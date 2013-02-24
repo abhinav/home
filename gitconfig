@@ -1,0 +1,12 @@
+[user]
+	name = Abhinav Gupta
+	email = mail@abhinavg.net
+[color]
+	ui = auto
+[core]
+	editor = vim
+[alias]
+    s = status
+    co = checkout
+[push]
+	default = simple
