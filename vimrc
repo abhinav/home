@@ -96,6 +96,7 @@ set ic                  " Case insensitive
 set sta                 " Smart tab
 set bg=dark             " We have a dark background
 set tw=78               " Wrap text after 78 characters
+set vb                  " Use visual bell instead of beeping"
 colo molokai            " Use molokai
 
 " File patterns to ignore in wildcard expansions.
