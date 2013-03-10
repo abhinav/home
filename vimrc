@@ -45,6 +45,15 @@ Bundle 'vim-pandoc/vim-pandoc'
 filetype plugin indent on
 
 " ----------------------------------------------------------------------------
+"  File type hooks
+" ----------------------------------------------------------------------------
+
+au FileType python call s:setup_python()
+au FileType haskell call s:setup_haskell()
+au FileType text set nornu
+au FileType pandoc set nornu
+
+" ----------------------------------------------------------------------------
 "  Plugin Configuration
 " ----------------------------------------------------------------------------
 
@@ -61,7 +70,6 @@ let g:delimitMate_expand_cr = 1
 let g:delimitMate_autoclose = 1
 let g:delimitMate_excluded_regions = "Comment,String"
 let g:delimitMate_excluded_ft = "pandoc,txt"
-au FileType python call s:setup_python()
 
 "  pandoc
 let g:pandoc_use_hard_wraps = 1
@@ -72,9 +80,6 @@ let g:syntastic_enable_signs = 1
 let g:syntastic_c_config_file = '.clang_complete'
 let g:syntastic_cpp_config_file = '.clang_complete'
 
-"  ghcmod-vim
-au FileType haskell call s:setup_haskell()
-
 " ----------------------------------------------------------------------------
 "  General Configuration
 " ----------------------------------------------------------------------------
@@ -84,6 +89,7 @@ set nowb                " Don't make backups before overwrite
 set bs=indent,eol,start " Allow backspace over everything
 set hi=50               " Keep 50 lines of command line history
 set ru                  " Show the cursor position all the time
+set rnu                 " Relative line numbering
 set ls=2                " Always show status line
 set sc                  " Display incomplete commands
 set is                  " Do incremental searching
