@@ -3,7 +3,7 @@
 " ----------------------------------------------------------------------------
 syntax on
 filetype off
-set rtp+=~/.vim/bundle/vundle
+set rtp+=~/.vim/bundle/vundle,$GOROOT/misc/vim
 call vundle#rc()
 
 " ----------------------------------------------------------------------------
@@ -33,7 +33,6 @@ Bundle 'SirVer/ultisnips'
 Bundle 'eagletmt/ghcmod-vim'
 Bundle 'groenewege/vim-less'
 Bundle 'guns/vim-clojure-static'
-Bundle 'jnwhiteh/vim-golang'
 Bundle 'kchmck/vim-coffee-script'
 Bundle 'pbrisbin/html-template-syntax'
 Bundle 'Rip-Rip/clang_complete'
@@ -50,6 +49,7 @@ filetype plugin indent on
 
 au FileType python call s:setup_python()
 au FileType haskell call s:setup_haskell()
+au FileType go call s:setup_go()
 au FileType text set nornu
 au FileType pandoc set nornu
 
@@ -130,21 +130,28 @@ endif
 "  Functions
 " ----------------------------------------------------------------------------
 
-function! s:setup_haskell()
-    nnoremap <buffer> <F1> :GhcModType<CR>
-    nnoremap <buffer> <silent> <F2> :GhcModTypeClear<CR>
-    setlocal omnifunc=necoghc#omnifunc
-endfunction
-
 function! s:close_preview()
     if pumvisible() == 0 && bufname('%') != "[Command Line]"
         silent! pclose
     endif
 endfunction
 
-function! s:setup_python()
-    let b:delimitMate_nesting_quotes = ['"','''', '`']
+function! s:close_preview_on_move()
     au CursorMovedI * call s:close_preview()
     au InsertLeave  * call s:close_preview()
 endfunction
 
+function! s:setup_haskell()
+    nnoremap <buffer> <F1> :GhcModType<CR>
+    nnoremap <buffer> <silent> <F2> :GhcModTypeClear<CR>
+    setlocal omnifunc=necoghc#omnifunc
+endfunction
+
+function! s:setup_python()
+    let b:delimitMate_nesting_quotes = ['"','''', '`']
+    call s:close_preview_on_move()
+endfunction
+
+function! s:setup_go()
+    call s:close_preview_on_move()
+endfunction

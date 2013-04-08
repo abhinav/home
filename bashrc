@@ -57,13 +57,11 @@ $PATH"
 ##############################################################################
 
 scripts=(
-    `brew --prefix`/etc/bash_completion
+    /usr/local/etc/bash_completion
     /usr/local/share/python/virtualenvwrapper_lazy.sh
 )
 
 for script in ${scripts[@]}; do
   [[ -f "$script" ]] && . "$script"
 done
-
-eval "$(rbenv init -)"
 
