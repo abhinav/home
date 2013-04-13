@@ -1,0 +1,5 @@
+:def k! \x -> return (":kind! " ++ x)
+
+-- :set prompt "λ "
+:set prompt "\ESC[34m%s > \ESC[m"
+
