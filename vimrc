@@ -103,6 +103,8 @@ set sta                 " Smart tab
 set bg=dark             " We have a dark background
 set tw=78               " Wrap text after 78 characters
 set vb                  " Use visual bell instead of beeping"
+set sb                  " split below
+set spr                 " split right
 colo molokai            " Use molokai
 
 " File patterns to ignore in wildcard expansions.
@@ -125,6 +127,12 @@ else
         inoremap <Nul> <C-x><C-o>
     endif
 endif
+
+" Better split navigation
+nnoremap <C-J> <C-W><C-J>
+nnoremap <C-K> <C-W><C-K>
+nnoremap <C-L> <C-W><C-L>
+nnoremap <C-H> <C-W><C-H>
 
 " ----------------------------------------------------------------------------
 "  Functions

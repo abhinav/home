@@ -1,5 +1,8 @@
-:def k! \x -> return (":kind! " ++ x)
+:def k! \x   -> return $ ":kind! " ++ x
+:def pf \str -> return $ ":! pointfree \"" ++ str ++ "\""
 
--- :set prompt "λ "
-:set prompt "\ESC[34m%s > \ESC[m"
+:set -XOverloadedStrings
+:set prompt "λ> "
 
+import Control.Applicative
+import Control.Monad
