@@ -1,5 +1,6 @@
 :def k! \x   -> return $ ":kind! " ++ x
-:def pf \str -> return $ ":! pointfree \"" ++ str ++ "\""
+:def pf   \str -> return $ ":! pointfree \'" ++ str ++ "\'"
+:def unpf \str -> return $ ":! pointful  \'" ++ str ++ "\'"
 
 :set -XOverloadedStrings
 :set prompt "λ> "
