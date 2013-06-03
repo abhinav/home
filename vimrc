@@ -38,7 +38,6 @@ Bundle 'pbrisbin/html-template-syntax'
 Bundle 'Rip-Rip/clang_complete'
 Bundle 'tpope/vim-haml'
 Bundle 'ujihisa/neco-ghc'
-Bundle 'Valloric/MatchTagAlways'
 Bundle 'vim-pandoc/vim-pandoc'
 
 filetype plugin indent on
