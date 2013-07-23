@@ -1,4 +1,5 @@
 {-# OPTIONS_GHC -fno-warn-missing-signatures #-}
+
 import           XMonad
 import           XMonad.Actions.CycleWS
 import           XMonad.Config.Gnome
@@ -23,7 +24,7 @@ startupWorkspace = "1"                          -- Start with the first
 myLayouts = maximize $ minimize $ smartBorders $ avoidStruts $
   -- Master to the left, tile to the right. Use M-h and M-l to change width of
   -- master. Use M-a and M-z to change height of current tile.
-  ResizableTall 1 (3/100) (1/2) []
+      ResizableTall 1 (3/100) (1/2) []
 
   -- Same as previous except master is at the top and tiles at the bottom.
   ||| Mirror (ResizableTall 1 (3/100) (1/2) [])
@@ -48,37 +49,40 @@ numPadKeys = [ xK_KP_End,  xK_KP_Down,  xK_KP_Page_Down -- 1, 2, 3
              , xK_KP_Home, xK_KP_Up,    xK_KP_Page_Up   -- 7, 8, 9
              ]
 
--- TODO prefer using additionalKeysP for this.
-myKeys = [
-  -- Show/hide panels
-    ((myModMask, xK_b), sendMessage ToggleStruts)
-
-  -- Change height of tile
-  , ((myModMask, xK_a), sendMessage MirrorShrink)
-  , ((myModMask, xK_z), sendMessage MirrorExpand)
-
-  -- Log out
-  , ((myModMask .|. shiftMask, xK_q), spawn "gnome-session-quit")
-
-  -- Move between workspaces using left/right arrow keys.
-  , ((myModMask .|. controlMask, xK_Left), prevWS)
-  , ((myModMask .|. controlMask, xK_Right), nextWS)
-  , ((myModMask .|. shiftMask .|. controlMask, xK_Left), shiftToPrev)
-  , ((myModMask .|. shiftMask .|. controlMask, xK_Right), shiftToNext)
-
-  -- Minimze and restore
-  , ((myModMask, xK_m), withFocused minimizeWindow)
-  , ((myModMask .|. shiftMask, xK_m), sendMessage RestoreNextMinimizedWin)
-
-  -- Maximize
-  , ((myModMask, xK_backslash), withFocused (sendMessage . maximizeRestore))
-  ] ++
+myKeys =
+  -- Allow using numpad keys to change workspaces
   [((m .|. myModMask, k), windows $ f i)
     | (i, k) <- zip myWorkspaces numPadKeys
     , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
 
+-- Custom keybindings
+myKeysP =
+  -- Show/hide panels
+  [ ("M-b", sendMessage ToggleStruts)
+
+  -- Change height of tile
+  , ("M-a", sendMessage MirrorShrink)
+  , ("M-z", sendMessage MirrorExpand)
+
+  -- Log out
+  , ("M-S-q", spawn "gnome-session-quit")
+
+  -- Move between workspaces using left/right arrow keys.
+  , ("M-C-<Left>",         prevWS)
+  , ("M-C-<Right>",        nextWS)
+  , ("M-S-C-<Left>",  shiftToPrev)
+  , ("M-S-C-<Right>", shiftToNext)
+
+  -- Minimze and restore
+  , ("M-m",            withFocused minimizeWindow)
+  , ("M-S-m", sendMessage RestoreNextMinimizedWin)
+
+  -- Maximize
+  , ("M-\\", withFocused (sendMessage . maximizeRestore))
+  ]
+
 myManagementHooks =
-  [ resource =? "synapse"     --> doIgnore
+  [ resource =? "synapse" --> doIgnore
   ]
 
 main :: IO ()
@@ -98,4 +102,5 @@ main = xmonad $ withUrgencyHook FocusHook
   , manageHook = manageHook defaultConfig
       <+> composeAll myManagementHooks
       <+> manageDocks
-  } `additionalKeys` myKeys
+  } `additionalKeysP` myKeysP
+    `additionalKeys`  myKeys
