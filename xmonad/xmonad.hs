@@ -4,6 +4,7 @@ import           XMonad
 import           XMonad.Actions.CycleWS
 import           XMonad.Config.Gnome
 import           XMonad.Hooks.ManageDocks
+import           XMonad.Hooks.ManageHelpers
 import           XMonad.Hooks.UrgencyHook
 import           XMonad.Layout.Circle
 import           XMonad.Layout.Fullscreen
@@ -19,7 +20,6 @@ import           XMonad.Util.EZConfig
 
 myModMask        = mod1Mask                     -- Use @alt@ as the mod key.
 myWorkspaces     = map show ([1..9] :: [Int])   -- 9 workspaces
-startupWorkspace = "1"                          -- Start with the first
 
 myLayouts = maximize $ minimize $ smartBorders $ avoidStruts $
   -- Master to the left, tile to the right. Use M-h and M-l to change width of
@@ -83,7 +83,14 @@ myKeysP =
 
 myManagementHooks =
   [ resource =? "synapse" --> doIgnore
+  , isFullscreen          --> doFullFloat
+  , isDialog              --> doCenterFloat
   ]
+
+myStartupHook = do
+    windows $ W.greedyView "1"
+    spawn "~/.xmonad/startup-hook"
+    startupHook gnomeConfig
 
 main :: IO ()
 main = xmonad $ withUrgencyHook FocusHook
@@ -95,12 +102,9 @@ main = xmonad $ withUrgencyHook FocusHook
   , workspaces          = myWorkspaces
   , modMask             = myModMask
   , handleEventHook     = fullscreenEventHook
-  , startupHook = do
-      windows $ W.greedyView startupWorkspace
-      spawn "~/.xmonad/startup-hook"
-      startupHook gnomeConfig
-  , manageHook = manageHook defaultConfig
-      <+> composeAll myManagementHooks
-      <+> manageDocks
+  , startupHook         = myStartupHook
+  , manageHook          = manageHook defaultConfig
+                          <+> composeAll myManagementHooks
+                          <+> manageDocks
   } `additionalKeysP` myKeysP
     `additionalKeys`  myKeys
