@@ -118,6 +118,11 @@ if has("unix")
   endif
 endif
 
+" If using gnome-terminal, use 256 colors.
+if $COLORTERM == 'gnome-terminal'
+    set t_Co=256
+endif
+
 " Use Ctrl-Space for omni completion.
 if has("gui_running")
     inoremap <C-Space> <C-x><C-o>
