@@ -61,8 +61,8 @@ myKeysP =
   [ ("M-b", sendMessage ToggleStruts)
 
   -- Change height of tile
-  , ("M-a", sendMessage MirrorShrink)
-  , ("M-z", sendMessage MirrorExpand)
+  , ("M-a", sendMessage MirrorExpand)
+  , ("M-z", sendMessage MirrorShrink)
 
   -- Log out
   , ("M-S-q", spawn "gnome-session-quit")
