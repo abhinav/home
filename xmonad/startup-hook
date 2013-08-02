@@ -6,7 +6,7 @@ if [ -z "$(pgrep synapse)" ] ; then
 fi
 
 if [ -z "$(pgrep synergys)" ] ; then
-    synergys --daemon
+    synergys --daemon --log "$HOME/.synergys.log"
 fi
 
 
