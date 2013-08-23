@@ -10,6 +10,31 @@ alias lla="ls -la"
 alias clj="rlwrap --remember -c -b '\(\){}[],^%$#@\"\";:''|\\' -f $HOME/.clj_completions clj"
 
 ##############################################################################
+# Bookmark system
+##############################################################################
+
+MARKS="$HOME/.marks"
+
+function mark {
+    [ -n "$1" ] && mkdir -p "$MARKS" && ln -s "$(pwd)" "$MARKS/$1" \
+                && echo "Bookmarked."
+}
+
+function unmark {
+    [ -n "$1" ] && [ -d "$MARKS/$1" ] && rm "$MARKS/$1" \
+                && echo "Deleted bookmark."
+}
+
+function marks {
+    [ -d "$MARKS" ] && ls -l "$MARKS" \
+        | tail -n+2 | sed 's/  / /g' | cut -d' ' -f10-
+}
+
+function cm {
+    [ -n "$1" ] && [ -d "$MARKS/$1" ] && cd -P "$MARKS/$1"
+}
+
+##############################################################################
 # Functions
 ##############################################################################
 
