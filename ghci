@@ -3,6 +3,7 @@
 :def unpf \str -> return $ ":! pointful  \'" ++ str ++ "\'"
 
 :set -XOverloadedStrings
+:set -XTupleSections
 :set prompt "λ> "
 
 import Control.Applicative
