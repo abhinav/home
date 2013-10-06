@@ -19,8 +19,8 @@ bind     f:alt;cmd ${full}
 # Resize
 bind right:alt;ctrl;cmd resize +10% +0
 bind  left:alt;ctrl;cmd resize -10% +0
-bind  down:alt;ctrl;cmd resize +0   -10%
-bind    up:alt;ctrl;cmd resize +0   +10%
+bind  down:alt;ctrl;cmd resize +0   +10%
+bind    up:alt;ctrl;cmd resize +0   -10%
 
 # Move
 bind right:alt;ctrl nudge +10% +0
