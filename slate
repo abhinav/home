@@ -6,6 +6,7 @@ config resizePercentOf screenSize
 # Aliases
 alias halfWidth screenSizeX/2;screenSizeY
 alias fullWidth screenSizeX;screenSizeY
+alias open /usr/bin/open
 
 alias  leftHalf move               screenOriginX;screenOriginY ${halfWidth}
 alias rightHalf move screenOriginX+screenSizeX/2;screenOriginY ${halfWidth}
@@ -29,5 +30,8 @@ bind  down:alt;ctrl nudge +0   +10%
 bind    up:alt;ctrl nudge +0   -10%
 
 # Launch terminal
-bind return:alt;shift shell path:~ '/usr/bin/open -a Terminal .'
+bind return:alt;shift shell path:~ '${open} -a Terminal .'
 bind  space:cmd;shift grid 0:6,2
+
+# Lock screen
+bind l:ctrl;cmd shell '${open} -a /System/Library/Frameworks/ScreenSaver.framework/Versions/A/Resources/ScreenSaverEngine.app'
