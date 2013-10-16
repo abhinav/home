@@ -162,6 +162,7 @@ endfunction
 function! s:setup_python()
     let b:delimitMate_nesting_quotes = ['"','''', '`']
     call s:close_preview_on_move()
+    set noet
 endfunction
 
 function! s:setup_go()
