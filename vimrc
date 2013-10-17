@@ -39,6 +39,8 @@ Bundle 'Rip-Rip/clang_complete'
 Bundle 'tpope/vim-haml'
 Bundle 'ujihisa/neco-ghc'
 Bundle 'vim-pandoc/vim-pandoc'
+Bundle 'uggedal/go-vim'
+Bundle 'Blackrush/vim-gocode'
 
 filetype plugin indent on
 
@@ -166,5 +168,6 @@ function! s:setup_python()
 endfunction
 
 function! s:setup_go()
+    set noet
     call s:close_preview_on_move()
 endfunction
