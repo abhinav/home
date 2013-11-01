@@ -3,7 +3,7 @@
 " ----------------------------------------------------------------------------
 syntax on
 filetype off
-set rtp+=~/.vim/bundle/vundle,$GOROOT/misc/vim
+set rtp+=~/.vim/bundle/vundle
 call vundle#rc()
 
 " ----------------------------------------------------------------------------
