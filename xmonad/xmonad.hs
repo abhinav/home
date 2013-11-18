@@ -81,6 +81,10 @@ myKeysP =
   , ("M-\\", withFocused (sendMessage . maximizeRestore))
   ]
 
+keysToRemove =
+    [ "M-<Return>" -- Swap focused and master window.
+    ]
+
 myManagementHooks =
   [ resource =? "synapse" --> doIgnore
   , isFullscreen          --> doFullFloat
@@ -106,5 +110,6 @@ main = xmonad $ withUrgencyHook FocusHook
   , manageHook          = manageHook defaultConfig
                           <+> composeAll myManagementHooks
                           <+> manageDocks
-  } `additionalKeysP` myKeysP
+  } `removeKeysP`     keysToRemove
+    `additionalKeysP` myKeysP
     `additionalKeys`  myKeys
