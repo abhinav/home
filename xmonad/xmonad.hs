@@ -3,6 +3,7 @@
 import           XMonad
 import           XMonad.Actions.CycleWS
 import           XMonad.Config.Gnome
+import           XMonad.Hooks.ICCCMFocus
 import           XMonad.Hooks.ManageDocks
 import           XMonad.Hooks.ManageHelpers
 import           XMonad.Hooks.UrgencyHook
@@ -93,7 +94,6 @@ myManagementHooks =
 
 myStartupHook = do
     windows $ W.greedyView "1"
-    spawn "~/.xmonad/startup-hook"
     startupHook gnomeConfig
 
 main :: IO ()
@@ -103,6 +103,7 @@ main = xmonad $ withUrgencyHook FocusHook
   , normalBorderColor   = "#cccccc"
   , borderWidth         = 3
   , layoutHook          = myLayouts
+  , logHook             = takeTopFocus
   , workspaces          = myWorkspaces
   , modMask             = myModMask
   , handleEventHook     = fullscreenEventHook

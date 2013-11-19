@@ -39,14 +39,6 @@ function cm {
 # Functions
 ##############################################################################
 
-# Activate the hsenv in the current directory.
-function activate_hsenv {
-    source .hsenv*/bin/activate 2> /dev/null
-    if [[ $? -ne 0 ]]; then
-        echo "Not an hsenv project directory."
-    fi
-}
-
 # Execute an mr command on each directory in the current folder that contains
 # an mrconfig.
 function mr-each {
