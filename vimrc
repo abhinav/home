@@ -75,11 +75,15 @@ let g:delimitMate_excluded_ft = "pandoc,txt"
 "  pandoc
 let g:pandoc_use_hard_wraps = 1
 let g:pandoc_no_folding = 1
+let g:pandoc_use_conceal = 0
 
 "  syntastic
 let g:syntastic_enable_signs = 1
 let g:syntastic_c_config_file = '.clang_complete'
 let g:syntastic_cpp_config_file = '.clang_complete'
+
+" netrw
+let g:netrw_liststyle = 4
 
 " ----------------------------------------------------------------------------
 "  General Configuration
@@ -140,6 +144,9 @@ nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 
+" Disable ex mode from Q
+nnoremap Q <Nop>
+
 " ----------------------------------------------------------------------------
 "  Functions
 " ----------------------------------------------------------------------------
@@ -164,7 +171,6 @@ endfunction
 function! s:setup_python()
     let b:delimitMate_nesting_quotes = ['"','''', '`']
     call s:close_preview_on_move()
-    set noet
 endfunction
 
 function! s:setup_go()
