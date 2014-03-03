@@ -65,7 +65,6 @@ export VIRTUALENV_DISTRIBUTE=1
 export PATH="\
 $HOME/.bin:\
 $HOME/.cabal/bin:\
-/usr/local/share/python:\
 /usr/local/bin:\
 /usr/local/sbin:\
 /usr/local/share/npm/bin:\
@@ -77,7 +76,6 @@ $PATH"
 
 scripts=(
     /usr/local/etc/bash_completion
-    /usr/local/share/python/virtualenvwrapper_lazy.sh
 )
 
 for script in ${scripts[@]}; do
