@@ -26,6 +26,7 @@ Bundle 'scrooloose/nerdtree'
 Bundle 'scrooloose/syntastic'
 Bundle 'Shougo/vimproc'
 Bundle 'SirVer/ultisnips'
+Bundle 'honza/vim-snippets'
 
 " ----------------------------------------------------------------------------
 "  Language-specific Plugins
@@ -39,6 +40,7 @@ Bundle 'Rip-Rip/clang_complete'
 Bundle 'tpope/vim-haml'
 Bundle 'ujihisa/neco-ghc'
 Bundle 'vim-pandoc/vim-pandoc'
+Bundle 'vim-voom/VOoM'
 Bundle 'uggedal/go-vim'
 Bundle 'Blackrush/vim-gocode'
 
@@ -169,6 +171,7 @@ function! s:setup_haskell()
 endfunction
 
 function! s:setup_python()
+    set noet
     let b:delimitMate_nesting_quotes = ['"','''', '`']
     call s:close_preview_on_move()
 endfunction
