@@ -17,7 +17,6 @@ Bundle 'gmarik/vundle'
 "  General Plugins
 " ----------------------------------------------------------------------------
 Bundle 'godlygeek/tabular'
-Bundle 'wincent/Command-T'
 Bundle 'kien/rainbow_parentheses.vim'
 Bundle 'molokai'
 Bundle 'Raimondi/delimitMate'
@@ -27,6 +26,9 @@ Bundle 'scrooloose/syntastic'
 Bundle 'Shougo/vimproc'
 Bundle 'SirVer/ultisnips'
 Bundle 'honza/vim-snippets'
+Bundle 'bling/vim-airline'
+Bundle 'tpope/vim-fugitive'
+Bundle 'Shougo/unite.vim'
 
 " ----------------------------------------------------------------------------
 "  Language-specific Plugins
@@ -87,6 +89,33 @@ let g:syntastic_cpp_config_file = '.clang_complete'
 " netrw
 let g:netrw_liststyle = 4
 
+" airline
+let g:airline_theme = "dark"
+if !exists('g:airline_symbols')
+    let g:airline_symbols = {}
+endif
+let g:airline_left_sep = '▶'
+let g:airline_right_sep = '◀'
+let g:airline_symbols.linenr = '¶'
+let g:airline_symbols.branch = '⎇'
+let g:airline_symbols.paste = '∥'
+let g:airline_symbols.whitespace = 'Ξ'
+
+" Unite
+call unite#filters#matcher_default#use(['matcher_fuzzy'])
+call unite#filters#sorter_default#use(['sorter_rank'])
+let g:unite_enable_start_insert=1
+
+function! s:unite_settings()
+    nmap <buffer> Q <plug>(unite_exit)
+    nmap <buffer> <esc> <plug>(unite_exit)
+    imap <buffer> <esc> <plug>(unite_exit)
+endfunction
+autocmd FileType unite call s:unite_settings()
+
+nnoremap <leader>t :<C-u>Unite -toggle -auto-resize file_rec/async:!<cr><c-u>
+nnoremap <leader>b :<C-u>Unite -auto-resize buffer<cr>
+
 " ----------------------------------------------------------------------------
 "  General Configuration
 " ----------------------------------------------------------------------------
@@ -105,7 +134,8 @@ set et                  " Use spaces to insert tabs
 set sw=4                " Number of spaces to use for each indent
 set ts=4                " Number of spaces tab will count for
 set nowrap              " No wrapping
-set ic                  " Case insensitive
+set scs                 " Case insensitive except if uppercase characters are
+                        " present.
 set sta                 " Smart tab
 set bg=dark             " We have a dark background
 set tw=78               " Wrap text after 78 characters
@@ -171,7 +201,6 @@ function! s:setup_haskell()
 endfunction
 
 function! s:setup_python()
-    set noet
     let b:delimitMate_nesting_quotes = ['"','''', '`']
     call s:close_preview_on_move()
 endfunction

@@ -9,5 +9,5 @@ set go-=T
 if has("gui_macvim")
     " Map Command-T
     macmenu &File.New\ Tab key=<nop>
-    map <D-t> :CommandT<CR>
+    noremap <D-t> :<C-u>Unite -toggle -auto-resize file_rec/async:!<cr><c-u>
 end
