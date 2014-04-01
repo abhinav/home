@@ -8,3 +8,5 @@
 
 import Control.Applicative
 import Control.Monad
+import Data.Either
+import Data.Maybe
