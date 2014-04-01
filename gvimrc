@@ -1,4 +1,4 @@
-set gfn=Menlo\ Regular:h12
+set gfn=Monaco\ for\ Powerline:h12
 colorscheme molokai
 
 set go-=r
