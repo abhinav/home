@@ -6,28 +6,86 @@ S.configAll({
 
 var screenSaverCommand = "/usr/bin/open -a /System/Library/Frameworks/ScreenSaver.framework/Versions/A/Resources/ScreenSaverEngine.app";
 
+// States:
+// +-------------+----------+--------------+
+// | top-left    |  top     | top-right    |
+// +-------------+----------+--------------+
+// | left        |          | right        |
+// +-------------+----------+--------------+
+// | bottom-left |  bottom  | bottom-right |
+// +-------------+----------+--------------+
+var states = {};
+
+_.each(["windowOpened", "windowFocused"], function(eventName) {
+    S.on(eventName, function(e, w) {
+        delete states[w.app().name()];
+    });
+});
+
+_.each(["windowClosed", "appClosed", "appOpened"], function(eventName) {
+    S.on(eventName, function(e, a) {
+        delete states[a.name()];
+    });
+});
+
+var operations = {
+    "top-left": S.op("move", {"x": "screenOriginX", "y": "screenOriginY", "width": "screenSizeX/2", "height": "screenSizeY/2"}),
+    "top": S.op("move", {"x": "screenOriginX", "y": "screenOriginY", "width": "screenSizeX", "height": "screenSizeY/2"}),
+    "top-right": S.op("move", {"x": "screenOriginX+screenSizeX/2", "y": "screenOriginY", "width": "screenSizeX/2", "height": "screenSizeY/2"}),
+    "right": S.op("move", {"x": "screenOriginX+screenSizeX/2", "y": "screenOriginY", "width": "screenSizeX/2", "height": "screenSizeY"}),
+    "bottom-right": S.op("move", {"x": "screenOriginX+screenSizeX/2", "y": "screenOriginY+screenSizeY/2", "width": "screenSizeX/2", "height": "screenSizeY/2"}),
+    "bottom": S.op("move", {"x": "screenOriginX", "y": "screenOriginY+screenSizeY/2", "width": "screenSizeX", "height": "screenSizeY/2"}),
+    "bottom-left": S.op("move", {"x": "screenOriginX", "y": "screenOriginY+screenSizeY/2", "width": "screenSizeX/2", "height": "screenSizeY/2"}),
+    "left": S.op("move", {"x": "screenOriginX", "y": "screenOriginY", "width": "screenSizeX/2", "height": "screenSizeY"}),
+    
+    "full": S.op("move", {"x": "screenOriginX", "y": "screenOriginY", "width": "screenSizeX", "height": "screenSizeY"}),
+};
+
+var defaultTransitions = {
+    "up": "top",
+    "right": "right",
+    "down": "bottom",
+    "left": "left",
+
+    "f": "full"
+};
+
+// Transitions specific to a state. These override the defaults when in that
+// state.
+var transitions = {
+    "top": {"left": "top-left", "right": "top-right"},
+    "right": {"up": "top-right", "down": "bottom-right"},
+    "bottom": {"left": "bottom-left", "right": "bottom-right"},
+    "left": {"up": "top-left", "down": "bottom-left"}
+};
+
+var nextState = function(key, win) {
+    var appName = win.app().name();
+    if (appName in states) {
+        var currentState = states[appName];
+        if (currentState != null && currentState in transitions
+                && key in transitions[currentState]) {
+            return transitions[currentState][key];
+        }
+    }
+    return defaultTransitions[key];
+};
+
+var go = function(key) {
+    return function(win) {
+        var newState = nextState(key, win);
+        win.doOperation(operations[newState]);
+        states[win.app().name()] = newState;
+    };
+};
+
 // Halves and full screen
 S.bindAll({
-    "left:alt;cmd": S.op("move", {"x": "screenOriginX",
-                                  "y": "screenOriginY",
-                                  "width": "screenSizeX/2",
-                                  "height": "screenSizeY"}),
-    "right:alt;cmd": S.op("move", {"x": "screenOriginX+screenSizeX/2",
-                                   "y": "screenOriginY",
-                                   "width": "screenSizeX/2",
-                                   "height": "screenSizeY"}),
-    "up:alt;cmd": S.op("move", {"x": "screenOriginX",
-                                   "y": "screenOriginY",
-                                   "width": "screenSizeX",
-                                   "height": "screenSizeY/2"}),
-    "down:alt;cmd": S.op("move", {"x": "screenOriginX",
-                                   "y": "screenOriginY+screenSizeY/2",
-                                   "width": "screenSizeX",
-                                   "height": "screenSizeY/2"}),
-    "f:alt;cmd": S.op("move", {"x": "screenOriginX",
-                               "y": "screenOriginY",
-                               "width": "screenSizeX",
-                               "height": "screenSizeY"})
+    "left:alt;cmd": go("left"),
+    "right:alt;cmd": go("right"),
+    "up:alt;cmd": go("up"),
+    "down:alt;cmd": go("down"),
+    "f:alt;cmd": go("f")
 });
 
 // Resize
