@@ -138,6 +138,10 @@ colo molokai            " Use molokai
 " File patterns to ignore in wildcard expansions.
 set wig+=*/cabal-dev,*/dist,*.o,*.class
 
+" Highlight columns 79 and higher.
+highlight ColorColumn ctermbg=234 guibg=#232526
+let &colorcolumn=join(range(79,320),",")
+
 " Configuration available on OSX only:
 if has("unix")
   let s:uname = system("uname")

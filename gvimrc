@@ -1,5 +1,4 @@
 set gfn=Monaco\ for\ Powerline:h12
-colorscheme molokai
 
 set go-=r
 set go-=L
