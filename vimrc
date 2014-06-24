@@ -55,6 +55,7 @@ filetype plugin indent on
 au FileType python call s:setup_python()
 au FileType haskell call s:setup_haskell()
 au FileType go call s:setup_go()
+au FileType sh call s:setup_sh()
 au FileType text set nornu
 au FileType pandoc set nornu
 
@@ -203,4 +204,8 @@ endfunction
 function! s:setup_go()
     set noet
     call s:close_preview_on_move()
+endfunction
+
+function! s:setup_sh()
+    set noet
 endfunction
