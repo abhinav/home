@@ -2,50 +2,52 @@
 "  Vundle
 " ----------------------------------------------------------------------------
 syntax on
+set nocompatible
 filetype off
-set rtp+=~/.vim/bundle/vundle
-call vundle#rc()
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
 
 " ----------------------------------------------------------------------------
 "  Vundle Bundles
 " ----------------------------------------------------------------------------
 
 "  Vundle itself so :BundleClean does not remove it.
-Bundle 'gmarik/vundle'
+Plugin 'gmarik/Vundle.vim'
 
 " ----------------------------------------------------------------------------
 "  General Plugins
 " ----------------------------------------------------------------------------
-Bundle 'godlygeek/tabular'
-Bundle 'kien/rainbow_parentheses.vim'
-Bundle 'molokai'
-Bundle 'Raimondi/delimitMate'
-Bundle 'rstacruz/sparkup', {'rtp': 'vim/'}
-Bundle 'scrooloose/nerdtree'
-Bundle 'scrooloose/syntastic'
-Bundle 'Shougo/vimproc'
-Bundle 'SirVer/ultisnips'
-Bundle 'honza/vim-snippets'
-Bundle 'bling/vim-airline'
-Bundle 'tpope/vim-fugitive'
-Bundle 'Shougo/unite.vim'
+Plugin 'godlygeek/tabular'
+Plugin 'kien/rainbow_parentheses.vim'
+Plugin 'molokai'
+Plugin 'Raimondi/delimitMate'
+Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
+Plugin 'scrooloose/nerdtree'
+Plugin 'scrooloose/syntastic'
+Plugin 'Shougo/vimproc'
+Plugin 'SirVer/ultisnips'
+Plugin 'honza/vim-snippets'
+Plugin 'bling/vim-airline'
+Plugin 'tpope/vim-fugitive'
+Plugin 'Shougo/unite.vim'
 
 " ----------------------------------------------------------------------------
 "  Language-specific Plugins
 " ----------------------------------------------------------------------------
-Bundle 'eagletmt/ghcmod-vim'
-Bundle 'groenewege/vim-less'
-Bundle 'guns/vim-clojure-static'
-Bundle 'kchmck/vim-coffee-script'
-Bundle 'pbrisbin/html-template-syntax'
-Bundle 'Rip-Rip/clang_complete'
-Bundle 'tpope/vim-haml'
-Bundle 'ujihisa/neco-ghc'
-Bundle 'vim-pandoc/vim-pandoc'
-Bundle 'vim-voom/VOoM'
-Bundle 'uggedal/go-vim'
-Bundle 'Blackrush/vim-gocode'
+Plugin 'eagletmt/ghcmod-vim'
+Plugin 'groenewege/vim-less'
+Plugin 'guns/vim-clojure-static'
+Plugin 'kchmck/vim-coffee-script'
+Plugin 'pbrisbin/html-template-syntax'
+Plugin 'Rip-Rip/clang_complete'
+Plugin 'tpope/vim-haml'
+Plugin 'ujihisa/neco-ghc'
+Plugin 'vim-pandoc/vim-pandoc'
+Plugin 'vim-voom/VOoM'
+Plugin 'uggedal/go-vim'
+Plugin 'Blackrush/vim-gocode'
 
+call vundle#end()
 filetype plugin indent on
 
 " ----------------------------------------------------------------------------
