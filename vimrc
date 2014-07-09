@@ -44,6 +44,7 @@ Plugin 'tpope/vim-haml'
 Plugin 'ujihisa/neco-ghc'
 Plugin 'vim-pandoc/vim-pandoc'
 Plugin 'vim-pandoc/vim-pandoc-syntax'
+Plugin 'vim-pandoc/vim-pandoc-after'
 Plugin 'vim-voom/VOoM'
 Plugin 'uggedal/go-vim'
 Plugin 'Blackrush/vim-gocode'
@@ -81,8 +82,10 @@ let g:delimitMate_excluded_regions = "Comment,String"
 let g:delimitMate_excluded_ft = "pandoc,txt"
 
 "  pandoc
+let g:pandoc#after#modules#enabled = ["ultisnips"]
 let g:pandoc#modules#disabled = ["folding"]
 let g:pandoc#formatting#mode = "h"
+let g:pandoc#syntax#conceal#use = 0
 
 "  syntastic
 let g:syntastic_enable_signs = 1
