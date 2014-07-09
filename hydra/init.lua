@@ -3,6 +3,8 @@ require "section"
 autolaunch.set(true)
 hydra.putindock(false)
 
+notify.show("Hydra", "Started", "", "")
+
 -----------------------------------------------------------------------------
 -- Menu
 -----------------------------------------------------------------------------
@@ -95,8 +97,8 @@ end)
 -----------------------------------------------------------------------------
 -- Move between screens
 -----------------------------------------------------------------------------
-hotkey.bind({"ctrl", "alt", "shift"}, 'right', ext.grid.pushwindow_nextscreen)
-hotkey.bind({"ctrl", "alt", "shift"}, 'left', ext.grid.pushwindow_prevscreen)
+hotkey.bind({"ctrl", "alt", "shift"}, 'left', ext.grid.pushwindow_nextscreen)
+hotkey.bind({"ctrl", "alt", "shift"}, 'right', ext.grid.pushwindow_prevscreen)
 
 -----------------------------------------------------------------------------
 -- Screen lock
