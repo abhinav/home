@@ -46,8 +46,7 @@ Plugin 'vim-pandoc/vim-pandoc'
 Plugin 'vim-pandoc/vim-pandoc-syntax'
 Plugin 'vim-pandoc/vim-pandoc-after'
 Plugin 'vim-voom/VOoM'
-Plugin 'uggedal/go-vim'
-Plugin 'Blackrush/vim-gocode'
+Plugin 'fatih/vim-go'
 
 call vundle#end()
 filetype plugin indent on
