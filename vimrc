@@ -143,6 +143,9 @@ colo molokai            " Use molokai
 " File patterns to ignore in wildcard expansions.
 set wig+=*/cabal-dev,*/dist,*.o,*.class
 
+" Support codex tags.
+set tags+=codex.tags
+
 " Configuration available on OSX only:
 if has("unix")
   let s:uname = system("uname")
