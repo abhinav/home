@@ -6,6 +6,32 @@ hydra.putindock(false)
 notify.show("Hydra", "Started", "", "")
 
 -----------------------------------------------------------------------------
+-- Updates
+-----------------------------------------------------------------------------
+function checkforupdates()
+    updates.check(function(available)
+        if available then
+            notify.show("Hydra", "Update available.", "Click here for more information.", "showupdate")
+        else
+            notify.show("Hydra", "No new updates", "", "showupdate")
+        end
+    end)
+    settings.set('lastcheckedupdates', os.time())
+end
+
+function showupdate()
+    os.execute('open https://github.com/sdegutis/Hydra/releases')
+end
+
+timer.new(timer.weeks(1), checkforupdates):start()
+notify.register("showupdate", showupdate)
+
+local lastcheckedupdates = settings.get('lastcheckedupdates')
+if lastcheckedupdates == nil or lastcheckedupdates <= os.time() - timer.days(7) then
+    checkforupdates()
+end
+
+-----------------------------------------------------------------------------
 -- Menu
 -----------------------------------------------------------------------------
 menu.show(function()
@@ -14,6 +40,8 @@ menu.show(function()
         {title = "Open REPL", fn = repl.open},
         {title = "Show logs", fn = logger.show},
         {title = "-"},
+        {title = "About", fn = hydra.showabout},
+        {title = "Check for updates", fn = checkforupdates},
         {title = "Quit", fn = os.exit}
     }
 end)
