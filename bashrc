@@ -7,7 +7,6 @@ alias l="ls"
 alias ll="ls -l"
 alias la="ls -a"
 alias lla="ls -la"
-alias clj="rlwrap --remember -c -b '\(\){}[],^%$#@\"\";:''|\\' -f $HOME/.clj_completions clj"
 alias serve_this='python -mSimpleHTTPServer'
 
 ##############################################################################
