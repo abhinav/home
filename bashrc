@@ -61,7 +61,7 @@ export PIP_DOWNLOAD_CACHE="$HOME/.pip_download_cache"
 export EDITOR="vim"
 export HOMEBREW_EDITOR="vim"
 export VIRTUALENV_DISTRIBUTE=1
-export GHC_DOT_APP="$HOME/Applications/ghc-7.8.2.app"
+export GHC_DOT_APP="$HOME/Applications/ghc-7.8.3.app"
 export PATH="\
 $HOME/.bin:\
 $HOME/.cabal/bin:\
