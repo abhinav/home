@@ -98,6 +98,11 @@ let g:netrw_liststyle = 3
 let g:airline_theme = "dark"
 let g:airline_powerline_fonts = 1
 
+" Command-T
+if executable("watchman")
+    let g:CommandTFileScanner = 'watchman'
+endif
+
 " ----------------------------------------------------------------------------
 "  General Configuration
 " ----------------------------------------------------------------------------
