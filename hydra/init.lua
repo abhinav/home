@@ -80,6 +80,10 @@ fnutils.each({"up", "down", "left", "right", 'f'}, function(direction)
     local default = ext.default_sections[direction]
     hotkey.bind({"cmd", "alt"}, direction, function()
         local win = window.focusedwindow()
+        if win == nil then
+            -- No active window
+            return
+        end
         local section = ext.section.get(win)
         if section == nil then
             ext.section.set(win, default)
