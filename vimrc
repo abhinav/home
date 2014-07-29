@@ -29,7 +29,7 @@ Plugin 'SirVer/ultisnips'
 Plugin 'honza/vim-snippets'
 Plugin 'bling/vim-airline'
 Plugin 'tpope/vim-fugitive'
-Plugin 'Shougo/unite.vim'
+Plugin 'wincent/command-t'
 
 " ----------------------------------------------------------------------------
 "  Language-specific Plugins
@@ -91,27 +91,12 @@ let g:syntastic_enable_signs = 1
 let g:syntastic_c_config_file = '.clang_complete'
 let g:syntastic_cpp_config_file = '.clang_complete'
 
-" netrw
-let g:netrw_liststyle = 4
+" Default to tree listing style for netrw.
+let g:netrw_liststyle = 3
 
 " airline
 let g:airline_theme = "dark"
 let g:airline_powerline_fonts = 1
-
-" Unite
-call unite#filters#matcher_default#use(['matcher_fuzzy'])
-call unite#filters#sorter_default#use(['sorter_rank'])
-let g:unite_enable_start_insert=1
-
-function! s:unite_settings()
-    nmap <buffer> Q <plug>(unite_exit)
-    nmap <buffer> <esc> <plug>(unite_exit)
-    imap <buffer> <esc> <plug>(unite_exit)
-endfunction
-autocmd FileType unite call s:unite_settings()
-
-nnoremap <leader>t :<C-u>Unite -toggle -auto-resize file_rec/async:!<cr><c-u>
-nnoremap <leader>b :<C-u>Unite -auto-resize buffer<cr>
 
 " ----------------------------------------------------------------------------
 "  General Configuration
