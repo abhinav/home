@@ -102,6 +102,7 @@ let g:airline_powerline_fonts = 1
 if executable("watchman")
     let g:CommandTFileScanner = 'watchman'
 endif
+let g:CommandTHighlightColor = 'Pmenu'
 
 " ----------------------------------------------------------------------------
 "  General Configuration
