@@ -1,4 +1,4 @@
-set gfn=Monaco\ for\ Powerline:h12
+set gfn=Literation\ Mono\ Powerline:h12
 
 set go-=r
 set go-=L

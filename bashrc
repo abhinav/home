@@ -55,9 +55,8 @@ function mr-each {
 ##############################################################################
 
 export WATCHMAN_CONFIG_FILE="$HOME/.watchman.json"
-export PS1='\e[35;40m\u\e[37;40m \e[32;40m\w\e[37;40m\n● '
+export PS1='\e[35;40m\e[1m\u\e[37;40m\e[0m \e[32;40m\w\e[37;40m\n● '
 export CLICOLOR=1
-export NODE_PATH="/usr/local/lib/node_modules:$NODE_PATH"
 export PIP_DOWNLOAD_CACHE="$HOME/.pip_download_cache"
 export EDITOR="vim"
 export HOMEBREW_EDITOR="vim"
