@@ -12,6 +12,8 @@ source $ZSH/oh-my-zsh.sh
 #############################################################################
 # zsh configuration
 #############################################################################
+PROMPT="$PROMPT
+"'%{$terminfo[bold]$fg[blue]%} $ %{$reset_color%}'
 bindkey '^R' history-incremental-search-backward
 setopt menu_complete
 
@@ -20,6 +22,7 @@ setopt menu_complete
 #############################################################################
 
 alias l=ls
+alias ll="ls -l"
 alias serve_this="python -mSimpleHTTPServer"
 
 #############################################################################
