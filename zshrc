@@ -12,6 +12,8 @@ source $ZSH/oh-my-zsh.sh
 #############################################################################
 fpath=(/usr/local/share/zsh-completions $fpath)
 
+bindkey '^R' history-incremental-search-backward
+
 setopt menu_complete
 autoload -Uz compinit
 compinit
