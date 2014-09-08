@@ -15,6 +15,8 @@ source $ZSH/oh-my-zsh.sh
 PROMPT="$PROMPT
 "'%{$terminfo[bold]$fg[blue]%} $ %{$reset_color%}'
 bindkey '^R' history-incremental-search-backward
+bindkey '^A' beginning-of-line
+bindkey '^E' end-of-line
 setopt menu_complete
 
 #############################################################################
