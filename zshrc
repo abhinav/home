@@ -1,3 +1,5 @@
+fpath=(/usr/local/share/zsh-completions $fpath)
+
 #############################################################################
 # oh-my-zsh
 #############################################################################
@@ -10,13 +12,8 @@ source $ZSH/oh-my-zsh.sh
 #############################################################################
 # zsh configuration
 #############################################################################
-fpath=(/usr/local/share/zsh-completions $fpath)
-
 bindkey '^R' history-incremental-search-backward
-
 setopt menu_complete
-autoload -Uz compinit
-compinit
 
 #############################################################################
 # Aliases
