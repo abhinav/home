@@ -39,7 +39,6 @@ Plugin 'groenewege/vim-less'
 Plugin 'guns/vim-clojure-static'
 Plugin 'kchmck/vim-coffee-script'
 Plugin 'pbrisbin/html-template-syntax'
-Plugin 'Rip-Rip/clang_complete'
 Plugin 'tpope/vim-haml'
 Plugin 'ujihisa/neco-ghc'
 Plugin 'vim-pandoc/vim-pandoc'
@@ -56,7 +55,7 @@ filetype plugin indent on
 " ----------------------------------------------------------------------------
 
 au FileType python call s:setup_python()
-au FileType haskell call s:setup_haskell()
+au FileType haskell,chaskell call s:setup_haskell()
 au FileType go call s:setup_go()
 au FileType sh call s:setup_sh()
 au FileType text set nornu
