@@ -17,6 +17,7 @@ PROMPT="$PROMPT
 bindkey '^R' history-incremental-search-backward
 bindkey '^A' beginning-of-line
 bindkey '^E' end-of-line
+setopt COMPLETE_IN_WORD
 setopt menu_complete
 setopt histignoredups
 
@@ -48,3 +49,22 @@ $HOME/.cabal/bin:\
 /usr/local/sbin:\
 /usr/local/share/npm/bin:\
 $PATH"
+
+#############################################################################
+# Completion configuration
+#############################################################################
+
+# The following lines were added by compinstall
+
+zstyle ':completion:*' completer _expand _complete _ignored _approximate
+zstyle ':completion:*' file-sort name
+zstyle ':completion:*' ignore-parents parent pwd directory
+zstyle ':completion:*' matcher-list '' 'm:{[:lower:]}={[:upper:]} r:|[._-]=** r:|=**' 'm:{[:lower:][:upper:]}={[:upper:][:lower:]}' 'l:|=* r:|=*'
+zstyle ':completion:*' menu select=1
+zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p%s
+zstyle :compinstall filename '/home/abg/.zshrc'
+
+autoload -Uz compinit
+compinit
+# End of lines added by compinstall
+#
