@@ -18,6 +18,7 @@ Plugin 'gmarik/Vundle.vim'
 "  General Plugins
 " ----------------------------------------------------------------------------
 Plugin 'godlygeek/tabular'
+Plugin 'dhruvasagar/vim-table-mode'
 Plugin 'kien/rainbow_parentheses.vim'
 Plugin 'molokai'
 Plugin 'Raimondi/delimitMate'
@@ -59,7 +60,7 @@ au FileType haskell,chaskell call s:setup_haskell()
 au FileType go call s:setup_go()
 au FileType sh call s:setup_sh()
 au FileType text set nornu
-au FileType pandoc set nornu
+au FileType pandoc call s:setup_pandoc()
 
 " ----------------------------------------------------------------------------
 "  Plugin Configuration
@@ -102,6 +103,9 @@ if executable("watchman")
     let g:CommandTFileScanner = 'watchman'
 endif
 let g:CommandTHighlightColor = 'Pmenu'
+
+" vim-table-mode
+let g:table_mode_corner_corner = '+'
 
 " ----------------------------------------------------------------------------
 "  General Configuration
@@ -201,4 +205,8 @@ endfunction
 
 function! s:setup_sh()
     set noet
+endfunction
+
+function! s:setup_pandoc()
+    set nornu
 endfunction
