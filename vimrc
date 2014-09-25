@@ -1,5 +1,5 @@
 " ----------------------------------------------------------------------------
-"  Vundle
+"  Vundle Setup {{{1
 " ----------------------------------------------------------------------------
 syntax on
 set nocompatible
@@ -8,14 +8,14 @@ set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 
 " ----------------------------------------------------------------------------
-"  Vundle Bundles
+"  Vundle Bundles {{{1
 " ----------------------------------------------------------------------------
 
 "  Vundle itself so :BundleClean does not remove it.
 Plugin 'gmarik/Vundle.vim'
 
 " ----------------------------------------------------------------------------
-"  General Plugins
+"  General Plugins {{{2
 " ----------------------------------------------------------------------------
 Plugin 'godlygeek/tabular'
 Plugin 'dhruvasagar/vim-table-mode'
@@ -33,7 +33,7 @@ Plugin 'tpope/vim-fugitive'
 Plugin 'wincent/command-t'
 
 " ----------------------------------------------------------------------------
-"  Language-specific Plugins
+"  Language-specific Plugins {{{2
 " ----------------------------------------------------------------------------
 Plugin 'eagletmt/ghcmod-vim'
 Plugin 'groenewege/vim-less'
@@ -52,7 +52,7 @@ call vundle#end()
 filetype plugin indent on
 
 " ----------------------------------------------------------------------------
-"  File type hooks
+"  File type hooks {{{1
 " ----------------------------------------------------------------------------
 
 au FileType python call s:setup_python()
@@ -63,52 +63,52 @@ au FileType text set nornu
 au FileType pandoc call s:setup_pandoc()
 
 " ----------------------------------------------------------------------------
-"  Plugin Configuration
+"  Plugin Configuration {{{1
 " ----------------------------------------------------------------------------
 
-"  clang_complete
+"  clang_complete {{{2
 let g:clang_use_library = 1
 let g:clang_periodic_quickfix = 0
 let g:clang_close_preview = 1
 let g:clang_snippets = 1
 let g:clang_snippets_engine = 'ultisnips'
 
-"  delimitMate
+"  delimitMate {{{2
 let g:delimitMate_expand_space = 1
 let g:delimitMate_expand_cr = 1
 let g:delimitMate_autoclose = 1
 let g:delimitMate_excluded_regions = "Comment,String"
 let g:delimitMate_excluded_ft = "pandoc,txt"
 
-"  pandoc
+"  pandoc {{{2
 let g:pandoc#after#modules#enabled = ["ultisnips"]
 let g:pandoc#modules#disabled = ["folding"]
 let g:pandoc#formatting#mode = "h"
 let g:pandoc#syntax#conceal#use = 0
 
-"  syntastic
+"  syntastic {{{2
 let g:syntastic_enable_signs = 1
 let g:syntastic_c_config_file = '.clang_complete'
 let g:syntastic_cpp_config_file = '.clang_complete'
 
-" Default to tree listing style for netrw.
+" netrw {{{2
 let g:netrw_liststyle = 3
 
-" airline
+" airline {{{2
 let g:airline_theme = "dark"
 let g:airline_powerline_fonts = 1
 
-" Command-T
+" Command-T {{{2
 if executable("watchman")
     let g:CommandTFileScanner = 'watchman'
 endif
 let g:CommandTHighlightColor = 'Pmenu'
 
-" vim-table-mode
+" vim-table-mode {{{2
 let g:table_mode_corner_corner = '+'
 
 " ----------------------------------------------------------------------------
-"  General Configuration
+"  General Configuration {{{1
 " ----------------------------------------------------------------------------
 set nocp                " Don't need compatibility with vi
 set nobk                " Don't make backups
@@ -132,6 +132,7 @@ set tw=78               " Wrap text after 78 characters
 set vb                  " Use visual bell instead of beeping"
 set sb                  " split below
 set spr                 " split right
+set fdm=marker          " Marker fold method
 colo molokai            " Use molokai
 
 " File patterns to ignore in wildcard expansions.
@@ -139,6 +140,10 @@ set wig+=*/cabal-dev,*/dist,*.o,*.class
 
 " Support codex tags.
 set tags+=codex.tags
+
+" ----------------------------------------------------------------------------
+"  Key Remaps {{{1
+" ----------------------------------------------------------------------------
 
 " Configuration available on OSX only:
 if has("unix")
@@ -173,7 +178,7 @@ nnoremap <C-H> <C-W><C-H>
 nnoremap Q <Nop>
 
 " ----------------------------------------------------------------------------
-"  Functions
+"  Functions {{{1
 " ----------------------------------------------------------------------------
 
 function! s:close_preview()
@@ -187,26 +192,26 @@ function! s:close_preview_on_move()
     au InsertLeave  * call s:close_preview()
 endfunction
 
-function! s:setup_haskell()
+function! s:setup_haskell() " {{{2
     nnoremap <buffer> <F1> :GhcModType<CR>
     nnoremap <buffer> <silent> <F2> :GhcModTypeClear<CR>
     setlocal omnifunc=necoghc#omnifunc
 endfunction
 
-function! s:setup_python()
+function! s:setup_python() " {{{2
     let b:delimitMate_nesting_quotes = ['"','''', '`']
     call s:close_preview_on_move()
 endfunction
 
-function! s:setup_go()
+function! s:setup_go() " {{{2
     set noet
     call s:close_preview_on_move()
 endfunction
 
-function! s:setup_sh()
+function! s:setup_sh() " {{{2
     set noet
 endfunction
 
-function! s:setup_pandoc()
+function! s:setup_pandoc() " {{{2
     set nornu
-endfunction
+endfunction " }}}2
