@@ -81,6 +81,12 @@ local SECTIONS = {
         w = GRIDWIDTH_HALF,
         h = grid.GRIDHEIGHT
     },
+    right_third = {
+        x = round(2 * grid.GRIDWIDTH / 3),
+        y = 0,
+        w = round(grid.GRIDWIDTH / 3),
+        h = grid.GRIDHEIGHT
+    },
     bottom_right = {
         x = GRIDWIDTH_HALF,
         y = GRIDHEIGHT_HALF,
@@ -105,10 +111,22 @@ local SECTIONS = {
         w = GRIDWIDTH_HALF,
         h = grid.GRIDHEIGHT
     },
+    left_third = {
+        x = 0,
+        y = 0,
+        w = round(grid.GRIDWIDTH / 3),
+        h = grid.GRIDHEIGHT
+    },
     full = {
         x = 0,
         y = 0,
         w = grid.GRIDWIDTH,
+        h = grid.GRIDHEIGHT
+    },
+    center_third = {
+        x = round(grid.GRIDWIDTH / 3),
+        y = 0,
+        w = round(grid.GRIDWIDTH / 3),
         h = grid.GRIDHEIGHT
     }
 }
@@ -166,7 +184,8 @@ local section_transitions = {
     },
     right = {
         up = "top_right",
-        down = "bottom_right"
+        down = "bottom_right",
+        right = "right_third"
     },
     bottom = {
         left = "bottom_left",
@@ -174,7 +193,11 @@ local section_transitions = {
     },
     left = {
         up = "top_left",
-        down = "bottom_left"
+        down = "bottom_left",
+        left = "left_third"
+    },
+    full = {
+        f = "center_third"
     }
 }
 
