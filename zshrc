@@ -6,8 +6,16 @@ fpath=(/usr/local/share/zsh-completions $fpath)
 export ZSH=$HOME/.oh-my-zsh
 ZSH_THEME="robbyrussell"
 COMPLETION_WAITING_DOTS="true"
+DISABLE_AUTO_UPDATE="true"
 plugins=(git vi-mode zsh-syntax-highlighting)
 source $ZSH/oh-my-zsh.sh
+
+scripts=(
+    /usr/local/bin/virtualenvwrapper_lazy.sh
+)
+for script in ${scripts[@]}; do
+    [[ -f "$script" ]] && . "$script"
+done
 
 #############################################################################
 # zsh configuration
