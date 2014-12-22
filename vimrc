@@ -18,7 +18,6 @@ Plugin 'gmarik/Vundle.vim'
 "  General Plugins {{{2
 " ----------------------------------------------------------------------------
 Plugin 'godlygeek/tabular'
-Plugin 'dhruvasagar/vim-table-mode'
 Plugin 'kien/rainbow_parentheses.vim'
 Plugin 'molokai'
 Plugin 'Raimondi/delimitMate'
@@ -104,9 +103,6 @@ if executable("watchman")
     let g:CommandTFileScanner = 'watchman'
 endif
 let g:CommandTHighlightColor = 'Pmenu'
-
-" vim-table-mode {{{2
-let g:table_mode_corner_corner = '+'
 
 " ----------------------------------------------------------------------------
 "  General Configuration {{{1
