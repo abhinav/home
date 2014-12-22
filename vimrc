@@ -35,6 +35,7 @@ Plugin 'wincent/command-t'
 "  Language-specific Plugins {{{2
 " ----------------------------------------------------------------------------
 Plugin 'eagletmt/ghcmod-vim'
+Plugin 'davidhalter/jedi-vim'
 Plugin 'groenewege/vim-less'
 Plugin 'guns/vim-clojure-static'
 Plugin 'idris-hackers/idris-vim'
@@ -105,6 +106,9 @@ if executable("watchman")
 endif
 let g:CommandTHighlightColor = 'Pmenu'
 
+" Jedi Vim {{{2
+let g:jedi#show_call_signatures=0
+
 " ----------------------------------------------------------------------------
 "  General Configuration {{{1
 " ----------------------------------------------------------------------------
@@ -134,7 +138,7 @@ set fdm=marker          " Marker fold method
 colo molokai            " Use molokai
 
 " File patterns to ignore in wildcard expansions.
-set wig+=*/cabal-dev,*/dist,*.o,*.class
+set wig+=*/cabal-dev,*/dist,*.o,*.class,*.pyc
 
 " Support codex tags.
 set tags+=codex.tags
