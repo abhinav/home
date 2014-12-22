@@ -97,6 +97,7 @@ let g:netrw_liststyle = 3
 " airline {{{2
 let g:airline_theme = "dark"
 let g:airline_powerline_fonts = 1
+let g:airline#extensions#branch#displayed_head_limit = 10
 
 " Command-T {{{2
 if executable("watchman")
