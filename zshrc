@@ -7,7 +7,7 @@ export ZSH=$HOME/.oh-my-zsh
 ZSH_THEME="robbyrussell"
 COMPLETION_WAITING_DOTS="true"
 DISABLE_AUTO_UPDATE="true"
-plugins=(git vi-mode zsh-syntax-highlighting)
+plugins=(cabal git vi-mode zsh-syntax-highlighting)
 source $ZSH/oh-my-zsh.sh
 
 scripts=(
@@ -20,7 +20,7 @@ done
 #############################################################################
 # zsh configuration
 #############################################################################
-PROMPT="$PROMPT
+PROMPT="$PROMPT\$(cabal_sandbox_info)
 "'%{$terminfo[bold]$fg[blue]%} $ %{$reset_color%}'
 bindkey '^R' history-incremental-search-backward
 bindkey '^A' beginning-of-line
