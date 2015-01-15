@@ -13,7 +13,7 @@ source $ZSH/oh-my-zsh.sh
 scripts=(
     /usr/local/bin/virtualenvwrapper_lazy.sh
 )
-for script in ${scripts[@]}; do
+for script in "${scripts[@]}"; do
     [[ -f "$script" ]] && . "$script"
 done
 
@@ -22,9 +22,15 @@ done
 #############################################################################
 PROMPT="$PROMPT\$(cabal_sandbox_info)
 "'%{$terminfo[bold]$fg[blue]%} $ %{$reset_color%}'
+
 bindkey '^R' history-incremental-search-backward
 bindkey '^A' beginning-of-line
 bindkey '^E' end-of-line
+bindkey '^K' kill-line
+bindkey '\eb' backward-word
+bindkey '\ef' forward-word
+bindkey '\ed' kill-word
+
 setopt COMPLETE_IN_WORD
 setopt menu_complete
 setopt histignoredups
