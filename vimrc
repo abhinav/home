@@ -17,8 +17,9 @@ Plugin 'gmarik/Vundle.vim'
 " ----------------------------------------------------------------------------
 "  General Plugins {{{2
 " ----------------------------------------------------------------------------
+Plugin 'bling/vim-airline'
 Plugin 'godlygeek/tabular'
-Plugin 'kien/rainbow_parentheses.vim'
+Plugin 'honza/vim-snippets'
 Plugin 'molokai'
 Plugin 'Raimondi/delimitMate'
 Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
@@ -26,28 +27,22 @@ Plugin 'scrooloose/nerdtree'
 Plugin 'scrooloose/syntastic'
 Plugin 'Shougo/vimproc'
 Plugin 'SirVer/ultisnips'
-Plugin 'honza/vim-snippets'
-Plugin 'bling/vim-airline'
 Plugin 'tpope/vim-fugitive'
 Plugin 'wincent/command-t'
 
 " ----------------------------------------------------------------------------
 "  Language-specific Plugins {{{2
 " ----------------------------------------------------------------------------
-Plugin 'eagletmt/ghcmod-vim'
 Plugin 'davidhalter/jedi-vim'
-Plugin 'groenewege/vim-less'
-Plugin 'guns/vim-clojure-static'
+Plugin 'eagletmt/ghcmod-vim'
+Plugin 'fatih/vim-go'
 Plugin 'idris-hackers/idris-vim'
-Plugin 'kchmck/vim-coffee-script'
 Plugin 'pbrisbin/html-template-syntax'
-Plugin 'tpope/vim-haml'
 Plugin 'ujihisa/neco-ghc'
 Plugin 'vim-pandoc/vim-pandoc'
-Plugin 'vim-pandoc/vim-pandoc-syntax'
 Plugin 'vim-pandoc/vim-pandoc-after'
-Plugin 'vim-voom/VOoM'
-Plugin 'fatih/vim-go'
+Plugin 'vim-pandoc/vim-pandoc-syntax'
+Plugin 'wting/rust.vim'
 
 call vundle#end()
 filetype plugin indent on
