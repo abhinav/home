@@ -74,6 +74,7 @@ zstyle ':completion:*' completer _expand _complete _ignored _approximate
 zstyle ':completion:*' file-sort name
 zstyle ':completion:*' ignore-parents parent pwd directory
 zstyle ':completion:*' matcher-list '' 'm:{[:lower:]}={[:upper:]} r:|[._-]=** r:|=**' 'm:{[:lower:][:upper:]}={[:upper:][:lower:]}' 'l:|=* r:|=*'
+zstyle ':completion:*:*:-command-:*:*' ignored-patterns '_*'       
 zstyle ':completion:*' menu select=1
 zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p%s
 zstyle :compinstall filename '/home/abg/.zshrc'
