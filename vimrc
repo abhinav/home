@@ -58,6 +58,11 @@ au FileType sh call s:setup_sh()
 au FileType text set nornu
 au FileType pandoc call s:setup_pandoc()
 
+augroup BWCCreateDir
+    autocmd!
+    autocmd BufWritePre * :call s:MkNonExDir(expand('<afile>'), +expand('<abuf>'))
+augroup end
+
 " ----------------------------------------------------------------------------
 "  Plugin Configuration {{{1
 " ----------------------------------------------------------------------------
@@ -178,13 +183,13 @@ nnoremap Q <Nop>
 "  Functions {{{1
 " ----------------------------------------------------------------------------
 
-function! s:close_preview()
+function! s:close_preview() " {{{2
     if pumvisible() == 0 && bufname('%') != "[Command Line]"
         silent! pclose
     endif
 endfunction
 
-function! s:close_preview_on_move()
+function! s:close_preview_on_move() " {{{2
     au CursorMovedI * call s:close_preview()
     au InsertLeave  * call s:close_preview()
 endfunction
@@ -211,4 +216,13 @@ endfunction
 
 function! s:setup_pandoc() " {{{2
     set nornu
-endfunction " }}}2
+endfunction
+
+function s:MkNonExDir(file, buf) " {{{2
+    if empty(getbufvar(a:buf, '&buftype')) && a:file!~#'\v^\w+\:\/'
+        let dir=fnamemodify(a:file, ':h')
+        if !isdirectory(dir)
+            call mkdir(dir, 'p')
+        endif
+    endif
+endfunction
