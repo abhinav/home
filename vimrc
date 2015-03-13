@@ -135,6 +135,7 @@ set vb                  " Use visual bell instead of beeping"
 set sb                  " split below
 set spr                 " split right
 set fdm=marker          " Marker fold method
+set cul                 " Highlight the current line
 colo molokai            " Use molokai
 
 " File patterns to ignore in wildcard expansions.
@@ -142,6 +143,10 @@ set wig+=*/cabal-dev,*/dist,*.o,*.class,*.pyc
 
 " Support codex tags.
 set tags+=codex.tags
+
+" Only bold out the current line
+hi clear CursorLine
+hi CursorLine term=bold cterm=bold
 
 " ----------------------------------------------------------------------------
 "  Key Remaps {{{1
