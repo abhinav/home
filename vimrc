@@ -109,6 +109,15 @@ let g:CommandTHighlightColor = 'Pmenu'
 " Jedi Vim {{{2
 let g:jedi#show_call_signatures=0
 
+" vim-go {{{2
+let g:go_def_mapping_enabled = 0
+let g:go_highlight_functions = 1
+let g:go_highlight_methods = 1
+let g:go_highlight_structs = 1
+let g:go_highlight_operators = 1
+let g:go_highlight_build_constraints = 1
+
+
 " ----------------------------------------------------------------------------
 "  General Configuration {{{1
 " ----------------------------------------------------------------------------
@@ -212,6 +221,7 @@ endfunction
 
 function! s:setup_go() " {{{2
     set noet
+    nmap <leader>d <Plug>(go-def-tab)
     call s:close_preview_on_move()
 endfunction
 
