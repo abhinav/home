@@ -211,6 +211,7 @@ endfunction
 function! s:setup_haskell() " {{{2
     nnoremap <buffer> <F1> :GhcModType<CR>
     nnoremap <buffer> <silent> <F2> :GhcModTypeClear<CR>
+    nnoremap <silent> <leader>d <C-w><C-]><C-w>T
     setlocal omnifunc=necoghc#omnifunc
 endfunction
 
