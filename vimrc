@@ -109,6 +109,10 @@ let g:CommandTHighlightColor = 'Pmenu'
 " Jedi Vim {{{2
 let g:jedi#show_call_signatures=0
 
+" NERDTree {{{2
+let g:NERDTreeMapJumpNextSibling="C-M-J"
+let g:NERDTreeMapJumpPrevSibling="C-M-J"
+
 " vim-go {{{2
 let g:go_def_mapping_enabled = 0
 let g:go_highlight_functions = 1
