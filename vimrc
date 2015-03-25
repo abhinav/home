@@ -105,6 +105,25 @@ if executable("watchman")
     let g:CommandTFileScanner = 'watchman'
 endif
 let g:CommandTHighlightColor = 'Pmenu'
+let g:CommandTTraverseSCM = 'pwd'
+let g:CommandTNeverShowDotFiles = 1
+let g:CommandTSmartCase = 1
+
+" If there is a gitignore file in the current directory, ignore everything
+" defined in there.
+if filereadable('.gitignore')
+    let igstring = ''
+    for oline in readfile('.gitignore')
+        let line = substitute(oline, '\s|\n|\r', '', "g")
+        if line =~ '^#' | con | endif
+        if line == '' | con  | endif
+        if line =~ '^!' | con  | endif
+        if line =~ '/$' | let igstring .= "," . line . "*" | con | endif
+        let igstring .= "," . line
+    endfor
+    let g:CommandTWildIgnore=&wildignore . igstring
+endif
+
 
 " Jedi Vim {{{2
 let g:jedi#show_call_signatures=0
