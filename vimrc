@@ -20,6 +20,7 @@ Plugin 'gmarik/Vundle.vim'
 Plugin 'bling/vim-airline'
 Plugin 'godlygeek/tabular'
 Plugin 'honza/vim-snippets'
+Plugin 'mileszs/ack.vim'
 Plugin 'molokai'
 Plugin 'Raimondi/delimitMate'
 Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
@@ -140,6 +141,11 @@ let g:go_highlight_structs = 1
 let g:go_highlight_operators = 1
 let g:go_highlight_build_constraints = 1
 
+" ack.vim {{{2
+if executable("ag")
+    let g:ackprg = 'ag --vimgrep'
+    cnoreabbrev ag Ack
+endif
 
 " ----------------------------------------------------------------------------
 "  General Configuration {{{1
@@ -171,7 +177,7 @@ set cul                 " Highlight the current line
 colo molokai            " Use molokai
 
 " File patterns to ignore in wildcard expansions.
-set wig+=*/cabal-dev,*/dist,*.o,*.class,*.pyc
+set wig+=*/cabal-dev,*/dist,*.o,*.class,*.pyc,*.hi
 
 " Support codex tags.
 set tags+=codex.tags
