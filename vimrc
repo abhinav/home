@@ -43,7 +43,7 @@ Plugin 'ujihisa/neco-ghc'
 Plugin 'vim-pandoc/vim-pandoc'
 Plugin 'vim-pandoc/vim-pandoc-after'
 Plugin 'vim-pandoc/vim-pandoc-syntax'
-Plugin 'wting/rust.vim'
+Plugin 'rust-lang/rust.vim'
 
 call vundle#end()
 filetype plugin indent on
