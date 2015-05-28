@@ -158,6 +158,7 @@ set bs=indent,eol,start " Allow backspace over everything
 set hi=50               " Keep 50 lines of command line history
 set ru                  " Show the cursor position all the time
 set rnu                 " Relative line numbering
+set nu                  " Absolute line number for current line
 set ls=2                " Always show status line
 set sc                  " Display incomplete commands
 set is                  " Do incremental searching
