@@ -18,6 +18,7 @@ Plugin 'gmarik/Vundle.vim'
 "  General Plugins {{{2
 " ----------------------------------------------------------------------------
 Plugin 'bling/vim-airline'
+Plugin 'ervandew/supertab'
 Plugin 'godlygeek/tabular'
 Plugin 'honza/vim-snippets'
 Plugin 'mileszs/ack.vim'
@@ -28,6 +29,7 @@ Plugin 'scrooloose/nerdtree'
 Plugin 'scrooloose/syntastic'
 Plugin 'Shougo/vimproc'
 Plugin 'SirVer/ultisnips'
+Plugin 'Valloric/YouCompleteMe'
 Plugin 'tpope/vim-fugitive'
 Plugin 'wincent/command-t'
 
@@ -147,6 +149,18 @@ if executable("ag")
     let g:ackprg = 'ag --vimgrep'
     cnoreabbrev ag Ack
 endif
+
+" YouCompleteMe {{{2
+let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
+let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
+
+" SuperTab {{{2
+let g:SuperTabDefaultCompletionType = '<C-n>'
+
+" UltiSnips {{{2
+let g:UltiSnipsExpandTrigger = "<tab>"
+let g:UltiSnipsJumpForwardTrigger = "<tab>"
+let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
 
 " ----------------------------------------------------------------------------
 "  General Configuration {{{1
