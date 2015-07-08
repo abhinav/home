@@ -35,6 +35,10 @@ setopt COMPLETE_IN_WORD
 setopt menu_complete
 setopt histignoredups
 
+# Don't share command history between active sessions.
+unsetopt inc_append_history
+unsetopt share_history
+
 #############################################################################
 # Aliases
 #############################################################################
