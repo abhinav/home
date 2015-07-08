@@ -22,7 +22,7 @@ Plugin 'ervandew/supertab'
 Plugin 'godlygeek/tabular'
 Plugin 'honza/vim-snippets'
 Plugin 'mileszs/ack.vim'
-Plugin 'molokai'
+Plugin 'tomasr/molokai'
 Plugin 'Raimondi/delimitMate'
 Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
 Plugin 'scrooloose/nerdtree'
@@ -163,6 +163,11 @@ let g:UltiSnipsExpandTrigger = "<tab>"
 let g:UltiSnipsJumpForwardTrigger = "<tab>"
 let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
 
+" Molokai {{{2
+
+let g:molokai_original = 1
+let g:rehash256 = 1
+
 " ----------------------------------------------------------------------------
 "  General Configuration {{{1
 " ----------------------------------------------------------------------------
@@ -191,6 +196,7 @@ set sb                  " split below
 set spr                 " split right
 set fdm=marker          " Marker fold method
 set cul                 " Highlight the current line
+set hls                 " Highlight search results
 colo molokai            " Use molokai
 
 " File patterns to ignore in wildcard expansions.
@@ -200,8 +206,10 @@ set wig+=*/cabal-dev,*/dist,*.o,*.class,*.pyc,*.hi
 set tags+=codex.tags
 
 " Only bold out the current line
-hi clear CursorLine
 hi CursorLine term=bold cterm=bold
+
+" Make line numbers in terminal more readable
+hi LineNr ctermfg=245
 
 " ----------------------------------------------------------------------------
 "  Key Remaps {{{1
@@ -238,6 +246,9 @@ nnoremap <C-H> <C-W><C-H>
 
 " Disable ex mode from Q
 nnoremap Q <Nop>
+
+" Clear highlgihts on enter
+nnoremap <CR> :nohlsearch<CR><CR>
 
 " ----------------------------------------------------------------------------
 "  Functions {{{1
