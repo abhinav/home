@@ -211,6 +211,10 @@ hi CursorLine term=bold cterm=bold
 " Make line numbers in terminal more readable
 hi LineNr ctermfg=245
 
+" Highlight unwanted whitespace
+highlight UnwwantedWhitespace ctermbg=darkred guibg=darkred
+match UnwwantedWhitespace /\s\+$\| \+\ze\t/
+
 " ----------------------------------------------------------------------------
 "  Key Remaps {{{1
 " ----------------------------------------------------------------------------
