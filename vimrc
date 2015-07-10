@@ -212,8 +212,8 @@ hi CursorLine term=bold cterm=bold
 hi LineNr ctermfg=245
 
 " Highlight unwanted whitespace
-highlight UnwwantedWhitespace ctermbg=darkred guibg=darkred
-match UnwwantedWhitespace /\s\+$\| \+\ze\t/
+highlight UnwantedWhitespace ctermbg=darkred guibg=darkred
+match UnwantedWhitespace /\s\+$\| \+\ze\t/
 
 " ----------------------------------------------------------------------------
 "  Key Remaps {{{1
