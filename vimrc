@@ -23,7 +23,6 @@ Plugin 'godlygeek/tabular'
 Plugin 'honza/vim-snippets'
 Plugin 'mileszs/ack.vim'
 Plugin 'tomasr/molokai'
-Plugin 'Raimondi/delimitMate'
 Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
 Plugin 'scrooloose/nerdtree'
 Plugin 'scrooloose/syntastic'
@@ -77,13 +76,6 @@ let g:clang_periodic_quickfix = 0
 let g:clang_close_preview = 1
 let g:clang_snippets = 1
 let g:clang_snippets_engine = 'ultisnips'
-
-"  delimitMate {{{2
-let g:delimitMate_expand_space = 1
-let g:delimitMate_expand_cr = 1
-let g:delimitMate_autoclose = 1
-let g:delimitMate_excluded_regions = "Comment,String"
-let g:delimitMate_excluded_ft = "pandoc,txt"
 
 "  pandoc {{{2
 let g:pandoc#after#modules#enabled = ["ultisnips"]
