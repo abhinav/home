@@ -84,9 +84,13 @@ let g:pandoc#formatting#mode = "h"
 let g:pandoc#syntax#conceal#use = 0
 
 "  syntastic {{{2
-let g:syntastic_enable_signs = 1
+let g:syntastic_aggregate_errors = 1
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
 let g:syntastic_c_config_file = '.clang_complete'
+let g:syntastic_check_on_wq = 0
 let g:syntastic_cpp_config_file = '.clang_complete'
+let g:syntastic_enable_signs = 1
 
 " netrw {{{2
 let g:netrw_liststyle = 3
