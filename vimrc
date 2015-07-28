@@ -248,7 +248,7 @@ nnoremap <C-H> <C-W><C-H>
 nnoremap Q <Nop>
 
 " Clear highlgihts on enter
-nnoremap <CR> :nohlsearch<CR><CR>
+nnoremap <silent> <CR> :nohlsearch<CR><CR>
 
 " ----------------------------------------------------------------------------
 "  Functions {{{1
