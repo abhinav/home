@@ -212,7 +212,7 @@ highlight UnwantedWhitespace ctermbg=darkred guibg=darkred
 match UnwantedWhitespace /\s\+$\| \+\ze\t/
 
 " ----------------------------------------------------------------------------
-"  Key Remaps {{{1
+"  Key Bindings {{{1
 " ----------------------------------------------------------------------------
 
 " Configuration available on OSX only:
@@ -249,6 +249,9 @@ nnoremap Q <Nop>
 
 " Clear highlgihts on enter
 nnoremap <silent> <CR> :nohlsearch<CR><CR>
+
+" Nerd tree on C-m
+nmap <C-t> :NERDTreeToggle<CR>
 
 " ----------------------------------------------------------------------------
 "  Functions {{{1
