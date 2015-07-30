@@ -58,7 +58,7 @@ au FileType python call s:setup_python()
 au FileType haskell,chaskell call s:setup_haskell()
 au FileType go call s:setup_go()
 au FileType sh call s:setup_sh()
-au FileType text set nornu
+au FileType text setlocal nornu
 au FileType pandoc call s:setup_pandoc()
 
 augroup BWCCreateDir
@@ -126,7 +126,7 @@ endif
 
 
 " Jedi Vim {{{2
-let g:jedi#show_call_signatures=0
+let g:jedi#use_tabs_not_buffers = 1
 
 " NERDTree {{{2
 let g:NERDTreeMapJumpNextSibling="C-M-J"
@@ -269,9 +269,9 @@ function! s:close_preview_on_move() " {{{2
 endfunction
 
 function! s:setup_haskell() " {{{2
-    nnoremap <buffer> <F1> :GhcModType<CR>
-    nnoremap <buffer> <silent> <F2> :GhcModTypeClear<CR>
-    nnoremap <silent> <leader>d <C-w><C-]><C-w>T
+    nmap <buffer> <F1> :GhcModType<CR>
+    nmap <buffer> <silent> <F2> :GhcModTypeClear<CR>
+    nmap <buffer> <silent> <leader>d <C-w><C-]><C-w>T
     setlocal omnifunc=necoghc#omnifunc
 endfunction
 
@@ -281,17 +281,17 @@ function! s:setup_python() " {{{2
 endfunction
 
 function! s:setup_go() " {{{2
-    set noet
-    nmap <leader>d <Plug>(go-def-tab)
+    setlocal noet
+    nmap <buffer> <leader>d <Plug>(go-def-tab)
     call s:close_preview_on_move()
 endfunction
 
 function! s:setup_sh() " {{{2
-    set noet
+    setlocal noet
 endfunction
 
 function! s:setup_pandoc() " {{{2
-    set nornu
+    setlocal nornu
 endfunction
 
 function s:MkNonExDir(file, buf) " {{{2
