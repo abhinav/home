@@ -5,6 +5,7 @@
 :set -XOverloadedStrings
 :set -XTupleSections
 :set prompt "λ> "
+:set prompt2 ":{ "
 
 import Control.Applicative
 import Control.Monad
