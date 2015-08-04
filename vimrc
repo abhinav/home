@@ -251,7 +251,7 @@ nnoremap Q <Nop>
 nnoremap <silent> <CR> :nohlsearch<CR><CR>
 
 " Nerd tree on C-m
-nmap <C-t> :NERDTreeToggle<CR>
+nmap <C-\> :NERDTreeToggle<CR>
 
 " ----------------------------------------------------------------------------
 "  Functions {{{1
