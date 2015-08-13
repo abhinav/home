@@ -226,6 +226,7 @@ nnoremap <C-H> <C-W><C-H>
 
 " Disable ex mode from Q
 nnoremap Q <Nop>
+nnoremap q: <Nop>
 
 " Clear highlgihts on enter
 nnoremap <silent> <CR> :nohlsearch<CR><CR>
