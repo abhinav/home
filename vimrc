@@ -173,6 +173,7 @@ set spr                 " split right
 set fdm=marker          " Marker fold method
 set cul                 " Highlight the current line
 set hls                 " Highlight search results
+set wmnu                " Menu for tab completion
 colo molokai            " Use molokai
 
 " File patterns to ignore in wildcard expansions.
