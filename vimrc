@@ -21,6 +21,7 @@ Plugin 'bling/vim-airline'
 Plugin 'ervandew/supertab'
 Plugin 'godlygeek/tabular'
 Plugin 'honza/vim-snippets'
+Plugin 'kien/ctrlp.vim'
 Plugin 'mileszs/ack.vim'
 Plugin 'tomasr/molokai'
 Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
@@ -30,8 +31,8 @@ Plugin 'Shougo/vimproc'
 Plugin 'SirVer/ultisnips'
 Plugin 'terryma/vim-multiple-cursors'
 Plugin 'tpope/vim-fugitive'
+Plugin 'tpope/vim-unimpaired'
 Plugin 'Valloric/YouCompleteMe'
-Plugin 'wincent/command-t'
 
 " ----------------------------------------------------------------------------
 "  Language-specific Plugins {{{2
@@ -86,7 +87,6 @@ let g:pandoc#syntax#conceal#use = 0
 "  syntastic {{{2
 let g:syntastic_aggregate_errors = 1
 let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
 let g:syntastic_c_config_file = '.clang_complete'
 let g:syntastic_check_on_wq = 0
 let g:syntastic_cpp_config_file = '.clang_complete'
@@ -100,30 +100,11 @@ let g:airline_theme = "dark"
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#branch#displayed_head_limit = 10
 
-" Command-T {{{2
-if executable("watchman")
-    let g:CommandTFileScanner = 'watchman'
+" Ctrl-P {{{2
+if executable("ag")
+   let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+   let g:ctrlp_use_caching = 0
 endif
-let g:CommandTHighlightColor = 'Pmenu'
-let g:CommandTTraverseSCM = 'pwd'
-let g:CommandTNeverShowDotFiles = 1
-let g:CommandTSmartCase = 1
-
-" If there is a gitignore file in the current directory, ignore everything
-" defined in there.
-if filereadable('.gitignore')
-    let igstring = ''
-    for oline in readfile('.gitignore')
-        let line = substitute(oline, '\s|\n|\r', '', "g")
-        if line =~ '^#' | con | endif
-        if line == '' | con  | endif
-        if line =~ '^!' | con  | endif
-        if line =~ '/$' | let igstring .= "," . line . "*" | con | endif
-        let igstring .= "," . line
-    endfor
-    let g:CommandTWildIgnore=&wildignore . igstring
-endif
-
 
 " Jedi Vim {{{2
 let g:jedi#use_tabs_not_buffers = 1
@@ -144,7 +125,6 @@ let g:go_fmt_command = "goimports"
 " ack.vim {{{2
 if executable("ag")
     let g:ackprg = 'ag --vimgrep'
-    cnoreabbrev ag Ack
 endif
 
 " YouCompleteMe {{{2
