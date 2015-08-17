@@ -57,7 +57,6 @@ export HISTSIZE=9999
 export SAVEHIST=9999
 
 export WATCHMAN_CONFIG_FILE="$HOME/.watchman.json"
-export PIP_DOWNLOAD_CACHE="$HOME/.pip_download_cache"
 export HOMEBREW_EDITOR="vim"
 
 export PATH="\
@@ -71,6 +70,9 @@ $PATH"
 #############################################################################
 # Completion configuration
 #############################################################################
+
+autoload -U bashcompinit
+bashcompinit
 
 # The following lines were added by compinstall
 

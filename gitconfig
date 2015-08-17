@@ -1,16 +1,3 @@
-[user]
-	name = Abhinav Gupta
-	email = mail@abhinavg.net
-[branch]
-	autosetuprebase = always
-[color]
-	ui = auto
-[core]
-	editor = vim
-[alias]
-    s = status
-    co = checkout
-[push]
-	default = simple
-
-# vim:set noet ft=gitconfig:
+[include]
+	path = ~/.dotfiles/global/gitconfig
+	path = ~/.dotfiles/local/gitconfig
