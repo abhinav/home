@@ -32,7 +32,6 @@ bindkey '\ef' forward-word
 bindkey '\ed' kill-word
 
 setopt COMPLETE_IN_WORD
-setopt menu_complete
 setopt histignoredups
 
 # Don't share command history between active sessions.
