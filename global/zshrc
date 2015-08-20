@@ -39,9 +39,20 @@ function vi_mode_indicator() {
 }
 RPS1='$(vi_mode_indicator)'
 
+function cabal_sandbox_info() {
+    if [ -f cabal.sandbox.config ]; then
+        echo "%{$fg[green]%}sandboxed%{$reset_color%}"
+    else
+        cabal_files=(*.cabal(N))
+        if [ $#cabal_files -gt 0 ]; then
+            echo "%{$fg[red]%}not sandboxed%{$reset_color%}"
+        fi
+    fi
+}
+
 source ~/.dotfiles/zsh/git_prompt.sh
 
-PROMPT='${ret_status}%{$fg_bold[green]%}%p %{$fg[cyan]%}%~ %{$fg_bold[blue]%}$(git_super_status)
+PROMPT='${ret_status}%{$fg_bold[green]%}%p %{$fg[cyan]%}%~ %{$fg_bold[blue]%}$(git_super_status)%{$reset_color%} $(cabal_sandbox_info)
 %{$fg[blue]%} $ %{$reset_color%}'
 
 #############################################################################
