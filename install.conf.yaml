@@ -10,6 +10,8 @@
     ~/.ghci: ghci
     ~/.gitconfig: gitconfig
     ~/.mjolnir: mjolnir/
+    ~/.zsh: zsh/
+    ~/.zshrc: zshrc
 
 - shell:
     - echo "Run 'vim +PluginInstall +qall' to install vim plugins."
