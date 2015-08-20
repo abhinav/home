@@ -1,4 +1,4 @@
-fpath=(~/.zsh/plugins/zsh-completions/src $fpath)
+fpath=(/usr/local/share/zsh-completions $fpath)
 
 #############################################################################
 # Options
@@ -131,4 +131,4 @@ compinit
 # End setup
 #############################################################################
 
-. ~/.zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+. ~/.zsh/plugins/syntax-highlighting/zsh-syntax-highlighting.zsh
