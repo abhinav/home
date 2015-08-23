@@ -24,6 +24,7 @@ Plugin 'honza/vim-snippets'
 Plugin 'junegunn/goyo.vim'
 Plugin 'kien/ctrlp.vim'
 Plugin 'mileszs/ack.vim'
+Plugin 'ntpeters/vim-better-whitespace'
 Plugin 'tomasr/molokai'
 Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
 Plugin 'scrooloose/nerdtree'
@@ -188,10 +189,6 @@ hi CursorLine term=bold cterm=bold
 
 " Make line numbers in terminal more readable
 hi LineNr ctermfg=245
-
-" Highlight unwanted whitespace
-highlight UnwantedWhitespace ctermbg=darkred guibg=darkred
-match UnwantedWhitespace /\s\+$\| \+\ze\t/
 
 " ----------------------------------------------------------------------------
 "  Key Bindings {{{1
