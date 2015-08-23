@@ -5,6 +5,7 @@ fpath=(/usr/local/share/zsh-completions $fpath)
 #############################################################################
 setopt COMPLETE_IN_WORD
 setopt PROMPT_SUBST
+setopt HIST_IGNORE_SPACE
 setopt extended_glob
 setopt histignoredups
 setopt interactivecomments
