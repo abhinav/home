@@ -98,6 +98,7 @@ export CLICOLOR=1
 
 export PATH="\
 $HOME/.bin:\
+$HOME/.local/bin:\
 $HOME/.cabal/bin:\
 /usr/local/bin:\
 /usr/local/sbin:\
