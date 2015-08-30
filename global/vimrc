@@ -26,6 +26,7 @@ Plugin 'kien/ctrlp.vim'
 Plugin 'mileszs/ack.vim'
 Plugin 'ntpeters/vim-better-whitespace'
 Plugin 'tomasr/molokai'
+Plugin 'rizzatti/dash.vim'
 Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
 Plugin 'scrooloose/nerdtree'
 Plugin 'scrooloose/syntastic'
@@ -232,6 +233,9 @@ nnoremap <silent> <CR> :nohlsearch<CR><CR>
 
 " Nerd tree on C-m
 nmap <C-\> :NERDTreeToggle<CR>
+
+" Dash search on \D
+nmap <silent> <leader>D <Plug>DashSearch
 
 " ----------------------------------------------------------------------------
 "  Functions {{{1
