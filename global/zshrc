@@ -44,10 +44,13 @@ function cabal_sandbox_info() {
     if [ -f cabal.sandbox.config ]; then
         echo "%{$fg[green]%}sandboxed%{$reset_color%}"
     else
+        if [ -d .stack-work ]; then
+            echo "%{$fg[green]%}stack%{$reset_color%}"
+        else
         cabal_files=(*.cabal(N))
-        if [ $#cabal_files -gt 0 -a ! -d .stack-work ]; then
-            # Print warning only if the project is not a stack project.
-            echo "%{$fg[red]%}not sandboxed%{$reset_color%}"
+            if [ $#cabal_files -gt 0 ]; then
+                echo "%{$fg[red]%}not sandboxed%{$reset_color%}"
+            fi
         fi
     fi
 }
