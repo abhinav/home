@@ -1,6 +1,5 @@
 *-blx.aux
 *-blx.bib
-*.[568vq]
 *.a
 *.acn
 *.acr
@@ -55,7 +54,9 @@
 *.out
 *.pdfsync
 *.pot
-*.py[cod]
+*.pyc
+*.pyo
+*.pyd
 *.pyg
 *.run.xml
 *.snm
@@ -89,12 +90,9 @@
 .pydevproject
 .ropeproject
 .tox/
-.virthualenv
+.virtualenv
 Session.vim
 Thumbs.db
-[._]*.s[a-w][a-z]
-[._]s[a-w][a-z]
-[568vq].out
 __pycache__/
 _cgo_defun.c
 _cgo_export.*
