@@ -6,7 +6,7 @@
 	url = https://github.com/VundleVim/Vundle.vim.git
 [submodule "zsh/plugins/zsh-syntax-highlighting"]
 	path = zsh/plugins/syntax-highlighting
-	url = git@github.com:zsh-users/zsh-syntax-highlighting.git
+	url = https://github.com/zsh-users/zsh-syntax-highlighting.git
 [submodule "zsh/powerline-zsh"]
 	path = zsh/powerline-zsh
 	url = https://github.com/carlcarl/powerline-zsh
