@@ -246,6 +246,17 @@ nmap <C-\> :NERDTreeToggle<CR>
 " Dash search on \D
 nmap <silent> <leader>D <Plug>DashSearch
 
+" Neovim specific configs.
+if has('nvim')
+    tnoremap <Esc> <C-\><C-n>
+
+    " Split navigation inside nvim's terminal emulator.
+    tnoremap <C-J> <C-\><C-n><C-W><C-J>
+    tnoremap <C-K> <C-\><C-n><C-W><C-K>
+    tnoremap <C-L> <C-\><C-n><C-W><C-L>
+    tnoremap <C-H> <C-\><C-n><C-W><C-H>
+endif
+
 " ----------------------------------------------------------------------------
 "  Functions {{{1
 " ----------------------------------------------------------------------------
