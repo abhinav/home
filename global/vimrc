@@ -237,6 +237,16 @@ nmap <C-\> :NERDTreeToggle<CR>
 " Dash search on \D
 nmap <silent> <leader>D <Plug>DashSearch
 
+" Yank and paste operations preceded by <leader> should use system clipboard.
+nnoremap <leader>y "+y
+nnoremap <leader>Y "+yg_
+vnoremap <leader>y "+y
+
+nnoremap <leader>p "+p
+nnoremap <leader>P "+P
+vnoremap <leader>p "+p
+vnoremap <leader>P "+P
+
 " Neovim specific configs.
 if has('nvim')
     " Split navigation inside nvim's terminal emulator.
