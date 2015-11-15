@@ -19,7 +19,7 @@ Plug 'ntpeters/vim-better-whitespace'
 Plug 'tomasr/molokai'
 Plug 'rizzatti/dash.vim', {'on': 'DashSearch'}
 Plug 'rstacruz/sparkup', {'rtp': 'vim'}
-Plug 'scrooloose/nerdtree', {'on': 'NERDTreeToggle'}
+Plug 'scrooloose/nerdtree'
 Plug 'scrooloose/syntastic'
 Plug 'Shougo/vimproc', {'do': 'make'}
 Plug 'SirVer/ultisnips'
