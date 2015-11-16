@@ -39,9 +39,9 @@ Plug 'eagletmt/neco-ghc'
 Plug 'fatih/vim-go', {'for': 'go'}
 Plug 'idris-hackers/idris-vim'
 Plug 'pbrisbin/html-template-syntax'
-Plug 'vim-pandoc/vim-pandoc', {'for': 'markdown'}
-Plug 'vim-pandoc/vim-pandoc-after', {'for': 'markdown'}
-Plug 'vim-pandoc/vim-pandoc-syntax', {'for': 'markdown'}
+Plug 'vim-pandoc/vim-pandoc'
+Plug 'vim-pandoc/vim-pandoc-after'
+Plug 'vim-pandoc/vim-pandoc-syntax'
 
 call plug#end()
 
@@ -272,10 +272,14 @@ function! s:close_preview_on_move() " {{{2
 endfunction
 
 function! s:setup_haskell() " {{{2
+    let g:haskellmode_completion_ghc = 0
+    setlocal omnifunc=necoghc#omnifunc
+
+    autocmd BufWritePost *.hs GhcModCheckAndLintAsync
+
     nmap <buffer> <F1> :GhcModType<CR>
     nmap <buffer> <silent> <F2> :GhcModTypeClear<CR>
     nmap <buffer> <silent> <leader>d <C-w><C-]><C-w>T
-    setlocal omnifunc=necoghc#omnifunc
 endfunction
 
 function! s:setup_python() " {{{2
