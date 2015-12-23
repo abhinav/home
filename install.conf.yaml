@@ -11,7 +11,7 @@
     ~/.config/nvim/init.vim: vimrc
     ~/.ghci: ghci
     ~/.gitconfig: gitconfig
-    ~/.mjolnir: mjolnir/
+    ~/.hammerspoon: hammerspoon/
     ~/.zsh: zsh/
     ~/.zshrc: zshrc
 
