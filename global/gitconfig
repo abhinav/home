@@ -8,7 +8,7 @@
 [color]
 	ui = auto
 [core]
-	editor = vim
+	editor = nvim
 [alias]
     s = status
     co = checkout
