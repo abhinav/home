@@ -23,6 +23,9 @@
 --      Resize the window to take the full screen. If the window was already
 --      taking the full screen, resize it to take a third of center third of
 --      the screen horizontally while remaining vertically full sized.
+--
+-- alt-shift-enter
+--      Create a new iTerm window.
 
 -----------------------------------------------------------------------------
 -- Reload automatically when this file changes
@@ -93,6 +96,22 @@ end)
 hs.hotkey.bind({'ctrl', 'alt', 'shift'}, 'right', function()
     local win = hs.window.focusedWindow()
     hs.grid.set(win, hs.grid.get(win), win:screen():next())
+end)
+
+-----------------------------------------------------------------------------
+-- New terminal
+-----------------------------------------------------------------------------
+
+hs.hotkey.bind({'alt', 'shift'}, 'return', function()
+    if hs.application.find('iTerm') == nil then
+        hs.application.launchOrFocus('iTerm')
+    else
+        hs.applescript.applescript([[
+            tell application "iTerm"
+                create window with default profile
+            end tell
+        ]])
+    end
 end)
 
 -----------------------------------------------------------------------------
