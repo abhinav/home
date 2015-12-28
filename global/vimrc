@@ -28,7 +28,7 @@ Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
 Plug 'Valloric/YouCompleteMe',
-  \ {'do': './install.py --clang-completer --gocode-completer'}
+  \ {'do': './install.py --clang-completer --gocode-completer --tern-completer'}
 
 " ----------------------------------------------------------------------------
 "  Language-specific Plugins {{{2
