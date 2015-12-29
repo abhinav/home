@@ -16,4 +16,4 @@
     ~/.zshrc: zshrc
 
 - shell:
-    - echo "Run 'vim +PluginInstall +qall' to install vim plugins."
+    - echo "Run 'vim +PlugInstall +qall' to install vim plugins."
