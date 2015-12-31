@@ -89,8 +89,15 @@ alias serve_this="python -mSimpleHTTPServer"
 #############################################################################
 # Environment variables
 #############################################################################
-export LANG=en_US.UTF-8
 export EDITOR=vim
+if (which nvim &> /dev/null); then
+    # Prefer nvim over vim.
+    alias vi=nvim
+    alias vim=nvim
+    export EDITOR=nvim
+fi
+
+export LANG=en_US.UTF-8
 export TERM=xterm-256color
 export HISTSIZE=9999
 export SAVEHIST=9999
@@ -99,13 +106,6 @@ export HOMEBREW_EDITOR="$EDITOR"
 export GITHUB_USER=abhinav
 export KEYTIMEOUT=1  # no lag when switching to vi normal mode
 export CLICOLOR=1
-
-if (which nvim &> /dev/null); then
-    # Prefer nvim over vim.
-    alias vi=nvim
-    alias vim=nvim
-    export EDITOR=nvim
-fi
 
 export PATH="\
 $HOME/.bin:\
