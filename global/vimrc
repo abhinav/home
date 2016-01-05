@@ -8,7 +8,6 @@ call plug#begin('~/.vim/bundle')
 " ----------------------------------------------------------------------------
 "  General Plugins {{{2
 " ----------------------------------------------------------------------------
-Plug 'benekastah/neomake'
 Plug 'bling/vim-airline'
 Plug 'ervandew/supertab'
 Plug 'godlygeek/tabular', {'on': 'Tabularize'}
@@ -21,6 +20,7 @@ Plug 'tomasr/molokai'
 Plug 'rizzatti/dash.vim', {'on': 'DashSearch'}
 Plug 'rstacruz/sparkup', {'rtp': 'vim'}
 Plug 'scrooloose/nerdtree'
+Plug 'scrooloose/syntastic'
 Plug 'Shougo/vimproc', {'do': 'make'}
 Plug 'SirVer/ultisnips'
 Plug 'terryma/vim-multiple-cursors'
@@ -74,16 +74,16 @@ let g:pandoc#modules#disabled = ["folding"]
 let g:pandoc#formatting#mode = "h"
 let g:pandoc#syntax#conceal#use = 0
 
-"  neomake {{{2
-autocmd! BufWritePost * Neomake
+"  syntastic {{{2
+let g:syntastic_aggregate_errors = 1
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_c_config_file = '.clang_complete'
+let g:syntastic_check_on_wq = 0
+let g:syntastic_cpp_config_file = '.clang_complete'
+let g:syntastic_enable_signs = 1
 
-let g:neomake_open_list = 2
-let g:neomake_place_signs = 1
-let g:neomake_echo_current_error = 1
-let g:neomake_verbose = 0
-
-let g:neomake_haskell_enabled_makers = ['ghcmod', 'hlint']
-let g:neomake_go_enabled_makers = ['go', 'golint']
+let g:syntastic_javascript_checkers = ['eslint']
+let g:syntastic_go_checkers = ['go', 'golint']
 
 " netrw {{{2
 let g:netrw_liststyle = 3
@@ -276,6 +276,8 @@ endfunction
 function! s:setup_haskell() " {{{2
     let g:haskellmode_completion_ghc = 0
     setlocal omnifunc=necoghc#omnifunc
+
+    autocmd BufWritePost *.hs GhcModCheckAndLintAsync
 
     nmap <buffer> <F1> :GhcModType<CR>
     nmap <buffer> <silent> <F2> :GhcModTypeClear<CR>
