@@ -21,13 +21,14 @@ Plug 'tomasr/molokai'
 Plug 'rizzatti/dash.vim', {'on': 'DashSearch'}
 Plug 'rstacruz/sparkup', {'rtp': 'vim'}
 Plug 'scrooloose/nerdtree'
-Plug 'Shougo/deoplete.nvim'
 Plug 'Shougo/vimproc', {'do': 'make'}
 Plug 'SirVer/ultisnips'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
+Plug 'Valloric/YouCompleteMe',
+  \ {'do': './install.py --clang-completer --gocode-completer --tern-completer'}
 
 " ----------------------------------------------------------------------------
 "  Language-specific Plugins {{{2
@@ -84,12 +85,6 @@ let g:neomake_verbose = 0
 let g:neomake_haskell_enabled_makers = ['ghcmod', 'hlint']
 let g:neomake_go_enabled_makers = ['go', 'golint']
 
-" deoplete {{{2
-let g:deoplete#enable_at_startup = 1
-
-" SuperTab {{{2
-let g:SuperTabDefaultCompletionType = '<C-n>'
-
 " netrw {{{2
 let g:netrw_liststyle = 3
 
@@ -108,12 +103,8 @@ endif
 let g:rustfmt_autosave = 1
 
 " Jedi Vim {{{2
-let g:jedi#completions_enabled = 0
-let g:jedi#auto_vim_configuration = 0
-let g:jedi#smart_auto_mappings = 1
 let g:jedi#show_call_signatures = 0
 let g:jedi#use_tabs_not_buffers = 1
-
 
 " NERDTree {{{2
 let g:NERDTreeMapJumpNextSibling="C-M-J"
@@ -132,6 +123,13 @@ let g:go_fmt_command = "goimports"
 if executable("ag")
     let g:ackprg = 'ag --vimgrep'
 endif
+
+" YouCompleteMe {{{2
+let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
+let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
+
+" SuperTab {{{2
+let g:SuperTabDefaultCompletionType = '<C-n>'
 
 " UltiSnips {{{2
 let g:UltiSnipsExpandTrigger = "<tab>"
@@ -277,10 +275,7 @@ endfunction
 
 function! s:setup_haskell() " {{{2
     let g:haskellmode_completion_ghc = 0
-    let b:deoplete_disable_auto_complete = 1
     setlocal omnifunc=necoghc#omnifunc
-
-    inoremap <silent><expr> <C-n> deoplete#mappings#manual_complete()
 
     nmap <buffer> <F1> :GhcModType<CR>
     nmap <buffer> <silent> <F2> :GhcModTypeClear<CR>
@@ -288,7 +283,6 @@ function! s:setup_haskell() " {{{2
 endfunction
 
 function! s:setup_python() " {{{2
-    setlocal omnifunc=jedi#completions
     let b:delimitMate_nesting_quotes = ['"','''', '`']
     call s:close_preview_on_move()
 endfunction
