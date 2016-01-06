@@ -12,6 +12,7 @@ Plug 'bling/vim-airline'
 Plug 'ervandew/supertab'
 Plug 'godlygeek/tabular', {'on': 'Tabularize'}
 Plug 'honza/vim-snippets'
+Plug 'jcorbin/vim-bindsplit'
 Plug 'junegunn/goyo.vim', {'on': 'Goyo'}
 Plug 'kien/ctrlp.vim'
 Plug 'mileszs/ack.vim'
@@ -23,7 +24,6 @@ Plug 'scrooloose/nerdtree'
 Plug 'scrooloose/syntastic'
 Plug 'Shougo/vimproc', {'do': 'make'}
 Plug 'SirVer/ultisnips'
-Plug 'terryma/vim-multiple-cursors'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
