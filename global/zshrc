@@ -96,9 +96,7 @@ if (which nvim &> /dev/null); then
     alias vim=nvim
     export EDITOR=nvim
 
-    # Use true colors in neovim and switch the cursor between block and I
-    # based on whether we're in normal mode or insert mode.
-    export NVIM_TUI_ENABLE_TRUE_COLOR=1
+    # Switch cursor shape in neovim based on mode
     export NVIM_TUI_ENABLE_CURSOR_SHAPE=1
 fi
 
