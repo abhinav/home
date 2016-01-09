@@ -52,12 +52,13 @@ call plug#end()
 "  File type hooks {{{1
 " ----------------------------------------------------------------------------
 
-au FileType python call s:setup_python()
-au FileType haskell,chaskell call s:setup_haskell()
 au FileType go call s:setup_go()
+au FileType haskell,chaskell call s:setup_haskell()
+au FileType pandoc call s:setup_pandoc()
+au FileType python call s:setup_python()
+au FileType rust call s:setup_rust()
 au FileType sh call s:setup_sh()
 au FileType text setlocal nornu
-au FileType pandoc call s:setup_pandoc()
 
 augroup BWCCreateDir
     autocmd!
@@ -125,6 +126,7 @@ if executable("ag")
 endif
 
 " YouCompleteMe {{{2
+let g:ycm_goto_buffer_command = 'new-tab'
 let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
 let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
 
@@ -301,6 +303,10 @@ endfunction
 
 function! s:setup_pandoc() " {{{2
     setlocal nornu
+endfunction
+
+function! s:setup_rust() " {{{2
+    nnoremap <buffer> <leader>d :YcmCompleter GoTo<CR>
 endfunction
 
 function s:MkNonExDir(file, buf) " {{{2
