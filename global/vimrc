@@ -29,7 +29,7 @@ Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
 Plug 'Valloric/YouCompleteMe',
-  \ {'do': './install.py --clang-completer --gocode-completer --tern-completer'}
+  \ {'do': './install.py --clang-completer --gocode-completer --tern-completer --racer-completer'}
 
 " ----------------------------------------------------------------------------
 "  Language-specific Plugins {{{2
@@ -41,7 +41,6 @@ Plug 'fatih/vim-go', {'for': 'go'}
 Plug 'hynek/vim-python-pep8-indent'
 Plug 'idris-hackers/idris-vim'
 Plug 'pbrisbin/html-template-syntax'
-Plug 'racer-rust/vim-racer'
 Plug 'rust-lang/rust.vim'
 Plug 'vim-pandoc/vim-pandoc'
 Plug 'vim-pandoc/vim-pandoc-after'
