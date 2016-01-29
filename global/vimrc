@@ -8,7 +8,6 @@ call plug#begin('~/.vim/bundle')
 " ----------------------------------------------------------------------------
 "  General Plugins {{{2
 " ----------------------------------------------------------------------------
-Plug 'bling/vim-airline'
 Plug 'ervandew/supertab'
 Plug 'godlygeek/tabular', {'on': 'Tabularize'}
 Plug 'honza/vim-snippets'
@@ -29,6 +28,8 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
 Plug 'Valloric/YouCompleteMe',
   \ {'do': './install.py --clang-completer --gocode-completer --tern-completer --racer-completer'}
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 
 " ----------------------------------------------------------------------------
 "  Language-specific Plugins {{{2
