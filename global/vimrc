@@ -77,7 +77,7 @@ let g:pandoc#formatting#mode = "h"
 let g:pandoc#syntax#conceal#use = 0
 
 "  syntastic {{{2
-let g:syntastic_aggregate_errors = 1
+let g:syntastic_aggregate_errors = 0
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_c_config_file = '.clang_complete'
 let g:syntastic_check_on_wq = 0
@@ -85,7 +85,7 @@ let g:syntastic_cpp_config_file = '.clang_complete'
 let g:syntastic_enable_signs = 1
 
 let g:syntastic_javascript_checkers = ['eslint']
-let g:syntastic_go_checkers = ['go', 'golint']
+let g:syntastic_go_checkers = ['go', 'golint', 'govet', 'errcheck']
 
 " netrw {{{2
 let g:netrw_liststyle = 3
@@ -120,6 +120,9 @@ let g:go_highlight_structs = 1
 let g:go_highlight_operators = 1
 let g:go_highlight_build_constraints = 1
 let g:go_fmt_command = "goimports"
+let g:go_fmt_fail_silently = 1
+let g:go_term_enabled = 1
+
 
 " ack.vim {{{2
 if executable("ag")
