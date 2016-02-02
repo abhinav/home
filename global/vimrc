@@ -13,7 +13,8 @@ Plug 'godlygeek/tabular', {'on': 'Tabularize'}
 Plug 'honza/vim-snippets'
 Plug 'jcorbin/vim-bindsplit'
 Plug 'junegunn/goyo.vim', {'on': 'Goyo'}
-Plug 'kien/ctrlp.vim'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
 Plug 'mileszs/ack.vim'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'tomasr/molokai'
@@ -95,12 +96,6 @@ let g:airline_theme = "dark"
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#branch#displayed_head_limit = 10
 
-" Ctrl-P {{{2
-if executable("ag")
-   let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
-   let g:ctrlp_use_caching = 0
-endif
-
 " Rust {{{2
 let g:rustfmt_autosave = 1
 
@@ -123,6 +118,9 @@ let g:go_fmt_command = "goimports"
 let g:go_fmt_fail_silently = 1
 let g:go_term_enabled = 1
 
+" fzf {{{2
+nmap <silent> <C-P> :Files<CR>
+let g:fzf_layout = { 'down': '~15%' }
 
 " ack.vim {{{2
 if executable("ag")
@@ -263,10 +261,10 @@ vnoremap <leader>P "+P
 " Neovim specific configs.
 if has('nvim')
     " Split navigation inside nvim's terminal emulator.
-    tnoremap <C-J> <C-\><C-n><C-W><C-J>
-    tnoremap <C-K> <C-\><C-n><C-W><C-K>
-    tnoremap <C-L> <C-\><C-n><C-W><C-L>
-    tnoremap <C-H> <C-\><C-n><C-W><C-H>
+    tnoremap <C-M-J> <C-\><C-n><C-W><C-J>
+    tnoremap <C-M-K> <C-\><C-n><C-W><C-K>
+    tnoremap <C-M-L> <C-\><C-n><C-W><C-L>
+    tnoremap <C-M-H> <C-\><C-n><C-W><C-H>
 endif
 
 " ----------------------------------------------------------------------------

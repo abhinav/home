@@ -109,6 +109,9 @@ export HOMEBREW_EDITOR="$EDITOR"
 export GITHUB_USER=abhinav
 export KEYTIMEOUT=1  # no lag when switching to vi normal mode
 export CLICOLOR=1
+export FZF_DEFAULT_OPTS="--cycle"
+export FZF_DEFAULT_COMMAND='ag -g ""'
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
 export PATH="\
 $HOME/.bin:\
@@ -149,3 +152,5 @@ compinit
 #############################################################################
 
 . ~/.zsh/plugins/syntax-highlighting/zsh-syntax-highlighting.zsh
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
