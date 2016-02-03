@@ -232,9 +232,9 @@ nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 
 " Easier tabbing
-nmap <C-T> :tabe<CR>
-nmap <C-M-H> :tabp<CR>
-nmap <C-M-L> :tabn<CR>
+nmap <silent> <C-T> :tabe<CR>
+nmap <silent> <C-M-H> :tabp<CR>
+nmap <silent> <C-M-L> :tabn<CR>
 
 " Disable ex mode from Q
 nnoremap Q <Nop>
