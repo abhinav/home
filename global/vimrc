@@ -60,7 +60,6 @@ au FileType pandoc call s:setup_pandoc()
 au FileType python call s:setup_python()
 au FileType rust call s:setup_rust()
 au FileType sh call s:setup_sh()
-au FileType c call s:setup_c()
 au FileType text setlocal nornu
 
 augroup BWCCreateDir
@@ -304,10 +303,6 @@ function! s:setup_go() " {{{2
     setlocal noet
     nmap <buffer> <leader>d <Plug>(go-def-tab)
     call s:close_preview_on_move()
-endfunction
-
-function! s:setup_c() " {{{2
-    setlocal ts=8 sw=8 noet
 endfunction
 
 function! s:setup_sh() " {{{2
