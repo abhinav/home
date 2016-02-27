@@ -129,6 +129,7 @@ let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
 
 " SuperTab {{{2
 let g:SuperTabDefaultCompletionType = '<C-n>'
+let g:SuperTabNoCompleteAfter = ['^', '\s', '[^\w]']
 
 " UltiSnips {{{2
 let g:UltiSnipsExpandTrigger = "<tab>"
