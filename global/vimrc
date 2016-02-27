@@ -15,7 +15,6 @@ Plug 'jcorbin/vim-bindsplit'
 Plug 'junegunn/goyo.vim', {'on': 'Goyo'}
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all --no-update-rc' }
 Plug 'junegunn/fzf.vim'
-Plug 'mileszs/ack.vim'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'tomasr/molokai'
 Plug 'rizzatti/dash.vim', {'on': 'DashSearch'}
@@ -122,11 +121,6 @@ let g:go_term_enabled = 1
 " fzf {{{2
 nmap <silent> <C-P> :Files<CR>
 let g:fzf_layout = { 'down': '~15%' }
-
-" ack.vim {{{2
-if executable("ag")
-    let g:ackprg = 'ag --vimgrep'
-endif
 
 " YouCompleteMe {{{2
 let g:ycm_extra_conf_globlist = ['~/dev/*','!~/*']
