@@ -130,7 +130,6 @@ let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
 
 " SuperTab {{{2
 let g:SuperTabDefaultCompletionType = '<C-n>'
-let g:SuperTabNoCompleteAfter = ['^', '\s', '[^\w]']
 
 " UltiSnips {{{2
 let g:UltiSnipsExpandTrigger = "<tab>"
@@ -157,7 +156,7 @@ set ls=2                " Always show status line
 set sc                  " Display incomplete commands
 set is                  " Do incremental searching
 set ai                  " Keep indentation from previous line
-set noet                " Don't expand tabs
+set et                  " Use spaces to insert tabs
 set sw=4                " Number of spaces to use for each indent
 set ts=4                " Number of spaces tab will count for
 set nowrap              " No wrapping
@@ -179,14 +178,21 @@ set wig+=*/cabal-dev,*/dist,*.o,*.class,*.pyc,*.hi
 " Support codex tags.
 set tags+=codex.tags
 
+" Only bold out the current line
+hi CursorLine term=bold cterm=bold
+
 " Make line numbers in terminal more readable
 hi LineNr ctermfg=245
 
-" Show invisible characters
-set list lcs=tab:»\ ,eol:¬
-
 " Use global python. Ensures nvim works with Python plugins inside a virtualenv.
 let g:python_host_prog = '/usr/local/bin/python'
+
+
+" Highlight the current line, but only in the focused split.
+autocmd WinEnter * setlocal cul
+autocmd BufEnter * setlocal cul
+autocmd WinLeave * setlocal nocul
+setlocal cul
 
 " ----------------------------------------------------------------------------
 "  Key Bindings {{{1
@@ -284,7 +290,6 @@ function! s:setup_haskell() " {{{2
 endfunction
 
 function! s:setup_python() " {{{2
-    setlocal et  " expand tabs to spaces
     let b:delimitMate_nesting_quotes = ['"','''', '`']
     call s:close_preview_on_move()
 endfunction
