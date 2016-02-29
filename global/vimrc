@@ -53,6 +53,8 @@ call plug#end()
 "  File type hooks {{{1
 " ----------------------------------------------------------------------------
 
+au FileType c call s:setup_c()
+au FileType cpp call s:setup_cpp()
 au FileType go call s:setup_go()
 au FileType haskell,chaskell call s:setup_haskell()
 au FileType pandoc call s:setup_pandoc()
@@ -287,6 +289,14 @@ function! s:setup_haskell() " {{{2
     nmap <buffer> <F1> :GhcModType<CR>
     nmap <buffer> <silent> <F2> :GhcModTypeClear<CR>
     nmap <buffer> <silent> <leader>d <C-w><C-]><C-w>T
+endfunction
+
+function! s:setup_c() " {{{2
+    call s:close_preview_on_move()
+endfunction
+
+function! s:setup_cpp() " {{{2
+    call s:close_preview_on_move()
 endfunction
 
 function! s:setup_python() " {{{2
