@@ -62,6 +62,7 @@ au FileType python call s:setup_python()
 au FileType rust call s:setup_rust()
 au FileType sh call s:setup_sh()
 au FileType text setlocal nornu
+au FileType yaml call s:setup_yaml()
 
 augroup BWCCreateDir
     autocmd!
@@ -321,6 +322,11 @@ endfunction
 
 function! s:setup_rust() " {{{2
     nnoremap <buffer> <leader>d :YcmCompleter GoTo<CR>
+endfunction
+
+function! s:setup_yaml() " {{{2
+    set ts=2 sw=2 et
+    autocmd BufWritePost package.yaml silent !hpack --silent
 endfunction
 
 function s:MkNonExDir(file, buf) " {{{2
