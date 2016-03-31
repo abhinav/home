@@ -12,6 +12,7 @@
     ~/.ghci: ghci
     ~/.gitconfig: gitconfig
     ~/.hammerspoon: hammerspoon/
+    ~/.tigrc: tigrc
     ~/.zsh: zsh/
     ~/.zshrc: zshrc
 
