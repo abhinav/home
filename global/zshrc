@@ -57,7 +57,7 @@ function cabal_sandbox_info() {
 
 source ~/.dotfiles/zsh/git_prompt.sh
 
-PROMPT='${ret_status}%{$fg_bold[green]%}%p %{$fg[cyan]%}%~ %{$fg_bold[blue]%}$(git_super_status)%{$reset_color%} $(cabal_sandbox_info)
+PROMPT='%{$fg_bold[white]%}%M%{$reset_color%} ${ret_status}%{$fg_bold[green]%}%p %{$fg[cyan]%}%~ %{$fg_bold[blue]%}$(git_super_status)%{$reset_color%} $(cabal_sandbox_info)
 %{$fg[blue]%} $ %{$reset_color%}'
 
 #############################################################################
