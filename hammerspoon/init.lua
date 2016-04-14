@@ -151,6 +151,12 @@ local SECTIONS = {
         w = round(GRIDWIDTH / 2),
         h = round(GRIDHEIGHT / 2)
     },
+    rightTwoThird = {
+        x = GRIDWIDTH - round(GRIDWIDTH / 3) * 2,
+        y = 0,
+        w = round(GRIDWIDTH / 3) * 2,
+        h = GRIDHEIGHT
+    },
     right = {
         x = round(GRIDWIDTH / 2),
         y = 0,
@@ -180,6 +186,12 @@ local SECTIONS = {
         y = round(GRIDHEIGHT / 2),
         w = round(GRIDWIDTH / 2),
         h = round(GRIDHEIGHT / 2)
+    },
+    leftTwoThird = {
+        x = 0,
+        y = 0,
+        w = round(GRIDWIDTH / 3) * 2,
+        h = GRIDHEIGHT
     },
     left = {
         x = 0,
@@ -227,6 +239,8 @@ local section = {
             down = 'bottomRight',
             right = 'rightThird'
         },
+        rightThird    = { right = 'rightTwoThird' },
+        rightTwoThird = { right = 'right' },
         bottom = {
             left = 'bottomLeft',
             right = 'bottomRight'
@@ -236,6 +250,8 @@ local section = {
             down = 'bottomLeft',
             left = 'leftThird'
         },
+        leftThird    = { left = 'leftTwoThird' },
+        leftTwoThird = { left = 'left' },
         full = {
             f = 'centerThird'
         }
