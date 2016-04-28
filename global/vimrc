@@ -325,7 +325,7 @@ function! s:setup_rust() " {{{2
 endfunction
 
 function! s:setup_yaml() " {{{2
-    set ts=2 sw=2 et
+    setlocal ts=2 sw=2 et
     autocmd BufWritePost package.yaml silent !hpack --silent
 endfunction
 
