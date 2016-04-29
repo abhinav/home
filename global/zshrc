@@ -106,6 +106,7 @@ export HISTSIZE=9999
 export SAVEHIST=9999
 export HISTFILE=~/.zsh_history
 export HOMEBREW_EDITOR="$EDITOR"
+export HOMEBREW_NO_ANALYTICS=1
 export GITHUB_USER=abhinav
 export KEYTIMEOUT=1  # no lag when switching to vi normal mode
 export CLICOLOR=1
