@@ -57,6 +57,7 @@ au FileType c call s:setup_c()
 au FileType cpp call s:setup_cpp()
 au FileType go call s:setup_go()
 au FileType haskell,chaskell call s:setup_haskell()
+au FileType javascript call s:close_preview_on_move()
 au FileType pandoc call s:setup_pandoc()
 au FileType python call s:setup_python()
 au FileType rust call s:setup_rust()
@@ -278,8 +279,8 @@ function! s:close_preview() " {{{2
 endfunction
 
 function! s:close_preview_on_move() " {{{2
-    au CursorMovedI * call s:close_preview()
-    au InsertLeave  * call s:close_preview()
+    au CursorMovedI <buffer> call s:close_preview()
+    au InsertLeave  <buffer> call s:close_preview()
 endfunction
 
 function! s:setup_haskell() " {{{2
