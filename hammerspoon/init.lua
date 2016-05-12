@@ -90,12 +90,12 @@ end
 -- move to next/prev screens
 hs.hotkey.bind({'ctrl', 'alt', 'shift'}, 'left', function()
     local win = hs.window.focusedWindow()
-    hs.grid.set(win, hs.grid.get(win), win:screen():previous())
+    hs.grid.set(win, hs.grid.get(win), win:screen():toWest())
 end)
 
 hs.hotkey.bind({'ctrl', 'alt', 'shift'}, 'right', function()
     local win = hs.window.focusedWindow()
-    hs.grid.set(win, hs.grid.get(win), win:screen():next())
+    hs.grid.set(win, hs.grid.get(win), win:screen():toEast())
 end)
 
 -----------------------------------------------------------------------------
