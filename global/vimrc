@@ -175,7 +175,6 @@ set spr                 " split right
 set fdm=marker          " Marker fold method
 set hls                 " Highlight search results
 set wmnu                " Menu for tab completion
-set tgc                 " Use 'true color'
 colo molokai            " Use molokai
 
 " File patterns to ignore in wildcard expansions.
