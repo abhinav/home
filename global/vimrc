@@ -291,6 +291,7 @@ endfunction
 
 function! s:setup_haskell() " {{{2
     let g:haskellmode_completion_ghc = 0
+    let g:necoghc_enable_detailed_browse = 1
     setlocal omnifunc=necoghc#omnifunc
 
     autocmd BufWritePost *.hs GhcModCheckAndLintAsync
