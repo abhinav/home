@@ -145,6 +145,18 @@ local SECTIONS = {
         w = GRIDWIDTH,
         h = round(GRIDHEIGHT / 2)
     },
+    topThird = {
+        x = 0,
+        y = 0,
+        w = round(GRIDWIDTH),
+        h = round(GRIDWIDTH / 3),
+    },
+    topTwoThird = {
+        x = 0,
+        y = 0,
+        w = round(GRIDWIDTH),
+        h = round(GRIDWIDTH / 3) * 2,
+    },
     topRight = {
         x = round(GRIDWIDTH / 2),
         y = 0,
@@ -181,6 +193,18 @@ local SECTIONS = {
         w = GRIDWIDTH,
         h = round(GRIDHEIGHT / 2)
     },
+    bottomThird = {
+        x = 0,
+        y = round(GRIDHEIGHT / 3) * 2,
+        w = round(GRIDWIDTH),
+        h = round(GRIDWIDTH / 3),
+    },
+    bottomTwoThird = {
+        x = 0,
+        y = round(GRIDHEIGHT / 3),
+        w = round(GRIDWIDTH),
+        h = round(GRIDWIDTH / 3) * 2,
+    },
     bottomLeft = {
         x = 0,
         y = round(GRIDHEIGHT / 2),
@@ -216,7 +240,13 @@ local SECTIONS = {
         y = 0,
         w = round(GRIDWIDTH / 3),
         h = GRIDHEIGHT
-    }
+    },
+    middleThird = {
+        x = 0,
+        y = round(GRIDHEIGHT / 3),
+        w = GRIDWIDTH,
+        h = round(GRIDHEIGHT / 3)
+    },
 }
 
 local section = {
@@ -231,9 +261,11 @@ local section = {
     -- transitions between sections based on the key that was pressed.
     transitions = {
         top = {
+            up = 'topThird',
             left = 'topLeft',
             right = 'topRight'
         },
+        topThird = { up = 'topTwoThird' },
         right = {
             up = 'topRight',
             down = 'bottomRight',
@@ -243,8 +275,10 @@ local section = {
         rightTwoThird = { right = 'right' },
         bottom = {
             left = 'bottomLeft',
+            down = 'bottomThird',
             right = 'bottomRight'
         },
+        bottomThird = { down = 'bottomTwoThird' },
         left = {
             up = 'topLeft',
             down = 'bottomLeft',
@@ -252,9 +286,8 @@ local section = {
         },
         leftThird    = { left = 'leftTwoThird' },
         leftTwoThird = { left = 'left' },
-        full = {
-            f = 'centerThird'
-        }
+        full        = { f = 'centerThird' },
+        centerThird = { f = 'middleThird' },
     }
 }
 
