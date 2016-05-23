@@ -15,6 +15,7 @@ Plug 'jcorbin/vim-bindsplit'
 Plug 'junegunn/goyo.vim', {'on': 'Goyo'}
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all --no-update-rc' }
 Plug 'junegunn/fzf.vim'
+Plug 'mileszs/ack.vim'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'tomasr/molokai'
 Plug 'rizzatti/dash.vim', {'on': 'DashSearch'}
@@ -98,6 +99,11 @@ let g:netrw_liststyle = 3
 let g:airline_theme = "dark"
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#branch#displayed_head_limit = 10
+
+"  Ack.vim {{{2
+if executable('ag')
+    let g:ackprg = 'ag --vimgrep'
+endif
 
 " Rust {{{2
 let g:rustfmt_autosave = 1
