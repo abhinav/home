@@ -90,12 +90,28 @@ end
 -- move to next/prev screens
 hs.hotkey.bind({'ctrl', 'alt', 'shift'}, 'left', function()
     local win = hs.window.focusedWindow()
-    hs.grid.set(win, hs.grid.get(win), win:screen():toWest())
+    local screen = win:screen()
+    if screen:toWest() == nil then
+        while screen:toEast() ~= nil do
+            screen = screen:toEast()
+        end
+    else
+        screen = screen:toWest()
+    end
+    hs.grid.set(win, hs.grid.get(win), screen)
 end)
 
 hs.hotkey.bind({'ctrl', 'alt', 'shift'}, 'right', function()
     local win = hs.window.focusedWindow()
-    hs.grid.set(win, hs.grid.get(win), win:screen():toEast())
+    local screen = win:screen()
+    if screen:toEast() == nil then
+        while screen:toWest() ~= nil do
+            screen = screen:toWest()
+        end
+    else
+        screen = screen:toEast()
+    end
+    hs.grid.set(win, hs.grid.get(win), screen)
 end)
 
 -----------------------------------------------------------------------------
