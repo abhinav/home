@@ -197,6 +197,8 @@ hi LineNr ctermfg=245
 " Use global python. Ensures nvim works with Python plugins inside a virtualenv.
 let g:python_host_prog = '/usr/local/bin/python'
 
+" Space = leader
+let mapleader = "\<Space>"
 
 " Highlight the current line, but only in the focused split.
 autocmd WinEnter * setlocal cul
