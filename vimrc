@@ -341,7 +341,7 @@ function! s:setup_yaml() " {{{2
     autocmd BufWritePost package.yaml silent !hpack --silent
 endfunction
 
-function s:MkNonExDir(file, buf) " {{{2
+function! s:MkNonExDir(file, buf) " {{{2
     if empty(getbufvar(a:buf, '&buftype')) && a:file!~#'\v^\w+\:\/'
         let dir=fnamemodify(a:file, ':h')
         if !isdirectory(dir)
