@@ -29,6 +29,7 @@ values."
       auto-completion-enable-sort-by-usage t)
      ;; better-defaults
      emacs-lisp
+     eyebrowse
      git
      github
      org
@@ -37,10 +38,9 @@ values."
      ;;        shell-default-height 30
      ;;        shell-default-position 'bottom)
      ;; spell-checking
+     spacemacs-layouts
      syntax-checking
      ;; version-control
-
-     ;; TODO: eyebrowse
 
      ;; languages and file formats
      (c-c++ :variables c-c++-enable-clang-support t)
@@ -279,12 +279,26 @@ you should place your code here."
             (lambda ()
               (message "haskell-mode-hook")
               (intero-mode)
-              (push '(company-ghci :with company-yasnippet :with company-dabbrev) company-backends-haskell-mode)
+              (push '(company-ghci
+                      :with company-yasnippet
+                      :with company-dabbrev)
+                    company-backends-haskell-mode)
               (setq haskell-stylish-on-save t)))
   (spacemacs/set-leader-keys-for-major-mode 'haskell-mode
     "ht" 'intero-type-at
     "hi" 'intero-info
     "gg" 'intero-goto-definition)
+
+  ;; eyebrowse helpers
+  (bind-key* "M-1" 'eyebrowse-switch-to-window-config-1)
+  (bind-key* "M-2" 'eyebrowse-switch-to-window-config-2)
+  (bind-key* "M-3" 'eyebrowse-switch-to-window-config-3)
+  (bind-key* "M-4" 'eyebrowse-switch-to-window-config-4)
+  (bind-key* "M-5" 'eyebrowse-switch-to-window-config-5)
+  (bind-key* "M-6" 'eyebrowse-switch-to-window-config-6)
+  (bind-key* "M-7" 'eyebrowse-switch-to-window-config-7)
+  (bind-key* "M-8" 'eyebrowse-switch-to-window-config-8)
+  (bind-key* "M-9" 'eyebrowse-switch-to-window-config-9)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
