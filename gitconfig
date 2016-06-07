@@ -1,3 +1,20 @@
+[core]
+	excludesfile = ~/.dotfiles/gitignores
+[user]
+	name = Abhinav Gupta
+	email = mail@abhinavg.net
+[branch]
+	autosetuprebase = always
+[color]
+	ui = auto
+[core]
+	editor = nvim
+[alias]
+    s = status
+    co = checkout
+[push]
+	default = simple
 [include]
-	path = ~/.dotfiles/global/gitconfig
 	path = ~/.dotfiles/local/gitconfig
+
+# vim:set noet ft=gitconfig:
