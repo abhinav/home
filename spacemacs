@@ -274,6 +274,9 @@ explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
   (global-company-mode)
 
+  ; check syntax only on save and new lines
+  (setq flycheck-check-syntax-automatically '(save new-line))
+
   ;; Haskell
   (add-hook 'haskell-mode-hook
             (lambda ()
