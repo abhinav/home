@@ -122,7 +122,8 @@ $HOME/.cargo/bin:\
 /usr/local/bin:\
 /usr/local/sbin:\
 /usr/local/share/npm/bin:\
-$PATH"
+$PATH:\
+/usr/local/opt/go/libexec/bin"
 
 #############################################################################
 # FASD
