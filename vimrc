@@ -130,7 +130,6 @@ let g:go_term_enabled = 1
 let g:go_alternate_mode = "vsplit"
 
 " fzf {{{2
-nmap <silent> <C-P> :Files<CR>
 let g:fzf_layout = { 'down': '~15%' }
 
 " YouCompleteMe {{{2
@@ -278,9 +277,16 @@ if has('nvim')
 endif
 
 " Edit the local vimrc
-nnoremap <leader>evf :tabe $MYVIMRC<cr>
-nnoremap <leader>evl :tabe ~/.dotfiles/local/vimrc<cr>
-nnoremap <leader>svf :source $MYVIMRC<cr>
+nnoremap <silent> <leader>evf :tabe $MYVIMRC<cr>
+nnoremap <silent> <leader>evl :tabe ~/.dotfiles/local/vimrc<cr>
+nnoremap <silent> <leader>svf :source $MYVIMRC<cr>
+
+" fzf
+nmap <silent> <C-P> :Files<CR>
+nmap <silent> <leader>r :History<CR>
+nmap <silent> <leader>b :Buffers<CR>
+nmap <silent> <leader>w :Windows<CR>
+nmap <silent> <leader>: :Commands<CR>
 
 " ----------------------------------------------------------------------------
 "  Functions {{{1
