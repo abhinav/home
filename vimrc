@@ -249,9 +249,6 @@ nmap <silent> <C-M-L> :tabn<CR>
 " Disable ex mode from Q
 nnoremap Q <Nop>
 
-" Typo
-map q: :q
-
 " Clear highlgihts on enter
 nnoremap <silent> <CR> :nohlsearch<CR><CR>
 
