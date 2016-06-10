@@ -283,14 +283,30 @@ nnoremap <silent> <leader>svf :source $MYVIMRC<cr>
 
 " fzf
 nmap <silent> <C-P> :Files<CR>
+nmap <silent> <leader>t :Trees<CR>
 nmap <silent> <leader>r :History<CR>
 nmap <silent> <leader>b :Buffers<CR>
 nmap <silent> <leader>w :Windows<CR>
 nmap <silent> <leader>: :Commands<CR>
 
 " ----------------------------------------------------------------------------
+"  Commands {{{1
+" ----------------------------------------------------------------------------
+
+" Fuzzy find a directory and open a NERDTree.
+command! Trees call s:fzf_dirs({'sink': 'NERDTree'})
+
+" ----------------------------------------------------------------------------
 "  Functions {{{1
 " ----------------------------------------------------------------------------
+
+" fzf_dirs(sink) runs FZF on the given
+function! s:fzf_dirs(opts) " {{{2
+    let cmd = 'find -L .
+                \ \( -path ''*/\.*'' -o -fstype dev -o -fstype proc \) -prune
+                \ -o -type d -print | sed 1d | cut -b3-'
+    call fzf#run(extend({'source': cmd}, a:opts))
+endfunction
 
 function! s:close_preview() " {{{2
     if pumvisible() == 0 && bufname('%') != "[Command Line]"
