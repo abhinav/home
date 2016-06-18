@@ -56,17 +56,20 @@ call plug#end()
 "  File type hooks {{{1
 " ----------------------------------------------------------------------------
 
-au FileType c call s:setup_c()
-au FileType cpp call s:setup_cpp()
-au FileType go call s:setup_go()
-au FileType haskell,chaskell call s:setup_haskell()
-au FileType javascript call s:close_preview_on_move()
-au FileType pandoc call s:setup_pandoc()
-au FileType python call s:setup_python()
-au FileType rust call s:setup_rust()
-au FileType sh call s:setup_sh()
-au FileType text setlocal nornu
-au FileType yaml call s:setup_yaml()
+augroup vimrc_ft_hooks
+    autocmd!
+    autocmd FileType c call s:setup_c()
+    autocmd FileType cpp call s:setup_cpp()
+    autocmd FileType go call s:setup_go()
+    autocmd FileType haskell,chaskell call s:setup_haskell()
+    autocmd FileType javascript call s:close_preview_on_move()
+    autocmd FileType pandoc call s:setup_pandoc()
+    autocmd FileType python call s:setup_python()
+    autocmd FileType rust call s:setup_rust()
+    autocmd FileType sh call s:setup_sh()
+    autocmd FileType text setlocal nornu
+    autocmd FileType yaml call s:setup_yaml()
+augroup end
 
 augroup BWCCreateDir
     autocmd!
@@ -203,9 +206,12 @@ let g:python_host_prog = '/usr/local/bin/python'
 let mapleader = "\<Space>"
 
 " Highlight the current line, but only in the focused split.
-autocmd WinEnter * setlocal cul
-autocmd BufEnter * setlocal cul
-autocmd WinLeave * setlocal nocul
+augroup vimrc_cursor_hooks
+    autocmd!
+    autocmd WinEnter * setlocal cul
+    autocmd BufEnter * setlocal cul
+    autocmd WinLeave * setlocal nocul
+augroup end
 setlocal cul
 
 " ----------------------------------------------------------------------------
@@ -316,8 +322,11 @@ function! s:close_preview() " {{{2
 endfunction
 
 function! s:close_preview_on_move() " {{{2
-    au CursorMovedI <buffer> call s:close_preview()
-    au InsertLeave  <buffer> call s:close_preview()
+    augroup vimrc_close_preview
+        autocmd!
+        autocmd CursorMovedI <buffer> call s:close_preview()
+        autocmd InsertLeave  <buffer> call s:close_preview()
+    augroup end
 endfunction
 
 function! s:setup_haskell() " {{{2
@@ -325,7 +334,10 @@ function! s:setup_haskell() " {{{2
     let g:necoghc_enable_detailed_browse = 1
     setlocal omnifunc=necoghc#omnifunc
 
-    autocmd BufWritePost *.hs GhcModCheckAndLintAsync
+    augroup vimrc_haskell_hooks
+        autocmd!
+        autocmd BufWritePost *.hs GhcModCheckAndLintAsync
+    augroup end
 
     nmap <buffer> <F1> :GhcModType<CR>
     nmap <buffer> <silent> <F2> :GhcModTypeClear<CR>
@@ -365,7 +377,10 @@ endfunction
 
 function! s:setup_yaml() " {{{2
     setlocal ts=2 sw=2 et
-    autocmd BufWritePost package.yaml silent !hpack --silent
+    augroup vimrc_yaml_hooks
+        autocmd!
+        autocmd BufWritePost package.yaml silent !hpack --silent
+    augroup end
 endfunction
 
 function! s:MkNonExDir(file, buf) " {{{2
