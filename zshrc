@@ -95,9 +95,6 @@ if (which nvim &> /dev/null); then
     alias vi=nvim
     alias vim=nvim
     export EDITOR=nvim
-
-    # Switch cursor shape in neovim based on mode
-    export NVIM_TUI_ENABLE_CURSOR_SHAPE=1
 fi
 
 export LANG=en_US.UTF-8
