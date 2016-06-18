@@ -10,11 +10,11 @@ call plug#begin('~/.vim/bundle')
 "  General Plugins {{{2
 " ----------------------------------------------------------------------------
 Plug 'ervandew/supertab'
-Plug 'godlygeek/tabular', {'on': 'Tabularize'}
 Plug 'honza/vim-snippets'
 Plug 'junegunn/goyo.vim', {'on': 'Goyo'}
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all --no-update-rc' }
 Plug 'junegunn/fzf.vim'
+Plug 'junegunn/vim-easy-align'
 Plug 'mileszs/ack.vim'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'tomasr/molokai'
@@ -109,6 +109,10 @@ endif
 
 " Rust {{{2
 let g:rustfmt_autosave = 1
+
+" easy-align {{{2
+xmap ga <Plug>(EasyAlign)
+nmap ga <Plug>(EasyAlign)
 
 " Jedi Vim {{{2
 let g:jedi#show_call_signatures = 0
