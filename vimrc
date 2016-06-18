@@ -15,9 +15,9 @@ Plug 'junegunn/goyo.vim', {'on': 'Goyo'}
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all --no-update-rc' }
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/vim-easy-align'
+Plug 'justinmk/molokai'
 Plug 'mileszs/ack.vim'
 Plug 'ntpeters/vim-better-whitespace'
-Plug 'tomasr/molokai'
 Plug 'rizzatti/dash.vim', {'on': 'DashSearch'}
 Plug 'rstacruz/sparkup', {'rtp': 'vim'}
 Plug 'scrooloose/nerdtree'
