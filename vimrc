@@ -11,6 +11,8 @@ call plug#begin('~/.vim/bundle')
 " ----------------------------------------------------------------------------
 Plug 'ervandew/supertab'
 Plug 'honza/vim-snippets'
+Plug 'joshdick/onedark.vim'
+Plug 'joshdick/airline-onedark.vim'
 Plug 'junegunn/goyo.vim', {'on': 'Goyo'}
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all --no-update-rc' }
 Plug 'junegunn/fzf.vim'
@@ -103,7 +105,7 @@ let g:syntastic_go_checkers = ['go', 'golint', 'govet', 'errcheck']
 let g:netrw_liststyle = 3
 
 " airline {{{2
-let g:airline_theme = "dark"
+let g:airline_theme = "onedark"
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#branch#displayed_head_limit = 10
 
@@ -157,11 +159,6 @@ let g:UltiSnipsExpandTrigger = "<tab>"
 let g:UltiSnipsJumpForwardTrigger = "<tab>"
 let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
 
-" Molokai {{{2
-
-let g:molokai_original = 1
-let g:rehash256 = 1
-
 " ----------------------------------------------------------------------------
 "  General Configuration {{{1
 " ----------------------------------------------------------------------------
@@ -192,7 +189,8 @@ set fdm=marker          " Marker fold method
 set hls                 " Highlight search results
 set wmnu                " Menu for tab completion
 set tgc                 " Use true colors
-colo molokai            " Use molokai
+
+colo onedark
 
 " File patterns to ignore in wildcard expansions.
 set wig+=*/cabal-dev,*/dist,*.o,*.class,*.pyc,*.hi
