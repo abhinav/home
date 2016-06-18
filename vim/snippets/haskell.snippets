@@ -1,0 +1,6 @@
+snippet module
+	module `substitute(substitute(expand('%:r'), '[/\\]','.','g'),'^\%(\l*\.\)\?','','')`
+		(
+		) where
+	`expand('%') =~ 'Main' ? "\nmain :: IO ()\nmain = undefined" : ""`
+
