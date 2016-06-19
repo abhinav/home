@@ -339,11 +339,8 @@ function! s:close_preview() " {{{2
 endfunction
 
 function! s:close_preview_on_move() " {{{2
-    augroup vimrc_close_preview
-        autocmd!
-        autocmd CursorMovedI <buffer> call s:close_preview()
-        autocmd InsertLeave  <buffer> call s:close_preview()
-    augroup end
+    autocmd CursorMovedI <buffer> call s:close_preview()
+    autocmd InsertLeave  <buffer> call s:close_preview()
 endfunction
 
 function! s:setup_haskell() " {{{2
