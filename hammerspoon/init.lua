@@ -134,9 +134,8 @@ end)
 -- Screen lock
 -----------------------------------------------------------------------------
 
-local screensaver = '/System/Library/Frameworks/ScreenSaver.framework/Versions/A/Resources/ScreenSaverEngine.app'
 hs.hotkey.bind({'ctrl', 'cmd'}, 'L', function()
-    hs.application.launchOrFocus(screensaver)
+    hs.applescript.applescript('tell application "Finder" to sleep')
 end)
 
 -----------------------------------------------------------------------------
@@ -268,42 +267,42 @@ local SECTIONS = {
 local section = {
     -- default sections to which the given keys map
     defaults = {
-        up = 'top',
+        up    = 'top',
         right = 'right',
-        down = 'bottom',
-        left = 'left',
-        f = 'full'
+        down  = 'bottom',
+        left  = 'left',
+        f     = 'full'
     },
     -- transitions between sections based on the key that was pressed.
     transitions = {
         top = {
-            up = 'topThird',
-            left = 'topLeft',
+            up    = 'topThird',
+            left  = 'topLeft',
             right = 'topRight'
         },
-        topThird = { up = 'topTwoThird' },
         right = {
-            up = 'topRight',
-            down = 'bottomRight',
+            up    = 'topRight',
+            down  = 'bottomRight',
             right = 'rightThird'
         },
-        rightThird    = { right = 'rightTwoThird' },
-        rightTwoThird = { right = 'right' },
         bottom = {
-            left = 'bottomLeft',
-            down = 'bottomThird',
+            left  = 'bottomLeft',
+            down  = 'bottomThird',
             right = 'bottomRight'
         },
-        bottomThird = { down = 'bottomTwoThird' },
         left = {
-            up = 'topLeft',
+            up   = 'topLeft',
             down = 'bottomLeft',
             left = 'leftThird'
         },
-        leftThird    = { left = 'leftTwoThird' },
-        leftTwoThird = { left = 'left' },
-        full        = { f = 'centerThird' },
-        centerThird = { f = 'middleThird' },
+        topThird      = { up    =   'topTwoThird' },
+        rightThird    = { right = 'rightTwoThird' },
+        rightTwoThird = { right =         'right' },
+        bottomThird   = { down  ='bottomTwoThird' },
+        leftThird     = { left  =  'leftTwoThird' },
+        leftTwoThird  = { left  =          'left' },
+        full          = { f     =   'centerThird' },
+        centerThird   = { f     =   'middleThird' },
     }
 }
 
