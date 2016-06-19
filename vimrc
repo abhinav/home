@@ -21,7 +21,6 @@ Plug 'justinmk/molokai'
 Plug 'justinmk/vim-sneak'
 Plug 'mileszs/ack.vim'
 Plug 'ntpeters/vim-better-whitespace'
-Plug 'rizzatti/dash.vim', {'on': 'DashSearch'}
 Plug 'rstacruz/sparkup', {'rtp': 'vim'}
 Plug 'scrooloose/nerdtree'
 Plug 'scrooloose/syntastic'
@@ -267,9 +266,6 @@ nnoremap <silent> <CR> :nohlsearch<CR><CR>
 
 " Nerd tree on C-m
 nmap <C-\> :NERDTreeToggle<CR>
-
-" Dash search on \D
-nmap <silent> <leader>D <Plug>DashSearch
 
 " Yank and paste operations preceded by <leader> should use system clipboard.
 nnoremap <leader>y "+y
