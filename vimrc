@@ -44,7 +44,7 @@ Plug 'davidhalter/jedi-vim', {'for': ['python', 'pyrex']}
 Plug 'eagletmt/ghcmod-vim'
 Plug 'eagletmt/neco-ghc'
 Plug 'fatih/vim-go', {'for': 'go'}
-Plug 'hspec/hspec.vim', {'for': 'hs'}
+Plug 'hspec/hspec.vim'
 Plug 'hynek/vim-python-pep8-indent'
 Plug 'idris-hackers/idris-vim'
 Plug 'jneen/ragel.vim', {'for': 'rl'}
