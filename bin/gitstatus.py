@@ -1,6 +1,8 @@
 ##!/usr/bin/env python
 from __future__ import print_function
 
+import os
+import os.path
 import sys
 import re
 import shlex
@@ -26,6 +28,14 @@ def get_tagname_or_hash():
     elif hash_:
         return hash_
     return None
+
+
+# ignore git annex repos
+cwd = os.getcwd()
+while cwd != '/':
+    if os.path.isdir(os.path.join(cwd, '.git/annex')):
+        sys.exit(0)
+    cwd = os.path.dirname(cwd)
 
 
 # `git status --porcelain --branch` can collect all information
