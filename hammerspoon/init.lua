@@ -134,8 +134,9 @@ end)
 -- Screen lock
 -----------------------------------------------------------------------------
 
+local screensaver = '/System/Library/Frameworks/ScreenSaver.framework/Versions/A/Resources/ScreenSaverEngine.app'
 hs.hotkey.bind({'ctrl', 'cmd'}, 'L', function()
-    hs.applescript.applescript('tell application "Finder" to sleep')
+    hs.application.launchOrFocus(screensaver)
 end)
 
 -----------------------------------------------------------------------------
