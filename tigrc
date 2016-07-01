@@ -1,2 +1,1 @@
-bind stage 1 stage-update-line
 bind main B !git rebase -i %(commit)
