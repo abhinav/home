@@ -100,8 +100,6 @@ _cgo_gotypes.go
 _obj
 _test
 _testmain.go
-bin/
-build/
 cabal-dev
 cabal.config
 cabal.sandbox.config
@@ -112,7 +110,6 @@ dist/
 docs/_build/
 eggs/
 ehthumbs.db
-lib/
 lib64/
 nosetests.xml
 parts/
