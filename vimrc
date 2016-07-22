@@ -100,7 +100,7 @@ let g:syntastic_cpp_config_file = '.clang_complete'
 let g:syntastic_enable_signs = 1
 
 let g:syntastic_javascript_checkers = ['eslint']
-let g:syntastic_go_checkers = ['go']
+let g:syntastic_go_checkers = ['go', 'golint', 'govet', 'errcheck']
 
 " netrw {{{2
 let g:netrw_liststyle = 3
@@ -136,9 +136,6 @@ let g:go_fmt_command = "goimports"
 let g:go_fmt_fail_silently = 1
 let g:go_term_enabled = 1
 let g:go_alternate_mode = "vsplit"
-let g:go_metalinter_enabled = [
-            \ 'vet', 'vetshadow', 'golint', 'ineffassign', 'goconst', 'gofmt']
-let g:go_list_type = "quickfix"
 
 let g:go_highlight_array_whitespace_error = 0
 let g:go_highlight_chan_whitespace_error = 0
@@ -382,11 +379,6 @@ function! s:setup_go() " {{{2
     setlocal noet sw=2 ts=2
     nmap <buffer> <leader>d <Plug>(go-def-tab)
     call s:close_preview_on_move()
-
-    augroup vimrc_go_hooks
-        autocmd!
-        autocmd BufWritePost *.go silent GoMetaLinter
-    augroup end
 endfunction
 
 function! s:setup_sh() " {{{2
