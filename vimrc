@@ -376,7 +376,7 @@ function! s:setup_python() " {{{2
 endfunction
 
 function! s:setup_go() " {{{2
-    setlocal noet sw=2 ts=2
+    setlocal noet
     nmap <buffer> <leader>d <Plug>(go-def-tab)
     call s:close_preview_on_move()
 endfunction
