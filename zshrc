@@ -109,7 +109,7 @@ export KEYTIMEOUT=1  # no lag when switching to vi normal mode
 export CLICOLOR=1
 export FZF_DEFAULT_OPTS="--cycle"
 export FZF_DEFAULT_COMMAND='
-  (git ls-tree -r --name-only HEAD || ag -g "" ||
+  (ag -g "" || git ls-tree -r --name-only HEAD ||
    find . -path "*/\.*" -prune -o -type f -print -o -type l -print |
       sed s/^..//) 2> /dev/null'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
