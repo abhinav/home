@@ -12,7 +12,6 @@ call plug#begin('~/.vim/bundle')
 Plug 'ervandew/supertab'
 Plug 'honza/vim-snippets'
 Plug 'joshdick/onedark.vim'
-Plug 'joshdick/airline-onedark.vim'
 Plug 'junegunn/goyo.vim', {'on': 'Goyo'}
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all --no-update-rc' }
 Plug 'junegunn/fzf.vim'
