@@ -58,7 +58,7 @@ Plug 'vim-pandoc/vim-pandoc-syntax'
 call plug#end()
 
 " ----------------------------------------------------------------------------
-"  File type hooks {{{1
+"  Global autocmds {{{1
 " ----------------------------------------------------------------------------
 
 augroup vimrc_ft_hooks
@@ -79,6 +79,12 @@ augroup end
 augroup BWCCreateDir
     autocmd!
     autocmd BufWritePre * :call s:MkNonExDir(expand('<afile>'), +expand('<abuf>'))
+augroup end
+
+" Trigger :checktime when changing buffers or coming back to vim.
+augroup AutoReload
+    autocmd!
+    autocmd FocusGained,BufEnter * :checktime
 augroup end
 
 " ----------------------------------------------------------------------------
