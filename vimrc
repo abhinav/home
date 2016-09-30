@@ -39,6 +39,7 @@ Plug 'visualrepeat'
 " ----------------------------------------------------------------------------
 "  Language-specific Plugins {{{2
 " ----------------------------------------------------------------------------
+Plug 'Arduino-syntax-file'
 Plug 'davidhalter/jedi-vim', {'for': ['python', 'pyrex']}
 Plug 'eagletmt/ghcmod-vim'
 Plug 'eagletmt/neco-ghc'
