@@ -369,10 +369,12 @@ function! s:setup_haskell() " {{{2
 endfunction
 
 function! s:setup_c() " {{{2
+    nmap <buffer> <leader>d :YcmCompleter GoTo<CR>
     call s:close_preview_on_move()
 endfunction
 
 function! s:setup_cpp() " {{{2
+    nmap <buffer> <leader>d :YcmCompleter GoTo<CR>
     call s:close_preview_on_move()
 endfunction
 
