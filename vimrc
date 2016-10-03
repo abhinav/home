@@ -143,6 +143,12 @@ let g:go_fmt_fail_silently = 1
 let g:go_term_enabled = 1
 let g:go_alternate_mode = "vsplit"
 
+let g:go_highlight_generate_tags = 1
+let g:go_highlight_build_constraints = 1
+let g:go_highlight_fields = 1
+let g:go_highlight_functions = 1
+let g:go_highlight_methods = 1
+
 let g:go_highlight_array_whitespace_error = 0
 let g:go_highlight_chan_whitespace_error = 0
 let g:go_highlight_space_tab_error = 0
