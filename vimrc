@@ -158,6 +158,7 @@ let g:go_highlight_trailing_whitespace_error = 0
 let g:fzf_layout = { 'down': '~15%' }
 
 " YouCompleteMe {{{2
+let g:ycm_global_ycm_extra_conf = '~/.dotfiles/default_ycm_extra_conf.py'
 let g:ycm_extra_conf_globlist = ['~/dev/*','!~/*']
 let g:ycm_goto_buffer_command = 'new-tab'
 let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
