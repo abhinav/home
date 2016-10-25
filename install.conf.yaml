@@ -12,6 +12,7 @@
     ~/.ghci: ghci
     ~/.gitconfig: gitconfig
     ~/.hammerspoon: hammerspoon/
+    ~/.spacemacs.d: spacemacs.d/
     ~/.tigrc: tigrc
     ~/.tmux.conf: tmux.conf
     ~/.zsh: zsh/
