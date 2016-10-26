@@ -304,6 +304,12 @@ you should place your code here."
 
   (define-key evil-normal-state-map (kbd "C-p") 'helm-projectile-find-file)
 
+  ; Easier split navigation
+  (define-key evil-normal-state-map (kbd "C-h") 'evil-window-left)
+  (define-key evil-normal-state-map (kbd "C-j") 'evil-window-down)
+  (define-key evil-normal-state-map (kbd "C-k") 'evil-window-up)
+  (define-key evil-normal-state-map (kbd "C-l") 'evil-window-right)
+
   (unless window-system
     (global-set-key (kbd "<mouse-4>") 'scroll-down-line)
     (global-set-key (kbd "<mouse-5>") 'scroll-up-line))
