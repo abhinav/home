@@ -30,15 +30,7 @@ values."
    dotspacemacs-configuration-layer-path '()
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(
-     markdown
-     ;; ----------------------------------------------------------------
-     ;; Example of useful layers you may want to use right away.
-     ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
-     ;; <M-m f e R> (Emacs style) to install them.
-     ;; ----------------------------------------------------------------
-     helm
-     auto-completion
+   '(auto-completion
      emacs-lisp
      evil-commentary
      evil-snipe
@@ -47,11 +39,13 @@ values."
          gofmt-command "goimports"
          go-tab-width 4)
      (haskell :variables haskell-completion-backend 'intero)
+     helm
      markdown
      (python :variables python-test-runner 'pytest)
      shell-scripts
      spell-checking
      syntax-checking
+     yaml
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -296,6 +290,10 @@ before packages are loaded. If you are unsure, you should try in setting them in
   (setq exec-path-from-shell-check-startup-files nil)
   )
 
+(defun comments-auto-fill ()
+  (setq-local comment-auto-fill-only-comments t)
+  (auto-fill-mode 1))
+
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
 This function is called at the very end of Spacemacs initialization after
@@ -304,6 +302,7 @@ This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
 
+  ; ctrl-p
   (define-key evil-normal-state-map (kbd "C-p") 'helm-projectile-find-file)
 
   ; Easier split navigation
@@ -312,9 +311,14 @@ you should place your code here."
   (define-key evil-normal-state-map (kbd "C-k") 'evil-window-up)
   (define-key evil-normal-state-map (kbd "C-l") 'evil-window-right)
 
+  ; scrolling
   (unless window-system
     (global-set-key (kbd "<mouse-4>") 'scroll-down-line)
     (global-set-key (kbd "<mouse-5>") 'scroll-up-line))
+
+  ; file mode hooks
+  (add-hook 'text-mode-hook 'turn-on-auto-fill)
+  (add-hook 'go-mode-hook 'comments-auto-fill)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
