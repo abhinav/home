@@ -11,7 +11,6 @@ call plug#begin('~/.vim/bundle')
 " ----------------------------------------------------------------------------
 Plug 'ervandew/supertab'
 Plug 'honza/vim-snippets'
-Plug 'joshdick/onedark.vim'
 Plug 'junegunn/goyo.vim', {'on': 'Goyo'}
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all --no-update-rc' }
 Plug 'junegunn/fzf.vim'
@@ -112,7 +111,7 @@ let g:syntastic_go_checkers = ['go', 'golint', 'govet', 'errcheck']
 let g:netrw_liststyle = 3
 
 " airline {{{2
-let g:airline_theme = "onedark"
+let g:airline_theme = "molokai"
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#branch#displayed_head_limit = 10
 
@@ -208,7 +207,7 @@ if $TERM_PROGRAM != "Apple_Terminal"
     set tgc
 endif
 
-colo onedark
+colo molokai
 
 " File patterns to ignore in wildcard expansions.
 set wig+=*/cabal-dev,*/dist,*.o,*.class,*.pyc,*.hi
