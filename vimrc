@@ -311,9 +311,21 @@ nnoremap <silent> <leader>svf :source $MYVIMRC<cr>
 nmap <silent> <C-P> :Files<CR>
 nmap <silent> <leader>t :Trees<CR>
 nmap <silent> <leader>r :History<CR>
-nmap <silent> <leader>b :Buffers<CR>
-nmap <silent> <leader>w :Windows<CR>
+nmap <silent> <leader>bb :Buffers<CR>
+nmap <silent> <leader>ww :Windows<CR>
 nmap <silent> <leader>: :Commands<CR>
+
+" Buffer shortcuts
+nmap <silent> <leader>bd :bd<CR>
+nmap <silent> <leader>bn :bn<CR>
+nmap <silent> <leader>bp :bN<CR>
+
+" Window shortcuts
+nmap <silent> <leader>wd :close<CR>
+nmap <silent> <leader>wns :new<CR>
+nmap <silent> <leader>wnv :vnew<CR>
+nmap <silent> <leader>ws :split<CR>
+nmap <silent> <leader>wv :vsplit<CR>
 
 " use sneak f/F t/T
 nmap f <Plug>Sneak_f
