@@ -280,8 +280,6 @@ nnoremap Q <Nop>
 " Clear highlgihts on enter
 nnoremap <silent> <CR> :nohlsearch<CR><CR>
 
-" Nerd tree on C-m
-nmap <C-\> :NERDTreeToggle<CR>
 
 " Yank and paste operations preceded by <leader> should use system clipboard.
 nnoremap <leader>y "+y
@@ -309,7 +307,7 @@ nnoremap <silent> <leader>svf :source $MYVIMRC<cr>
 
 " fzf
 nmap <silent> <C-P> :Files<CR>
-nmap <silent> <leader>t :Trees<CR>
+nmap <silent> <leader>tt :Trees<CR>
 nmap <silent> <leader>r :History<CR>
 nmap <silent> <leader>bb :Buffers<CR>
 nmap <silent> <leader>ww :Windows<CR>
@@ -326,6 +324,11 @@ nmap <silent> <leader>wns :new<CR>
 nmap <silent> <leader>wnv :vnew<CR>
 nmap <silent> <leader>ws :split<CR>
 nmap <silent> <leader>wv :vsplit<CR>
+
+" NerdTREE shortcuts
+nmap <silent> <leader>tp :NERDTreeToggle<CR>
+nmap <silent> <leader>tf :NERDTreeToggle %:h<CR>
+nmap <silent> <C-\>      :NERDTreeToggle %:h<CR>
 
 " use sneak f/F t/T
 nmap f <Plug>Sneak_f
