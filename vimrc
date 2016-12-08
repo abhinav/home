@@ -46,7 +46,7 @@ Plug 'fatih/vim-go', {'for': 'go'}
 Plug 'hspec/hspec.vim'
 Plug 'hynek/vim-python-pep8-indent'
 Plug 'idris-hackers/idris-vim'
-Plug 'jneen/ragel.vim', {'for': 'rl'}
+Plug 'jneen/ragel.vim'
 Plug 'pbrisbin/html-template-syntax'
 Plug 'rust-lang/rust.vim'
 Plug 'solarnz/thrift.vim', {'for': 'thrift'}
@@ -73,6 +73,8 @@ augroup vimrc_ft_hooks
     autocmd FileType sh call s:setup_sh()
     autocmd FileType text setlocal nornu
     autocmd FileType yaml call s:setup_yaml()
+
+    autocmd BufNewFile,BufRead *.rl setf ragel
 augroup end
 
 augroup BWCCreateDir
