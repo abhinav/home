@@ -17,6 +17,7 @@ Plug 'junegunn/fzf.vim'
 Plug 'junegunn/vim-easy-align'
 Plug 'justinmk/molokai'
 Plug 'justinmk/vim-sneak'
+Plug 'machakann/vim-highlightedyank'
 Plug 'mileszs/ack.vim'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'rstacruz/sparkup', {'rtp': 'vim'}
