@@ -31,7 +31,7 @@ Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
 Plug 'Valloric/YouCompleteMe',
-  \ {'do': './install.py --clang-completer --gocode-completer --tern-completer --racer-completer'}
+  \ {'do': './install.py --clang-completer --gocode-completer --racer-completer'}
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'visualrepeat'
