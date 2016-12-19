@@ -193,7 +193,8 @@ set et                  " Use spaces to insert tabs
 set sw=4                " Number of spaces to use for each indent
 set ts=4                " Number of spaces tab will count for
 set nowrap              " No wrapping
-set ic                  " Case insensitive
+set ic scs              " Smart case insensitive
+set tc=match            " Case sensitive for tag search
 set sta                 " Smart tab
 set bg=dark             " We have a dark background
 set tw=78               " Wrap text after 78 characters
