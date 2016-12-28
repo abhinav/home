@@ -6,7 +6,6 @@
 - link:
     ~/.vim: vim/
     ~/.vimrc: vimrc
-    ~/.gvimrc: gvimrc
     ~/.config/nvim: vim/
     ~/.config/nvim/init.vim: vimrc
     ~/.ghci: ghci
