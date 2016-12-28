@@ -118,17 +118,6 @@ export FZF_ALT_C_COMMAND='
    find -L . \( -path "*/\.*" -o -fstype dev -o -fstype proc \) -prune -o -type d -print |
       sed 1d | cut -b3-) 2> /dev/null'
 
-export PATH="\
-$HOME/.bin:\
-$HOME/.local/bin:\
-$HOME/.cabal/bin:\
-$HOME/.cargo/bin:\
-/usr/local/bin:\
-/usr/local/sbin:\
-/usr/local/share/npm/bin:\
-$PATH:\
-/usr/local/opt/go/libexec/bin"
-
 #############################################################################
 # FASD
 #############################################################################

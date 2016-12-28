@@ -16,6 +16,7 @@
     ~/.tmux.conf: tmux.conf
     ~/.zsh: zsh/
     ~/.zshrc: zshrc
+    ~/.zshenv: zshenv
 
 - shell:
     - echo "Run 'vim +PlugInstall +qall' to install vim plugins."
