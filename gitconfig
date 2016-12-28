@@ -12,8 +12,9 @@
 [core]
 	editor = nvim
 [alias]
-    s = status
-    co = checkout
+	am = commit --amend
+	s = status
+	co = checkout
 [push]
 	default = simple
 [include]
