@@ -5,6 +5,8 @@
 	email = mail@abhinavg.net
 [branch]
 	autosetuprebase = always
+[fetch]
+	prune = true
 [color]
 	ui = auto
 [core]
