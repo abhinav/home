@@ -21,3 +21,7 @@
 	default = simple
 [include]
 	path = ~/.dotfiles/local/gitconfig
+[rerere]
+	enabled = true
+[diff]
+	algorithm = patience
