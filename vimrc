@@ -63,17 +63,17 @@ call plug#end()
 
 augroup vimrc_ft_hooks
     autocmd!
-    autocmd FileType c call s:setup_c()
-    autocmd FileType cpp call s:setup_cpp()
-    autocmd FileType go call s:setup_go()
-    autocmd FileType haskell,chaskell call s:setup_haskell()
-    autocmd FileType javascript call s:close_preview_on_move()
-    autocmd FileType pandoc call s:setup_pandoc()
-    autocmd FileType python call s:setup_python()
-    autocmd FileType rust call s:setup_rust()
-    autocmd FileType sh call s:setup_sh()
+    autocmd FileType c call s:SetupC()
+    autocmd FileType cpp call s:SetupCPP()
+    autocmd FileType go call s:SetupGo()
+    autocmd FileType haskell,chaskell call s:SetupHaskell()
+    autocmd FileType javascript call s:ClosePreviewOnMove()
+    autocmd FileType pandoc call s:SetupPandoc()
+    autocmd FileType python call s:SetupPython()
+    autocmd FileType rust call s:SetupRust()
+    autocmd FileType sh call s:SetupSh()
     autocmd FileType text setlocal nornu
-    autocmd FileType yaml call s:setup_yaml()
+    autocmd FileType yaml call s:SetupYAML()
 
     autocmd BufNewFile,BufRead *.rl setf ragel
 augroup end
@@ -352,32 +352,49 @@ omap T <Plug>Sneak_T
 " ----------------------------------------------------------------------------
 
 " Fuzzy find a directory and open a NERDTree.
-command! Trees call s:fzf_dirs({'sink': 'NERDTree'})
+command! Trees call s:FZFDirs({'sink': 'NERDTree'})
 
 " ----------------------------------------------------------------------------
 "  Functions {{{1
 " ----------------------------------------------------------------------------
 
-" fzf_dirs(sink) runs FZF on the given
-function! s:fzf_dirs(opts) " {{{2
+" FZFDirs runs FZF, displaying only directories.
+function! s:FZFDirs(opts) " {{{2
     let cmd = 'find -L .
                 \ \( -path ''*/\.*'' -o -fstype dev -o -fstype proc \) -prune
                 \ -o -type d -print | sed 1d | cut -b3-'
     call fzf#run(extend({'source': cmd}, a:opts))
 endfunction
 
-function! s:close_preview() " {{{2
+function! s:ClosePreview() " {{{2
     if pumvisible() == 0 && bufname('%') != "[Command Line]"
         silent! pclose
     endif
 endfunction
 
-function! s:close_preview_on_move() " {{{2
-    autocmd CursorMovedI <buffer> call s:close_preview()
-    autocmd InsertLeave  <buffer> call s:close_preview()
+" ClosePreviewOnMove sets up an autocmd to close the preview window once the
+" cursor moves.
+function! s:ClosePreviewOnMove() " {{{2
+    autocmd CursorMovedI <buffer> call s:ClosePreview()
+    autocmd InsertLeave  <buffer> call s:ClosePreview()
 endfunction
 
-function! s:setup_haskell() " {{{2
+" MkNonExDir creates the parent directories for the given file if they don't
+" already exist.
+function! s:MkNonExDir(file, buf) " {{{2
+    if empty(getbufvar(a:buf, '&buftype')) && a:file!~#'\v^\w+\:\/'
+        let dir=fnamemodify(a:file, ':h')
+        if !isdirectory(dir)
+            call mkdir(dir, 'p')
+        endif
+    endif
+endfunction
+
+" ----------------------------------------------------------------------------
+"  Language-specific Functions {{{1
+" ----------------------------------------------------------------------------
+
+function! s:SetupHaskell() " {{{2
     let g:haskellmode_completion_ghc = 0
     let g:necoghc_enable_detailed_browse = 1
     setlocal omnifunc=necoghc#omnifunc
@@ -392,40 +409,40 @@ function! s:setup_haskell() " {{{2
     nmap <buffer> <silent> <leader>d <C-w><C-]><C-w>T
 endfunction
 
-function! s:setup_c() " {{{2
+function! s:SetupC() " {{{2
     nmap <buffer> <leader>d :YcmCompleter GoTo<CR>
-    call s:close_preview_on_move()
+    call s:ClosePreviewOnMove()
 endfunction
 
-function! s:setup_cpp() " {{{2
+function! s:SetupCPP() " {{{2
     nmap <buffer> <leader>d :YcmCompleter GoTo<CR>
-    call s:close_preview_on_move()
+    call s:ClosePreviewOnMove()
 endfunction
 
-function! s:setup_python() " {{{2
+function! s:SetupPython() " {{{2
     let b:delimitMate_nesting_quotes = ['"','''', '`']
-    call s:close_preview_on_move()
+    call s:ClosePreviewOnMove()
 endfunction
 
-function! s:setup_go() " {{{2
+function! s:SetupGo() " {{{2
     setlocal noet
     nmap <buffer> <leader>d <Plug>(go-def-tab)
-    call s:close_preview_on_move()
+    call s:ClosePreviewOnMove()
 endfunction
 
-function! s:setup_sh() " {{{2
+function! s:SetupSh() " {{{2
     setlocal noet
 endfunction
 
-function! s:setup_pandoc() " {{{2
+function! s:SetupPandoc() " {{{2
     setlocal nornu
 endfunction
 
-function! s:setup_rust() " {{{2
+function! s:SetupRust() " {{{2
     nnoremap <buffer> <leader>d :YcmCompleter GoTo<CR>
 endfunction
 
-function! s:setup_yaml() " {{{2
+function! s:SetupYAML() " {{{2
     setlocal ts=2 sw=2 et
     augroup vimrc_yaml_hooks
         autocmd!
@@ -433,17 +450,9 @@ function! s:setup_yaml() " {{{2
     augroup end
 endfunction
 
-function! s:MkNonExDir(file, buf) " {{{2
-    if empty(getbufvar(a:buf, '&buftype')) && a:file!~#'\v^\w+\:\/'
-        let dir=fnamemodify(a:file, ':h')
-        if !isdirectory(dir)
-            call mkdir(dir, 'p')
-        endif
-    endif
-endfunction
-
 " ----------------------------------------------------------------------------
-" Source the local vimrc if it exists
+" local vimrc {{{1
+" ----------------------------------------------------------------------------
 
 if glob("~/.dotfiles/local/vimrc")
     source ~/.dotfiles/local/vimrc
