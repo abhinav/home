@@ -17,6 +17,7 @@
 	am = commit --amend
 	s = status
 	co = checkout
+	c = commit
 [push]
 	default = simple
 [include]
