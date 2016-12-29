@@ -4,6 +4,7 @@
     - [git submodule update --init --recursive, Installing/updating submodules]
 
 - link:
+    ~/bin/v: bin/v
     ~/.vim: vim/
     ~/.vimrc: vimrc
     ~/.config/nvim: vim/
