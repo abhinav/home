@@ -330,8 +330,8 @@ nmap <silent> <leader>wv :vsplit<CR>
 
 " NerdTREE shortcuts
 nmap <silent> <leader>tp :NERDTreeToggle<CR>
-nmap <silent> <leader>tf :NERDTreeToggle %:h<CR>
-nmap <silent> <C-\>      :NERDTreeToggle %:h<CR>
+nmap <silent> <leader>tf :call <sid>ToggleNERDTree()<CR>
+nmap <silent> <C-\>      :call <sid>ToggleNERDTree()<CR>
 
 " use sneak f/F t/T
 nmap f <Plug>Sneak_f
@@ -364,6 +364,16 @@ function! s:FZFDirs(opts) " {{{2
                 \ \( -path ''*/\.*'' -o -fstype dev -o -fstype proc \) -prune
                 \ -o -type d -print | sed 1d | cut -b3-'
     call fzf#run(extend({'source': cmd}, a:opts))
+endfunction
+
+" ToggleNERDTree opens a NERDTree in the parent directory of the current file
+" or in the current directory if a file isn't open.
+function! s:ToggleNERDTree() " {{{2
+    if expand('%') == ''
+        exec 'NERDTreeToggle'
+    else
+        exec 'NERDTreeToggle %:h'
+    endif
 endfunction
 
 function! s:ClosePreview() " {{{2
