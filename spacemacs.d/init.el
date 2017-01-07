@@ -41,6 +41,7 @@ values."
      (haskell :variables haskell-completion-backend 'intero)
      helm
      markdown
+     org
      (python :variables python-test-runner 'pytest)
      shell-scripts
      spell-checking
