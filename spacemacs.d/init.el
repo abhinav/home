@@ -43,6 +43,7 @@ values."
      markdown
      org
      (python :variables python-test-runner 'pytest)
+     (rust :variables rust-format-on-save t)
      shell-scripts
      spell-checking
      syntax-checking
