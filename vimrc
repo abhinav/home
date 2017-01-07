@@ -109,6 +109,7 @@ let g:syntastic_enable_signs = 1
 
 let g:syntastic_javascript_checkers = ['eslint']
 let g:syntastic_go_checkers = ['go', 'golint', 'govet', 'errcheck']
+let g:syntastic_rust_checkers = ['rustc']
 
 " netrw {{{2
 let g:netrw_liststyle = 3
