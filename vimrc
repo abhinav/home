@@ -166,6 +166,10 @@ let g:ycm_goto_buffer_command = 'new-tab'
 let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
 let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
 
+if $RUST_SRC_PATH != ''
+    let g:ycm_rust_src_path = $RUST_SRC_PATH
+endif
+
 " SuperTab {{{2
 let g:SuperTabDefaultCompletionType = '<C-n>'
 let g:SuperTabNoCompleteAfter = ['^', '\s', '[^\w]']
