@@ -125,6 +125,10 @@ if executable('ag')
     let g:ackprg = 'ag --vimgrep'
 endif
 
+if executable('rg')
+    let g:ackprg = 'rg --vimgrep'
+endif
+
 " Rust {{{2
 let g:rustfmt_autosave = 1
 
