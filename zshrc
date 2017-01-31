@@ -107,9 +107,15 @@ export HOMEBREW_NO_ANALYTICS=1
 export GITHUB_USER=abhinav
 export KEYTIMEOUT=1  # no lag when switching to vi normal mode
 export CLICOLOR=1
+
+fzf_search_command='ag -g ""'
+if (which rg &> /dev/null); then
+    fzf_search_command='rg --files'
+fi
+
 export FZF_DEFAULT_OPTS="--cycle"
 export FZF_DEFAULT_COMMAND='
-  (ag -g "" || git ls-tree -r --name-only HEAD ||
+  ('"$fzf_search_command"' || git ls-tree -r --name-only HEAD ||
    find . -path "*/\.*" -prune -o -type f -print -o -type l -print |
       sed s/^..//) 2> /dev/null'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
