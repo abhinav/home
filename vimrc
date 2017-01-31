@@ -67,6 +67,7 @@ augroup vimrc_ft_hooks
     autocmd FileType c call s:SetupC()
     autocmd FileType cpp call s:SetupCPP()
     autocmd FileType go call s:SetupGo()
+    autocmd FileType gitcommit setlocal tw=72
     autocmd FileType haskell,chaskell call s:SetupHaskell()
     autocmd FileType javascript call s:ClosePreviewOnMove()
     autocmd FileType pandoc call s:SetupPandoc()
