@@ -98,6 +98,7 @@ augroup end
 let g:pandoc#after#modules#enabled = ["ultisnips"]
 let g:pandoc#modules#disabled = ["folding"]
 let g:pandoc#formatting#mode = "h"
+let g:pandoc#formatting#extra_equalprg = "--reference-links --reference-location=section"
 let g:pandoc#syntax#conceal#use = 0
 
 "  syntastic {{{2
