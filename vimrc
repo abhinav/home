@@ -9,6 +9,7 @@ call plug#begin('~/.vim/bundle')
 " ----------------------------------------------------------------------------
 "  General Plugins {{{2
 " ----------------------------------------------------------------------------
+Plug 'cespare/vim-toml'
 Plug 'ervandew/supertab'
 Plug 'honza/vim-snippets'
 Plug 'junegunn/goyo.vim', {'on': 'Goyo'}
