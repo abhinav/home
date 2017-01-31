@@ -413,6 +413,7 @@ function! s:SetupHaskell() " {{{2
     let g:haskellmode_completion_ghc = 0
     let g:necoghc_enable_detailed_browse = 1
     setlocal omnifunc=necoghc#omnifunc
+    setlocal ts=2 sw=2 et
 
     augroup vimrc_haskell_hooks
         autocmd!
