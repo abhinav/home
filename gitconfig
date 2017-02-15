@@ -6,6 +6,7 @@
 	name = Abhinav Gupta
 	email = mail@abhinavg.net
 [branch]
+	autosetupmerge = always
 	autosetuprebase = always
 [fetch]
 	prune = true
@@ -20,9 +21,17 @@
 	c = commit
 [push]
 	default = simple
-[include]
-	path = ~/.dotfiles/local/gitconfig
 [rerere]
+	autoupdate = true
 	enabled = true
 [diff]
 	algorithm = patience
+	renames = copies
+[column]
+	ui = auto
+[apply]
+	whitespace = fix
+[rebase]
+	stat = true
+[include]
+	path = ~/.dotfiles/local/gitconfig
