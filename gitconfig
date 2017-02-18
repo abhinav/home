@@ -6,7 +6,6 @@
 	name = Abhinav Gupta
 	email = mail@abhinavg.net
 [branch]
-	autosetupmerge = always
 	autosetuprebase = always
 [fetch]
 	prune = true
