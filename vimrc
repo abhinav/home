@@ -217,6 +217,7 @@ set spr                 " split right
 set fdm=marker          " Marker fold method
 set hls                 " Highlight search results
 set wmnu                " Menu for tab completion
+set mouse=a             " Mouse support
 
 " Use true color if not on Terminal.app
 if $TERM_PROGRAM != "Apple_Terminal"
