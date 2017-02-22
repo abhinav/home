@@ -10,6 +10,7 @@ call plug#begin('~/.vim/bundle')
 "  General Plugins {{{2
 " ----------------------------------------------------------------------------
 Plug 'cespare/vim-toml'
+Plug 'christoomey/vim-tmux-navigator'
 Plug 'ervandew/supertab'
 Plug 'honza/vim-snippets'
 Plug 'junegunn/goyo.vim', {'on': 'Goyo'}
@@ -187,6 +188,10 @@ let g:UltiSnipsExpandTrigger = "<tab>"
 let g:UltiSnipsJumpForwardTrigger = "<tab>"
 let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
 
+" tmux-navigator {{{2
+" We have our own mappings
+let g:tmux_navigator_no_mappings = 1
+
 " ----------------------------------------------------------------------------
 "  General Configuration {{{1
 " ----------------------------------------------------------------------------
@@ -281,10 +286,10 @@ else
 endif
 
 " Better split navigation
-nnoremap <C-J> <C-W><C-J>
-nnoremap <C-K> <C-W><C-K>
-nnoremap <C-L> <C-W><C-L>
-nnoremap <C-H> <C-W><C-H>
+nnoremap <silent> <C-J> :TmuxNavigateDown<CR>
+nnoremap <silent> <C-K> :TmuxNavigateUp<CR>
+nnoremap <silent> <C-L> :TmuxNavigateRight<CR>
+nnoremap <silent> <C-H> :TmuxNavigateLeft<CR>
 
 " Easier tabbing
 nmap <silent> <C-M-T> :tabe<CR>
