@@ -56,8 +56,8 @@ hs.grid.setGrid(GRIDWIDTH .. 'x' .. GRIDHEIGHT)
 hs.grid.setMargins({w = 0, h = 0})
 hs.grid.ui.textSize = 16
 
--- faster animations
-hs.window.animationDuration = 0.1
+-- No animations
+hs.window.animationDuration = 0
 
 -----------------------------------------------------------------------------
 -- Basic window movement and resizing
