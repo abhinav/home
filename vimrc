@@ -72,6 +72,8 @@ augroup vimrc_ft_hooks
     autocmd FileType gitcommit setlocal tw=72
     autocmd FileType haskell,chaskell call s:SetupHaskell()
     autocmd FileType javascript call s:ClosePreviewOnMove()
+    autocmd FileType nerdtree setlocal nolist
+    autocmd FileType plain setlocal nolist
     autocmd FileType pandoc call s:SetupPandoc()
     autocmd FileType python call s:SetupPython()
     autocmd FileType rust call s:SetupRust()
@@ -228,6 +230,9 @@ set mouse=a             " Mouse support
 if $TERM_PROGRAM != "Apple_Terminal"
     set tgc
 endif
+
+" Show invisible characters
+set list lcs=tab:»\ ,trail:·
 
 colo molokai
 
@@ -465,6 +470,7 @@ function! s:SetupSh() " {{{2
 endfunction
 
 function! s:SetupPandoc() " {{{2
+    setlocal nolist
     setlocal nornu
 endfunction
 
