@@ -11,6 +11,7 @@ call plug#begin('~/.vim/bundle')
 " ----------------------------------------------------------------------------
 Plug 'cespare/vim-toml'
 Plug 'christoomey/vim-tmux-navigator'
+Plug 'edkolev/tmuxline.vim'
 Plug 'ervandew/supertab'
 Plug 'honza/vim-snippets'
 Plug 'junegunn/goyo.vim', {'on': 'Goyo'}
@@ -125,6 +126,10 @@ let g:netrw_liststyle = 3
 let g:airline_theme = "molokai"
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#branch#displayed_head_limit = 10
+
+" We want to do this manually with,
+"   :Tmuxline airline | TmuxlineSnapshot ~/.dotfiles/tmux-molokai.conf
+let g:airline#extensions#tmuxline#enabled = 0
 
 "  Ack.vim {{{2
 if executable('ag')
