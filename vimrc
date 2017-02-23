@@ -21,7 +21,7 @@ Plug 'junegunn/vim-easy-align'
 Plug 'justinmk/molokai'
 Plug 'justinmk/vim-sneak'
 Plug 'machakann/vim-highlightedyank'
-Plug 'mileszs/ack.vim'
+Plug 'mhinz/vim-grepper'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'rstacruz/sparkup', {'rtp': 'vim'}
 Plug 'scrooloose/nerdtree'
@@ -131,15 +131,6 @@ let g:airline#extensions#branch#displayed_head_limit = 10
 "   :Tmuxline airline | TmuxlineSnapshot ~/.dotfiles/tmux-molokai.conf
 let g:airline#extensions#tmuxline#enabled = 0
 
-"  Ack.vim {{{2
-if executable('ag')
-    let g:ackprg = 'ag --vimgrep'
-endif
-
-if executable('rg')
-    let g:ackprg = 'rg --vimgrep'
-endif
-
 " Rust {{{2
 let g:rustfmt_autosave = 1
 
@@ -171,6 +162,16 @@ let g:go_highlight_array_whitespace_error = 0
 let g:go_highlight_chan_whitespace_error = 0
 let g:go_highlight_space_tab_error = 0
 let g:go_highlight_trailing_whitespace_error = 0
+
+" grepper {{{2
+let g:grepper =
+    \ {
+    \ 'tools': ['rg', 'ag', 'git'],
+    \ 'open': 1,
+    \ 'switch': 1,
+    \ 'jump': 0,
+    \ 'dir': 'file',
+    \ }
 
 " fzf {{{2
 let g:fzf_layout = { 'down': '~15%' }
@@ -375,6 +376,16 @@ xmap t <Plug>Sneak_t
 xmap T <Plug>Sneak_T
 omap t <Plug>Sneak_t
 omap T <Plug>Sneak_T
+
+"  vim-grepper
+if executable('rg')
+    nnoremap <leader>g :Grepper -tool rg<cr>
+else
+    nnoremap <leader>g :Grepper -tool ag<cr>
+endif
+
+nmap gs <plug>(GrepperOperator)
+xmap gs <plug>(GrepperOperator)
 
 " ----------------------------------------------------------------------------
 "  Commands {{{1
