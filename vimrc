@@ -12,7 +12,6 @@ call plug#begin('~/.vim/bundle')
 Plug 'cespare/vim-toml'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'edkolev/tmuxline.vim'
-Plug 'ervandew/supertab'
 Plug 'honza/vim-snippets'
 Plug 'junegunn/goyo.vim', {'on': 'Goyo'}
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all --no-update-rc' }
@@ -26,16 +25,16 @@ Plug 'ntpeters/vim-better-whitespace'
 Plug 'rstacruz/sparkup', {'rtp': 'vim'}
 Plug 'scrooloose/nerdtree'
 Plug 'scrooloose/syntastic'
+Plug 'Shougo/deoplete.nvim', {'do': ':UpdateRemotePlugins'}
+Plug 'Shougo/neosnippet'
+Plug 'Shougo/neosnippet-snippets'
 Plug 'Shougo/vimproc', {'do': 'make'}
-Plug 'SirVer/ultisnips'
 Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
-Plug 'Valloric/YouCompleteMe',
-  \ {'do': './install.py --clang-completer --gocode-completer --racer-completer'}
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'visualrepeat'
@@ -56,10 +55,12 @@ Plug 'idris-hackers/idris-vim'
 Plug 'jneen/ragel.vim'
 Plug 'pbrisbin/html-template-syntax'
 Plug 'rust-lang/rust.vim'
+Plug 'sebastianmarkow/deoplete-rust'
 Plug 'solarnz/thrift.vim', {'for': 'thrift'}
 Plug 'vim-pandoc/vim-pandoc'
 Plug 'vim-pandoc/vim-pandoc-after'
 Plug 'vim-pandoc/vim-pandoc-syntax'
+Plug 'zchee/deoplete-go', {'do': 'make'}
 
 call plug#end()
 
@@ -103,7 +104,7 @@ augroup end
 " ----------------------------------------------------------------------------
 
 "  pandoc {{{2
-let g:pandoc#after#modules#enabled = ["ultisnips"]
+let g:pandoc#after#modules#enabled = ["neosnippets"]
 let g:pandoc#modules#disabled = ["folding"]
 let g:pandoc#formatting#mode = "h"
 let g:pandoc#formatting#extra_equalprg = "--reference-links --reference-location=section"
@@ -132,6 +133,15 @@ let g:airline#extensions#branch#displayed_head_limit = 10
 " We want to do this manually with,
 "   :Tmuxline airline | TmuxlineSnapshot ~/.dotfiles/tmux-molokai.conf
 let g:airline#extensions#tmuxline#enabled = 0
+
+" deoplete {{{2
+set completeopt=menu,preview,longest
+let g:deoplete#enable_at_startup = 1
+let g:deoplete#sources#go#gocode_binary = $GOPATH . '/bin/gocode'
+
+if $RUST_SRC_PATH != ''
+    let g:deoplete#sources#rust#rust_source_path = $RUST_SRC_PATH
+endif
 
 " Rust {{{2
 let g:rustfmt_autosave = 1
@@ -165,6 +175,8 @@ let g:go_highlight_chan_whitespace_error = 0
 let g:go_highlight_space_tab_error = 0
 let g:go_highlight_trailing_whitespace_error = 0
 
+let g:go_snippet_engine = "neosnippet"
+
 " grepper {{{2
 let g:grepper =
     \ {
@@ -175,28 +187,13 @@ let g:grepper =
     \ 'dir': 'file',
     \ }
 
+" neosnippets {{{2
+let g:neosnippet#snippets_directory = "~/.vim/bundle/vim-snippets/snippets"
+set conceallevel=1
+set concealcursor=niv
+
 " fzf {{{2
 let g:fzf_layout = { 'down': '~15%' }
-
-" YouCompleteMe {{{2
-let g:ycm_global_ycm_extra_conf = '~/.dotfiles/default_ycm_extra_conf.py'
-let g:ycm_extra_conf_globlist = ['~/dev/*','!~/*']
-let g:ycm_goto_buffer_command = 'new-tab'
-let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
-let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
-
-if $RUST_SRC_PATH != ''
-    let g:ycm_rust_src_path = $RUST_SRC_PATH
-endif
-
-" SuperTab {{{2
-let g:SuperTabDefaultCompletionType = '<C-n>'
-let g:SuperTabNoCompleteAfter = ['^', '\s', '[^\w]']
-
-" UltiSnips {{{2
-let g:UltiSnipsExpandTrigger = "<tab>"
-let g:UltiSnipsJumpForwardTrigger = "<tab>"
-let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
 
 " tmux-navigator {{{2
 " We have our own mappings
@@ -287,15 +284,6 @@ endif
 " If using gnome-terminal, use 256 colors.
 if $COLORTERM == 'gnome-terminal'
     set t_Co=256
-endif
-
-" Use Ctrl-Space for omni completion.
-if has("gui_running")
-    inoremap <C-Space> <C-x><C-o>
-else
-    if has("unix")
-        inoremap <Nul> <C-x><C-o>
-    endif
 endif
 
 " Better split navigation
@@ -389,6 +377,22 @@ endif
 nmap gs <plug>(GrepperOperator)
 xmap gs <plug>(GrepperOperator)
 
+" SuperTab-style behavior
+function! s:HandleTab() " {{{2
+    if neosnippet#expandable_or_jumpable()
+        return "\<Plug>(neosnippet_expand_or_jump)"
+    else
+        if pumvisible()
+            return "\<c-n>"
+        else
+            return "\<tab>"
+        endif
+    endif
+endfunction
+
+imap <expr><TAB> <SID>HandleTab()
+inoremap <silent><expr> <C-Space> deoplete#mappings#manual_complete()
+
 " ----------------------------------------------------------------------------
 "  Commands {{{1
 " ----------------------------------------------------------------------------
@@ -463,12 +467,10 @@ function! s:SetupHaskell() " {{{2
 endfunction
 
 function! s:SetupC() " {{{2
-    nmap <buffer> <leader>d :YcmCompleter GoTo<CR>
     call s:ClosePreviewOnMove()
 endfunction
 
 function! s:SetupCPP() " {{{2
-    nmap <buffer> <leader>d :YcmCompleter GoTo<CR>
     call s:ClosePreviewOnMove()
 endfunction
 
@@ -493,7 +495,6 @@ function! s:SetupPandoc() " {{{2
 endfunction
 
 function! s:SetupRust() " {{{2
-    nnoremap <buffer> <leader>d :YcmCompleter GoTo<CR>
 endfunction
 
 function! s:SetupYAML() " {{{2
