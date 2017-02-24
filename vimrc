@@ -24,7 +24,6 @@ Plug 'mhinz/vim-grepper'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'rstacruz/sparkup', {'rtp': 'vim'}
 Plug 'scrooloose/nerdtree'
-Plug 'scrooloose/syntastic'
 Plug 'Shougo/deoplete.nvim', {'do': ':UpdateRemotePlugins'}
 Plug 'Shougo/neosnippet'
 Plug 'Shougo/neosnippet-snippets'
@@ -38,6 +37,7 @@ Plug 'tpope/vim-unimpaired'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'visualrepeat'
+Plug 'w0rp/ale'
 
 " ----------------------------------------------------------------------------
 "  Language-specific Plugins {{{2
@@ -103,24 +103,19 @@ augroup end
 "  Plugin Configuration {{{1
 " ----------------------------------------------------------------------------
 
+" ale {{{2
+let g:ale_open_list = 1
+let g:ale_sign_error='⊘'
+let g:ale_sign_warning='⚠'
+let g:ale_line_on_save = 1
+let g:ale_lint_on_text_changed = 0
+
 "  pandoc {{{2
 let g:pandoc#after#modules#enabled = ["neosnippets"]
 let g:pandoc#modules#disabled = ["folding"]
 let g:pandoc#formatting#mode = "h"
 let g:pandoc#formatting#extra_equalprg = "--reference-links --reference-location=section"
 let g:pandoc#syntax#conceal#use = 0
-
-"  syntastic {{{2
-let g:syntastic_aggregate_errors = 0
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_c_config_file = '.clang_complete'
-let g:syntastic_check_on_wq = 0
-let g:syntastic_cpp_config_file = '.clang_complete'
-let g:syntastic_enable_signs = 1
-
-let g:syntastic_javascript_checkers = ['eslint']
-let g:syntastic_go_checkers = ['go', 'golint', 'govet', 'errcheck']
-let g:syntastic_rust_checkers = ['rustc']
 
 " netrw {{{2
 let g:netrw_liststyle = 3
@@ -129,6 +124,7 @@ let g:netrw_liststyle = 3
 let g:airline_theme = "molokai"
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#branch#displayed_head_limit = 10
+let g:airline#extensions#ale#enabled = 1
 
 " We want to do this manually with,
 "   :Tmuxline airline | TmuxlineSnapshot ~/.dotfiles/tmux-molokai.conf
@@ -139,6 +135,7 @@ set completeopt=menu,preview,longest
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#sources#go#gocode_binary = $GOPATH . '/bin/gocode'
 
+let g:deoplete#sources#rust#racer_binary = '/Users/abg/.cargo/bin/racer'
 if $RUST_SRC_PATH != ''
     let g:deoplete#sources#rust#rust_source_path = $RUST_SRC_PATH
 endif
@@ -328,6 +325,10 @@ nnoremap <silent> <leader>evf :tabe $MYVIMRC<cr>
 nnoremap <silent> <leader>evl :tabe ~/.dotfiles/local/vimrc<cr>
 nnoremap <silent> <leader>svf :source $MYVIMRC<cr>
 
+"  ale
+nmap <silent> <leader>ep <Plug>(ale_previous_wrap)
+nmap <silent> <leader>en <Plug>(ale_next_wrap)
+
 " fzf
 nmap <silent> <C-P> :Files<CR>
 nmap <silent> <leader>tt :Trees<CR>
@@ -390,6 +391,7 @@ function! s:HandleTab() " {{{2
     endif
 endfunction
 
+" Auto-completion and snippets
 imap <expr><TAB> <SID>HandleTab()
 inoremap <silent><expr> <C-Space> deoplete#mappings#manual_complete()
 
