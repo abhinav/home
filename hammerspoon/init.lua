@@ -128,7 +128,10 @@ end)
 
 local screensaver = '/System/Library/Frameworks/ScreenSaver.framework/Versions/A/Resources/ScreenSaverEngine.app'
 hs.hotkey.bind({'ctrl', 'cmd'}, 'L', function()
-    hs.application.launchOrFocus(screensaver)
+    hs.alert("Locking")
+    hs.timer.doAfter(1, function()
+        hs.application.launchOrFocus(screensaver)
+    end)
 end)
 
 -----------------------------------------------------------------------------
