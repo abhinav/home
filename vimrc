@@ -186,8 +186,6 @@ let g:grepper =
 
 " neosnippets {{{2
 let g:neosnippet#snippets_directory = "~/.vim/bundle/vim-snippets/snippets"
-set conceallevel=1
-set concealcursor=niv
 
 " fzf {{{2
 let g:fzf_layout = { 'down': '~15%' }
