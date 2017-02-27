@@ -36,6 +36,7 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
+Plug 'vim-syntastic/syntastic'
 Plug 'visualrepeat'
 Plug 'w0rp/ale'
 
@@ -109,6 +110,25 @@ let g:ale_sign_error='⊘'
 let g:ale_sign_warning='⚠'
 let g:ale_line_on_save = 1
 let g:ale_lint_on_text_changed = 0
+
+" Disable for Go until better support is available
+let g:ale_linters = {'go': []}
+
+" syntastic {{{2
+
+" Only until ale gets better Go support
+
+let g:syntastic_aggregate_errors = 0
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_check_on_wq = 0
+let g:syntastic_enable_signs = 1
+let g:syntastic_go_checkers = ['go', 'golint', 'govet', 'errcheck']
+
+" Disable automatic checking for everything but Go
+let g:syntastic_mode_map = {
+    \ "mode": "passive",
+    \ "active_filetypes": ["go"],
+    \ }
 
 "  pandoc {{{2
 let g:pandoc#after#modules#enabled = ["neosnippets"]
