@@ -1,0 +1,27 @@
+#!/bin/sh
+
+TMUX=/usr/local/bin/tmux
+SESSION_NAME=main
+
+if [ -n "$1" ]; then
+	SESSION_NAME="$1"
+fi
+
+CMD=$(\
+	"$TMUX" list-sessions -F '#S #{session_attached}' | \
+		while read -r name attached; do
+			if [ "$name" = "$SESSION_NAME" ]; then
+				if [ "$attached" -eq 0 ]; then
+					# We have a session but nobody is using it
+					echo "attach -t $SESSION_NAME"
+				else
+					# We have a session and we're using it so leave it alone
+					echo "new-session"
+				fi
+			fi
+		done)
+if [ -z "$CMD" ]; then
+	CMD="new-session -s $SESSION_NAME"
+fi
+
+"$TMUX" $CMD
