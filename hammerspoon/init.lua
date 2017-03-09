@@ -25,7 +25,7 @@
 --      the screen horizontally while remaining vertically full sized.
 --
 -- alt-shift-enter
---      Create a new or focus on an existing iTerm window.
+--      Create a new iTerm window.
 
 -----------------------------------------------------------------------------
 -- Reload automatically when this file changes
@@ -115,11 +115,19 @@ hs.hotkey.bind({'ctrl', 'alt', 'shift'}, 'right', function()
 end)
 
 -----------------------------------------------------------------------------
--- Focus on terminal
+-- New terminal
 -----------------------------------------------------------------------------
 
 hs.hotkey.bind({'alt', 'shift'}, 'return', function()
-    hs.application.launchOrFocus('iTerm')
+    if hs.application.find('iTerm') == nil then
+        hs.application.launchOrFocus('iTerm')
+    else
+        hs.applescript.applescript([[
+            tell application "iTerm"
+                create window with default profile
+            end tell
+        ]])
+    end
 end)
 
 -----------------------------------------------------------------------------
