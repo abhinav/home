@@ -234,13 +234,17 @@ set sw=4                " Number of spaces to use for each indent
 set ts=4                " Number of spaces tab will count for
 set nowrap              " No wrapping
 set ic scs              " Smart case insensitive
+set icm=split           " Show :s result incrementally
 set tc=match            " Case sensitive for tag search
 set sta                 " Smart tab
 set bg=dark             " We have a dark background
 set tw=78               " Wrap text after 78 characters
+set lz                  " Lazy redraw; faster macros
+set ve=all              " Virtual edit
 set vb                  " Use visual bell instead of beeping"
 set sb                  " split below
 set spr                 " split right
+set so=3                " leave 3 lines below cursor
 set fdm=marker          " Marker fold method
 set hls                 " Highlight search results
 set wmnu                " Menu for tab completion
