@@ -118,6 +118,9 @@ export FZF_DEFAULT_COMMAND='
   ('"$fzf_search_command"' || git ls-tree -r --name-only HEAD ||
    find . -path "*/\.*" -prune -o -type f -print -o -type l -print |
       sed s/^..//) 2> /dev/null'
+if [ -n "$TMUX" ]; then
+    export FZF_TMUX=1
+fi
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_ALT_C_COMMAND='
   (git ls-tree -d -r --name-only HEAD ||
