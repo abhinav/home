@@ -1,0 +1,38 @@
+#!/bin/zsh
+
+fpath=(/usr/local/share/zsh/site-functions $fpath)
+
+# In the middle of a word, tab completion takes both sides into account.
+setopt COMPLETE_IN_WORD
+
+# Completions plugin
+source ~/.zsh/zsh-completions/zsh-completions.plugin.zsh
+
+# Colored file lists in completion
+if [ -n "$LS_COLORS" ]; then
+    export ZLS_COLORS="$LS_COLORS"
+    zmodload zsh/complist 2> /dev/null
+fi
+
+autoload -U bashcompinit
+bashcompinit
+
+# The following lines were added by compinstall
+
+zstyle ':completion:*' completer _expand _complete _approximate
+zstyle ':completion:*' file-sort name
+zstyle ':completion:*' ignore-parents parent pwd directory
+zstyle ':completion:*:*:-command-:*:*' ignored-patterns '_*'
+zstyle ':completion:*' insert-unambiguous true
+zstyle ':completion:*' special-dirs true
+zstyle ':completion:*' list-colors ''
+zstyle ':completion:*' matcher-list '' 'm:{[:lower:]}={[:upper:]}' 'm:{[:lower:][:upper:]}={[:upper:][:lower:]}' 'r:|[._-]=* r:|=* l:|=*'
+zstyle ':completion:*' menu select=1
+zstyle ':completion:*' original true
+zstyle ':completion:*' select-prompt '%SScrolling active: current selection at %p%s'
+zstyle :compinstall filename '/Users/abg/.zsh/rc.d/completion'
+
+autoload -Uz compinit
+compinit
+# End of lines added by compinstall
+#

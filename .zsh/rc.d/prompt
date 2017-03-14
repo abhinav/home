@@ -1,0 +1,44 @@
+#!/bin/zsh
+
+# Expand parameters, command substitution, etc. in prompts.
+setopt PROMPT_SUBST
+
+autoload -U colors
+colors
+
+local ret_status="%(?:%{$fg_bold[green]%}➜ :%{$fg_bold[red]%}➜ %s)"
+
+# Indicate with red <<< on the right when in normal mode.
+function zle-key-map-init zle-keymap-select {
+    zle reset-prompt
+    zle -R
+}
+
+zle -N zle-keymap-init
+zle -N zle-keymap-select
+
+MODE_INDICATOR="%{$fg_bold[red]%}<<<%{$reset_color%}"
+function vi_mode_indicator() {
+    echo "${${KEYMAP/vicmd/$MODE_INDICATOR}/(main|viins)/}"
+}
+RPS1='$(vi_mode_indicator)'
+
+function cabal_sandbox_info() {
+    if [ -f cabal.sandbox.config ]; then
+        echo "%{$fg[green]%}sandboxed%{$reset_color%}"
+    else
+        if [ -d .stack-work ]; then
+            echo "%{$fg[green]%}stack%{$reset_color%}"
+        else
+        cabal_files=(*.cabal(N))
+            if [ $#cabal_files -gt 0 ]; then
+                echo "%{$fg[red]%}not sandboxed%{$reset_color%}"
+            fi
+        fi
+    fi
+}
+
+source ~/.zsh/git_prompt.sh
+
+PROMPT='%{$fg_bold[white]%}%M%{$reset_color%} ${ret_status}%{$fg_bold[green]%}%p %{$fg[cyan]%}%~ %{$fg_bold[blue]%}$(git_super_status)%{$reset_color%} $(cabal_sandbox_info)
+%{$fg[blue]%} $ %{$reset_color%}'

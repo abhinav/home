@@ -1,0 +1,18 @@
+#!/bin/zsh
+
+HISTFILE="${ZDOTDIR:-$HOME}/.zhistory"
+HISTSIZE=10000  # Number of events to save in internal history
+SAVEHIST=10000  # Number of events to save in history file
+
+setopt EXTENDED_HISTORY       # Write in ':start:elapsed;command' format
+setopt INC_APPEND_HISTORY     # Write history file immediately, not on exit
+setopt SHARE_HISTORY          # Share history between sessions
+setopt HIST_EXPIRE_DUPS_FIRST # Expire duplicate event first when trimming
+setopt HIST_IGNORE_DUPS       # Don't record an event that was just recorded
+setopt HIST_IGNORE_ALL_DUPS   # Delete old event if new event is a duplicate
+setopt HIST_FIND_NO_DUPS      # Don't display previously found event
+setopt HIST_IGNORE_SPACE      # Don't record events starting with a space
+setopt HIST_SAVE_NO_DUPS      # Don't write duplicate event to file
+setopt HIST_VERIFY            # Don't execute immediately upon expansion
+
+bindkey '^r' history-incremental-search-backward

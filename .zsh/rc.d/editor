@@ -1,0 +1,17 @@
+#!/bin/zsh
+
+bindkey -v
+bindkey '^A' beginning-of-line
+bindkey '^E' end-of-line
+bindkey '^K' kill-line
+bindkey '\eb' backward-word
+bindkey '\ef' forward-word
+bindkey '\ed' kill-word
+
+# Bind v in Normal mode to edit the current command in vim.
+autoload edit-command-line
+zle -N edit-command-line
+bindkey -M vicmd v edit-command-line
+
+# no lag when switching to vi normal mode
+export KEYTIMEOUT=1
