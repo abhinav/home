@@ -1,0 +1,11 @@
+#!/bin/bash
+
+alias l=ls
+alias ll="ls -l"
+alias la="ls -a"
+alias lla="ls -la"
+
+if [ "$EDITOR" = "nvim" ]; then
+	alias vi=nvim
+	alias vim=nvim
+fi

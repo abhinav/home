@@ -16,6 +16,7 @@
 !/bin
 
 # shell
+!.aliases
 !.bashrc
 !.profile
 !.profile.d/
