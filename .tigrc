@@ -1,1 +1,2 @@
 bind main B !git rebase -i %(commit)
+bind main <Ctrl-p> ?git push "%(prompt Enter remote name: )" %(commit):"%(prompt Enter branch name: )"
