@@ -29,7 +29,7 @@ function chpwd_update_git_vars() {
 
 function update_current_git_vars() {
     unset __CURRENT_GIT_STATUS
-    _GIT_STATUS="$(python $HOME/.dotfiles/bin/gitstatus.py 2>/dev/null)"
+    _GIT_STATUS="$(python $HOME/.zsh/gitstatus.py 2>/dev/null)"
     __CURRENT_GIT_STATUS=("${(@s: :)_GIT_STATUS}")
     GIT_BRANCH=$__CURRENT_GIT_STATUS[1]
     GIT_AHEAD=$__CURRENT_GIT_STATUS[2]

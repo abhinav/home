@@ -55,7 +55,7 @@ function cabal_sandbox_info() {
     fi
 }
 
-source ~/.dotfiles/zsh/git_prompt.sh
+source ~/.zsh/git_prompt.sh
 
 PROMPT='%{$fg_bold[white]%}%M%{$reset_color%} ${ret_status}%{$fg_bold[green]%}%p %{$fg[cyan]%}%~ %{$fg_bold[blue]%}$(git_super_status)%{$reset_color%} $(cabal_sandbox_info)
 %{$fg[blue]%} $ %{$reset_color%}'
@@ -155,7 +155,7 @@ zstyle ':completion:*' matcher-list '' 'm:{[:lower:]}={[:upper:]}' 'm:{[:lower:]
 zstyle ':completion:*' menu select=1
 zstyle ':completion:*' original true
 zstyle ':completion:*' select-prompt '%SScrolling active: current selection at %p%s'
-zstyle :compinstall filename '/Users/abg/.dotfiles/zshrc'
+zstyle :compinstall filename '/Users/abg/.zshrc'
 
 autoload -Uz compinit
 compinit
@@ -174,6 +174,6 @@ compinit
 # Source the local zshrc if present
 #############################################################################
 
-if [[ -f "$HOME/.dotfiles/local/zshrc" ]]; then
-    . ~/.dotfiles/local/zshrc
+if [[ -f "$HOME/.zsh/rc.d/local" ]]; then
+    source "$HOME/.zsh/rc.d/local"
 fi

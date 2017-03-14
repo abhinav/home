@@ -1,7 +1,5 @@
 # vim:set noet ft=gitconfig:
 
-[core]
-	excludesfile = ~/.dotfiles/gitignores
 [user]
 	name = Abhinav Gupta
 	email = mail@abhinavg.net
@@ -33,4 +31,4 @@
 [rebase]
 	stat = true
 [include]
-	path = ~/.dotfiles/local/gitconfig
+	path = ~/.gitconfig.d/local

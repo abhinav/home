@@ -108,8 +108,7 @@ augroup end
 let g:ale_open_list = 1
 let g:ale_sign_error='⊘'
 let g:ale_sign_warning='⚠'
-let g:ale_lint_on_save = 1
-let g:ale_lint_on_enter = 0
+let g:ale_line_on_save = 1
 let g:ale_lint_on_text_changed = 0
 
 " Disable for Go until better support is available
@@ -148,7 +147,7 @@ let g:airline#extensions#branch#displayed_head_limit = 10
 let g:airline#extensions#ale#enabled = 1
 
 " We want to do this manually with,
-"   :Tmuxline airline | TmuxlineSnapshot ~/.dotfiles/tmux-molokai.conf
+"   :Tmuxline airline | TmuxlineSnapshot ~/.tmux-molokai.conf
 let g:airline#extensions#tmuxline#enabled = 0
 
 " deoplete {{{2
@@ -345,7 +344,6 @@ endif
 
 " Edit the local vimrc
 nnoremap <silent> <leader>evf :tabe $MYVIMRC<cr>
-nnoremap <silent> <leader>evl :tabe ~/.dotfiles/local/vimrc<cr>
 nnoremap <silent> <leader>svf :source $MYVIMRC<cr>
 
 "  ale
@@ -529,11 +527,3 @@ function! s:SetupYAML() " {{{2
         autocmd BufWritePost package.yaml silent !hpack --silent
     augroup end
 endfunction
-
-" ----------------------------------------------------------------------------
-" local vimrc {{{1
-" ----------------------------------------------------------------------------
-
-if glob("~/.dotfiles/local/vimrc")
-    source ~/.dotfiles/local/vimrc
-endif

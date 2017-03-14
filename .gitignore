@@ -1,0 +1,49 @@
+# Ignore everything by default and whitelist things explicitly.
+/*
+
+!.gitignore
+!.gitmodules
+
+# XDG home
+!/.config
+/.config/*
+
+# Always ignore
+.DS_Store
+.*.sw?
+
+# Useful scripts/tools are placed in ~/bin
+!/bin
+
+# shell
+!.bashrc
+!.zsh/
+!.zshenv
+!.zshrc
+/.zsh/rc.d/local
+
+# git
+!.gitconfig
+!/.gitconfig.d/
+/.gitconfig.d/local
+
+# GHC
+!.ghci
+
+# hammerspoon
+!/.hammerspoon/
+
+# spacemacs
+!/.spacemacs.d/
+
+# tig
+!.tigrc
+
+# tmux
+!.tmux*.conf
+
+# [n]vim
+!.vimrc
+!/.config/nvim
+/.config/nvim/*
+!/.config/nvim/init.vim
