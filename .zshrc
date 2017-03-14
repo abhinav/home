@@ -1,4 +1,4 @@
-fpath=(/usr/local/share/zsh-completions /usr/local/share/zsh/site-functions $fpath)
+fpath=(/usr/local/share/zsh/site-functions $fpath)
 
 #############################################################################
 # Options
@@ -142,6 +142,8 @@ unset fasd_cache
 # Completion configuration
 #############################################################################
 
+source ~/.zsh/zsh-completions/zsh-completions.plugin.zsh
+
 # The following lines were added by compinstall
 
 zstyle ':completion:*' completer _expand _complete _approximate
@@ -166,7 +168,7 @@ compinit
 # End setup
 #############################################################################
 
-. ~/.zsh/plugins/syntax-highlighting/zsh-syntax-highlighting.zsh
+. ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
