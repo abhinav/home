@@ -1,0 +1,6 @@
+#!/bin/bash
+
+if [ -z "$HOSTNAME" ]; then
+	HOSTNAME=$(hostname)
+	export HOSTNAME
+fi

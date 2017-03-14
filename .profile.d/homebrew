@@ -1,0 +1,4 @@
+#!/bin/bash
+
+export HOMEBREW_EDITOR="$EDITOR"
+export HOMEBREW_NO_ANALYTICS=1

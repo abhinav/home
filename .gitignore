@@ -17,6 +17,9 @@
 
 # shell
 !.bashrc
+!.profile
+!.profile.d/
+!.zprofile
 !.zsh/
 !.zshenv
 !.zshrc

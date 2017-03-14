@@ -1,3 +1,11 @@
+#!/bin/zsh
+
+# Make sure that .profile has been loaded, even if there was no "login shell"
+# in our lineage.
+if [ -n "$_PROFILE_LOADED" ]; then
+    source ~/.profile
+fi
+
 fpath=(/usr/local/share/zsh/site-functions $fpath)
 
 #############################################################################
@@ -78,35 +86,12 @@ zle -N edit-command-line
 bindkey -M vicmd v edit-command-line
 
 #############################################################################
-# Aliases
-#############################################################################
-alias l=ls
-alias ll="ls -l"
-alias la="ls -a"
-alias lla="ls -la"
-alias serve_this="python -mSimpleHTTPServer"
-
-#############################################################################
 # Environment variables
 #############################################################################
-export EDITOR=vim
-if (which nvim &> /dev/null); then
-    # Prefer nvim over vim.
-    alias vi=nvim
-    alias vim=nvim
-    export EDITOR=nvim
-fi
-
-export LANG=en_US.UTF-8
-export TERM=screen-256color
 export HISTSIZE=9999
 export SAVEHIST=9999
 export HISTFILE=~/.zsh_history
-export HOMEBREW_EDITOR="$EDITOR"
-export HOMEBREW_NO_ANALYTICS=1
-export GITHUB_USER=abhinav
 export KEYTIMEOUT=1  # no lag when switching to vi normal mode
-export CLICOLOR=1
 
 fzf_search_command='ag -g ""'
 if (which rg &> /dev/null); then
@@ -126,17 +111,6 @@ export FZF_ALT_C_COMMAND='
   (git ls-tree -d -r --name-only HEAD ||
    find -L . \( -path "*/\.*" -o -fstype dev -o -fstype proc \) -prune -o -type d -print |
       sed 1d | cut -b3-) 2> /dev/null'
-
-#############################################################################
-# FASD
-#############################################################################
-fasd_cache="$HOME/.fasd-init-zsh"
-if [ "$(command -v fasd)" -nt "$fasd_cache" -o ! -s "$fasd_cache" ]; then
-    fasd --init auto >| "$fasd_cache"
-fi
-source "$fasd_cache"
-unset fasd_cache
-
 
 #############################################################################
 # Completion configuration
@@ -175,6 +149,8 @@ compinit
 #############################################################################
 # Source the local zshrc if present
 #############################################################################
+
+source ~/.aliases
 
 if [[ -f "$HOME/.zsh/rc.d/local" ]]; then
     source "$HOME/.zsh/rc.d/local"

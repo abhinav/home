@@ -1,0 +1,7 @@
+#!/bin/bash
+
+EDITOR=vim
+if (which nvim &> /dev/null); then
+	EDITOR=nvim
+fi
+export EDITOR
