@@ -1,0 +1,4 @@
+[http "https://gopkg.in"]
+	followRedirects = true
+
+# vim:set ft=gitconfig:

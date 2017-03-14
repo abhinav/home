@@ -31,4 +31,5 @@
 [rebase]
 	stat = true
 [include]
+	path = ~/.gitconfig.d/go
 	path = ~/.gitconfig.d/local
