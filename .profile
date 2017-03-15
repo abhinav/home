@@ -2,6 +2,7 @@
 
 source ~/.profile.d/hostname
 source ~/.profile.d/locale
+source ~/.profile.d/arrayutil
 source ~/.profile.d/pager
 source ~/.profile.d/editor
 source ~/.profile.d/term

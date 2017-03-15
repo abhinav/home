@@ -4,6 +4,9 @@
 # in our lineage.
 if [ -z "$_PROFILE_LOADED" ]; then
 	source ~/.profile
+else
+	# Always want arrayutil
+	source ~/.profile.d/arrayutil
 fi
 
 source ~/.aliases
