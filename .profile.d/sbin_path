@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# shellcheck disable=2086
+add_sbin_paths() {
+	local IFS=:
+
+	PATH=$(append /sbin $PATH)
+	PATH=$(append /usr/sbin $PATH)
+	PATH=$(append /usr/local/sbin $PATH)
+
+	export PATH
+}
+
+add_sbin_paths

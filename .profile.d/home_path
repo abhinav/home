@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# shellcheck disable=2086
+add_home_paths() {
+	local IFS=:
+
+	[ -d "$HOME/bin" ] && PATH=$(prepend "$HOME/bin" $PATH)
+	[ -d "$HOME/.bin" ] && PATH=$(prepend "$HOME/.bin" $PATH)
+	[ -d "$HOME/.local/bin" ] && PATH=$(prepend "$HOME/.local/bin" $PATH)
+
+	export PATH
+}
+
+add_home_paths
