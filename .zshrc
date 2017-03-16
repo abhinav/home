@@ -1,8 +1,5 @@
 #!/bin/zsh
 
-# Comments next to commands
-setopt INTERACTIVECOMMENTS
-
 # Make sure that .profile has been loaded, even if there was no "login shell"
 # in our lineage.
 if [ -z "$_PROFILE_LOADED" ]; then
