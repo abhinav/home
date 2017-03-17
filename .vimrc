@@ -274,6 +274,9 @@ hi CursorLine term=bold cterm=bold
 " Make line numbers in terminal more readable
 hi LineNr ctermfg=245
 
+" Invisible vertical split
+hi VertSplit guibg=bg guifg=bg
+
 " Use global python. Ensures nvim works with Python plugins inside a virtualenv.
 let g:python_host_prog = '/usr/local/bin/python'
 
