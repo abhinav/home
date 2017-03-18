@@ -1,6 +1,5 @@
 #!/bin/bash
 
-export HOMEBREW_EDITOR="$EDITOR"
 export HOMEBREW_NO_ANALYTICS=1
 export HOMEBREW_PREFIX=/usr/local
 

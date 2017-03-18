@@ -5,3 +5,4 @@ if (which nvim &> /dev/null); then
 	EDITOR=nvim
 fi
 export EDITOR
+export HOMEBREW_EDITOR="$EDITOR"
