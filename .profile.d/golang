@@ -1,5 +1,6 @@
 #!/bin/bash
 
+GOPATH="$HOME/go"
 if [ -d "$HOME/dev/go" ]; then
 	GOPATH="$HOME/dev/go"
 
@@ -14,3 +15,41 @@ if [ -d "$HOMEBREW_PREFIX/opt/go/libexec/bin" ]; then
 fi
 
 export GOPATH PATH
+
+# Clones the Go given Go project and cds into it. Works only for import paths.
+#
+# 	goclone github.com/...
+#
+# For GitHub projects, the "github.com/" may be skipped. For non-GitHub
+# projects, we rely on `go get` to retrieve the project so its dependencies
+# will also be downloaded.
+goclone() {
+	local name="$1"
+	if [ -z "$name" ]; then
+		echo "USAGE: goclone IMPORTPATH"
+		return
+	fi
+
+	local dest="$GOPATH/src/$name"
+	if [ ! -d "$dest" ]; then
+		mkdir -p "$dest"
+	fi
+
+	local numParts
+	numParts=$(IFS="/"; echo ${#${name[@]}})
+	if [ "$numParts" -eq 2 ]; then
+		# foo/bar => github.com/foo/bar
+		goclone "github.com/$name"
+		return
+	fi
+
+	case "$name" in
+		github.com/*)
+			git clone "https://$name.git" "$dest" || return
+			;;
+		*)
+			go get -u -d -v -f "$name" || return
+	esac
+
+	cd "$dest" || return
+}
