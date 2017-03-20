@@ -1,0 +1,4 @@
+#!/bin/zsh
+
+hash -d gos="$GOPATH/src"
+hash -d gog="$GOPATH/src/github.com"
