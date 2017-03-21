@@ -157,6 +157,7 @@ set completeopt=menu,preview,longest
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#sources#go#gocode_binary = $GOPATH . '/bin/gocode'
 
+let g:deoplete#sources#rust#disable_keymap = 1
 let g:deoplete#sources#rust#racer_binary = '/Users/abg/.cargo/bin/racer'
 if $RUST_SRC_PATH != ''
     let g:deoplete#sources#rust#rust_source_path = $RUST_SRC_PATH
@@ -523,6 +524,8 @@ function! s:SetupPandoc() " {{{2
 endfunction
 
 function! s:SetupRust() " {{{2
+    nmap <buffer> <leader>d <Plug>DeopleteRustGoToDefinitionTab
+    nmap <buffer> K <Plug>DeopleteRustShowDocumentation
 endfunction
 
 function! s:SetupYAML() " {{{2
