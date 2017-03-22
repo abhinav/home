@@ -62,3 +62,4 @@ hs.window.animationDuration = 0
 require('win')
 require('term')
 require('lock')
+require('sections')
