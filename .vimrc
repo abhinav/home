@@ -208,7 +208,8 @@ let g:grepper =
     \ }
 
 " neosnippets {{{2
-let g:neosnippet#snippets_directory = "~/.vim/bundle/vim-snippets/snippets"
+let g:neosnippet#enable_snipmate_compatibility = 1
+let g:neosnippet#snippets_directory = "~/.config/nvim/plugged/vim-snippets/snippets"
 
 " fzf {{{2
 let g:fzf_layout = { 'down': '~15%' }
