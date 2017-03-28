@@ -14,6 +14,10 @@
 --      Move the window to the next/previous screen while maintaining its size
 --      relative to that screen's grid.
 --
+-- cmd-alt-shift + left/right
+--      Move the mouse to the screen in the given direction placing it in the
+--      same section of the new screen as the original.
+--
 -- cmd-alt + up/down/left/right
 --      Resize the current window to take the given half of the screen. For
 --      left/right, if the window was already in that half, take that third of
@@ -60,6 +64,7 @@ hs.grid.ui.textSize = 16
 hs.window.animationDuration = 0
 
 require('win')
+require('mouse')
 require('term')
 require('lock')
 require('sections')
