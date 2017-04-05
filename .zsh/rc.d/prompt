@@ -6,6 +6,11 @@ setopt PROMPT_SUBST
 autoload -U colors
 colors
 
+if [ "$ITERM_PROFILE" = "Presentation" ]; then
+    export PROMPT='%{$fg[blue]%} $ %{$reset_color%}'
+    return
+fi
+
 local ret_status="%(?:%{$fg_bold[green]%}➜ :%{$fg_bold[red]%}➜ %s)"
 
 # Indicate with red <<< on the right when in normal mode.
