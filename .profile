@@ -17,6 +17,7 @@ source ~/.profile.d/github
 source ~/.profile.d/golang
 source ~/.profile.d/rust
 source ~/.profile.d/haskell
+source ~/.profile.d/node
 
 # - Each shell profile (e.g., .bash_profile) sources .profile
 # - Each shell rc (e.g., .bashrc) sources .profile if _PROFILE_LOADED is not
