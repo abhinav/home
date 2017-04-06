@@ -1,20 +1,29 @@
 #!/bin/sh
 
-if [ -e "$HOME/.nvm/nvm.sh" ]; then
-	if [ -f "$HOME/.nvm/alias/default" ]; then
-		nvm_default=$(cat "$HOME/.nvm/alias/default")
-		if [ -d "$HOME/.nvm/v${nvm_default}/bin" ]; then
-			export PATH=$(IFS=:; prepend "$HOME/.nvm/v${nvm_default}/bin" $PATH)
-		else
-			export PATH=$(IFS=:; prepend "$HOME/.nvm/versions/node/v${nvm_default}/bin" $PATH)
-		fi
-	fi
+_setup_nvm_alias()
+{
+	name="$1"
+	eval "
+		$name()
+		{
+			unset -f $name
+			if [ -z \"\$NVM_DIR\" ]; then
+				. '$HOME/.nvm/nvm.sh'
+			fi
+			$name \"\$@\"
+		}
+	"
+}
 
-	nvm()
-	{
-		. "$HOME/.nvm/nvm.sh"
-		nvm "$@"
-	}
+setup_nvm_aliases()
+{
+	_setup_nvm_alias nvm
+	_setup_nvm_alias npm
+	_setup_nvm_alias node
+}
+
+if [ -e "$HOME/.nvm/nvm.sh" ]; then
+	setup_nvm_aliases
 fi
 
-export PATH=$(IFS=:; prepend "node_modules/.bin" $PATH)
+unset -f _setup_nvm_alias setup_nvm_aliases
