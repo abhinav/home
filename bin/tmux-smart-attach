@@ -8,7 +8,7 @@ if [ -n "$1" ]; then
 fi
 
 CMD=$(\
-	"$TMUX" list-sessions -F '#S #{session_attached}' | \
+	"$TMUX" list-sessions -F '#S #{session_attached}' 2>/dev/null | \
 		while read -r name attached; do
 			if [ "$name" = "$SESSION_NAME" ]; then
 				if [ "$attached" -eq 0 ]; then
