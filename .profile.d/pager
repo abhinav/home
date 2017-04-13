@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PAGER="$(which less)"
+PAGER="$(command -v less)"
 
 # sets default options to less
 LESS='-SMRci'

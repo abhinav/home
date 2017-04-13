@@ -1,7 +1,7 @@
 #!/bin/zsh
 
 fzf_search_command='ag -g ""'
-if (which rg &> /dev/null); then
+if (command -v rg &> /dev/null); then
     fzf_search_command='rg --files'
 fi
 
