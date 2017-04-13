@@ -270,6 +270,9 @@ set wig+=*/cabal-dev,*/dist,*.o,*.class,*.pyc,*.hi
 " Support codex tags.
 set tags+=codex.tags
 
+" Workaround for https://github.com/neovim/neovim/issues/4210
+hi Normal ctermbg=NONE guibg=NONE
+
 " Only bold out the current line
 hi CursorLine term=bold cterm=bold
 
