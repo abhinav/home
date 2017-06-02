@@ -16,6 +16,10 @@
 	s = status
 	co = checkout
 	c = commit
+[log]
+	abbrevCommit = true
+	date = relative
+	decorate = true
 [push]
 	default = simple
 [rerere]
