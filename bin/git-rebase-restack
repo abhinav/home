@@ -1,0 +1,12 @@
+#!/usr/bin/env perl
+
+while (<>) {
+    print;
+    next unless /^pick /;
+    next unless m/\(([^)]+)\)$/g;
+    for (split /, ?/, $1) {
+        if (-e ".git/refs/heads/$_") {
+            print "exec git branch -f $_\n";
+        }
+    }
+}
