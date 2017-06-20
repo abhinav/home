@@ -116,6 +116,9 @@ let g:ale_emit_conflict_warnings = 0
 let g:ale_linters = {
     \ 'go': ['go vet', 'golint', 'go build'],
     \ }
+let g:ale_linter_aliases = {
+    \ 'pandoc': ['markdown']
+    \ }
 
 "  pandoc {{{2
 let g:pandoc#after#modules#enabled = ["neosnippets"]
