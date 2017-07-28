@@ -40,6 +40,9 @@
 # spacemacs
 !/.spacemacs.d/
 
+# stack
+!/.stack
+
 # tig
 !.tigrc
 

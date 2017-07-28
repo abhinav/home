@@ -1,0 +1,7 @@
+flags: {}
+extra-package-dbs: []
+packages: []
+extra-deps: []
+
+# Also update .profile.d/haskell
+resolver: lts-9.0

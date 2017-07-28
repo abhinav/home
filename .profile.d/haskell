@@ -4,8 +4,8 @@
 add_haskell_paths() {
 	# Don't complain if glob expansion doesn't result in anything
 	local IFS=:
-	local STACK_RESOLVER=lts-7.15
-	local GHC_VERSION=8.0.1
+	local STACK_RESOLVER=lts-9.0
+	local GHC_VERSION=8.0.2
 
 	if [ -d "$HOME/.cabal/bin" ]; then
 		PATH=$(append "$HOME/.cabal/bin" $PATH)
