@@ -115,6 +115,7 @@ let g:ale_emit_conflict_warnings = 0
 
 let g:ale_linters = {
     \ 'go': ['go vet', 'golint', 'go build'],
+    \ 'haskell': ['stack-ghc-mod'],
     \ }
 let g:ale_linter_aliases = {
     \ 'pandoc': ['markdown']
@@ -473,11 +474,6 @@ function! s:SetupHaskell() " {{{2
     let g:necoghc_enable_detailed_browse = 1
     setlocal omnifunc=necoghc#omnifunc
     setlocal ts=2 sw=2 et
-
-    augroup vimrc_haskell_hooks
-        autocmd!
-        autocmd BufWritePost *.hs GhcModCheckAndLintAsync
-    augroup end
 
     nmap <buffer> <F1> :GhcModType<CR>
     nmap <buffer> <silent> <F2> :GhcModTypeClear<CR>
