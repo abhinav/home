@@ -355,9 +355,9 @@ nmap <silent> <leader>ww :Windows<CR>
 nmap <silent> <leader>: :Commands<CR>
 
 " Buffer shortcuts
-nmap <silent> <leader>bd :bd<CR>
-nmap <silent> <leader>bn :bn<CR>
-nmap <silent> <leader>bp :bN<CR>
+nmap <silent> <leader>q :bd<CR>
+nmap <silent> <leader>n :bn<CR>
+nmap <silent> <leader>p :bN<CR>
 
 " Window shortcuts
 nmap <silent> <leader>wd :close<CR>
