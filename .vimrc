@@ -357,7 +357,7 @@ nmap <silent> <leader>: :Commands<CR>
 " Buffer shortcuts
 nmap <silent> <leader>q :bd<CR>
 nmap <silent> <leader>n :bn<CR>
-nmap <silent> <leader>p :bN<CR>
+nmap <silent> <leader>N :bN<CR>
 
 " Window shortcuts
 nmap <silent> <leader>wd :close<CR>
