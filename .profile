@@ -14,6 +14,7 @@ source ~/.profile.d/dircolors
 source ~/.profile.d/fasd
 source ~/.profile.d/github
 
+source ~/.profile.d/ruby
 source ~/.profile.d/golang
 source ~/.profile.d/rust
 source ~/.profile.d/haskell

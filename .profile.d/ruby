@@ -1,0 +1,8 @@
+#!/bin/bash
+
+if [ -d "$HOME/.rbenv/shims" ]; then
+
+	# shellcheck disable=2086
+	PATH=$(IFS=:; prepend "$HOME/.rbenv/shims" $PATH)
+fi
+
