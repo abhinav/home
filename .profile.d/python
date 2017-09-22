@@ -1,0 +1,7 @@
+#!/bin/bash
+
+if [ -d "$HOMEBREW_PREFIX/opt/python/libexec/bin" ]; then
+
+	# shellcheck disable=2086
+	PATH=$(IFS=:; prepend "$HOMEBREW_PREFIX/opt/python/libexec/bin" $PATH)
+fi
