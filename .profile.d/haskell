@@ -8,17 +8,17 @@ add_haskell_paths() {
 	local GHC_VERSION=8.0.2
 
 	if [ -d "$HOME/.cabal/bin" ]; then
-		PATH=$(append "$HOME/.cabal/bin" $PATH)
+		PATH=$(prepend "$HOME/.cabal/bin" $PATH)
 	fi
 
 	local snapshot="$HOME/.stack/snapshots/x86_64-osx/$STACK_RESOLVER/$GHC_VERSION/bin"
 	if [ -d "$snapshot" ]; then
-		PATH=$(append "$snapshot" $PATH)
+		PATH=$(prepend "$snapshot" $PATH)
 	fi
 
 	local ghc="$HOME/.stack/programs/x86_64-osx/ghc-$GHC_VERSION/bin"
 	if [ -d "$ghc" ]; then
-		PATH=$(append "$ghc" $PATH)
+		PATH=$(prepend "$ghc" $PATH)
 	fi
 
 	export PATH

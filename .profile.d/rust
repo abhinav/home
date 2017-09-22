@@ -9,6 +9,6 @@ fi
 
 if [ -d "$HOME/.cargo" ]; then
 	# shellcheck disable=2086
-	PATH=$(IFS=:; append "$HOME/.cargo/bin" $PATH)
+	PATH=$(IFS=:; prepend "$HOME/.cargo/bin" $PATH)
 fi
 export PATH
