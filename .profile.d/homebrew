@@ -4,5 +4,5 @@ export HOMEBREW_NO_ANALYTICS=1
 export HOMEBREW_PREFIX=/usr/local
 
 # shellcheck disable=2086
-PATH=$(IFS=:; append "$HOMEBREW_PREFIX/bin" $PATH)
+PATH=$(IFS=:; prepend "$HOMEBREW_PREFIX/bin" $PATH)
 export PATH
