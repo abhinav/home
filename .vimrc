@@ -496,6 +496,11 @@ endfunction
 function! s:SetupGo() " {{{2
     setlocal noet
     nmap <buffer> <leader>d <Plug>(go-def-tab)
+
+    " Search for declarations in the current file or directory.
+    nmap <buffer> <leader>ss :GoDecls<CR>
+    nmap <buffer> <leader>sd :GoDeclsDir<CR>
+
     call s:ClosePreviewOnMove()
 endfunction
 
