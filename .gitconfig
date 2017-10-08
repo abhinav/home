@@ -34,7 +34,7 @@
 	whitespace = fix
 [rebase]
 	stat = true
-	instructionFormat = %s %d
+	instructionFormat = %s%d
 [include]
 	path = ~/.gitconfig.d/go
 	path = ~/.gitconfig.d/local
