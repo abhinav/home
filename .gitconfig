@@ -35,6 +35,8 @@
 [rebase]
 	stat = true
 	instructionFormat = %s%d
+[sequence]
+	editor = ~/.restack/edit.sh
 [include]
 	path = ~/.gitconfig.d/go
 	path = ~/.gitconfig.d/local

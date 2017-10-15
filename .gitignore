@@ -54,3 +54,6 @@
 !/.config/nvim
 /.config/nvim/*
 !/.config/nvim/init.vim
+
+# restack
+!/.restack
