@@ -43,7 +43,10 @@ function cabal_sandbox_info() {
     fi
 }
 
-source ~/.zsh/git_prompt.sh
+_GITPROMPT=gitprompt
+if ! command -v gitprompt &>/dev/null; then
+    _GITPROMPT='echo (gitprompt is not installed)'
+fi
 
-PROMPT='%{$fg_bold[white]%}%M%{$reset_color%} ${ret_status}%{$fg_bold[green]%}%p %{$fg[cyan]%}%~ %{$fg_bold[blue]%}$(git_super_status)%{$reset_color%} $(cabal_sandbox_info)
+PROMPT='%{$fg_bold[white]%}%M%{$reset_color%} ${ret_status}%{$fg_bold[green]%}%p %{$fg[cyan]%}%~ %{$reset_color%}$($_GITPROMPT) $(cabal_sandbox_info)
 %{$fg[blue]%} $ %{$reset_color%}'
