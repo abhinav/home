@@ -36,13 +36,13 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-Plug 'visualrepeat'
+Plug 'vim-scripts/visualrepeat'
 Plug 'w0rp/ale'
 
 " ----------------------------------------------------------------------------
 "  Language-specific Plugins {{{2
 " ----------------------------------------------------------------------------
-Plug 'Arduino-syntax-file'
+Plug 'vim-scripts/Arduino-syntax-file'
 Plug 'davidhalter/jedi-vim', {'for': ['python', 'pyrex']}
 Plug 'eagletmt/ghcmod-vim'
 Plug 'eagletmt/neco-ghc'
