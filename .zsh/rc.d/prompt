@@ -48,5 +48,10 @@ if ! command -v gitprompt &>/dev/null; then
     _GITPROMPT='echo (gitprompt is not installed)'
 fi
 
-PROMPT='%{$fg_bold[white]%}%M%{$reset_color%} ${ret_status}%{$fg_bold[green]%}%p %{$fg[cyan]%}%~ %{$reset_color%}$($_GITPROMPT) $(cabal_sandbox_info)
+gitstatus()
+{
+    "$_GITPROMPT" 2>/dev/null
+}
+
+PROMPT='%{$fg_bold[white]%}%M%{$reset_color%} ${ret_status}%{$fg_bold[green]%}%p %{$fg[cyan]%}%~ %{$reset_color%}$(gitstatus) $(cabal_sandbox_info)
 %{$fg[blue]%} $ %{$reset_color%}'
