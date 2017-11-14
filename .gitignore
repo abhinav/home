@@ -18,6 +18,7 @@
 # shell
 !.aliases
 !.bashrc
+!.bash_profile
 !.profile
 !.profile.d/
 !.zprofile
