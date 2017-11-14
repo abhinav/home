@@ -1,6 +1,16 @@
 #!/bin/sh
 
-TMUX=/usr/local/bin/tmux
+TMUX_EXE=$(command -v tmux)
+if [ -z "$TMUX_EXE" ]; then
+	TMUX_EXE=/usr/local/bin/tmux
+fi
+
+if [ ! -x "$TMUX_EXE" ]; then
+	echo "Could not find tmux. Falling back to $SHELL."
+	"$SHELL"
+	exit
+fi
+
 SESSION_NAME=main
 
 if [ -n "$1" ]; then
@@ -8,7 +18,7 @@ if [ -n "$1" ]; then
 fi
 
 CMD=$(\
-	"$TMUX" list-sessions -F '#S #{session_attached}' 2>/dev/null | \
+	"$TMUX_EXE" list-sessions -F '#S #{session_attached}' 2>/dev/null | \
 		while read -r name attached; do
 			if [ "$name" = "$SESSION_NAME" ]; then
 				if [ "$attached" -eq 0 ]; then
@@ -24,4 +34,4 @@ if [ -z "$CMD" ]; then
 	CMD="new-session -s $SESSION_NAME"
 fi
 
-"$TMUX" $CMD
+"$TMUX_EXE" $CMD
