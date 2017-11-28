@@ -1,9 +1,16 @@
 #!/bin/bash
 
-alias l=ls
-alias ll="ls -l"
-alias la="ls -a"
-alias lla="ls -la"
+if command -v exa &>/dev/null; then
+	alias l=exa
+else
+	alias l=ls
+fi
+
+alias ll="l -l"
+alias la="l -a"
+alias lla="l -la"
+
+unset LS
 
 if [ "$EDITOR" = "nvim" ]; then
 	alias vi=nvim
