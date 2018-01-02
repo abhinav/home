@@ -35,6 +35,7 @@
 [rebase]
 	stat = true
 	instructionFormat = %s%d
+	autoSquash = true
 [sequence]
 	editor = ~/.restack/edit.sh
 [include]
