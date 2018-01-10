@@ -2,3 +2,9 @@
 
 # Don't accidentally overwrite files by piping into them.
 setopt noclobber
+
+# Don't kill background processes on exit.
+setopt no_hup
+
+# Report background process status immediately.
+setopt notify
