@@ -9,6 +9,7 @@ else
     source ~/.profile.d/arrayutil
 fi
 
+source ~/.zsh/rc.d/options
 source ~/.zsh/rc.d/prompt
 source ~/.zsh/rc.d/editor
 source ~/.zsh/rc.d/dir

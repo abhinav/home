@@ -1,0 +1,4 @@
+#!/bin/zsh
+
+# Don't accidentally overwrite files by piping into them.
+setopt noclobber
