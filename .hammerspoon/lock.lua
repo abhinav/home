@@ -1,6 +1,6 @@
 -- Screen lock
 
-local screensaver = '/System/Library/Frameworks/ScreenSaver.framework/Versions/A/Resources/ScreenSaverEngine.app'
+local screensaver = 'ScreenSaverEngine'
 
 local function screenLock()
     hs.application.launchOrFocus(screensaver)
