@@ -261,9 +261,6 @@ set tags+=codex.tags
 " Workaround for https://github.com/neovim/neovim/issues/4210
 hi Normal ctermbg=NONE guibg=NONE
 
-" Only bold out the current line
-hi CursorLine term=bold cterm=bold
-
 " Make line numbers in terminal more readable
 hi LineNr ctermfg=245
 
@@ -272,15 +269,6 @@ hi VertSplit guibg=bg guifg=bg
 
 " Space = leader
 let mapleader = "\<Space>"
-
-" Highlight the current line, but only in the focused split.
-augroup vimrc_cursor_hooks
-    autocmd!
-    autocmd WinEnter * setlocal cul
-    autocmd BufEnter * setlocal cul
-    autocmd WinLeave * setlocal nocul
-augroup end
-setlocal cul
 
 " ----------------------------------------------------------------------------
 "  Key Bindings {{{1
