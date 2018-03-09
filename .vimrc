@@ -87,6 +87,7 @@ augroup vimrc_ft_hooks
     autocmd FileType yaml call s:SetupYAML()
 
     autocmd BufNewFile,BufRead *.rl setf ragel
+    autocmd BufReadPost quickfix call s:SetupQuickfix()
 augroup end
 
 augroup BWCCreateDir
@@ -193,7 +194,7 @@ let g:grepper =
     \ 'open': 1,
     \ 'switch': 1,
     \ 'jump': 0,
-    \ 'dir': 'file',
+    \ 'dir': 'filecwd',
     \ }
 
 " neosnippets {{{2
@@ -499,6 +500,11 @@ endfunction
 function! s:SetupPandoc() " {{{2
     setlocal nolist
     setlocal nornu
+endfunction
+
+function! s:SetupQuickfix() " {{{2
+    nnoremap <buffer> <C-O> <C-W><Enter>
+    nnoremap <buffer> <C-T> <C-W><Enter><C-W>T
 endfunction
 
 function! s:SetupRust() " {{{2
