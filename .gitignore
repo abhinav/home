@@ -49,6 +49,7 @@
 
 # tmux
 !.tmux*.conf
+!/.tmux/
 
 # [n]vim
 !.vimrc

@@ -1,11 +1,11 @@
-#!/bin/sh
+#!/bin/bash
+
+# Need to source ~/.profile because otherwise the tmux server won't have
+# everything we expect on $PATH.
+[ -z "$_PROFILE_LOADED" ] && source ~/.profile
 
 TMUX_EXE=$(command -v tmux)
-if [ -z "$TMUX_EXE" ]; then
-	TMUX_EXE=/usr/local/bin/tmux
-fi
-
-if [ ! -x "$TMUX_EXE" ]; then
+if [ -z "$TMUX_EXE" ] || [ ! -x "$TMUX_EXE" ]; then
 	echo "Could not find tmux. Falling back to $SHELL."
 	"$SHELL"
 	exit
