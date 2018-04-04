@@ -64,7 +64,7 @@ hs.grid.ui.textSize = 16
 hs.window.animationDuration = 0
 
 require('win')
-require('mouse')
+require('focus')
 require('term')
 require('lock')
 require('sections')

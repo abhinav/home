@@ -4,9 +4,9 @@ local function round(num)
     return math.floor(num + 0.5)
 end
 
-local function mouseMover(direction)
+local function focusScreen(direction)
     return function()
-        local fromScreen = hs.mouse.getCurrentScreen()
+        local fromScreen = hs.window.focusedWindow():screen()
         local toScreen = screens.inDirection(fromScreen, direction)
         if toScreen == nil then
             return
@@ -20,9 +20,10 @@ local function mouseMover(direction)
             end
         end
 
+        local mouseScreen = hs.mouse.getCurrentScreen()
         local pos = hs.mouse.getRelativePosition()
-        pos.x = round((pos.x / fromScreen:frame().w) * toScreen:frame().w)
-        pos.y = round((pos.y / fromScreen:frame().h) * toScreen:frame().h)
+        pos.x = round((pos.x / mouseScreen:frame().w) * toScreen:frame().w)
+        pos.y = round((pos.y / mouseScreen:frame().h) * toScreen:frame().h)
 
         hs.mouse.setRelativePosition(pos, toScreen)
         win:focus()
@@ -35,5 +36,5 @@ local directions = {
 }
 
 for k, dir in pairs(directions) do
-    hs.hotkey.bind({'command', 'shift'}, k, mouseMover(dir))
+    hs.hotkey.bind({'command', 'shift'}, k, focusScreen(dir))
 end
