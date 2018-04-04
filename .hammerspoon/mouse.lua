@@ -29,8 +29,11 @@ local function mouseMover(direction)
     end
 end
 
-local mouseMovers = {'left', 'right'}
-for k, dir in pairs(mouseMovers) do
-    hs.hotkey.bind({'command', 'alt', 'shift'}, dir, mouseMover(dir))
-end
+local directions = {
+    h = 'left',
+    l = 'right',
+}
 
+for k, dir in pairs(directions) do
+    hs.hotkey.bind({'command', 'shift'}, k, mouseMover(dir))
+end

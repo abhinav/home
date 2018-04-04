@@ -14,7 +14,7 @@
 --      Move the window to the next/previous screen while maintaining its size
 --      relative to that screen's grid.
 --
--- cmd-alt-shift + left/right
+-- cmd-shift + h/l
 --      Move the mouse to the screen in the given direction placing it in the
 --      same section of the new screen as the original.
 --
