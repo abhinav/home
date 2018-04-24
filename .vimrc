@@ -318,6 +318,9 @@ nnoremap <leader>P "+P
 vnoremap <leader>p "+p
 vnoremap <leader>P "+P
 
+" Ctrl-P in insert mode will paste while preserving indentation.
+inoremap <C-P> <C-R><C-P>"
+
 " Neovim specific configs.
 if has('nvim')
     " Split navigation inside nvim's terminal emulator.
