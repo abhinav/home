@@ -28,6 +28,7 @@ Plug 'Shougo/deoplete.nvim', {'do': ':UpdateRemotePlugins'}
 Plug 'Shougo/neosnippet'
 Plug 'Shougo/neosnippet-snippets'
 Plug 'Shougo/vimproc', {'do': 'make'}
+Plug 'sickill/vim-pasta'
 Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
