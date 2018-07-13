@@ -243,6 +243,7 @@ set fdm=marker          " Marker fold method
 set hls                 " Highlight search results
 set wmnu                " Menu for tab completion
 set mouse=a             " Mouse support
+set so=10               " 10 lines of context when scrolling
 
 " Use true color if not on Terminal.app
 if $TERM_PROGRAM != "Apple_Terminal"
