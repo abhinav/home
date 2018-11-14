@@ -16,6 +16,8 @@
 	s = status
 	co = checkout
 	c = commit
+[http]
+	cookiefile = /Users/abg/.gitcookies
 [log]
 	abbrevCommit = true
 	date = relative
