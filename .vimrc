@@ -43,7 +43,6 @@ Plug 'w0rp/ale'
 " ----------------------------------------------------------------------------
 "  Language-specific Plugins {{{2
 " ----------------------------------------------------------------------------
-Plug 'vim-scripts/Arduino-syntax-file'
 Plug 'davidhalter/jedi-vim', {'for': ['python', 'pyrex']}
 Plug 'eagletmt/ghcmod-vim'
 Plug 'eagletmt/neco-ghc'
@@ -53,12 +52,13 @@ Plug 'hynek/vim-python-pep8-indent'
 Plug 'idris-hackers/idris-vim'
 Plug 'jneen/ragel.vim'
 Plug 'pbrisbin/html-template-syntax'
+Plug 'racer-rust/vim-racer'
 Plug 'rust-lang/rust.vim'
-Plug 'sebastianmarkow/deoplete-rust'
 Plug 'solarnz/thrift.vim', {'for': 'thrift'}
 Plug 'vim-pandoc/vim-pandoc'
 Plug 'vim-pandoc/vim-pandoc-after'
 Plug 'vim-pandoc/vim-pandoc-syntax'
+Plug 'vim-scripts/Arduino-syntax-file'
 Plug 'zchee/deoplete-go', {'do': 'make'}
 
 call plug#end()
@@ -145,14 +145,9 @@ set completeopt=menu,preview,longest
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#sources#go#gocode_binary = $GOPATH . '/bin/gocode'
 
-let g:deoplete#sources#rust#disable_keymap = 1
-let g:deoplete#sources#rust#racer_binary = '/Users/abg/.cargo/bin/racer'
-if $RUST_SRC_PATH != ''
-    let g:deoplete#sources#rust#rust_source_path = $RUST_SRC_PATH
-endif
-
 " Rust {{{2
 let g:rustfmt_autosave = 1
+let g:racer_cmd = $HOME . "/.cargo/bin/racer"
 
 " easy-align {{{2
 xmap ga <Plug>(EasyAlign)
@@ -510,8 +505,8 @@ function! s:SetupQuickfix() " {{{2
 endfunction
 
 function! s:SetupRust() " {{{2
-    nmap <buffer> <leader>d <Plug>DeopleteRustGoToDefinitionTab
-    nmap <buffer> K <Plug>DeopleteRustShowDocumentation
+    nmap <buffer> <leader>d <Plug>(rust-def)
+    nmap <buffer> K <Plug>(rust-doc))
 endfunction
 
 function! s:SetupYAML() " {{{2
