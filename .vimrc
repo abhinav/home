@@ -482,6 +482,7 @@ endfunction
 
 function! s:SetupGo() " {{{2
     setlocal noet
+    nmap <buffer> <leader>d <Plug>(go-def)
 
     " Search for declarations in the current file or directory.
     nmap <buffer> <leader>ss :GoDecls<CR>
