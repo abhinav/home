@@ -9,6 +9,7 @@ call plug#begin('~/.config/nvim/plugged')
 " ----------------------------------------------------------------------------
 "  General Plugins {{{2
 " ----------------------------------------------------------------------------
+Plug 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': 'bash install.sh' }
 Plug 'cespare/vim-toml'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'edkolev/tmuxline.vim'
@@ -47,13 +48,12 @@ Plug 'w0rp/ale'
 Plug 'davidhalter/jedi-vim', {'for': ['python', 'pyrex']}
 Plug 'eagletmt/ghcmod-vim'
 Plug 'eagletmt/neco-ghc'
-Plug 'fatih/vim-go', {'for': 'go'}
+Plug 'fatih/vim-go'
 Plug 'hspec/hspec.vim'
 Plug 'hynek/vim-python-pep8-indent'
 Plug 'idris-hackers/idris-vim'
 Plug 'jneen/ragel.vim'
 Plug 'pbrisbin/html-template-syntax'
-Plug 'racer-rust/vim-racer'
 Plug 'rust-lang/rust.vim'
 Plug 'solarnz/thrift.vim', {'for': 'thrift'}
 Plug 'vim-pandoc/vim-pandoc'
@@ -79,13 +79,14 @@ augroup vimrc_ft_hooks
     autocmd FileType plain setlocal nolist
     autocmd FileType pandoc call s:SetupPandoc()
     autocmd FileType python call s:SetupPython()
-    autocmd FileType rust call s:SetupRust()
     autocmd FileType sh call s:SetupSh()
     autocmd FileType text setlocal norelativenumber
     autocmd FileType yaml call s:SetupYAML()
 
     autocmd BufNewFile,BufRead *.rl setf ragel
     autocmd BufReadPost quickfix call s:SetupQuickfix()
+
+    autocmd FileType * call s:SetupLanguageClient()
 augroup end
 
 augroup BWCCreateDir
@@ -142,14 +143,9 @@ let g:airline#extensions#tmuxline#enabled = 0
 " deoplete {{{2
 set completeopt=menu,preview,longest
 let g:deoplete#enable_at_startup = 1
-call deoplete#custom#option('omni_patterns',
-    \ {
-    \ 'go': '[^. *\t]\.\w*',
-    \ })
 
 " Rust {{{2
 let g:rustfmt_autosave = 1
-let g:racer_cmd = $HOME . "/.cargo/bin/racer"
 
 " easy-align {{{2
 xmap ga <Plug>(EasyAlign)
@@ -202,6 +198,20 @@ let g:fzf_layout = { 'down': '~15%' }
 " tmux-navigator {{{2
 " We have our own mappings
 let g:tmux_navigator_no_mappings = 1
+
+" LanguageClient-neovim {{{2
+let g:LanguageClient_serverCommands = {
+    \ 'go': [$GOPATH . '/bin/gopls'],
+    \ 'rust': ['rustup', 'run', 'nightly', 'rls'],
+    \ }
+let g:LanguageClient_rootMarkers = {
+      \ 'go': ['go.mod', 'Gopkg.toml', 'glide.lock'],
+      \ }
+let g:LanguageClient_autoStart = 1
+
+" Disable diagnostics until they're supported onsave only.
+" https://github.com/autozimu/LanguageClient-neovim/issues/754
+let g:LanguageClient_diagnosticsEnable = 0
 
 " ----------------------------------------------------------------------------
 "  General Configuration {{{1
@@ -482,13 +492,31 @@ endfunction
 
 function! s:SetupGo() " {{{2
     setlocal noexpandtab
-    nmap <buffer> <leader>d <Plug>(go-def)
 
     " Search for declarations in the current file or directory.
     nmap <buffer> <leader>ss :GoDecls<CR>
     nmap <buffer> <leader>sd :GoDeclsDir<CR>
 
     call s:ClosePreviewOnMove()
+endfunction
+
+function! s:SetupLanguageClient() " {{{2
+    if !has_key(g:LanguageClient_serverCommands, &filetype)
+        return
+    endif
+
+    setlocal formatexpr=LanguageClient#textDocument_rangeFormatting_sync()
+
+    " Keybindings
+    "  K            Documentation
+    "  <leader>d    Go to definition
+    "  F2           Rename
+    "  F5           Context menu
+
+    nnoremap <buffer> <silent> K :call LanguageClient#textDocument_hover()<CR>
+    nnoremap <buffer> <silent> <leader>d :call LanguageClient#textDocument_definition()<CR>
+    nnoremap <buffer> <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
+    nnoremap <buffer> <silent> <F5> :call LanguageClient_contextMenu()<CR>
 endfunction
 
 function! s:SetupSh() " {{{2
@@ -503,11 +531,6 @@ endfunction
 function! s:SetupQuickfix() " {{{2
     nnoremap <buffer> <C-O> <C-W><Enter>
     nnoremap <buffer> <C-T> <C-W><Enter><C-W>T
-endfunction
-
-function! s:SetupRust() " {{{2
-    nmap <buffer> <leader>d <Plug>(rust-def)
-    nmap <buffer> K <Plug>(rust-doc))
 endfunction
 
 function! s:SetupYAML() " {{{2

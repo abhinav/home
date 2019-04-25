@@ -1,12 +1,5 @@
 #!/bin/bash
 
-RUST_SRC_PATH="$HOME/.rustup/toolchains/stable-x86_64-apple-darwin/lib/rustlib/src/rust/src"
-if [ -d "$RUST_SRC_PATH" ]; then
-	export RUST_SRC_PATH
-else
-	unset RUST_SRC_PATH
-fi
-
 if [ -d "$HOME/.cargo" ]; then
 	# shellcheck disable=2086
 	PATH=$(IFS=:; prepend "$HOME/.cargo/bin" $PATH)
