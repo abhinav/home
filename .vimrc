@@ -9,7 +9,6 @@ call plug#begin('~/.config/nvim/plugged')
 " ----------------------------------------------------------------------------
 "  General Plugins {{{2
 " ----------------------------------------------------------------------------
-Plug 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': 'bash install.sh' }
 Plug 'cespare/vim-toml'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'edkolev/tmuxline.vim'
@@ -86,8 +85,6 @@ augroup vimrc_ft_hooks
 
     autocmd BufNewFile,BufRead *.rl setf ragel
     autocmd BufReadPost quickfix call s:SetupQuickfix()
-
-    autocmd FileType * call s:SetupLanguageClient()
 augroup end
 
 augroup BWCCreateDir
@@ -144,6 +141,10 @@ let g:airline#extensions#tmuxline#enabled = 0
 " deoplete {{{2
 set completeopt=menu,preview,longest
 let g:deoplete#enable_at_startup = 1
+call deoplete#custom#option('omni_patterns',
+    \ {
+    \ 'go': '[^. *\t]\.\w*',
+    \ })
 
 " Rust {{{2
 let g:rustfmt_autosave = 1
@@ -200,18 +201,6 @@ let g:fzf_layout = { 'down': '~15%' }
 " tmux-navigator {{{2
 " We have our own mappings
 let g:tmux_navigator_no_mappings = 1
-
-" LanguageClient-neovim {{{2
-let g:LanguageClient_serverCommands = {
-    \ 'go': [$GOPATH . '/bin/gopls'],
-    \ }
-let g:LanguageClient_rootMarkers = {
-      \ 'go': ['go.mod', 'Gopkg.toml', 'glide.lock'],
-      \ }
-
-" Disable diagnostics until they're supported onsave only.
-" https://github.com/autozimu/LanguageClient-neovim/issues/754
-let g:LanguageClient_diagnosticsEnable = 0
 
 " ----------------------------------------------------------------------------
 "  General Configuration {{{1
@@ -499,19 +488,6 @@ function! s:SetupGo() " {{{2
     nmap <buffer> <leader>sd :GoDeclsDir<CR>
 
     call s:ClosePreviewOnMove()
-endfunction
-
-function! s:SetupLanguageClient() " {{{2
-    if has_key(g:LanguageClient_serverCommands, &filetype)
-        " In-line definition with K.
-        nnoremap <buffer> <silent> K :call LanguageClient#textDocument_hover()<CR>
-
-        " Go-to-definition with <leader>d.
-        nnoremap <buffer> <silent> <leader>d :call LanguageClient#textDocument_definition()<CR>
-
-        " Rename with F2.
-        nnoremap <buffer> <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
-    endif
 endfunction
 
 function! s:SetupSh() " {{{2
