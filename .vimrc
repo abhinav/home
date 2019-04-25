@@ -134,7 +134,6 @@ let g:netrw_liststyle = 3
 
 " airline {{{2
 let g:airline_theme = "molokai"
-let g:airline_powerline_fonts = 1
 let g:airline#extensions#branch#displayed_head_limit = 10
 let g:airline#extensions#ale#enabled = 1
 
