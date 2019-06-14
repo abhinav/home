@@ -71,7 +71,7 @@ augroup vimrc_ft_hooks
     autocmd FileType c call s:SetupC()
     autocmd FileType cpp call s:SetupCPP()
     autocmd FileType go call s:SetupGo()
-    autocmd FileType gitcommit setlocal tw=72
+    autocmd FileType gitcommit setlocal textwidth=72
     autocmd FileType haskell,chaskell call s:SetupHaskell()
     autocmd FileType javascript call s:ClosePreviewOnMove()
     autocmd FileType nerdtree setlocal nolist
@@ -80,7 +80,7 @@ augroup vimrc_ft_hooks
     autocmd FileType python call s:SetupPython()
     autocmd FileType rust call s:SetupRust()
     autocmd FileType sh call s:SetupSh()
-    autocmd FileType text setlocal nornu
+    autocmd FileType text setlocal norelativenumber
     autocmd FileType yaml call s:SetupYAML()
 
     autocmd BufNewFile,BufRead *.rl setf ragel
@@ -205,55 +205,53 @@ let g:tmux_navigator_no_mappings = 1
 " ----------------------------------------------------------------------------
 "  General Configuration {{{1
 " ----------------------------------------------------------------------------
-set nocp                " Don't need compatibility with vi
-set nobk                " Don't make backups
-set nowb                " Don't make backups before overwrite
-set bs=indent,eol,start " Allow backspace over everything
-set hi=50               " Keep 50 lines of command line history
-set ru                  " Show the cursor position all the time
-set rnu                 " Relative line numbering
-set nu                  " Absolute line number for current line
-set ls=2                " Always show status line
-set sc                  " Display incomplete commands
-set is                  " Do incremental searching
-set ai                  " Keep indentation from previous line
-set et                  " Use spaces to insert tabs
-set sw=4                " Number of spaces to use for each indent
-set ts=4                " Number of spaces tab will count for
+set nocompatible        " Don't need compatibility with vi.
+set nobackup writebackup
+                        " Don't backup edited files but temporarily backup
+                        " before overwiting.
+set backspace=indent,eol,start
+set history=50          " History of : commands.
+set ruler               " Show the cursor position.
+set laststatus=2        " Always show status line.
+set showcmd             " Display incomplete commands.
+set relativenumber number
+                        " Show the line number of the current line and
+                        " relative numbers of all other lines.
+set expandtab shiftwidth=8 tabstop=8 smarttab
+                        " For most files, expand tabs to 4 spaces but for
+                        " files that actually use tabs, show them as 8 spaces.
+set incsearch
+set autoindent
 set nowrap              " No wrapping
-set ic scs              " Smart case insensitive
-set icm=split           " Show :s result incrementally
-set tc=match            " Case sensitive for tag search
-set sta                 " Smart tab
-set bg=dark             " We have a dark background
-set tw=78               " Wrap text after 78 characters
-set lz                  " Lazy redraw; faster macros
-set ve=all              " Virtual edit
-set vb                  " Use visual bell instead of beeping"
-set sb                  " split below
-set spr                 " split right
-set so=3                " leave 3 lines below cursor
-set fdm=marker          " Marker fold method
-set hls                 " Highlight search results
-set wmnu                " Menu for tab completion
-set mouse=a             " Mouse support
-set so=10               " 10 lines of context when scrolling
+set ignorecase smartcase tagcase=followscs
+                        " Ignore casing during search except if uppercase
+                        " characters are used. Use the same settings for tag
+                        " searches.
+set inccommand=split    " Show :s result incrementally.
+set background=dark
+set textwidth=78
+set lazyredraw          " Don't redraw the screen while executing macros.
+                        " Useful if the macros does a lot of transformation.
+set virtualedit=all
+set visualbell          " No beeping.
+set splitbelow splitright
+                        " Split below or to the right of the current window.
+set foldmethod=marker
+set hlsearch            " Highlight search results.
+set wildmenu            " Show options for :-command completion.
+set mouse=a             " Support mouse everywhere.
+set scrolloff=10        " Lines to leave below cursor when scrolling.
+set list listchars=tab:»\ ,trail:·
+                        " Show tabs and trailing whitespace.
+set wildignore+=*/cabal-dev,*/dist,*.o,*.class,*.pyc,*.hi
+                        " Ignore in wildcard expansions.
 
 " Use true color if not on Terminal.app
 if $TERM_PROGRAM != "Apple_Terminal"
     set tgc
 endif
 
-" Show invisible characters
-set list lcs=tab:»\ ,trail:·
-
 colo molokai
-
-" File patterns to ignore in wildcard expansions.
-set wig+=*/cabal-dev,*/dist,*.o,*.class,*.pyc,*.hi
-
-" Support codex tags.
-set tags+=codex.tags
 
 " Make line numbers in terminal more readable
 hi LineNr ctermfg=245
@@ -460,7 +458,8 @@ function! s:SetupHaskell() " {{{2
     let g:haskellmode_completion_ghc = 0
     let g:necoghc_enable_detailed_browse = 1
     setlocal omnifunc=necoghc#omnifunc
-    setlocal ts=2 sw=2 et
+    setlocal tabstop=2 shiftwidth=2 expandtab
+    setlocal tags+=codex.tags
 
     nmap <buffer> <F1> :GhcModType<CR>
     nmap <buffer> <silent> <F2> :GhcModTypeClear<CR>
@@ -481,7 +480,7 @@ function! s:SetupPython() " {{{2
 endfunction
 
 function! s:SetupGo() " {{{2
-    setlocal noet
+    setlocal noexpandtab
     nmap <buffer> <leader>d <Plug>(go-def)
 
     " Search for declarations in the current file or directory.
@@ -492,12 +491,12 @@ function! s:SetupGo() " {{{2
 endfunction
 
 function! s:SetupSh() " {{{2
-    setlocal noet
+    setlocal noexpandtab
 endfunction
 
 function! s:SetupPandoc() " {{{2
     setlocal nolist
-    setlocal nornu
+    setlocal norelativenumber
 endfunction
 
 function! s:SetupQuickfix() " {{{2
@@ -511,7 +510,7 @@ function! s:SetupRust() " {{{2
 endfunction
 
 function! s:SetupYAML() " {{{2
-    setlocal ts=2 sw=2 et
+    setlocal tabstop=2 shiftwidth=2 expandtab
     augroup vimrc_yaml_hooks
         autocmd!
         autocmd BufWritePost package.yaml silent !hpack --silent
