@@ -33,6 +33,7 @@ Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-sleuth'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
 Plug 'vim-airline/vim-airline'
@@ -217,9 +218,9 @@ set showcmd             " Display incomplete commands.
 set relativenumber number
                         " Show the line number of the current line and
                         " relative numbers of all other lines.
-set expandtab shiftwidth=8 tabstop=8 smarttab
-                        " For most files, expand tabs to 4 spaces but for
-                        " files that actually use tabs, show them as 8 spaces.
+set noexpandtab shiftwidth=8 tabstop=8 smarttab
+                        " Tabs, taking up 8 spaces. vim-sleuth will handle the
+                        " other cases.
 set incsearch
 set autoindent
 set nowrap              " No wrapping
