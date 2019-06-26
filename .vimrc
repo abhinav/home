@@ -7,29 +7,33 @@ endif
 call plug#begin('~/.config/nvim/plugged')
 
 " ----------------------------------------------------------------------------
-"  General Plugins {{{2
+"  Plugins {{{1
 " ----------------------------------------------------------------------------
 Plug 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': 'bash install.sh' }
 Plug 'cespare/vim-toml'
 Plug 'christoomey/vim-tmux-navigator'
+Plug 'davidhalter/jedi-vim', {'for': ['python', 'pyrex']}
 Plug 'edkolev/tmuxline.vim'
+Plug 'fatih/vim-go'
 Plug 'honza/vim-snippets'
-Plug 'junegunn/goyo.vim', {'on': 'Goyo'}
+Plug 'hynek/vim-python-pep8-indent'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all --no-update-rc' }
 Plug 'junegunn/fzf.vim'
+Plug 'junegunn/goyo.vim', {'on': 'Goyo'}
 Plug 'junegunn/vim-easy-align'
 Plug 'justinmk/molokai'
 Plug 'justinmk/vim-sneak'
 Plug 'machakann/vim-highlightedyank'
 Plug 'mhinz/vim-grepper'
 Plug 'ntpeters/vim-better-whitespace'
-Plug 'rstacruz/sparkup', {'rtp': 'vim'}
+Plug 'rust-lang/rust.vim'
 Plug 'scrooloose/nerdtree'
 Plug 'Shougo/deoplete.nvim', {'do': ':UpdateRemotePlugins'}
 Plug 'Shougo/neosnippet'
 Plug 'Shougo/neosnippet-snippets'
 Plug 'Shougo/vimproc', {'do': 'make'}
 Plug 'sickill/vim-pasta'
+Plug 'solarnz/thrift.vim', {'for': 'thrift'}
 Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
@@ -39,27 +43,11 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-Plug 'vim-scripts/visualrepeat'
-Plug 'w0rp/ale'
-
-" ----------------------------------------------------------------------------
-"  Language-specific Plugins {{{2
-" ----------------------------------------------------------------------------
-Plug 'davidhalter/jedi-vim', {'for': ['python', 'pyrex']}
-Plug 'eagletmt/ghcmod-vim'
-Plug 'eagletmt/neco-ghc'
-Plug 'fatih/vim-go'
-Plug 'hspec/hspec.vim'
-Plug 'hynek/vim-python-pep8-indent'
-Plug 'idris-hackers/idris-vim'
-Plug 'jneen/ragel.vim'
-Plug 'pbrisbin/html-template-syntax'
-Plug 'rust-lang/rust.vim'
-Plug 'solarnz/thrift.vim', {'for': 'thrift'}
 Plug 'vim-pandoc/vim-pandoc'
 Plug 'vim-pandoc/vim-pandoc-after'
 Plug 'vim-pandoc/vim-pandoc-syntax'
-Plug 'vim-scripts/Arduino-syntax-file'
+Plug 'vim-scripts/visualrepeat'
+Plug 'w0rp/ale'
 
 call plug#end()
 
@@ -73,7 +61,6 @@ augroup vimrc_ft_hooks
     autocmd FileType cpp call s:SetupCPP()
     autocmd FileType go call s:SetupGo()
     autocmd FileType gitcommit setlocal textwidth=72
-    autocmd FileType haskell,chaskell call s:SetupHaskell()
     autocmd FileType javascript call s:ClosePreviewOnMove()
     autocmd FileType nerdtree setlocal nolist
     autocmd FileType plain setlocal nolist
@@ -83,7 +70,6 @@ augroup vimrc_ft_hooks
     autocmd FileType text setlocal norelativenumber
     autocmd FileType yaml call s:SetupYAML()
 
-    autocmd BufNewFile,BufRead *.rl setf ragel
     autocmd BufReadPost quickfix call s:SetupQuickfix()
 
     autocmd FileType * call s:SetupLanguageClient()
@@ -114,8 +100,7 @@ let g:ale_lint_on_text_changed = 0
 let g:ale_emit_conflict_warnings = 0
 
 let g:ale_linters = {
-    \ 'go': ['go vet', 'golint', 'go build'],
-    \ 'haskell': ['stack-ghc-mod'],
+    \ 'go': ['go vet', 'golint'],
     \ }
 let g:ale_linter_aliases = {
     \ 'pandoc': ['markdown']
@@ -465,18 +450,6 @@ endfunction
 "  Language-specific Functions {{{1
 " ----------------------------------------------------------------------------
 
-function! s:SetupHaskell() " {{{2
-    let g:haskellmode_completion_ghc = 0
-    let g:necoghc_enable_detailed_browse = 1
-    setlocal omnifunc=necoghc#omnifunc
-    setlocal tabstop=2 shiftwidth=2 expandtab
-    setlocal tags+=codex.tags
-
-    nmap <buffer> <F1> :GhcModType<CR>
-    nmap <buffer> <silent> <F2> :GhcModTypeClear<CR>
-    nmap <buffer> <silent> <leader>d <C-w><C-]><C-w>T
-endfunction
-
 function! s:SetupC() " {{{2
     call s:ClosePreviewOnMove()
 endfunction
@@ -529,6 +502,9 @@ function! s:SetupPandoc() " {{{2
 endfunction
 
 function! s:SetupQuickfix() " {{{2
+    " Ctrl-O    Open in split.
+    " Ctrl-T    Open in tab.
+
     nnoremap <buffer> <C-O> <C-W><Enter>
     nnoremap <buffer> <C-T> <C-W><Enter><C-W>T
 endfunction
