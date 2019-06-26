@@ -13,6 +13,7 @@ Plug 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': 'bash install.s
 Plug 'cespare/vim-toml'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'davidhalter/jedi-vim', {'for': ['python', 'pyrex']}
+Plug 'dpc/vim-smarttabs'
 Plug 'edkolev/tmuxline.vim'
 Plug 'fatih/vim-go'
 Plug 'honza/vim-snippets'
@@ -38,7 +39,6 @@ Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
-Plug 'tpope/vim-sleuth'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
 Plug 'vim-airline/vim-airline'
@@ -213,9 +213,11 @@ set showcmd             " Display incomplete commands.
 set relativenumber number
                         " Show the line number of the current line and
                         " relative numbers of all other lines.
-set noexpandtab shiftwidth=8 tabstop=8 smarttab
-                        " Tabs, taking up 8 spaces. vim-sleuth will handle the
-                        " other cases.
+set noexpandtab softtabstop=0 shiftwidth=8 tabstop=8
+                        " Use 8 tabs for indentation. Smart Tabs plugin will
+                        " use spaces for alignment.
+set copyindent preserveindent
+                        " Preserve existing indentation as much as possible.
 set incsearch
 set autoindent
 set nowrap              " No wrapping
@@ -497,8 +499,8 @@ function! s:SetupSh() " {{{2
 endfunction
 
 function! s:SetupPandoc() " {{{2
-    setlocal nolist
-    setlocal norelativenumber
+    setlocal nolist norelativenumber
+    setlocal shiftwidth=4 tabstop=4 expandtab
 endfunction
 
 function! s:SetupQuickfix() " {{{2
