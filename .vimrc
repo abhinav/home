@@ -13,7 +13,6 @@ Plug 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': 'bash install.s
 Plug 'cespare/vim-toml'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'davidhalter/jedi-vim', {'for': ['python', 'pyrex']}
-Plug 'dpc/vim-smarttabs'
 Plug 'edkolev/tmuxline.vim'
 Plug 'fatih/vim-go'
 Plug 'honza/vim-snippets'
@@ -63,9 +62,8 @@ augroup vimrc_ft_hooks
     autocmd FileType gitcommit setlocal textwidth=72
     autocmd FileType javascript call s:ClosePreviewOnMove()
     autocmd FileType nerdtree setlocal nolist
-    autocmd FileType plain setlocal nolist
     autocmd FileType pandoc call s:SetupPandoc()
-    autocmd FileType python call s:SetupPython()
+    autocmd FileType bzl,python call s:SetupPython()
     autocmd FileType sh call s:SetupSh()
     autocmd FileType text setlocal norelativenumber
     autocmd FileType yaml call s:SetupYAML()
@@ -214,8 +212,7 @@ set relativenumber number
                         " Show the line number of the current line and
                         " relative numbers of all other lines.
 set noexpandtab softtabstop=0 shiftwidth=8 tabstop=8
-                        " Use 8 tabs for indentation. Smart Tabs plugin will
-                        " use spaces for alignment.
+                        " Use 8 tabs for indentation.
 set copyindent preserveindent
                         " Preserve existing indentation as much as possible.
 set incsearch
@@ -461,8 +458,8 @@ function! s:SetupCPP() " {{{2
 endfunction
 
 function! s:SetupPython() " {{{2
-    let b:delimitMate_nesting_quotes = ['"','''', '`']
     call s:ClosePreviewOnMove()
+    setlocal shiftwidth=4 tabstop=4 expandtab
 endfunction
 
 function! s:SetupGo() " {{{2
