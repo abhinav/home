@@ -477,8 +477,6 @@ function! s:SetupLanguageClient() " {{{2
         return
     endif
 
-    setlocal formatexpr=LanguageClient#textDocument_rangeFormatting_sync()
-
     " Keybindings
     "  K            Documentation
     "  <leader>d    Go to definition
