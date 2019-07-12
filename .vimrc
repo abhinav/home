@@ -248,6 +248,9 @@ endif
 
 colo molokai
 
+" Use terminal background for performance.
+hi Normal ctermbg=NONE guibg=NONE
+
 " Make line numbers in terminal more readable
 hi LineNr ctermfg=245
 
