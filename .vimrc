@@ -42,10 +42,8 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-Plug 'vim-pandoc/vim-pandoc'
-Plug 'vim-pandoc/vim-pandoc-after'
-Plug 'vim-pandoc/vim-pandoc-syntax'
 Plug 'vim-scripts/visualrepeat'
+Plug 'vimwiki/vimwiki'
 Plug 'w0rp/ale'
 
 call plug#end()
@@ -62,7 +60,7 @@ augroup vimrc_ft_hooks
     autocmd FileType gitcommit setlocal textwidth=72
     autocmd FileType javascript call s:ClosePreviewOnMove()
     autocmd FileType nerdtree setlocal nolist
-    autocmd FileType pandoc call s:SetupPandoc()
+    autocmd FileType vimwiki call s:SetupVimwiki()
     autocmd FileType bzl,python call s:SetupPython()
     autocmd FileType sh call s:SetupSh()
     autocmd FileType text setlocal norelativenumber
@@ -101,15 +99,8 @@ let g:ale_linters = {
     \ 'go': ['go vet', 'golint'],
     \ }
 let g:ale_linter_aliases = {
-    \ 'pandoc': ['markdown']
+    \ 'vimwiki': ['markdown']
     \ }
-
-"  pandoc {{{2
-let g:pandoc#after#modules#enabled = ["neosnippets"]
-let g:pandoc#modules#disabled = ["folding"]
-let g:pandoc#formatting#mode = "h"
-let g:pandoc#formatting#extra_equalprg = "--reference-links --reference-location=section --atx-headers"
-let g:pandoc#syntax#conceal#use = 0
 
 " netrw {{{2
 let g:netrw_liststyle = 3
@@ -188,13 +179,35 @@ let g:LanguageClient_serverCommands = {
     \ 'rust': ['rustup', 'run', 'nightly', 'rls'],
     \ }
 let g:LanguageClient_rootMarkers = {
-      \ 'go': ['go.mod', 'Gopkg.toml', 'glide.lock'],
-      \ }
+    \ 'go': ['go.mod', 'Gopkg.toml', 'glide.lock'],
+    \ }
 let g:LanguageClient_autoStart = 1
 
 " Disable diagnostics until they're supported onsave only.
 " https://github.com/autozimu/LanguageClient-neovim/issues/754
 let g:LanguageClient_diagnosticsEnable = 0
+
+" vimwiki {{{2
+let g:vimwiki_list = [
+    \ {
+    \   'path': '~/.notes/',
+    \   'syntax': 'markdown',
+    \   'ext': '.md',
+    \   'diary_rel_path': 'log/',
+    \   'diary_index': 'log',
+    \   'diary_header': 'Log',
+    \   'auto_tags': 1,
+    \   'auto_diary_index': 1,
+    \   'auto_toc': 1,
+    \   'list_margin': 0,
+    \ },
+\ ]
+let g:vimwiki_hl_headers = 1
+let g:vimwiki_hl_cb_checked = 1
+let g:vimwiki_ext2syntax = {'.md': 'markdown'}
+let g:vimwiki_autowriteall = 0
+let g:vimwiki_auto_chdir = 1
+let g:vimwiki_folding = 'expr'
 
 " ----------------------------------------------------------------------------
 "  General Configuration {{{1
@@ -208,6 +221,7 @@ set history=50          " History of : commands.
 set ruler               " Show the cursor position.
 set laststatus=2        " Always show status line.
 set showcmd             " Display incomplete commands.
+set hidden              " Allow buffers to be hidden without saving.
 set relativenumber number
                         " Show the line number of the current line and
                         " relative numbers of all other lines.
@@ -334,7 +348,6 @@ nmap <silent> <C-P> :Files<CR>
 nmap <silent> <leader>tt :Trees<CR>
 nmap <silent> <leader>r :History<CR>
 nmap <silent> <leader>bb :Buffers<CR>
-nmap <silent> <leader>ww :Windows<CR>
 nmap <silent> <leader>: :Commands<CR>
 
 " Buffer shortcuts
@@ -346,8 +359,6 @@ nmap <silent> <leader>N :bN<CR>
 nmap <silent> <leader>wd :close<CR>
 nmap <silent> <leader>wns :new<CR>
 nmap <silent> <leader>wnv :vnew<CR>
-nmap <silent> <leader>ws :split<CR>
-nmap <silent> <leader>wv :vsplit<CR>
 
 " NerdTREE shortcuts
 nmap <silent> <leader>tp :NERDTreeToggle<CR>
@@ -496,9 +507,12 @@ function! s:SetupSh() " {{{2
     setlocal noexpandtab
 endfunction
 
-function! s:SetupPandoc() " {{{2
-    setlocal nolist norelativenumber
+function! s:SetupVimwiki() " {{{2
+    setlocal nolist nonumber norelativenumber
     setlocal shiftwidth=4 tabstop=4 expandtab
+
+    " Shift-Enter doesn't appear to work in iTerm. Use Alt-Enter instead.
+    inoremap <A-CR> <Esc>:VimwikiReturn 2 2<CR>
 endfunction
 
 function! s:SetupQuickfix() " {{{2
