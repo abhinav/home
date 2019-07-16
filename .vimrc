@@ -510,6 +510,7 @@ endfunction
 function! s:SetupVimwiki() " {{{2
     setlocal nolist nonumber norelativenumber
     setlocal shiftwidth=4 tabstop=4 expandtab
+    setlocal spell
 
     " Shift-Enter doesn't appear to work in iTerm. Use Alt-Enter instead.
     inoremap <A-CR> <Esc>:VimwikiReturn 2 2<CR>
