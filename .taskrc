@@ -1,0 +1,5 @@
+data.location=~/.task
+include ~/.taskrc.d/monokai.theme
+
+# Local-only changes
+include ~/.taskrc.d/local
