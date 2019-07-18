@@ -194,7 +194,7 @@ let s:wiki_defaults =
     \   'syntax': 'markdown',
     \   'ext': '.md',
     \   'diary_rel_path': 'log/',
-    \   'diary_index': 'log',
+    \   'diary_index': 'index',
     \   'diary_header': 'Log',
     \   'auto_tags': 1,
     \   'auto_diary_index': 1,
