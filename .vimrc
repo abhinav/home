@@ -176,7 +176,7 @@ let g:tmux_navigator_no_mappings = 1
 
 " LanguageClient-neovim {{{2
 let g:LanguageClient_serverCommands = {
-    \ 'go': [$GOPATH . '/bin/gopls'],
+    \ 'go': ['gopls'],
     \ 'rust': ['rustup', 'run', 'nightly', 'rls'],
     \ }
 let g:LanguageClient_rootMarkers = {
