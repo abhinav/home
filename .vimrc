@@ -541,6 +541,9 @@ function! s:SetupVimwiki() " {{{2
     setlocal shiftwidth=4 tabstop=4 expandtab
     setlocal spell
 
+    " Don't highlight task priority.
+    highlight TaskWikiTaskPriority ctermbg=NONE guibg=NONE
+
     " Shift-Enter doesn't appear to work in iTerm. Use Alt-Enter instead.
     inoremap <A-CR> <Esc>:VimwikiReturn 2 2<CR>
 endfunction
