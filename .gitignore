@@ -63,3 +63,6 @@
 # TaskWarrior
 !/.taskrc
 !/.taskrc.d/
+!/.task/
+/.task/*
+!/.task/hooks
