@@ -213,6 +213,7 @@ let g:vimwiki_folding = 'expr'
 
 " taskwiki {{{2
 let g:taskwiki_markup_syntax = "markdown"
+let g:taskwiki_disable_concealcursor = 1
 
 " notational-fzf-vim
 let g:nv_search_paths = [g:vimwiki_list[0].path]
