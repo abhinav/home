@@ -190,9 +190,8 @@ let g:LanguageClient_autoStart = 1
 let g:LanguageClient_diagnosticsEnable = 0
 
 " vimwiki {{{2
-let g:vimwiki_list = [
+let s:wiki_defaults =
     \ {
-    \   'path': '~/.notes/',
     \   'syntax': 'markdown',
     \   'ext': '.md',
     \   'diary_rel_path': 'log/',
@@ -202,8 +201,19 @@ let g:vimwiki_list = [
     \   'auto_diary_index': 1,
     \   'auto_toc': 1,
     \   'list_margin': 0,
-    \ },
-\ ]
+    \ }
+
+let s:global_wiki = copy(s:wiki_defaults)
+let s:global_wiki.path = '~/.notes'
+let g:vimwiki_list = [s:global_wiki]
+
+" Local wiki added first by setting VIMWIKI_PATH.
+if $VIMWIKI_PATH != ""
+    let s:local_wiki = copy(s:wiki_defaults)
+    let s:local_wiki.path = $VIMWIKI_PATH
+    call insert(g:vimwiki_list, s:local_wiki)
+endif
+
 let g:vimwiki_hl_headers = 1
 let g:vimwiki_hl_cb_checked = 1
 let g:vimwiki_ext2syntax = {'.md': 'markdown'}
@@ -216,7 +226,11 @@ let g:taskwiki_markup_syntax = "markdown"
 let g:taskwiki_disable_concealcursor = 1
 
 " notational-fzf-vim
-let g:nv_search_paths = [g:vimwiki_list[0].path]
+let g:nv_search_paths = []
+for wiki in g:vimwiki_list
+    call add(g:nv_search_paths, wiki.path)
+endfor
+
 let g:nv_default_extension = '.md'
 let g:nv_ignore_pattern = ['.gitignore']
 let g:nv_create_note_window = 'tabedit'
