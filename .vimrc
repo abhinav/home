@@ -9,7 +9,6 @@ call plug#begin('~/.config/nvim/plugged')
 " ----------------------------------------------------------------------------
 "  Plugins {{{1
 " ----------------------------------------------------------------------------
-Plug 'alok/notational-fzf-vim'
 Plug 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': 'bash install.sh' }
 Plug 'cespare/vim-toml'
 Plug 'christoomey/vim-tmux-navigator'
@@ -225,16 +224,6 @@ let g:vimwiki_folding = 'expr'
 let g:taskwiki_markup_syntax = "markdown"
 let g:taskwiki_disable_concealcursor = 1
 
-" notational-fzf-vim
-let g:nv_search_paths = []
-for wiki in g:vimwiki_list
-    call add(g:nv_search_paths, wiki.path)
-endfor
-
-let g:nv_default_extension = '.md'
-let g:nv_ignore_pattern = ['.gitignore']
-let g:nv_create_note_window = 'tabedit'
-
 " ----------------------------------------------------------------------------
 "  General Configuration {{{1
 " ----------------------------------------------------------------------------
@@ -431,9 +420,6 @@ endfunction
 " Auto-completion and snippets
 imap <expr><TAB> <SID>HandleTab()
 inoremap <silent><expr> <C-Space> deoplete#mappings#manual_complete()
-
-" notational-fzf
-nnoremap <silent> <leader>ss :NV<CR>
 
 " ----------------------------------------------------------------------------
 "  Commands {{{1
