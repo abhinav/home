@@ -34,6 +34,7 @@ Plug 'Shougo/neosnippet-snippets'
 Plug 'Shougo/vimproc', {'do': 'make'}
 Plug 'sickill/vim-pasta'
 Plug 'solarnz/thrift.vim', {'for': 'thrift'}
+Plug 'tbabej/taskwiki', {'do': 'pip3 install --upgrade git+git://github.com/tbabej/tasklib@develop'}
 Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
@@ -208,6 +209,9 @@ let g:vimwiki_ext2syntax = {'.md': 'markdown'}
 let g:vimwiki_autowriteall = 0
 let g:vimwiki_auto_chdir = 1
 let g:vimwiki_folding = 'expr'
+
+" taskwiki {{{2
+let g:taskwiki_markup_syntax = "markdown"
 
 " ----------------------------------------------------------------------------
 "  General Configuration {{{1
