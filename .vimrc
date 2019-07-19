@@ -515,7 +515,7 @@ function! s:SetupLanguageClient() " {{{2
     nnoremap <buffer> <silent> K :call LanguageClient#textDocument_hover()<CR>
     nnoremap <buffer> <silent> <leader>d :call LanguageClient#textDocument_definition()<CR>
     nnoremap <buffer> <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
-    nnoremap <buffer> <silent> <F5> :call LanguageClient_contextMenu()<CR>
+    nnoremap <buffer> <silent> <C-Space> :call LanguageClient_contextMenu()<CR>
 endfunction
 
 function! s:SetupSh() " {{{2
