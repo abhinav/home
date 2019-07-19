@@ -23,6 +23,7 @@ Plug 'junegunn/goyo.vim', {'on': 'Goyo'}
 Plug 'junegunn/vim-easy-align'
 Plug 'justinmk/molokai'
 Plug 'justinmk/vim-sneak'
+Plug 'mattn/calendar-vim'
 Plug 'machakann/vim-highlightedyank'
 Plug 'mhinz/vim-grepper'
 Plug 'ntpeters/vim-better-whitespace'
