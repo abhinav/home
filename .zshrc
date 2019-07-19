@@ -19,8 +19,6 @@ source ~/.zsh/rc.d/highlighting
 source ~/.zsh/rc.d/history
 source ~/.zsh/rc.d/fzf
 
-source ~/.zsh/rc.d/golang
-
 source ~/.aliases
 
 if [[ -f "$HOME/.zsh/rc.d/local" ]]; then
