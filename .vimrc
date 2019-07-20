@@ -207,7 +207,7 @@ let s:global_wiki = copy(s:wiki_defaults)
 let s:global_wiki.path = '~/.notes'
 let g:vimwiki_list = [s:global_wiki]
 
-" Local wiki added first by setting VIMWIKI_PATH.
+" Local wiki added first by setting VIMWIKI_PATH. {{{3
 if $VIMWIKI_PATH != ""
     let s:local_wiki = copy(s:wiki_defaults)
     let s:local_wiki.path = $VIMWIKI_PATH
@@ -220,6 +220,12 @@ let g:vimwiki_ext2syntax = {'.md': 'markdown'}
 let g:vimwiki_autowriteall = 0
 let g:vimwiki_auto_chdir = 1
 let g:vimwiki_folding = 'expr'
+let g:vimwiki_use_mouse = 1
+
+" Override default keybindings. {{{3
+
+" Backspace to go back is annoying when mistyped.
+nmap <Nop> <Plug>VimwikiGoBackLink
 
 " taskwiki {{{2
 let g:taskwiki_markup_syntax = "markdown"
@@ -526,13 +532,10 @@ endfunction
 function! s:SetupVimwiki() " {{{2
     setlocal nolist nonumber norelativenumber
     setlocal shiftwidth=4 tabstop=4 expandtab
-    setlocal spell
+    setlocal spell foldlevel=1
 
     " Don't highlight task priority.
     highlight TaskWikiTaskPriority ctermbg=NONE guibg=NONE
-
-    " Shift-Enter doesn't appear to work in iTerm. Use Alt-Enter instead.
-    inoremap <A-CR> <Esc>:VimwikiReturn 2 2<CR>
 endfunction
 
 function! s:SetupQuickfix() " {{{2
