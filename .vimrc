@@ -526,12 +526,12 @@ endfunction
 " functionality because I don't use it.
 
 " Remove unused diary mappings.
-augroup VimwikiCleanup
+augroup VimwikiPostSetup
 	autocmd!
-	autocmd VimEnter * call s:CleanupVimwiki()
+	autocmd VimEnter * call s:VimwikiPostSetup()
 augroup END
 
-function! s:CleanupVimwiki()
+function! s:VimwikiPostSetup()
 	" Remove unused diary shortcuts.
 	let map_prefix = vimwiki#vars#get_global('map_prefix')
 	exec 'unmap ' . map_prefix . 'i'
@@ -540,6 +540,9 @@ function! s:CleanupVimwiki()
 	exec 'unmap ' . map_prefix . '<leader>t'
 	exec 'unmap ' . map_prefix . '<leader>y'
 	exec 'unmap ' . map_prefix . '<leader>m'
+
+	" Prefer Markdown-style links.
+	let g:vimwiki_global_vars.WikiLinkTemplate2 = '[__LinkDescription__](__LinkUrl__)'
 endfunction
 
 " Memos {{{3
