@@ -508,9 +508,6 @@ let g:vimwiki_auto_chdir = 1
 let g:vimwiki_folding = 'expr'
 let g:vimwiki_use_mouse = 1
 
-" Backspace to go back is annoying when mistyped.
-nmap <Nop> <Plug>VimwikiGoBackLink
-
 autocmd FileTypeHooks FileType vimwiki call s:SetupVimwiki()
 
 function! s:SetupVimwiki() " {{{3
@@ -520,6 +517,9 @@ function! s:SetupVimwiki() " {{{3
 
 	" Don't highlight task priority.
 	highlight TaskWikiTaskPriority ctermbg=NONE guibg=NONE
+
+	" Remove annoying backspace mapping.
+	unmap <buffer> <BS>
 endfunction
 
 " Memos {{{3
