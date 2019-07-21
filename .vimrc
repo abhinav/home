@@ -170,12 +170,6 @@ nmap <silent> <leader>q :bd<CR>
 nmap <silent> <leader>n :bn<CR>
 nmap <silent> <leader>N :bN<CR>
 
-" Window shortcuts
-nmap <silent> <leader>wd :close<CR>
-nmap <silent> <leader>wns :new<CR>
-nmap <silent> <leader>wnv :vnew<CR>
-
-
 " SuperTab-style behavior {{{2
 
 " Auto-completion and snippets
