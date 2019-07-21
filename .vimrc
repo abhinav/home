@@ -21,7 +21,6 @@ Plug 'junegunn/goyo.vim', {'on': 'Goyo'}
 Plug 'junegunn/vim-easy-align'
 Plug 'justinmk/molokai'
 Plug 'justinmk/vim-sneak'
-Plug 'mattn/calendar-vim'
 Plug 'machakann/vim-highlightedyank'
 Plug 'mhinz/vim-grepper'
 Plug 'ntpeters/vim-better-whitespace'
@@ -482,11 +481,7 @@ function! s:buildWiki(path)
 	return {
 		\ 'syntax': 'markdown',
 		\ 'ext': '.md',
-		\ 'diary_rel_path': 'log/',
-		\ 'diary_index': 'index',
-		\ 'diary_header': 'Log',
 		\ 'auto_tags': 1,
-		\ 'auto_diary_index': 1,
 		\ 'auto_toc': 1,
 		\ 'list_margin': 0,
 		\ 'path': a:path,
@@ -520,6 +515,31 @@ function! s:SetupVimwiki() " {{{3
 
 	" Remove annoying backspace mapping.
 	unmap <buffer> <BS>
+
+	" Remove vimwiki-only diary mappings.
+	unmap <buffer> <C-Down>
+	unmap <buffer> <C-Up>
+endfunction
+
+" Disable vimwiki diary {{{3
+" This section disables some of the keybindings added by vimwiki's diary
+" functionality because I don't use it.
+
+" Remove unused diary mappings.
+augroup VimwikiCleanup
+	autocmd!
+	autocmd VimEnter * call s:CleanupVimwiki()
+augroup END
+
+function! s:CleanupVimwiki()
+	" Remove unused diary shortcuts.
+	let map_prefix = vimwiki#vars#get_global('map_prefix')
+	exec 'unmap ' . map_prefix . 'i'
+	exec 'unmap ' . map_prefix . '<leader>i'
+	exec 'unmap ' . map_prefix . '<leader>w'
+	exec 'unmap ' . map_prefix . '<leader>t'
+	exec 'unmap ' . map_prefix . '<leader>y'
+	exec 'unmap ' . map_prefix . '<leader>m'
 endfunction
 
 " Memos {{{3
