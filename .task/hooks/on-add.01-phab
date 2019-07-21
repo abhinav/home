@@ -15,13 +15,14 @@ from datetime import date
 PHAB_RE = re.compile(r'\b([DT]\d{4,})\b')
 ARCRC = path.expanduser('~/.arcrc')
 
-def process(task):
-    if not path.isfile(ARCRC):
-        return '~/.arcrc does not exist'
 
+def process(task):
     phab_ids = PHAB_RE.findall(task['description'])
     if not phab_ids:
         return ''
+
+    if not path.isfile(ARCRC):
+        return '~/.arcrc does not exist'
 
     arc_url = None
     with open(ARCRC) as f:
