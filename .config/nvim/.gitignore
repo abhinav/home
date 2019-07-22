@@ -1,0 +1,7 @@
+# vim-plug
+/plugged
+/autoload/plug.vim
+/autoload/plug.vim.old
+
+# netrw
+.netrwhist
