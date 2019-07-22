@@ -519,6 +519,34 @@ function! s:SetupVimwiki() " {{{3
 	" Remove vimwiki-only diary mappings.
 	unmap <buffer> <C-Down>
 	unmap <buffer> <C-Up>
+
+	" [[-based search for entries.
+	let b:wikidir = vimwiki#vars#get_wikilocal('path')
+	imap <buffer><silent><expr> [[ fzf#vim#complete(
+		\ "rg --no-heading -N --color=always -m 1 -x -e '\\s*title:\\s*(.*)' -e '#\\s+(.*)' -r '$1$2'",
+		\ {
+			\ 'dir': b:wikidir,
+			\ 'reducer': function('<sid>buildWikiLink', [b:wikidir]),
+			\ 'down': '40%',
+			\ 'options': [
+				\ '--ansi', '--no-multi',
+				\ '-d:', '--nth=2',
+			\],
+		\ })
+endfunction
+
+" Builds a Markdown-style link.
+function! s:buildWikiLink(wikidir, lines)
+	let toks = split(a:lines[0], ':')
+	let title = trim(join(toks[1:], ':'))
+
+	" foo/bar.md => ~/.notes/foo/bar.md => ~/.notes/foo/bar
+	let wikifile = fnamemodify(vimwiki#path#join_path(a:wikidir, toks[0]), ':r')
+	let current_file = vimwiki#path#current_wiki_file()
+
+	" ~/.notes/foo/bar => ../foo/bar.
+	let rel_path = vimwiki#path#relpath(fnamemodify(current_file, ':h'), wikifile)
+	return printf('[%s](%s)', title, rel_path)
 endfunction
 
 " Disable vimwiki diary {{{3
