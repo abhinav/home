@@ -15,4 +15,5 @@ unset LS
 if [ "$EDITOR" = "nvim" ]; then
 	alias vi=nvim
 	alias vim=nvim
+	alias vimdiff='nvim -d'
 fi
