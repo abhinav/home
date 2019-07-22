@@ -603,6 +603,15 @@ vmap <silent> <leader>mf :<C-U>call <SID>NewMemo(visualmode())<CR>
 " positioned in place to fill the title. Otherwise, the cursor will be
 " positioned at the start of the body of the memo.
 function! s:NewMemo(...)
+	let wiki_nr = vimwiki#vars#get_bufferlocal('wiki_nr')
+	let wiki_dir = ''
+	let in_wiki = wiki_nr != -1
+	if in_wiki
+ 		let wiki_dir = vimwiki#vars#get_wikilocal('path', wiki_nr)
+	endif
+
+	let memo_name = strftime('%y%m%d%H%M')
+
 	" If invoked as an operator (via a motion), the ranged-over text will
 	" be the title.
 	let title = ''
@@ -621,22 +630,35 @@ function! s:NewMemo(...)
 			return
 		endif
 
-		let title = trim(getline(startline)[startcol-1:endcol-1])
+		let line = getline(startline)
+		let startcol = startcol - 1
+		let endcol = endcol - 1
+		let title = trim(line[startcol:endcol])
 
-		" TODO: If we're in a wiki file, use the vimwiki#path#relpath
-		" to replace the ranged text with [$text]($link).
+		" If we're in a wiki file, replace the affected text with a
+		" link.
+		if in_wiki
+			" Relative path to the new file from the current file.
+			let rel_path = vimwiki#path#relpath(
+				\ fnamemodify(vimwiki#path#current_wiki_file(), ':h'),
+				\ vimwiki#path#join_path(wiki_dir, memo_name),
+				\ )
+
+			let new_line
+				\ = (startcol ? line[:startcol-1] : '')
+				\ . printf("[%s](%s)", title, rel_path)
+				\ . line[endcol + 1:]
+			call setline(startline, new_line)
+		endif
 	endif
 
-	let memo_name = strftime('%y%m%d%H%M')
 
-	" If we have a registerted wiki open, the new note will be created
-	" relative to its root. Otherwise the default wiki will be used.
-	let wiki_nr = vimwiki#vars#get_bufferlocal('wiki_nr')
-	if wiki_nr == -1 || vimwiki#vars#get_wikilocal('is_temporary_wiki', wiki_nr)
-		let wiki_nr = 0
+	" Use the default wiki if we're not inside a wiki or using a temporary
+	" one.
+	if wiki_dir == '' || vimwiki#vars#get_wikilocal('is_temporary_wiki', wiki_nr)
+		let wiki_dir = vimwiki#vars#get_wikilocal('path', 0)
 	endif
-	let wiki_index = vimwiki#vars#get_wikilocal('path', wiki_nr) . '/index.md'
-
+	let wiki_index = wiki_dir . '/index.md'
 	let link = vimwiki#base#resolve_link(memo_name, wiki_index)
 	let already_exists = !empty(glob(link.filename))
 
