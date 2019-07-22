@@ -588,13 +588,13 @@ endfunction
 " Memos {{{3
 
 " mn starts a new memo.
-nmap <silent> <leader>mn :call <SID>NewMemo()<CR>
+nmap <silent> <leader>wn :call <SID>NewMemo()<CR>
 
 " mf creates a new memo, using the motion to get its title.
-nmap <silent> <leader>mf :set opfunc=<SID>NewMemo<CR>g@
+nmap <silent> <leader>wf :set opfunc=<SID>NewMemo<CR>g@
 
 " mf in visual mode creates a memo using the selected text as the title.
-vmap <silent> <leader>mf :<C-U>call <SID>NewMemo(visualmode())<CR>
+vmap <silent> <leader>wf :<C-U>call <SID>NewMemo(visualmode())<CR>
 
 " Starts a new numbered memo in the current wiki's root or the default one if
 " a wiki isn't open.
