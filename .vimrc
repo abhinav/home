@@ -186,22 +186,6 @@ function! s:HandleTab() " {{{3
 	endif
 endfunction
 
-" Close Preview on Move {{{2
-
-" ClosePreviewOnMove sets up an autocmd to close the preview window once the
-" cursor moves.
-function! s:ClosePreviewOnMove() " {{{3
-	autocmd CursorMovedI <buffer> call s:ClosePreview()
-	autocmd InsertLeave  <buffer> call s:ClosePreview()
-endfunction
-
-function! s:ClosePreview() " {{{3
-	if pumvisible() == 0 && bufname('%') != "[Command Line]"
-		silent! pclose
-	endif
-endfunction
-
-
 " Automatic directory creation {{{2
 
 augroup BWCCreateDir " {{{3
@@ -409,7 +393,7 @@ augroup FileTypeHooks
 augroup end
 
 function! s:SetupC() " {{{3
-	call s:ClosePreviewOnMove()
+	call preview#AutoClose()
 endfunction
 
 " gitcommit {{{2
@@ -423,7 +407,7 @@ function! s:SetupGo() " {{{3
 	" Search for declarations in the current file or directory.
 	nmap <buffer> <leader>ss :GoDecls<CR>
 	nmap <buffer> <leader>sd :GoDeclsDir<CR>
-	call s:ClosePreviewOnMove()
+	call preview#AutoClose()
 endfunction
 
 " vim-go {{{3
@@ -450,7 +434,7 @@ let g:LanguageClient_rootMarkers.go = ['go.mod', 'Gopkg.toml', 'glide.lock']
 let g:ale_linters.go = ['go vet', 'golint']
 
 " javascript {{{2
-autocmd FileTypeHooks FileType javascript call s:ClosePreviewOnMove()
+autocmd FileTypeHooks FileType javascript call preview#AutoClose()
 
 " plain {{{2
 autocmd FileTypeHooks FileType text setlocal norelativenumber
@@ -460,7 +444,7 @@ autocmd FileTypeHooks FileType text setlocal norelativenumber
 autocmd FileTypeHooks FileType bzl,python call s:SetupPython()
 
 function! s:SetupPython() " {{{3
-	call s:ClosePreviewOnMove()
+	call preview#AutoClose()
 	setlocal shiftwidth=4 tabstop=4 expandtab
 endfunction
 
