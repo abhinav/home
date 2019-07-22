@@ -1,26 +1,6 @@
-" Provides support for numbered wiki files (referred to as memos here).
-
-if exists('g:loaded_vimwiki_memo')
-	finish
-endif
-let g:loaded_vimwiki_memo = 1
-
-" wn starts a new memo.
-nmap <silent> <leader>wn :call <SID>NewMemo()<CR>
-
-" wf creates a new memo, using the motion to get its title.
-nmap <silent> <leader>wf :set opfunc=<SID>NewMemo<CR>g@
-
-" wf in visual mode creates a memo using the selected text as the title.
-vmap <silent> <leader>wf :<C-U>call <SID>NewMemo(visualmode())<CR>
-
-" Starts a new numbered memo in the current wiki's root or the default one if
-" a wiki isn't open.
-"
-" Accepts an optional title for the note. Without a title, the cursor will be
-" positioned in place to fill the title. Otherwise, the cursor will be
-" positioned at the start of the body of the memo.
-function! s:NewMemo(...)
+" Starts a new numbered wiki page in the current wiki's root, or the default
+" one if a wiki is not open. (Temporary wikis don't count.)
+function wikimemo#New(...)
 	let wiki_nr = vimwiki#vars#get_bufferlocal('wiki_nr')
 	let wiki_dir = ''
 	let in_wiki = wiki_nr != -1
