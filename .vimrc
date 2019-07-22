@@ -520,19 +520,31 @@ function! s:SetupVimwiki() " {{{3
 	unmap <buffer> <C-Down>
 	unmap <buffer> <C-Up>
 
-	" [[-based search for entries.
 	let b:wikidir = vimwiki#vars#get_wikilocal('path')
+
+	" FZF options to search wikis by title.
+	let b:vimwiki_title_search = {
+		\ 'source':  "rg --no-heading -N --color=always -m 1 -x -e '\\s*title:\\s*(.*)' -e '#\\s+(.*)' -r '$1$2'",
+		\ 'dir': b:wikidir,
+		\ 'down': '40%',
+		\ 'options': [
+			\ '--ansi', '--no-multi',
+			\ '-d:', '--nth=2',
+		\],
+	\}
+
+	" [[-based search for entries.
 	imap <buffer><silent><expr> [[ fzf#vim#complete(
-		\ "rg --no-heading -N --color=always -m 1 -x -e '\\s*title:\\s*(.*)' -e '#\\s+(.*)' -r '$1$2'",
-		\ {
-			\ 'dir': b:wikidir,
-			\ 'reducer': function('<sid>buildWikiLink', [b:wikidir]),
-			\ 'down': '40%',
-			\ 'options': [
-				\ '--ansi', '--no-multi',
-				\ '-d:', '--nth=2',
-			\],
-		\ })
+		\ extend(copy(b:vimwiki_title_search), {
+			\ 'reducer': function('<sid>buildWikiLink', [b:wikidir])
+		\ }),
+	\ )
+
+	" Override Ctrl-P to use titles rather than file names.
+	nmap <buffer><silent> <C-P> :call fzf#vim#grep(
+		\ b:vimwiki_title_search.source, 0,
+		\ copy(b:vimwiki_title_search)
+	\ )<CR>
 endfunction
 
 " Builds a Markdown-style link.
