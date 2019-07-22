@@ -1,0 +1,41 @@
+setlocal nolist nonumber norelativenumber
+setlocal shiftwidth=4 tabstop=4 expandtab
+setlocal spell foldlevel=1
+
+" FZF options to search wikis by title.
+let b:vimwiki_title_search = {
+	\ 'source':  "rg --no-heading -N --color=always -m 1 -x -e '\\s*title:\\s*(.*)' -e '#\\s+(.*)' -r '$1$2'",
+	\ 'dir': vimwiki#vars#get_wikilocal('path'),
+	\ 'down': '40%',
+	\ 'options': [
+		\ '--ansi', '--no-multi',
+		\ '-d:', '--nth=2',
+	\],
+\}
+
+" [[-based search for entries.
+imap <buffer><silent><expr> [[ fzf#vim#complete(
+	\ extend(copy(b:vimwiki_title_search), {
+		\ 'reducer': function('<sid>buildWikiLink', [vimwiki#vars#get_wikilocal('path')])
+	\ }),
+\ )
+
+" Override Ctrl-P to use titles rather than file names.
+nmap <buffer><silent> <C-P> :call fzf#vim#grep(
+	\ b:vimwiki_title_search.source, 0,
+	\ copy(b:vimwiki_title_search)
+\ )<CR>
+
+" Builds a Markdown-style link.
+function! s:buildWikiLink(wikidir, lines)
+	let toks = split(a:lines[0], ':')
+	let title = trim(join(toks[1:], ':'))
+
+	" foo/bar.md => ~/.notes/foo/bar.md => ~/.notes/foo/bar
+	let wikifile = fnamemodify(vimwiki#path#join_path(a:wikidir, toks[0]), ':r')
+	let current_file = vimwiki#path#current_wiki_file()
+
+	" ~/.notes/foo/bar => ../foo/bar.
+	let rel_path = vimwiki#path#relpath(fnamemodify(current_file, ':h'), wikifile)
+	return printf('[%s](%s)', title, rel_path)
+endfunction

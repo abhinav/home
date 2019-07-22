@@ -204,11 +204,6 @@ function! s:MkNonExDir(file, buf) " {{{3
 	endif
 endfunction
 
-" Clear the group so we can add commands to it.
-augroup FileTypeHooks
-	autocmd!
-augroup end
-
 " Trigger :checktime when changing buffers or coming back to vim.
 augroup AutoReload
 	autocmd!
@@ -299,7 +294,10 @@ let g:LanguageClient_autoStart = 1
 " https://github.com/autozimu/LanguageClient-neovim/issues/754
 let g:LanguageClient_diagnosticsEnable = 0
 
-autocmd FileTypeHooks FileType * call s:SetupLanguageClient()
+augroup LanguageClientHooks
+	autocmd!
+	autocmd FileType * call s:SetupLanguageClient()
+augroup END
 
 function! s:SetupLanguageClient() " {{{3
 	if !has_key(g:LanguageClient_serverCommands, &filetype)
@@ -326,11 +324,7 @@ let g:neosnippet#snippets_directory = "~/.config/nvim/plugged/vim-snippets/snipp
 let g:NERDTreeMapJumpNextSibling="C-M-J"
 let g:NERDTreeMapJumpPrevSibling="C-M-J"
 
-autocmd FileTypeHooks FileType nerdtree setlocal nolist
-
-nmap <silent> <leader>tp :NERDTreeToggle<CR>
-nmap <silent> <leader>tf :call <sid>ToggleNERDTree()<CR>
-nmap <silent> <C-\>      :call <sid>ToggleNERDTree()<CR>
+nmap <silent> <C-\> :call <sid>ToggleNERDTree()<CR>
 
 " ToggleNERDTree opens a NERDTree in the parent directory of the current file
 " or in the current directory if a file isn't open.
@@ -345,15 +339,6 @@ endfunction
 " netrw {{{2
 let g:netrw_liststyle = 3
 
-" quickfix {{{2
-autocmd FileTypeHooks BufReadPost quickfix call s:SetupQuickfix()
-
-function! s:SetupQuickfix() " {{{3
-	" Ctrl-O    Open in split.
-	" Ctrl-T    Open in tab.
-	nnoremap <buffer> <C-O> <C-W><Enter>
-	nnoremap <buffer> <C-T> <C-W><Enter><C-W>T
-endfunction
 " sneak {{{2
 nmap f <Plug>Sneak_f
 nmap F <Plug>Sneak_F
@@ -385,30 +370,7 @@ nnoremap <silent> <C-H> :TmuxNavigateLeft<CR>
 
 "  File Types {{{1
 
-" c {{{2
-
-augroup FileTypeHooks
-	autocmd FileType c call s:SetupC()
-	autocmd FileType cpp call s:SetupC()
-augroup end
-
-function! s:SetupC() " {{{3
-	call preview#AutoClose()
-endfunction
-
-" gitcommit {{{2
-autocmd FileTypeHooks FileType gitcommit setlocal textwidth=72
-
 " go {{{2
-
-autocmd FileTypeHooks FileType go call s:SetupGo()
-
-function! s:SetupGo() " {{{3
-	" Search for declarations in the current file or directory.
-	nmap <buffer> <leader>ss :GoDecls<CR>
-	nmap <buffer> <leader>sd :GoDeclsDir<CR>
-	call preview#AutoClose()
-endfunction
 
 " vim-go {{{3
 let g:go_def_mapping_enabled = 0
@@ -433,25 +395,11 @@ let g:LanguageClient_rootMarkers.go = ['go.mod', 'Gopkg.toml', 'glide.lock']
 " ale {{{3
 let g:ale_linters.go = ['go vet', 'golint']
 
-" javascript {{{2
-autocmd FileTypeHooks FileType javascript call preview#AutoClose()
-
-" plain {{{2
-autocmd FileTypeHooks FileType text setlocal norelativenumber
-
 " python {{{2
-
-autocmd FileTypeHooks FileType bzl,python call s:SetupPython()
-
-function! s:SetupPython() " {{{3
-	call preview#AutoClose()
-	setlocal shiftwidth=4 tabstop=4 expandtab
-endfunction
 
 " jedi-vim {{{3
 let g:jedi#show_call_signatures = 0
 let g:jedi#use_tabs_not_buffers = 1
-
 
 " rust {{{2
 let g:rustfmt_autosave = 1
@@ -487,203 +435,5 @@ let g:vimwiki_auto_chdir = 1
 let g:vimwiki_folding = 'expr'
 let g:vimwiki_use_mouse = 1
 
-autocmd FileTypeHooks FileType vimwiki call s:SetupVimwiki()
-
-function! s:SetupVimwiki() " {{{3
-	setlocal nolist nonumber norelativenumber
-	setlocal shiftwidth=4 tabstop=4 expandtab
-	setlocal spell foldlevel=1
-
-	" Don't highlight task priority.
-	highlight TaskWikiTaskPriority ctermbg=NONE guibg=NONE
-
-	" Remove annoying backspace mapping.
-	unmap <buffer> <BS>
-
-	" Remove vimwiki-only diary mappings.
-	unmap <buffer> <C-Down>
-	unmap <buffer> <C-Up>
-
-	let b:wikidir = vimwiki#vars#get_wikilocal('path')
-
-	" FZF options to search wikis by title.
-	let b:vimwiki_title_search = {
-		\ 'source':  "rg --no-heading -N --color=always -m 1 -x -e '\\s*title:\\s*(.*)' -e '#\\s+(.*)' -r '$1$2'",
-		\ 'dir': b:wikidir,
-		\ 'down': '40%',
-		\ 'options': [
-			\ '--ansi', '--no-multi',
-			\ '-d:', '--nth=2',
-		\],
-	\}
-
-	" [[-based search for entries.
-	imap <buffer><silent><expr> [[ fzf#vim#complete(
-		\ extend(copy(b:vimwiki_title_search), {
-			\ 'reducer': function('<sid>buildWikiLink', [b:wikidir])
-		\ }),
-	\ )
-
-	" Override Ctrl-P to use titles rather than file names.
-	nmap <buffer><silent> <C-P> :call fzf#vim#grep(
-		\ b:vimwiki_title_search.source, 0,
-		\ copy(b:vimwiki_title_search)
-	\ )<CR>
-endfunction
-
-" Builds a Markdown-style link.
-function! s:buildWikiLink(wikidir, lines)
-	let toks = split(a:lines[0], ':')
-	let title = trim(join(toks[1:], ':'))
-
-	" foo/bar.md => ~/.notes/foo/bar.md => ~/.notes/foo/bar
-	let wikifile = fnamemodify(vimwiki#path#join_path(a:wikidir, toks[0]), ':r')
-	let current_file = vimwiki#path#current_wiki_file()
-
-	" ~/.notes/foo/bar => ../foo/bar.
-	let rel_path = vimwiki#path#relpath(fnamemodify(current_file, ':h'), wikifile)
-	return printf('[%s](%s)', title, rel_path)
-endfunction
-
-" Disable vimwiki diary {{{3
-" This section disables some of the keybindings added by vimwiki's diary
-" functionality because I don't use it.
-
-" Remove unused diary mappings.
-augroup VimwikiPostSetup
-	autocmd!
-	autocmd VimEnter * call s:VimwikiPostSetup()
-augroup END
-
-function! s:VimwikiPostSetup()
-	" Remove unused diary shortcuts.
-	let map_prefix = vimwiki#vars#get_global('map_prefix')
-	exec 'unmap ' . map_prefix . 'i'
-	exec 'unmap ' . map_prefix . '<leader>i'
-	exec 'unmap ' . map_prefix . '<leader>w'
-	exec 'unmap ' . map_prefix . '<leader>t'
-	exec 'unmap ' . map_prefix . '<leader>y'
-	exec 'unmap ' . map_prefix . '<leader>m'
-
-	" Prefer Markdown-style links.
-	let g:vimwiki_global_vars.WikiLinkTemplate2 = '[__LinkDescription__](__LinkUrl__)'
-endfunction
-
-" Memos {{{3
-
-" mn starts a new memo.
-nmap <silent> <leader>wn :call <SID>NewMemo()<CR>
-
-" mf creates a new memo, using the motion to get its title.
-nmap <silent> <leader>wf :set opfunc=<SID>NewMemo<CR>g@
-
-" mf in visual mode creates a memo using the selected text as the title.
-vmap <silent> <leader>wf :<C-U>call <SID>NewMemo(visualmode())<CR>
-
-" Starts a new numbered memo in the current wiki's root or the default one if
-" a wiki isn't open.
-"
-" Accepts an optional title for the note. Without a title, the cursor will be
-" positioned in place to fill the title. Otherwise, the cursor will be
-" positioned at the start of the body of the memo.
-function! s:NewMemo(...)
-	let wiki_nr = vimwiki#vars#get_bufferlocal('wiki_nr')
-	let wiki_dir = ''
-	let in_wiki = wiki_nr != -1
-	if in_wiki
- 		let wiki_dir = vimwiki#vars#get_wikilocal('path', wiki_nr)
-	endif
-
-	let memo_name = strftime('%y%m%d%H%M')
-
-	" If invoked as an operator (via a motion), the ranged-over text will
-	" be the title.
-	let title = ''
-	if a:0
-		if a:1 != 'char' && a:1 != 'v'
-			echoerr 'Only single-line (charwise) ranges can'.
-				\ ' be used to create titles.'
-			return
-		endif
-
-		let [startline, startcol] = getpos(a:1 == 'v' ? "'<" : "'[")[1:2]
-		let [endline, endcol] = getpos(a:1 == 'v' ? "'>" : "']")[1:2]
-		if startline != endline
-			echoerr 'Only single-line (charwise) ranges can'.
-				\ ' be used to create titles.'
-			return
-		endif
-
-		let line = getline(startline)
-		let startcol = startcol - 1
-		let endcol = endcol - 1
-		let title = trim(line[startcol:endcol])
-
-		" If we're in a wiki file, replace the affected text with a
-		" link.
-		if in_wiki
-			" Relative path to the new file from the current file.
-			let rel_path = vimwiki#path#relpath(
-				\ fnamemodify(vimwiki#path#current_wiki_file(), ':h'),
-				\ vimwiki#path#join_path(wiki_dir, memo_name),
-				\ )
-
-			let new_line
-				\ = (startcol ? line[:startcol-1] : '')
-				\ . printf("[%s](%s)", title, rel_path)
-				\ . line[endcol + 1:]
-			call setline(startline, new_line)
-		endif
-	endif
-
-
-	" Use the default wiki if we're not inside a wiki or using a temporary
-	" one.
-	if wiki_dir == '' || vimwiki#vars#get_wikilocal('is_temporary_wiki', wiki_nr)
-		let wiki_dir = vimwiki#vars#get_wikilocal('path', 0)
-	endif
-	let wiki_index = wiki_dir . '/index.md'
-	let link = vimwiki#base#resolve_link(memo_name, wiki_index)
-	let already_exists = !empty(glob(link.filename))
-
-	call vimwiki#base#open_link(':e ', memo_name, wiki_index)
-
-	if already_exists
-		return
-	endif
-
-	" This is a new file. Add the template and reposition the cursor.
-
-	call append(line('1'),
-		\ [
-		\ '---',
-		\ printf('title: %s', title),
-		\ printf('date: %s', strftime('%Y-%m-%d %H:%M')),
-		\ '---',
-		\ '',
-		\ ])
-
-	" If no title was given, move cursor in position to write the title.
-	" Otherwise, move to the body of the note.
-	if title == ''
-		exec 2
-	else
-		exec 'normal G'
-	endif
-
-	startinsert!
-endfunction
-
 " ale {{{3
 let g:ale_linter_aliases.vimwiki = ['markdown']
-
-" yaml {{{2
-autocmd FileTypeHooks FileType yaml call s:SetupYAML()
-
-function! s:SetupYAML() " {{{3
-	setlocal tabstop=2 shiftwidth=2 expandtab
-	augroup vimrc_yaml_hooks
-		autocmd!
-		autocmd BufWritePost package.yaml silent !hpack --silent
-	augroup end
-endfunction
