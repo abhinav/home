@@ -186,23 +186,7 @@ function! s:HandleTab() " {{{3
 	endif
 endfunction
 
-" Automatic directory creation {{{2
-
-augroup BWCCreateDir " {{{3
-	autocmd!
-	autocmd BufWritePre * :call s:MkNonExDir(expand('<afile>'), +expand('<abuf>'))
-augroup end
-
-" MkNonExDir creates the parent directories for the given file if they don't
-" already exist.
-function! s:MkNonExDir(file, buf) " {{{3
-	if empty(getbufvar(a:buf, '&buftype')) && a:file!~#'\v^\w+\:\/'
-		let dir=fnamemodify(a:file, ':h')
-		if !isdirectory(dir)
-			call mkdir(dir, 'p')
-		endif
-	endif
-endfunction
+" Auto-reload files {{{2
 
 " Trigger :checktime when changing buffers or coming back to vim.
 augroup AutoReload
