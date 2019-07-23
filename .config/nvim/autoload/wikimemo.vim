@@ -75,12 +75,15 @@ function wikimemo#New(...)
 		\ printf('date: %s', strftime('%Y-%m-%d %H:%M')),
 		\ '---',
 		\ '',
-		\ 'Tags: ',
-		\ '',
 		\ ])
 
 	" If no title was given, move cursor in position to write the title.
 	" Otherwise, move to the body of the note.
-	exec (title == '' ? 2 : 6)
+	if title == ''
+		exec 2
+	else
+		exec 'normal G'
+	endif
+
 	startinsert!
 endfunction
