@@ -397,7 +397,6 @@ function! s:buildWiki(path)
 	return {
 		\ 'syntax': 'markdown',
 		\ 'ext': '.md',
-		\ 'auto_tags': 1,
 		\ 'auto_toc': 1,
 		\ 'list_margin': 0,
 		\ 'path': a:path,
