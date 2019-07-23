@@ -2,9 +2,10 @@ setlocal nolist nonumber norelativenumber
 setlocal shiftwidth=4 tabstop=4 expandtab
 setlocal spell foldlevel=1
 
+let b:vimwiki_title_search_source = "rg --no-heading -N --color=always -m 1 -x -e '\\s*title:\\s*(.*)' -e '#\\s+(.*)' -r '$1$2'"
+
 " FZF options to search wikis by title.
 let b:vimwiki_title_search = {
-	\ 'source':  "rg --no-heading -N --color=always -m 1 -x -e '\\s*title:\\s*(.*)' -e '#\\s+(.*)' -r '$1$2'",
 	\ 'dir': vimwiki#vars#get_wikilocal('path'),
 	\ 'down': '40%',
 	\ 'options': [
@@ -16,13 +17,14 @@ let b:vimwiki_title_search = {
 " [[-based search for entries.
 imap <buffer><silent><expr> [[ fzf#vim#complete(
 	\ extend(copy(b:vimwiki_title_search), {
+		\ 'source': b:vimwiki_title_search_source,
 		\ 'reducer': function('<sid>buildWikiLink', [vimwiki#vars#get_wikilocal('path')])
 	\ }),
 \ )
 
 " Override Ctrl-P to use titles rather than file names.
 nmap <buffer><silent> <C-P> :call fzf#vim#grep(
-	\ b:vimwiki_title_search.source, 0,
+	\ b:vimwiki_title_search_source, 0,
 	\ copy(b:vimwiki_title_search)
 \ )<CR>
 
