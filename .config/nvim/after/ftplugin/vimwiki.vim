@@ -1,3 +1,8 @@
+if exists('b:loaded_vimwiki_overrides')
+	finish
+endif
+let b:loaded_vimwiki_overrides = 1
+
 " Remove annoying backspace mapping.
 unmap <buffer> <BS>
 
