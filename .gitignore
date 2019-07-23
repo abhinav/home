@@ -58,6 +58,9 @@
 # restack
 !/.restack
 
+# ripgrep
+!/.ripgreprc
+
 # TaskWarrior
 !/.taskrc
 !/.taskrc.d/
