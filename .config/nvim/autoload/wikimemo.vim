@@ -36,10 +36,11 @@ function wikimemo#New(...)
 		" If we're in a wiki file, replace the affected text with a
 		" link.
 		if in_wiki
+			let file_path = vimwiki#path#join_path(wiki_dir, memo_name) . '.md'
 			" Relative path to the new file from the current file.
 			let rel_path = vimwiki#path#relpath(
 				\ fnamemodify(vimwiki#path#current_wiki_file(), ':h'),
-				\ vimwiki#path#join_path(wiki_dir, memo_name),
+				\ file_path,
 				\ )
 
 			let new_line
