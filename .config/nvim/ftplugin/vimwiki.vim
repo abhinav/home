@@ -38,8 +38,8 @@ function! s:buildWikiLink(wikidir, lines)
 	let toks = split(a:lines[0], ':')
 	let title = trim(join(toks[1:], ':'))
 
-	" foo/bar.md => ~/.notes/foo/bar.md => ~/.notes/foo/bar
-	let wikifile = fnamemodify(vimwiki#path#join_path(a:wikidir, toks[0]), ':r')
+	" foo/bar.md => ~/.notes/foo/bar.md
+	let wikifile = vimwiki#path#join_path(a:wikidir, toks[0])
 	let current_file = vimwiki#path#current_wiki_file()
 
 	" ~/.notes/foo/bar => ../foo/bar.
