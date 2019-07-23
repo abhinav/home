@@ -222,7 +222,7 @@ nmap <silent> <leader>en <Plug>(ale_next_wrap)
 " deoplete {{{2
 set completeopt=menu,preview,longest
 let g:deoplete#enable_at_startup = 1
-inoremap <silent><expr> <C-Space> deoplete#mappings#manual_complete()
+inoremap <silent><expr> <C-Space> deoplete#manual_complete()
 
 " easy-align {{{2
 xmap ga <Plug>(EasyAlign)
