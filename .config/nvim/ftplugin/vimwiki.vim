@@ -14,7 +14,7 @@ let b:vimwiki_title_search = {
 	\ 'dir': vimwiki#vars#get_wikilocal('path'),
 	\ 'down': '40%',
 	\ 'options': [
-		\ '--ansi', '--no-multi',
+		\ '--ansi', '--no-multi', '--color=16'
 	\],
 \}
 
