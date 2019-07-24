@@ -15,7 +15,6 @@ let b:vimwiki_title_search = {
 	\ 'down': '40%',
 	\ 'options': [
 		\ '--ansi', '--no-multi',
-		\ '-d:', '--nth=2',
 	\],
 \}
 
