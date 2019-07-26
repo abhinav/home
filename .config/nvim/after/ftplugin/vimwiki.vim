@@ -14,3 +14,5 @@ unmap <buffer> <C-Up>
 " try to convert it into a link. Instead, act like <CR> in normal mode, moving
 " to the next line.
 command! -buffer VimwikiFollowLink call wikilink#Follow()
+
+EnableWhitespace
