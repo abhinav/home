@@ -19,7 +19,7 @@ let b:vimwiki_title_search = {
 \}
 
 " Puts the name of the current file into the system register.
-nmap <buffer><silent> <leader>fn :call setreg("+", expand('%:t'))<CR>
+nmap <buffer><silent> <leader>fn :call setreg("+", expand('%:t:r'))<CR>
 
 " [[-based search for entries.
 imap <buffer><silent><expr> [[ fzf#vim#complete(
