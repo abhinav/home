@@ -255,7 +255,11 @@ command! Trees call s:FZFDirs({'sink': 'NERDTree'})
 let g:grepper =
 	\ {
 	\ 'tools': ['rg', 'ag', 'git'],
-	\ 'open': 1,
+	\ 'side': 1,
+	\ 'side_cmd': 'new',
+	\ 'prompt_text': '$t> ',
+	\ 'prompt_quote': 2,
+	\ 'quickfix': 1,
 	\ 'switch': 1,
 	\ 'jump': 0,
 	\ 'dir': 'filecwd',
