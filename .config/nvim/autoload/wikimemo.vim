@@ -1,14 +1,12 @@
 " Starts a new numbered wiki page in the current wiki's root, or the default
 " one if a wiki is not open. (Temporary wikis don't count.)
+"
+" May be used as a motion or a visual selection over the title.
 function wikimemo#New(...)
 	let wiki_nr = vimwiki#vars#get_bufferlocal('wiki_nr')
-	let wiki_dir = ''
 	let in_wiki = wiki_nr != -1
-	if in_wiki
- 		let wiki_dir = vimwiki#vars#get_wikilocal('path', wiki_nr)
-	endif
-
-	let memo_name = strftime('%y%m%d%H%M')
+	let wiki_dir = wikimemo#CurrentWikiDir()
+	let memo_name = s:generateMemoName()
 
 	" If invoked as an operator (via a motion), the ranged-over text will
 	" be the title.
@@ -50,17 +48,18 @@ function wikimemo#New(...)
 		endif
 	endif
 
+	call s:newWikiNote(wiki_dir, memo_name, title)
+endfunction
 
-	" Use the default wiki if we're not inside a wiki or using a temporary
-	" one.
-	if wiki_dir == '' || vimwiki#vars#get_wikilocal('is_temporary_wiki', wiki_nr)
-		let wiki_dir = vimwiki#vars#get_wikilocal('path', 0)
-	endif
-	let wiki_index = wiki_dir . '/index.md'
-	let link = vimwiki#base#resolve_link(memo_name, wiki_index)
+" Given a valid wiki directory and a note name relative to the root of the
+" directory, creates a new note with the given title if it doesn't already
+" exist.
+function s:newWikiNote(wiki_dir, note_name, title)
+	let wiki_index = a:wiki_dir . '/index.md'
+	let link = vimwiki#base#resolve_link(a:note_name, wiki_index)
 	let already_exists = !empty(glob(link.filename))
 
-	call vimwiki#base#open_link(':e ', memo_name, wiki_index)
+	call vimwiki#base#open_link(':e ', a:note_name, wiki_index)
 
 	if already_exists
 		return
@@ -71,7 +70,7 @@ function wikimemo#New(...)
 	call append(line('1'),
 		\ [
 		\ '---',
-		\ printf('title: %s', title),
+		\ printf('title: %s', a:title),
 		\ printf('date: %s', strftime('%Y-%m-%d %H:%M')),
 		\ '---',
 		\ '',
@@ -79,11 +78,30 @@ function wikimemo#New(...)
 
 	" If no title was given, move cursor in position to write the title.
 	" Otherwise, move to the body of the note.
-	if title == ''
+	if strlen(a:title) == 0
 		exec 2
 	else
 		exec 'normal G'
 	endif
 
 	startinsert!
+endfunction
+
+function s:generateMemoName()
+	return strftime('%y%m%d%H%M')
+endfunction
+
+" Creates and opens a new wiki page with the given title.
+function wikimemo#NewWithTitle(title)
+	call s:newWikiNote(wikimemo#CurrentWikiDir(), s:generateMemoName(), a:title)
+endfunction
+
+" Returns the path to the current wiki directory, or the default directory if
+" we're not inside one, or if we're inside a temporary wiki.
+function wikimemo#CurrentWikiDir()
+	let wiki_nr = vimwiki#vars#get_bufferlocal('wiki_nr')
+	if wiki_nr == -1 || vimwiki#vars#get_wikilocal('is_temporary_wiki', wiki_nr)
+		let wiki_nr = 0
+	endif
+	return vimwiki#vars#get_wikilocal('path', wiki_nr)
 endfunction
