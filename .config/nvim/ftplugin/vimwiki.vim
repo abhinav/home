@@ -15,7 +15,7 @@ let b:vimwiki_title_search = {
 	\ 'down': '40%',
 	\ 'options': [
 		\ '--ansi', '--no-multi', '--color=16',
-		\ '-d:', '--preview', '(bat --color=always {1} || cat {1}) 2>/dev/null',
+		\ '-d:', '--preview', '(bat --color=always {1} || cat {1}) 2>/dev/null | head -n100',
 	\],
 \}
 
