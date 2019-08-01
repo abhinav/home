@@ -22,6 +22,10 @@ let b:vimwiki_title_search = {
 " Puts the name of the current file into the system register.
 nmap <buffer><silent> <leader>fn :call setreg("+", expand('%:t:r'))<CR>
 
+" <leader>wy to copy rich text from Markdown.
+nmap <buffer><silent> <leader>wy :set opfunc=wikicopy#Copy<CR>g@
+vmap <buffer><silent> <leader>wy :<C-U>call wikicopy#Copy(visualmode(), 1)<CR>
+
 " [[-based search for entries.
 imap <buffer><silent><expr> [[ fzf#vim#complete(
 	\ extend(copy(b:vimwiki_title_search), {
