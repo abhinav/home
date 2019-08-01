@@ -4,7 +4,7 @@
 "
 " Inspired by https://github.com/alok/notational-fzf-vim.
 "
-" Use <leader>wN or :NV to invoke it.
+" Use <leader>wp or :NV to invoke it.
 "
 " In the search menu, the following keybindings are supported in addition to
 " the usual fzf bindings.
@@ -40,7 +40,7 @@ command! -nargs=* NV
 		\ ],
 	\ }))
 
-nnoremap <silent> <leader>wN :NV<CR>
+nnoremap <silent> <leader>wp :NV<CR>
 
 function s:HandleSelection(lines)
 	if len(a:lines) < 2
