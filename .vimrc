@@ -394,7 +394,7 @@ let g:jedi#use_tabs_not_buffers = 1
 let g:rustfmt_autosave = 1
 
 " LanguageClient {{{3
-let g:LanguageClient_serverCommands.rust = ['rustup', 'run', 'nightly', 'rls']
+let g:LanguageClient_serverCommands.rust = ['rustup', 'run', 'stable', 'rls']
 
 " vimwiki {{{2
 
