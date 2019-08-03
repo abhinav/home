@@ -69,6 +69,8 @@ set copyindent preserveindent
 set incsearch
 set autoindent
 set nowrap              " No wrapping
+set nojoinspaces        " Don't add two spaces after punctuation when joining
+                        " two lines.
 set ignorecase smartcase tagcase=followscs
                         " Ignore casing during search except if uppercase
                         " characters are used. Use the same settings for tag
