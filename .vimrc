@@ -9,6 +9,7 @@ call plug#begin('~/.config/nvim/plugged')
 "  Plugins {{{1
 Plug 'autozimu/LanguageClient-neovim', {'branch': 'next', 'do': 'bash install.sh'}
 Plug 'cespare/vim-toml'
+Plug 'chrisbra/NrrwRgn'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'davidhalter/jedi-vim', {'for': ['python', 'pyrex']}
 Plug 'edkolev/tmuxline.vim'
