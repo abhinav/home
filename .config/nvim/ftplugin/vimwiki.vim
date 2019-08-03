@@ -7,6 +7,9 @@ setlocal nolist nonumber norelativenumber
 setlocal shiftwidth=4 tabstop=4 expandtab
 setlocal spell foldlevel=1
 
+" Treat blockquotes as comments so gq formats them nicely.
+setlocal comments=n:>
+
 let b:vimwiki_title_search_source = "rg -g '*.md' --no-heading -N -m 1 -x -e '\\s*title:\\s*(.*)' -e '#\\s+(.*)' -r '$1'"
 
 " FZF options to search wikis by title.
