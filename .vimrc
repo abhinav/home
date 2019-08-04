@@ -169,8 +169,8 @@ nnoremap <silent> <leader>svf :source $MYVIMRC<cr>
 " Buffer shortcuts
 nmap <silent> <leader>q :bd<CR>
 nmap <silent> <leader>Q :bd!<CR>
-nmap <silent> <leader>n :bn<CR>
-nmap <silent> <leader>N :bN<CR>
+nmap <silent> <leader>bn :bn<CR>
+nmap <silent> <leader>bN :bN<CR>
 
 " SuperTab-style behavior {{{2
 
