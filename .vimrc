@@ -33,7 +33,6 @@ Plug 'Shougo/neosnippet-snippets'
 Plug 'Shougo/vimproc', {'do': 'make'}
 Plug 'sickill/vim-pasta'
 Plug 'solarnz/thrift.vim', {'for': 'thrift'}
-Plug 'tbabej/taskwiki', {'do': 'pip3 install --upgrade git+git://github.com/tbabej/tasklib@develop'}
 Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
@@ -344,10 +343,6 @@ xmap t <Plug>Sneak_t
 xmap T <Plug>Sneak_T
 omap t <Plug>Sneak_t
 omap T <Plug>Sneak_T
-
-" taskwiki {{{2
-let g:taskwiki_markup_syntax = "markdown"
-let g:taskwiki_disable_concealcursor = 1
 
 " tmux-navigator {{{2
 
