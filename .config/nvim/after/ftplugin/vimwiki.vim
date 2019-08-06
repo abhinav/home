@@ -20,3 +20,6 @@ let &l:equalprg = 'pandoc -f markdown -t commonmark --atx-headers --columns=' . 
 command! -buffer VimwikiFollowLink call wikilink#Follow()
 
 EnableWhitespace
+
+" Treat blockquotes as comments so gq formats them nicely.
+setlocal comments=n:>
