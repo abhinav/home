@@ -1,14 +1,13 @@
 #!/bin/bash
 
 if command -v exa &>/dev/null; then
-	alias l=exa
-else
-	alias l=ls
+	alias ls=exa
 fi
 
-alias ll="l -l"
-alias la="l -a"
-alias lla="l -la"
+alias l="ls"
+alias ll="ls -l"
+alias la="ls -a"
+alias lla="ls -la"
 
 unset LS
 
