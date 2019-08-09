@@ -7,7 +7,11 @@ setlocal nolist nonumber norelativenumber
 setlocal shiftwidth=4 tabstop=4 expandtab
 setlocal spell foldlevel=1
 
-let b:vimwiki_title_search_source = "rg -g '*.md' --no-heading -N -m 1 -x -e '\\s*title:\\s*(.*)' -e '#\\s+(.*)' -r '$1'"
+let b:vimwiki_title_search_source =
+	\ "rg -g '*.md' --no-heading -N -m 1 -x"
+	\ . " -e " . shellescape('title:\s*["'']?(?P<t1>.*?)["'']?')
+	\ . " -e " . shellescape('#\s+(?P<t2>.*)')
+	\ . " -r " . shellescape('$t1$t2')
 
 " FZF options to search wikis by title.
 let b:vimwiki_title_search = {
