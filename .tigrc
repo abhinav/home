@@ -1,7 +1,11 @@
 bind main <Ctrl-R> !git rebase --autosquash -i %(commit)
 bind main = !git commit --fixup=%(commit)
 
+# Branch checkouts.
 bind main b !git checkout -b "%(prompt Enter branch name: )" %(commit)
 bind main B !git checkout -B "%(prompt Enter branch name: )" %(commit)
+
+# Detached checkout of a commit.
+bind main d !git checkout --detach %(commit)
 
 bind main <Ctrl-p> ?git push "%(prompt Enter remote name: )" %(commit):"%(prompt Enter branch name: )"
