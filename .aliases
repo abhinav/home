@@ -9,10 +9,10 @@ alias ll="ls -l"
 alias la="ls -a"
 alias lla="ls -la"
 
-unset LS
-
 if [ "$EDITOR" = "nvim" ]; then
 	alias vi=nvim
 	alias vim=nvim
 	alias vimdiff='nvim -d'
 fi
+
+alias g=git
