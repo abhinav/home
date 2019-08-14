@@ -24,14 +24,17 @@ Plug 'justinmk/molokai'
 Plug 'justinmk/vim-sneak'
 Plug 'machakann/vim-highlightedyank'
 Plug 'mhinz/vim-grepper'
+Plug 'ncm2/ncm2'
+Plug 'ncm2/ncm2-bufword'
+Plug 'ncm2/ncm2-markdown-subscope'
+Plug 'ncm2/ncm2-path'
+Plug 'ncm2/ncm2-ultisnips'
 Plug 'ntpeters/vim-better-whitespace'
+Plug 'roxma/nvim-yarp'
 Plug 'rust-lang/rust.vim'
 Plug 'scrooloose/nerdtree'
-Plug 'Shougo/deoplete.nvim', {'do': ':UpdateRemotePlugins'}
-Plug 'Shougo/neosnippet'
-Plug 'Shougo/neosnippet-snippets'
-Plug 'Shougo/vimproc', {'do': 'make'}
 Plug 'sickill/vim-pasta'
+Plug 'SirVer/ultisnips'
 Plug 'solarnz/thrift.vim', {'for': 'thrift'}
 Plug 'tbabej/taskwiki', {'do': 'pip3 install --upgrade git+git://github.com/tbabej/tasklib@develop'}
 Plug 'tpope/vim-abolish'
@@ -74,6 +77,7 @@ set ignorecase smartcase tagcase=followscs
                         " Ignore casing during search except if uppercase
                         " characters are used. Use the same settings for tag
                         " searches.
+set shortmess+=c
 set inccommand=split    " Show :s result incrementally.
 set background=dark
 set textwidth=78
@@ -172,23 +176,6 @@ nmap <silent> <leader>Q :bd!<CR>
 nmap <silent> <leader>bn :bn<CR>
 nmap <silent> <leader>bN :bN<CR>
 
-" SuperTab-style behavior {{{2
-
-" Auto-completion and snippets
-imap <expr><TAB> <SID>HandleTab()
-
-function! s:HandleTab() " {{{3
-	if neosnippet#expandable_or_jumpable()
-		return "\<Plug>(neosnippet_expand_or_jump)"
-	else
-		if pumvisible()
-			return "\<c-n>"
-		else
-			return "\<tab>"
-		endif
-	endif
-endfunction
-
 " Auto-reload files {{{2
 
 " Trigger :checktime when changing buffers or coming back to vim.
@@ -222,10 +209,44 @@ let g:ale_linter_aliases = {}
 nmap <silent> <leader>ep <Plug>(ale_previous_wrap)
 nmap <silent> <leader>en <Plug>(ale_next_wrap)
 
-" deoplete {{{2
-set completeopt=menu,preview,longest
-let g:deoplete#enable_at_startup = 1
-inoremap <silent><expr> <C-Space> deoplete#manual_complete()
+" ncm2 {{{2
+autocmd BufEnter * call ncm2#enable_for_buffer()
+
+set completeopt=noinsert,menuone,noselect,preview
+
+inoremap <silent> <C-Space> <c-r>=ncm2#force_trigger()<cr>
+
+" CTRL-C doesn't trigger the InsertLeave autocmd . map to <ESC> instead.
+inoremap <c-c> <ESC>
+
+" When <CR> is pressed while the popup menu is visible, it only
+" hides the menu. This hides the menu and moves on to the next line.
+inoremap <expr> <CR> (pumvisible() ? "\<c-y>\<cr>" : "\<CR>")
+
+" Use <TAB> to select the popup menu:
+inoremap <expr> <Tab> <SID>HandleTab()
+inoremap <expr> <S-Tab> (pumvisible() ? "\<C-p>" : "\<S-Tab>")
+
+function s:HandleTab()
+	" Select the first item if popup is open but nothing has been
+	" selected. Otherwise, expand the selected item.
+	if pumvisible()
+		if empty(v:completed_item)
+			return "\<c-n>"
+		else
+			return ncm2_ultisnips#expand_or("", 'n')
+		endif
+	endif
+
+	return "\<tab>"
+endfunction
+
+" UltiSnips {{{3
+imap <c-u> <Plug>(ultisnips_expand)
+let g:UltiSnipsExpandTrigger            = "<Plug>(ultisnips_expand)"
+let g:UltiSnipsJumpForwardTrigger       = "<c-j>"
+let g:UltiSnipsJumpBackwardTrigger      = "<c-k>"
+let g:UltiSnipsRemoveSelectModeMappings = 0
 
 " easy-align {{{2
 xmap ga <Plug>(EasyAlign)
