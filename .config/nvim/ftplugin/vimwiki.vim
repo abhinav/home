@@ -30,6 +30,9 @@ nmap <buffer><silent> <leader>fn :call setreg("+", expand('%:t:r'))<CR>
 nmap <buffer><silent> <leader>wy :set opfunc=wikicopy#Copy<CR>g@
 vmap <buffer><silent> <leader>wy :<C-U>call wikicopy#Copy(visualmode(), 1)<CR>
 
+" <Leader><Enter> to open a link in a tab.
+nmap <buffer> <leader><cr> <Plug>VimwikiTabnewLink
+
 " [[-based search for entries.
 imap <buffer><silent><expr> [[ fzf#vim#complete(
 	\ extend(copy(b:vimwiki_title_search), {
