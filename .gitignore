@@ -6,7 +6,6 @@
 
 # XDG home
 !/.config
-/.config/*
 
 # Always ignore
 .DS_Store
