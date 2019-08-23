@@ -8,7 +8,6 @@ source ~/.profile.d/sbin_path
 source ~/.profile.d/homebrew
 source ~/.profile.d/pager
 source ~/.profile.d/editor
-source ~/.profile.d/bat
 source ~/.profile.d/term
 source ~/.profile.d/dircolors
 source ~/.profile.d/ripgrep
