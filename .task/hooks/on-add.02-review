@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+# Adds a +review tag if the description contains the string "review".
+exec jq -Mec '
+if (.description | ascii_downcase | contains("review")) then
+	(.tags += ["review"])
+else
+	.
+end
+'
