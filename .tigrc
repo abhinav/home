@@ -6,6 +6,6 @@ bind main b !git checkout -b "%(prompt Enter branch name: )" %(commit)
 bind main B !git checkout -B "%(prompt Enter branch name: )" %(commit)
 
 # Detached checkout of a commit.
-bind main d !git checkout --detach %(commit)
+bind main D ?<git checkout --detach %(commit)
 
 bind main <Ctrl-p> ?git push "%(prompt Enter remote name: )" %(commit):"%(prompt Enter branch name: )"
