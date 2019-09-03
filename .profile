@@ -6,9 +6,9 @@ source ~/.profile.d/arrayutil
 source ~/.profile.d/home_path
 source ~/.profile.d/sbin_path
 source ~/.profile.d/homebrew
+source ~/.profile.d/term
 source ~/.profile.d/pager
 source ~/.profile.d/editor
-source ~/.profile.d/term
 source ~/.profile.d/dircolors
 source ~/.profile.d/ripgrep
 
