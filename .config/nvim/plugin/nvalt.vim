@@ -35,7 +35,7 @@ command! -nargs=* NV
 		\ 'options': [
 			\ '--ansi', '--no-multi', '--color=16', '--exact',
 			\ '--expect=enter,ctrl-x', '--print-query',
-			\ '-d:', '--nth=1,3..',
+			\ '-d:', '--nth=1,3..', '--no-sort',
 			\ '--query', <q-args>,
 		\ ],
 	\ }))
