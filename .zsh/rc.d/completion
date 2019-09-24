@@ -36,3 +36,7 @@ autoload -Uz compinit
 compinit
 # End of lines added by compinstall
 #
+
+# Caching
+zstyle ':completion:*' use-cache on
+zstyle ':completion:*' cache-path ~/.zsh/cache
