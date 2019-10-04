@@ -4,4 +4,4 @@ packages: []
 extra-deps: []
 
 # Also update .profile.d/haskell
-resolver: lts-11.13
+resolver: lts-14.7
