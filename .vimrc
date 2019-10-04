@@ -11,6 +11,7 @@ Plug 'autozimu/LanguageClient-neovim', {'branch': 'next', 'do': 'bash install.sh
 Plug 'cespare/vim-toml'
 Plug 'chrisbra/NrrwRgn'
 Plug 'christoomey/vim-tmux-navigator'
+Plug 'direnv/direnv.vim'
 Plug 'davidhalter/jedi-vim', {'for': ['python', 'pyrex']}
 Plug 'edkolev/tmuxline.vim'
 Plug 'fatih/vim-go'
