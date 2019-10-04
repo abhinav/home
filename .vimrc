@@ -407,6 +407,14 @@ let g:LanguageClient_rootMarkers.go = ['go.mod', 'Gopkg.toml', 'glide.lock']
 " ale {{{3
 let g:ale_linters.go = ['go vet', 'golint']
 
+" haskell {[{2
+
+" LanguageClient {{{3
+let g:ale_linters.haskell = ['hie', 'stylish-haskell', 'hlint']
+let g:ale_haskell_hie_executable = 'hie-wrapper'
+let g:LanguageClient_serverCommands.haskell = ['hie-wrapper']
+let g:LanguageClient_rootMarkers.haskell = ['*.cabal', 'stack.yaml']
+
 " python {{{2
 
 " jedi-vim {{{3
