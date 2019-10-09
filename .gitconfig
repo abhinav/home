@@ -20,7 +20,7 @@
 	cookiefile = /Users/abg/.gitcookies
 [log]
 	abbrevCommit = true
-	date = relative
+	date = iso-local
 	decorate = true
 [push]
 	default = simple
