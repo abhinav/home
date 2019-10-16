@@ -3,6 +3,7 @@ bind main = !git commit --fixup=%(commit)
 
 # Copy commit hash to clipboard.
 bind main Y +sh -c "printf '%s' %(commit) | pbcopy; echo %(commit)"
+bind diff Y +sh -c "printf '%s' %(commit) | pbcopy; echo %(commit)"
 
 # Branch checkouts.
 bind main b !git checkout -b "%(prompt Enter branch name: )" %(commit)
