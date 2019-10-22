@@ -304,10 +304,6 @@ let g:LanguageClient_serverCommands = {}
 let g:LanguageClient_rootMarkers = {}
 let g:LanguageClient_autoStart = 1
 
-" Disable diagnostics until they're supported onsave only.
-" https://github.com/autozimu/LanguageClient-neovim/issues/754
-let g:LanguageClient_diagnosticsEnable = 0
-
 augroup LanguageClientHooks
 	autocmd!
 	autocmd FileType * call s:SetupLanguageClient()
