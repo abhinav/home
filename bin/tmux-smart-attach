@@ -2,13 +2,14 @@
 
 # Need to source ~/.profile because otherwise the tmux server won't have
 # everything we expect on $PATH.
+
+# shellcheck source=/dev/null
 [ -z "$_PROFILE_LOADED" ] && source ~/.profile
 
 TMUX_EXE=$(command -v tmux)
 if [ -z "$TMUX_EXE" ] || [ ! -x "$TMUX_EXE" ]; then
 	echo "Could not find tmux. Falling back to $SHELL."
-	"$SHELL"
-	exit
+	exec "$SHELL"
 fi
 
 SESSION_NAME=main
@@ -17,21 +18,23 @@ if [ -n "$1" ]; then
 	SESSION_NAME="$1"
 fi
 
-CMD=$(\
-	"$TMUX_EXE" list-sessions -F '#S #{session_attached}' 2>/dev/null | \
-		while read -r name attached; do
-			if [ "$name" = "$SESSION_NAME" ]; then
-				if [ "$attached" -eq 0 ]; then
-					# We have a session but nobody is using it
-					echo "attach -t $SESSION_NAME"
-				else
-					# We have a session and we're using it so leave it alone
-					echo "new-session"
-				fi
-			fi
-		done)
-if [ -z "$CMD" ]; then
-	CMD="new-session -s $SESSION_NAME"
+CMD=()
+while read -r name attached; do
+	if [ "$name" = "$SESSION_NAME" ]; then
+		if [ "$attached" -eq 0 ]; then
+			# We have a session but nobody is using it
+			CMD+=(attach -t "$SESSION_NAME")
+			# echo "attach -t $SESSION_NAME"
+		else
+			# We have a session and we're using it so leave it alone
+			CMD+=(new-session)
+		fi
+	fi
+done < <("$TMUX_EXE" list-sessions -F '#S #{session_attached}' 2>/dev/null)
+
+if [[ 0 -eq "${#CMD[@]}" ]]; then
+	CMD=(new-session -s "$SESSION_NAME")
 fi
 
-"$TMUX_EXE" $CMD
+
+exec "$TMUX_EXE" "${CMD[@]}"
