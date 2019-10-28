@@ -22,6 +22,7 @@ Plug 'junegunn/fzf.vim'
 Plug 'junegunn/goyo.vim', {'on': 'Goyo'}
 Plug 'junegunn/vim-easy-align'
 Plug 'justinmk/molokai'
+Plug 'justinmk/vim-dirvish'
 Plug 'justinmk/vim-sneak'
 Plug 'machakann/vim-highlightedyank'
 Plug 'mhinz/vim-grepper'
@@ -34,7 +35,6 @@ Plug 'ntpeters/vim-better-whitespace'
 Plug 'rhysd/git-messenger.vim'
 Plug 'roxma/nvim-yarp'
 Plug 'rust-lang/rust.vim'
-Plug 'scrooloose/nerdtree'
 Plug 'sickill/vim-pasta'
 Plug 'SirVer/ultisnips'
 Plug 'solarnz/thrift.vim', {'for': 'thrift'}
@@ -274,8 +274,8 @@ function! s:FZFDirs(opts) " {{{4
 	call fzf#run(extend({'source': cmd}, a:opts))
 endfunction
 
-" Fuzzy find a directory and open a NERDTree.
-command! Trees call s:FZFDirs({'sink': 'NERDTree'})
+" Fuzzy find a directory and open a directory.
+command! Trees call s:FZFDirs({'sink': 'edit'})
 
 " grepper {{{2
 let g:grepper =
@@ -333,22 +333,6 @@ endfunction
 " neosnippets {{{2
 let g:neosnippet#enable_snipmate_compatibility = 1
 let g:neosnippet#snippets_directory = "~/.config/nvim/plugged/vim-snippets/snippets"
-
-" NERDTree {{{2
-let g:NERDTreeMapJumpNextSibling="C-M-J"
-let g:NERDTreeMapJumpPrevSibling="C-M-J"
-
-nmap <silent> <C-\> :call <sid>ToggleNERDTree()<CR>
-
-" ToggleNERDTree opens a NERDTree in the parent directory of the current file
-" or in the current directory if a file isn't open.
-function! s:ToggleNERDTree() " {{{3
-	if expand('%') == ''
-		exec 'NERDTreeToggle'
-	else
-		exec 'NERDTreeToggle %:h'
-	endif
-endfunction
 
 " netrw {{{2
 let g:netrw_liststyle = 3
