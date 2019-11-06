@@ -33,13 +33,25 @@ vmap <buffer><silent> <leader>wy :<C-U>call wikicopy#Copy(visualmode(), 1)<CR>
 " <Leader><Enter> to open a link in a tab.
 nmap <buffer> <leader><cr> <Plug>VimwikiTabnewLink
 
-" [[-based search for entries.
+" Use [[ to search for files by title and generate a complete link to them,
+" including the title.
 imap <buffer><silent><expr> [[ fzf#vim#complete(
 	\ extend(copy(b:vimwiki_title_search), {
 		\ 'source': b:vimwiki_title_search_source,
-		\ 'reducer': function('<sid>buildWikiLink', [vimwiki#vars#get_wikilocal('path')])
+		\ 'reducer': function('<sid>buildWikiOpenLink', [vimwiki#vars#get_wikilocal('path')])
 	\ }),
 \ )
+
+" Use ]] to search for files by title and generate only the ](foo) part of the
+" link.
+imap <buffer><silent><expr> ]] fzf#vim#complete(
+	\ extend(copy(b:vimwiki_title_search), {
+		\ 'prefix': '\[\zs.*$',
+		\ 'source': b:vimwiki_title_search_source,
+		\ 'reducer': function('<sid>buildWikiCloseLink', [vimwiki#vars#get_wikilocal('path')])
+	\ }),
+\ )
+
 
 " Override Ctrl-P to use titles rather than file names.
 nmap <buffer><silent> <C-P> :call fzf#vim#grep(
@@ -48,15 +60,27 @@ nmap <buffer><silent> <C-P> :call fzf#vim#grep(
 \ )<CR>
 
 " Builds a Markdown-style link.
-function! s:buildWikiLink(wikidir, lines)
+function! s:buildWikiOpenLink(wikidir, lines)
 	let toks = split(a:lines[0], ':')
+	let dest = toks[0]
 	let title = trim(join(toks[1:], ':'))
 
+	return printf('[%s](%s)', title, s:wikiRelPath(a:wikidir, dest))
+endfunction
+
+function! s:buildWikiCloseLink(wikidir, lines)
+	let toks = split(a:lines[0], ':')
+	let dest = toks[0]
+	let prefix = matchstr(getline('.')[0:col('.')-2], '\[\zs.*$')
+
+	return printf('%s](%s)', prefix, s:wikiRelPath(a:wikidir, dest))
+endfunction
+
+function! s:wikiRelPath(wikidir, dest)
 	" foo/bar.md => ~/.notes/foo/bar.md => ~/.notes/foo/bar
-	let wikifile = fnamemodify(vimwiki#path#join_path(a:wikidir, toks[0]), ':r')
-	let current_file = vimwiki#path#current_wiki_file()
+	let wikifile = fnamemodify(vimwiki#path#join_path(a:wikidir, a:dest), ':r')
 
 	" ~/.notes/foo/bar => ../foo/bar.
-	let rel_path = vimwiki#path#relpath(fnamemodify(current_file, ':h'), wikifile)
-	return printf('[%s](%s)', title, rel_path)
+	let current_file = vimwiki#path#current_wiki_file()
+	return vimwiki#path#relpath(fnamemodify(current_file, ':h'), wikifile)
 endfunction
