@@ -292,9 +292,9 @@ let g:grepper =
 	\ }
 
 if executable('rg')
-	nnoremap <leader>g :Grepper -tool rg<cr>
+	nnoremap <leader>gg :Grepper -tool rg<cr>
 else
-	nnoremap <leader>g :Grepper -tool ag<cr>
+	nnoremap <leader>gg :Grepper -tool ag<cr>
 endif
 
 nmap gs <plug>(GrepperOperator)
