@@ -7,6 +7,9 @@ setlocal nolist nonumber norelativenumber
 setlocal shiftwidth=4 tabstop=4 expandtab
 setlocal spell foldlevel=1
 
+" Let autowrite do its thing.
+setlocal nohidden
+
 let b:vimwiki_title_search_source =
 	\ "rg -g '*.md' --no-heading -N -m 1 -x"
 	\ . " -e " . shellescape('title:\s*["'']?(?P<t1>.*?)["'']?')
