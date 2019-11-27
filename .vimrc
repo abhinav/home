@@ -391,6 +391,10 @@ let g:go_highlight_space_tab_error = 0
 let g:go_highlight_trailing_whitespace_error = 0
 let g:go_snippet_engine = "neosnippet"
 
+if $VIM_GO_BIN_PATH != ""
+	let g:go_bin_path = $VIM_GO_BIN_PATH
+endif
+
 " LanguageClient {{{3
 let g:LanguageClient_serverCommands.go = ['gopls']
 let g:LanguageClient_rootMarkers.go = ['go.mod', 'Gopkg.toml', 'glide.lock']
