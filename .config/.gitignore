@@ -5,3 +5,4 @@
 
 # Neovim configuration.
 !/nvim
+!/vim-go

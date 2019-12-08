@@ -390,6 +390,7 @@ let g:go_highlight_chan_whitespace_error = 0
 let g:go_highlight_space_tab_error = 0
 let g:go_highlight_trailing_whitespace_error = 0
 let g:go_snippet_engine = "neosnippet"
+let g:go_template_file = $HOME . "/.config/vim-go/main.go"
 
 if $VIM_GO_BIN_PATH != ""
 	let g:go_bin_path = $VIM_GO_BIN_PATH
