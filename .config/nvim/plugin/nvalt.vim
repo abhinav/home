@@ -26,7 +26,7 @@ let g:loaded_nvalt = 1
 " the file name or line numbers.
 command! -nargs=* NV
 	\ call fzf#run(fzf#vim#with_preview({
-		\ 'source': "rg -g '*.md' --no-heading --line-number -e " .
+		\ 'source': "rg -g '*.md' -g '!/archive' --no-heading --line-number -e " .
 			\ (<q-args> == '' ? '"\S"' : shellescape(<q-args>)) .
 			\ "| rg -v -x -e '([^:]+:){2}\s*?(---)?\s*?'",
 		\ 'sink*': function('<SID>HandleSelection'),

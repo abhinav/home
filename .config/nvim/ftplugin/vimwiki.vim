@@ -11,7 +11,7 @@ setlocal spell foldlevel=1
 setlocal nohidden
 
 let b:vimwiki_title_search_source =
-	\ "rg -g '*.md' --no-heading -N -m 1 -x"
+	\ "rg -g '*.md' -g '!/archive' --no-heading -N -m 1 -x"
 	\ . " -e " . shellescape('title:\s*["'']?(?P<t1>.*?)["'']?')
 	\ . " -e " . shellescape('#\s+(?P<t2>.*)')
 	\ . " -r " . shellescape('$t1$t2')
