@@ -43,3 +43,6 @@
 [include]
 	path = ~/.gitconfig.d/go
 	path = ~/.gitconfig.d/local
+[pager]
+	branch = false
+	tag = false
