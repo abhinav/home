@@ -31,15 +31,6 @@ function wikimemo#New(...)
 		let endcol = endcol - 1
 		let title = trim(line[startcol:endcol])
 
-		" Escape with double quotes if the title contains a single
-		" quote or a colon, or single quotes if it contains a double
-		" quote.
-		if title =~ '"'
-			let title = "'" . title . "'"
-		elseif title =~ ":"
-			let title = '"' . title . '"'
-		endif
-
 		" If we're in a wiki file, replace the affected text with a
 		" link.
 		if in_wiki
@@ -54,6 +45,15 @@ function wikimemo#New(...)
 				\ . printf("[%s](%s)", title, rel_path)
 				\ . line[endcol + 1:]
 			call setline(startline, new_line)
+		endif
+
+		" Escape with double quotes if the title contains a single
+		" quote or a colon, or single quotes if it contains a double
+		" quote.
+		if title =~ '"'
+			let title = "'" . title . "'"
+		elseif title =~ ":"
+			let title = '"' . title . '"'
 		endif
 	endif
 
