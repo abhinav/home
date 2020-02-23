@@ -6,3 +6,6 @@
 # Neovim configuration.
 !/nvim
 !/vim-go
+
+# tig
+!/tig
