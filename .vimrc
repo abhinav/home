@@ -184,6 +184,9 @@ nmap <silent> <leader>Q :bd!<CR>
 nmap <silent> <leader>bn :bn<CR>
 nmap <silent> <leader>bN :bN<CR>
 
+" Don't show line numbers in terminal.
+autocmd TermOpen * setlocal nonu nornu
+
 " Auto-reload files {{{2
 
 " Trigger :checktime when changing buffers or coming back to vim.
