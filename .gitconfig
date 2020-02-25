@@ -43,6 +43,7 @@
 [include]
 	path = ~/.gitconfig.d/go
 	path = ~/.gitconfig.d/local
+	path = ~/.netlify/helper/git-config
 [pager]
 	branch = false
 	tag = false

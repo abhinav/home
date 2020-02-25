@@ -18,6 +18,7 @@ source ~/.zsh/rc.d/completion
 source ~/.zsh/rc.d/highlighting
 source ~/.zsh/rc.d/history
 source ~/.zsh/rc.d/fzf
+source ~/.zsh/rc.d/netlify
 
 source ~/.aliases
 

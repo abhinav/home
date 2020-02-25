@@ -1,0 +1,3 @@
+#!/bin/zsh
+
+[ -f "$HOME/.netlify/helper/path.zsh.inc" ] && source "$HOME/.netlify/helper/path.zsh.inc"
