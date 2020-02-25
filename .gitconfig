@@ -40,10 +40,6 @@
 	autoSquash = true
 [sequence]
 	editor = ~/.restack/edit.sh
-[include]
-	path = ~/.gitconfig.d/go
-	path = ~/.gitconfig.d/local
-	path = ~/.netlify/helper/git-config
 [pager]
 	branch = false
 	tag = false
@@ -52,3 +48,7 @@
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
 	required = true
+[include]
+	path = ~/.gitconfig.d/go
+	path = ~/.gitconfig.d/local
+	path = ~/.netlify/helper/git-config
