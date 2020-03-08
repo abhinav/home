@@ -9,6 +9,8 @@
 	prune = true
 [color]
 	ui = auto
+[commit]
+	verbose = true
 [core]
 	editor = nvim
 [alias]
