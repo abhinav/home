@@ -1,4 +1,4 @@
-bind main <Ctrl-R> !git rebase --autosquash -i %(commit)
+bind main <Ctrl-R> <git rebase --autosquash -i %(commit)
 bind main = !git commit --fixup=%(commit)
 
 # Copy commit hash to clipboard.
