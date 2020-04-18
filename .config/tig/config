@@ -2,8 +2,10 @@ bind main <Ctrl-R> <git rebase --autosquash -i %(commit)
 bind main = !git commit --fixup=%(commit)
 
 # Copy commit hash to clipboard.
-bind main Y +sh -c "printf '%s' %(commit) | pbcopy; echo %(commit)"
-bind diff Y +sh -c "printf '%s' %(commit) | pbcopy; echo %(commit)"
+bind main Y +bash -c "printf '%s' %(commit) | tee >(pbcopy)"
+
+# Copy commit or file name to clipboard.
+bind diff Y +bash -c "( [ -n '%(file)' ] && echo '%(file)' || echo '%(commit)' ) | tee >(pbcopy)"
 
 # Branch checkouts.
 bind main b !git checkout -b "%(prompt Enter branch name: )" %(commit)
