@@ -442,7 +442,11 @@ let g:jedi#use_tabs_not_buffers = 1
 let g:rustfmt_autosave = 1
 
 " LanguageClient {{{3
-let g:LanguageClient_serverCommands.rust = ['rustup', 'run', 'stable', 'rls']
+if executable('rust-analyzer')
+	let g:LanguageClient_serverCommands.rust = ['rust-analyzer']
+else
+	let g:LanguageClient_serverCommands.rust = ['rustup', 'run', 'stable', 'rls']
+endif
 
 " vimwiki {{{2
 
