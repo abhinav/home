@@ -1,6 +1,9 @@
 # Ignore everything by default and whitelist things explicitly.
 /*
 
+# Keep README.
+!/README.md
+
 !.gitignore
 !.gitmodules
 
