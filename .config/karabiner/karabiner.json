@@ -110,16 +110,7 @@
                     },
                     "ignore": false,
                     "manipulate_caps_lock_led": true,
-                    "simple_modifications": [
-                        {
-                            "from": {
-                                "key_code": "caps_lock"
-                            },
-                            "to": {
-                                "key_code": "escape"
-                            }
-                        }
-                    ]
+                    "simple_modifications": []
                 },
                 {
                     "disable_built_in_keyboard_if_exists": false,
@@ -155,38 +146,6 @@
                             },
                             "to": {
                                 "key_code": "right_command"
-                            }
-                        },
-                        {
-                            "from": {
-                                "key_code": "up_arrow"
-                            },
-                            "to": {
-                                "key_code": "vk_none"
-                            }
-                        },
-                        {
-                            "from": {
-                                "key_code": "down_arrow"
-                            },
-                            "to": {
-                                "key_code": "vk_none"
-                            }
-                        },
-                        {
-                            "from": {
-                                "key_code": "left_arrow"
-                            },
-                            "to": {
-                                "key_code": "vk_none"
-                            }
-                        },
-                        {
-                            "from": {
-                                "key_code": "right_arrow"
-                            },
-                            "to": {
-                                "key_code": "vk_none"
                             }
                         }
                     ]
@@ -295,7 +254,48 @@
                 "delay_milliseconds_before_open_device": 1000
             },
             "selected": true,
-            "simple_modifications": [],
+            "simple_modifications": [
+                {
+                    "from": {
+                        "key_code": "caps_lock"
+                    },
+                    "to": {
+                        "key_code": "escape"
+                    }
+                },
+                {
+                    "from": {
+                        "key_code": "down_arrow"
+                    },
+                    "to": {
+                        "key_code": "vk_none"
+                    }
+                },
+                {
+                    "from": {
+                        "key_code": "left_arrow"
+                    },
+                    "to": {
+                        "key_code": "vk_none"
+                    }
+                },
+                {
+                    "from": {
+                        "key_code": "right_arrow"
+                    },
+                    "to": {
+                        "key_code": "vk_none"
+                    }
+                },
+                {
+                    "from": {
+                        "key_code": "up_arrow"
+                    },
+                    "to": {
+                        "key_code": "vk_none"
+                    }
+                }
+            ],
             "virtual_hid_keyboard": {
                 "country_code": 0,
                 "mouse_key_xy_scale": 100
