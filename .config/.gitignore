@@ -3,6 +3,9 @@
 
 !.gitignore
 
+# Karabiner
+!/karabiner
+
 # Neovim configuration.
 !/nvim
 !/vim-go
