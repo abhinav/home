@@ -463,6 +463,8 @@ endfunction
 " Use ~/.notes as the wiki location by default. Support overriding by setting
 " VIMWIKI_PATH.
 let g:vimwiki_list = [s:buildWiki('~/.notes')]
+let g:vimwiki_list[0].index = '000000000001 Home'
+
 if $VIMWIKI_PATH != ""
 	call insert(g:vimwiki_list, s:buildWiki($VIMWIKI_PATH))
 endif
