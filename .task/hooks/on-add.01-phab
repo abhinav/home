@@ -26,13 +26,21 @@ def process(task):
 
     arc_url = None
     with open(ARCRC) as f:
-        arc_url = json.load(f).get('config', {}).get('default')
+        cfg = json.load(f)
+        arc_url = cfg.get('config', {}).get('default')
+        if not arc_url:
+            hosts = list(cfg.get('hosts', []).keys())
+            if hosts:
+                arc_url = hosts[0]
 
     if not arc_url:
-        return 'config.default not found in ~/.arcrc'
+        return 'Phabricator URL not found in ~/.arcrc'
 
     if not arc_url.endswith('/'):
         arc_url += '/'
+
+    if arc_url.endswith('/api/'):
+        arc_url = arc_url[:-4]  # drop "api/"
 
     entry = task.get('entry')
     if not entry:
