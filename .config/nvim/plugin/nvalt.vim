@@ -26,16 +26,14 @@ let g:loaded_nvalt = 1
 " the file name or line numbers.
 command! -nargs=* NV
 	\ call fzf#run(fzf#vim#with_preview({
-		\ 'source': "rg -g '*.md' -g '!/archive' --no-heading --line-number -e " .
-			\ (<q-args> == '' ? '"\S"' : shellescape(<q-args>)) .
-			\ "| rg -v -x -e '([^:]+:){2}\s*?(---)?\s*?'",
+		\ 'source': "rg -g '*.md' -g '!/archive' --files" .
+			\ (<q-args> == '' ? '' : (' | rg ' . shellescape(<q-args>))),
 		\ 'sink*': function('<SID>HandleSelection'),
 		\ 'dir': wikimemo#CurrentWikiDir(),
 		\ 'down': '40%',
 		\ 'options': [
 			\ '--ansi', '--no-multi', '--color=16', '--exact',
-			\ '--expect=enter,ctrl-x', '--print-query',
-			\ '-d:', '--nth=1,3..', '--no-sort',
+			\ '--expect=enter,ctrl-x', '--print-query', '--no-sort',
 			\ '--query', <q-args>,
 		\ ],
 	\ }))
@@ -59,5 +57,6 @@ function s:HandleSelection(lines)
 		return
 	endif
 
-	exec 'edit ' . split(a:lines[2], ':')[0]
+	let dest = a:lines[2]
+	exec 'edit ' . dest
 endfunction

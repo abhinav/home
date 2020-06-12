@@ -6,7 +6,7 @@ function wikimemo#New(...)
 	let wiki_nr = vimwiki#vars#get_bufferlocal('wiki_nr')
 	let in_wiki = wiki_nr != -1
 	let wiki_dir = wikimemo#CurrentWikiDir()
-	let memo_name = s:generateMemoName()
+	let note_id = s:generateMemoID()
 
 	" If invoked as an operator (via a motion), the ranged-over text will
 	" be the title.
@@ -34,75 +34,38 @@ function wikimemo#New(...)
 		" If we're in a wiki file, replace the affected text with a
 		" link.
 		if in_wiki
-			" Relative path to the new file from the current file.
-			let rel_path = vimwiki#path#relpath(
-				\ fnamemodify(vimwiki#path#current_wiki_file(), ':h'),
-				\ vimwiki#path#join_path(wiki_dir, memo_name),
-				\ )
-
 			let new_line
 				\ = (startcol ? line[:startcol-1] : '')
-				\ . printf("[%s](%s)", title, rel_path)
+				\ . printf("[[%s %s]]", note_id, title)
 				\ . line[endcol + 1:]
 			call setline(startline, new_line)
 		endif
-
-		" Escape with double quotes if the title contains a single
-		" quote or a colon, or single quotes if it contains a double
-		" quote.
-		if title =~ '"'
-			let title = "'" . title . "'"
-		elseif title =~ ":"
-			let title = '"' . title . '"'
-		endif
+	else
+		let title = input("Title: ")
 	endif
 
-	call s:newWikiNote(wiki_dir, memo_name, title)
+	call s:newWikiNote(wiki_dir, note_id, title)
 endfunction
 
 " Given a valid wiki directory and a note name relative to the root of the
 " directory, creates a new note with the given title if it doesn't already
 " exist.
-function s:newWikiNote(wiki_dir, note_name, title)
+function s:newWikiNote(wiki_dir, note_id, title)
+	" TODO: validate title
+
+	let note_name = printf("%s %s", a:note_id, a:title)
 	let wiki_index = a:wiki_dir . '/index.md'
-	let link = vimwiki#base#resolve_link(a:note_name, wiki_index)
-	let already_exists = !empty(glob(link.filename))
 
-	call vimwiki#base#open_link(':e ', a:note_name, wiki_index)
-
-	if already_exists
-		return
-	endif
-
-	" This is a new file. Add the template and reposition the cursor.
-
-	call append(line('1'),
-		\ [
-		\ '---',
-		\ printf('title: %s', a:title),
-		\ printf('date: %s', strftime('%Y-%m-%d %H:%M')),
-		\ '---',
-		\ '',
-		\ ])
-
-	" If no title was given, move cursor in position to write the title.
-	" Otherwise, move to the body of the note.
-	if strlen(a:title) == 0
-		exec 2
-	else
-		exec 'normal G'
-	endif
-
-	startinsert!
+	call vimwiki#base#open_link(':e ', note_name, wiki_index)
 endfunction
 
-function s:generateMemoName()
-	return strftime('%y%m%d%H%M')
+function s:generateMemoID()
+	return strftime('%Y%m%d%H%M')
 endfunction
 
 " Creates and opens a new wiki page with the given title.
 function wikimemo#NewWithTitle(title)
-	call s:newWikiNote(wikimemo#CurrentWikiDir(), s:generateMemoName(), a:title)
+	call s:newWikiNote(wikimemo#CurrentWikiDir(), s:generateMemoID(), a:title)
 endfunction
 
 " Returns the path to the current wiki directory, or the default directory if
