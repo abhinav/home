@@ -11,7 +11,7 @@ setlocal spell foldlevel=1
 setlocal nohidden
 
 let b:vimwiki_title_search_source =
-	\ "rg -g '*.md' -g '!/archive' --no-heading -N -m 1 --files"
+	\ "rg -g '*.md' -g '!/archive' --files"
 
 " FZF options to search wikis by title.
 let b:vimwiki_title_search = {
@@ -19,7 +19,7 @@ let b:vimwiki_title_search = {
 	\ 'down': '40%',
 	\ 'options': [
 		\ '--ansi', '--no-multi', '--color=16',
-		\ '-d:', '--preview', '(bat --color=always {1} || cat {1}) 2>/dev/null | head -n100',
+		\ '--preview', '(bat --color=always {} || cat {}) 2>/dev/null | head -n100',
 	\],
 \}
 
@@ -45,10 +45,7 @@ imap <buffer><silent><expr> [[ fzf#vim#complete(
 " TODO: Support '|' and '#'
 
 " Override Ctrl-P to use titles rather than file names.
-nmap <buffer><silent> <C-P> :call fzf#vim#grep(
-	\ b:vimwiki_title_search_source, 0,
-	\ copy(b:vimwiki_title_search)
-\ )<CR>
+nmap <buffer><silent> <C-P> :NV<CR>
 
 " Builds a Markdown-style link.
 function! s:buildWikiOpenLink(lines)
