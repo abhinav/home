@@ -23,3 +23,7 @@ EnableWhitespace
 
 " Treat blockquotes as comments so gq formats them nicely.
 setlocal comments=n:>
+
+" Don't suggest file-name based completions. When needed, these are provided
+" by [[.
+call ncm2#blacklist_for_buffer(['bufpath', 'rootpath', 'cwdpath'])
