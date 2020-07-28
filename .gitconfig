@@ -3,6 +3,8 @@
 [user]
 	name = Abhinav Gupta
 	email = mail@abhinavg.net
+[init]
+	defaultBranch = main
 [branch]
 	autosetuprebase = always
 [fetch]
