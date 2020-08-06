@@ -13,3 +13,6 @@
 [submodule ".tmux/plugins/tmux-continuum"]
 	path = .tmux/plugins/tmux-continuum
 	url = https://github.com/tmux-plugins/tmux-continuum
+[submodule "/Users/abg/.zsh/zsh-autosuggestions"]
+	path = /Users/abg/.zsh/zsh-autosuggestions
+	url = https://github.com/zsh-users/zsh-autosuggestions

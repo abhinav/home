@@ -1,0 +1,7 @@
+#!/bin/zsh
+
+ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
+ZSH_AUTOSUGGEST_USE_ASYNC=1
+ZSH_AUTOSUGGEST_MANUAL_REBIND=1
+
+source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
