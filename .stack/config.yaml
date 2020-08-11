@@ -1,6 +1,0 @@
-templates:
-  params:
-    author-name: Abhinav Gupta
-    author-email: mail@abhinavg.net
-    github-username: abhinav
-  scm-init: git
