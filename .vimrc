@@ -12,6 +12,7 @@ call plug#begin('~/.config/nvim/plugged')
 
 "  Plugins {{{1
 Plug 'autozimu/LanguageClient-neovim', {'branch': 'next', 'do': 'bash install.sh'}
+Plug 'camspiers/lens.vim'
 Plug 'cespare/vim-toml'
 Plug 'chrisbra/NrrwRgn'
 Plug 'christoomey/vim-tmux-navigator'
@@ -340,6 +341,10 @@ function! s:SetupLanguageClient() " {{{3
 	nnoremap <buffer> <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
 	nnoremap <buffer> <silent> <C-Space> :call LanguageClient_contextMenu()<CR>
 endfunction
+
+" lens {{{2
+let g:lens#disabled_filetypes = ['fzf']
+let g:lens#animate = 0
 
 " vim-multiple-cursors {{{2
 
