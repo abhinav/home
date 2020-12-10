@@ -44,7 +44,6 @@ Plug 'sickill/vim-pasta'
 Plug 'SirVer/ultisnips'
 Plug 'solarnz/thrift.vim', {'for': 'thrift'}
 Plug 'tbabej/taskwiki', {'do': 'pip3 install --upgrade git+git://github.com/tbabej/tasklib@develop'}
-Plug 'terryma/vim-multiple-cursors'
 Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
@@ -345,20 +344,6 @@ endfunction
 " lens {{{2
 let g:lens#disabled_filetypes = ['fzf']
 let g:lens#animate = 0
-
-" vim-multiple-cursors {{{2
-
-" Ctrl-p conflicts with file search. Use different mapping.
-let g:multi_cursor_use_default_mapping=0
-
-let g:multi_cursor_start_word_key      = '<C-n>'
-let g:multi_cursor_select_all_word_key = '<A-n>'
-let g:multi_cursor_start_key           = 'g<C-n>'
-let g:multi_cursor_select_all_key      = 'g<A-n>'
-let g:multi_cursor_next_key            = '<C-n>'
-let g:multi_cursor_prev_key            = '<C-m>'
-let g:multi_cursor_skip_key            = '<C-x>'
-let g:multi_cursor_quit_key            = '<Esc>'
 
 " neosnippets {{{2
 let g:neosnippet#enable_snipmate_compatibility = 1
