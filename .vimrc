@@ -49,6 +49,7 @@ Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
+Plug 'voldikss/vim-floaterm'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'vim-scripts/visualrepeat'
@@ -262,6 +263,17 @@ let g:UltiSnipsRemoveSelectModeMappings = 0
 " easy-align {{{2
 xmap ga <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
+
+" floaterm {{{2
+let g:floaterm_keymap_prev   = '<F4>'
+let g:floaterm_keymap_next   = '<F5>'
+let g:floaterm_keymap_toggle = '<F9>'
+let g:floaterm_autoclose = 1
+let g:floaterm_wintype   = 'floating'
+
+nnoremap <silent> <F6> :FloatermNew --height=0.4 --width=0.98  --position=bottom<CR>
+tnoremap <silent> <F6> <C-\><C-n>:FloatermNew --height=0.4 --width=0.98  --position=bottom<CR>
+tnoremap <silent> <F7> <C-\><C-n>
 
 " fzf {{{2
 let g:fzf_layout = { 'down': '~15%' }
