@@ -43,7 +43,6 @@ Plug 'rust-lang/rust.vim'
 Plug 'sickill/vim-pasta'
 Plug 'SirVer/ultisnips'
 Plug 'solarnz/thrift.vim', {'for': 'thrift'}
-Plug 'tbabej/taskwiki', {'do': 'pip3 install --upgrade git+git://github.com/tbabej/tasklib@develop'}
 Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
