@@ -48,7 +48,7 @@ Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
-Plug 'voldikss/vim-floaterm'
+Plug 'voldikss/vim-floaterm', {'do': 'pip install --upgrade neovim-remote'}
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'vim-scripts/visualrepeat'
