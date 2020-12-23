@@ -15,6 +15,7 @@ Plug 'autozimu/LanguageClient-neovim', {'branch': 'next', 'do': 'bash install.sh
 Plug 'camspiers/lens.vim'
 Plug 'cespare/vim-toml'
 Plug 'chrisbra/NrrwRgn'
+Plug 'chrisbra/csv.vim'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'direnv/direnv.vim'
 Plug 'davidhalter/jedi-vim', {'for': ['python', 'pyrex']}
