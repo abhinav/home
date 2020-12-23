@@ -477,6 +477,7 @@ let g:vimwiki_autowriteall = 1
 let g:vimwiki_auto_chdir = 1
 let g:vimwiki_folding = 'expr'
 let g:vimwiki_use_mouse = 1
+let g:vimwiki_listsyms = ' x'
 
 " ale {{{3
 let g:ale_linter_aliases.vimwiki = ['markdown']
