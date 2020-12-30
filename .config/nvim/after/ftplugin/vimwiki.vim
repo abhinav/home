@@ -10,6 +10,9 @@ unmap <buffer> <BS>
 unmap <buffer> <C-Down>
 unmap <buffer> <C-Up>
 
+" Replace vimwiki's new note command with our own.
+unmap <buffer> <leader>wn
+
 " Replace =-based header change with formatting with pandoc.
 unmap <buffer> =
 let &l:equalprg = 'pandoc -f markdown -t markdown --reference-links --markdown-heading=atx --columns=' . &textwidth
