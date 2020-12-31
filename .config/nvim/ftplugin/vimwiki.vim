@@ -13,7 +13,7 @@ nnoremap <buffer> j gj
 nnoremap <buffer> k gk
 
 " Don't automatically wrap lines while typing.
-setlocal formatoptions-=t
+setlocal formatoptions+=l
 
 " For long lines that are part of lists, match indentation of the list item.
 setlocal breakindent
