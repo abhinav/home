@@ -23,6 +23,7 @@ Plug 'edkolev/tmuxline.vim'
 Plug 'fatih/vim-go'
 Plug 'honza/vim-snippets'
 Plug 'hynek/vim-python-pep8-indent'
+Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
 Plug 'junegunn/fzf', {'dir': '~/.fzf', 'do': './install --all --no-update-rc'}
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/goyo.vim', {'on': 'Goyo'}
