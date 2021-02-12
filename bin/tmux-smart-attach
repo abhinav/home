@@ -16,6 +16,7 @@ SESSION_NAME=main
 
 if [ -n "$1" ]; then
 	SESSION_NAME="$1"
+	shift
 fi
 
 CMD=()
@@ -27,13 +28,13 @@ while read -r name attached; do
 			# echo "attach -t $SESSION_NAME"
 		else
 			# We have a session and we're using it so leave it alone
-			CMD+=(new-session)
+			CMD+=(new-session "$@")
 		fi
 	fi
 done < <("$TMUX_EXE" list-sessions -F '#S #{session_attached}' 2>/dev/null)
 
 if [[ 0 -eq "${#CMD[@]}" ]]; then
-	CMD=(new-session -s "$SESSION_NAME")
+	CMD=(new-session -s "$SESSION_NAME" "$@")
 fi
 
 
