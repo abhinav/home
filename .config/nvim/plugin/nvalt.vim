@@ -11,6 +11,9 @@
 "
 "   ctrl-x  create a new note with the given title.
 "   enter   if on a note, open that note, otherwise create a new note
+"   ctrl-t  open the note in a new tab
+"   ctrl-s  open the note in a horizontal split
+"   ctrl-v  open the note in a vertical split
 
 if exists('g:loaded_nvalt')
 	finish
@@ -33,12 +36,19 @@ command! -nargs=* NV
 		\ 'down': '40%',
 		\ 'options': [
 			\ '--ansi', '--no-multi', '--color=16', '--exact',
-			\ '--expect=enter,ctrl-x', '--print-query', '--no-sort',
+			\ '--expect=enter,ctrl-x,ctrl-t,ctrl-v,ctrl-s', '--print-query', '--no-sort',
 			\ '--query', <q-args>,
 		\ ],
 	\ }))
 
 nnoremap <silent> <leader>wp :NV<CR>
+
+let s:action = {
+	\ 'enter': 'edit',
+	\ 'ctrl-t': 'tabedit',
+	\ 'ctrl-v': 'vsplit',
+	\ 'ctrl-s': 'split',
+	\ }
 
 function s:HandleSelection(lines)
 	if len(a:lines) < 2
@@ -58,5 +68,7 @@ function s:HandleSelection(lines)
 	endif
 
 	let dest = a:lines[2]
-	exec 'edit ' . dest
+	let cmd = get(s:action, key, 'edit')
+
+	exec cmd . ' ' . dest
 endfunction
