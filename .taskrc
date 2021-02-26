@@ -1,5 +1,0 @@
-data.location=~/.task
-include ~/.taskrc.d/theme
-
-# Local-only changes
-include ~/.taskrc.d/local
