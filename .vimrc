@@ -359,6 +359,10 @@ endfunction
 let g:lens#disabled_filetypes = ['fzf']
 let g:lens#animate = 0
 
+" markdown-preview {{{2
+let g:mkdp_auto_close = 0
+let g:mkdp_filetypes = ['markdown', 'vimwiki']
+
 " neosnippets {{{2
 let g:neosnippet#enable_snipmate_compatibility = 1
 let g:neosnippet#snippets_directory = "~/.config/nvim/plugged/vim-snippets/snippets"
