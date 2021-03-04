@@ -45,6 +45,7 @@ Plug 'rust-lang/rust.vim'
 Plug 'sickill/vim-pasta'
 Plug 'SirVer/ultisnips'
 Plug 'solarnz/thrift.vim', {'for': 'thrift'}
+Plug 'stacked-git/stgit', {'rtp': 'contrib/vim'}
 Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
