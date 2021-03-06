@@ -7,6 +7,8 @@ import (
 	"os"
 )
 
+const _name = "FIXME"
+
 func main() {
 	log.SetFlags(0)
 	if err := run(os.Args[1:]); err != nil && err != flag.ErrHelp {
@@ -18,9 +20,9 @@ const _usage = `usage: %v [options] ...
 `
 
 func run(args []string) error {
-	flag := flag.NewFlagSet(os.Args[0], flag.ContinueOnError)
+	flag := flag.NewFlagSet(_name, flag.ContinueOnError)
 	flag.Usage = func() {
-		fmt.Fprintf(flag.Output(), _usage, os.Args[0])
+		fmt.Fprintf(flag.Output(), _usage, _name)
 		flag.PrintDefaults()
 	}
 
