@@ -9,7 +9,7 @@ import (
 
 func main() {
 	log.SetFlags(0)
-	if err := run(os.Args[1:]); err != nil {
+	if err := run(os.Args[1:]); err != nil && err != flag.ErrHelp {
 		log.Fatalf("%+v", err)
 	}
 }
