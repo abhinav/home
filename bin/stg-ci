@@ -14,17 +14,23 @@ print_usage()
 
 	  -m MSG
 	    use MSG as the patch description
+	  -d
+	    edit the diff
 	  -h
 	    show this message
 	EOF
 }
 
 msg=""
-while getopts ':hm:' opt; do
+diff=no
+while getopts ':hm:d' opt; do
 	case "$opt" in
 		h)
 			print_usage
 			exit 0
+			;;
+		d)
+			diff=yes
 			;;
 		m)
 			msg="$OPTARG"
@@ -42,5 +48,10 @@ if [[ -z "$patch" ]]; then
 	exit 1
 fi
 
+refresh_args=("-i" "-e")
+if [[ "$diff" == yes ]]; then
+	refresh_args+=("-d")
+fi
+
 stg new -m "$msg" "$patch" &&
-	stg refresh -i -e
+	stg refresh "${refresh_args[@]}"
