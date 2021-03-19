@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+set -euo pipefail
+IFS=$'\n\t'
+
+print_usage()
+{
+	cat >&2 <<-EOF
+	USAGE: stg ci [OPTIONS] PATCH
+
+	Creates a new stg patch and refreshes it with the contents of the
+	current git index.
+
+	OPTIONS
+
+	  -m MSG
+	    use MSG as the patch description
+	  -h
+	    show this message
+	EOF
+}
+
+msg=""
+while getopts ':hm:' opt; do
+	case "$opt" in
+		h)
+			print_usage
+			exit 0
+			;;
+		m)
+			msg="$OPTARG"
+			;;
+		'?')
+			echo >&2 "invalid option: -$OPTARG"
+			exit 1
+	esac
+done
+shift "$((OPTIND-1))"
+
+patch="${1:-}"
+if [[ -z "$patch" ]]; then
+	echo >&2 "please provide a patch name"
+	exit 1
+fi
+
+stg new -m "$msg" "$patch" &&
+	stg refresh -i -e

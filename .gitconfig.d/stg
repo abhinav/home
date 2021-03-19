@@ -1,0 +1,2 @@
+[stgit.alias]
+	ci = stg-ci
