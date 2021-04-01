@@ -13,21 +13,6 @@ fi
 
 local ret_status="%(?:%{$fg_bold[green]%}➜ :%{$fg_bold[red]%}➜ %s)"
 
-# Indicate with red <<< on the right when in normal mode.
-function zle-key-map-init zle-keymap-select {
-    zle reset-prompt
-    zle -R
-}
-
-zle -N zle-keymap-init
-zle -N zle-keymap-select
-
-MODE_INDICATOR="%{$fg_bold[red]%}<<<%{$reset_color%}"
-function vi_mode_indicator() {
-    echo "${${KEYMAP/vicmd/$MODE_INDICATOR}/(main|viins)/}"
-}
-RPS1='$(vi_mode_indicator)'
-
 _GITPROMPT=$(command -v gitprompt)
 if [ -z "$_GITPROMPT" ]; then
     _GITPROMPT='echo (gitprompt is not installed)'
