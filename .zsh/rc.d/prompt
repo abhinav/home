@@ -28,21 +28,6 @@ function vi_mode_indicator() {
 }
 RPS1='$(vi_mode_indicator)'
 
-function cabal_sandbox_info() {
-    if [ -f cabal.sandbox.config ]; then
-        echo "%{$fg[green]%}sandboxed%{$reset_color%}"
-    else
-        if [ -d .stack-work ]; then
-            echo "%{$fg[green]%}stack%{$reset_color%}"
-        else
-        cabal_files=(*.cabal(N))
-            if [ $#cabal_files -gt 0 ]; then
-                echo "%{$fg[red]%}not sandboxed%{$reset_color%}"
-            fi
-        fi
-    fi
-}
-
 _GITPROMPT=$(command -v gitprompt)
 if [ -z "$_GITPROMPT" ]; then
     _GITPROMPT='echo (gitprompt is not installed)'
@@ -50,5 +35,5 @@ else
 	_GITPROMPT="$_GITPROMPT zsh"
 fi
 
-PROMPT='%{$fg_bold[white]%}%M%{$reset_color%} ${ret_status}%{$fg_bold[green]%}%p %{$fg[cyan]%}%~ %{$reset_color%}$($_GITPROMPT) $(cabal_sandbox_info)
+PROMPT='%{$fg_bold[white]%}%M%{$reset_color%} ${ret_status}%{$fg_bold[green]%}%p %{$fg[cyan]%}%~ %{$reset_color%}$($_GITPROMPT)
 %{$fg[blue]%} $ %{$reset_color%}'
