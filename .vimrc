@@ -277,6 +277,11 @@ nnoremap <silent> <F6> :FloatermNew --height=0.4 --width=0.98  --position=bottom
 tnoremap <silent> <F6> <C-\><C-n>:FloatermNew --height=0.4 --width=0.98  --position=bottom<CR>
 tnoremap <silent> <F7> <C-\><C-n>
 
+" :NNN for nnn
+if executable('nnn')
+	command! NNN FloatermNew nnn
+endif
+
 " fzf {{{2
 let g:fzf_layout = { 'down': '~15%' }
 
