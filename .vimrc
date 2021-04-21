@@ -91,7 +91,7 @@ set ignorecase smartcase tagcase=followscs
 set shortmess+=c
 set inccommand=split    " Show :s result incrementally.
 set background=dark
-set textwidth=78
+set textwidth=79
 set lazyredraw          " Don't redraw the screen while executing macros.
                         " Useful if the macros does a lot of transformation.
 set virtualedit=all
