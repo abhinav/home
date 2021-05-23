@@ -352,12 +352,17 @@ function! s:SetupLanguageClient() " {{{3
 	"  K            Documentation
 	"  <leader>d    Go to definition
 	"  F2           Rename
-	"  Ctrl-Space   Context menu
+	"  Ctrl-Space   Code action
+	"  Alt-Enter    Context Menu
 
 	nnoremap <buffer> <silent> K :call LanguageClient#textDocument_hover()<CR>
 	nnoremap <buffer> <silent> <leader>d :call LanguageClient#textDocument_definition()<CR>
 	nnoremap <buffer> <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
-	nnoremap <buffer> <silent> <C-Space> :call LanguageClient_contextMenu()<CR>
+
+	nnoremap <buffer> <silent> <M-CR> :call LanguageClient_contextMenu()<CR>
+
+	nnoremap <buffer> <silent> <C-Space> :call LanguageClient#textDocument_codeAction()<CR>
+	vnoremap <buffer> <silent> <C-Space> :call LanguageClient#textDocument_codeAction()<CR>
 endfunction
 
 " lens {{{2
