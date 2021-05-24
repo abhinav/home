@@ -415,20 +415,18 @@ nnoremap <silent> <C-H> :TmuxNavigateLeft<CR>
 
 " vim-go {{{3
 let g:go_def_mapping_enabled = 0
-let g:go_fmt_command = "goimports"
-let g:go_fmt_fail_silently = 1
+
 let g:go_term_enabled = 1
-let g:go_gopls_complete_unimported = 1
-let g:go_highlight_generate_tags = 1
-let g:go_highlight_build_constraints = 1
-let g:go_highlight_fields = 1
-let g:go_highlight_functions = 1
-let g:go_highlight_methods = 1
-let g:go_highlight_array_whitespace_error = 0
-let g:go_highlight_chan_whitespace_error = 0
-let g:go_highlight_space_tab_error = 0
-let g:go_highlight_trailing_whitespace_error = 0
+let g:go_term_reuse = 1
+let g:go_term_mode = "split"
+
+let g:go_gopls_complete_unimported = v:true
+let g:go_gopls_staticcheck = v:true
+let g:go_gopls_gofumpt = v:true
+
 let g:go_snippet_engine = "neosnippet"
+let g:go_metalinter_command = "gopls"
+
 let g:go_template_file = $HOME . "/.config/vim-go/main.go"
 let g:go_template_test_file = $HOME . "/.config/vim-go/test.go"
 
