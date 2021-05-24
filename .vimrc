@@ -441,7 +441,7 @@ let g:LanguageClient_serverCommands.go = ['gopls']
 let g:LanguageClient_rootMarkers.go = ['go.mod', 'Gopkg.toml', 'glide.lock']
 
 " ale {{{3
-let g:ale_linters.go = ['go vet', 'golint']
+let g:ale_linters.go = ['gopls']
 
 " haskell {[{2
 
