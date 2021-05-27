@@ -420,7 +420,6 @@ let g:go_term_enabled = 1
 let g:go_term_reuse = 1
 let g:go_term_mode = "split"
 
-let g:go_gopls_complete_unimported = v:true
 let g:go_gopls_staticcheck = v:true
 let g:go_gopls_gofumpt = v:true
 
