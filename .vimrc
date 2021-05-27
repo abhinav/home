@@ -433,6 +433,10 @@ if $VIM_GO_BIN_PATH != ""
 	let g:go_bin_path = $VIM_GO_BIN_PATH
 endif
 
+if $VIM_GOPLS_DISABLED
+	let g:go_gopls_enabled = 0
+endif
+
 " LanguageClient {{{3
 let g:LanguageClient_serverCommands.go = ['gopls']
 let g:LanguageClient_rootMarkers.go = ['go.mod', 'Gopkg.toml', 'glide.lock']
