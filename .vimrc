@@ -18,7 +18,6 @@ Plug 'chrisbra/NrrwRgn'
 Plug 'chrisbra/csv.vim'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'direnv/direnv.vim'
-Plug 'davidhalter/jedi-vim', {'for': ['python', 'pyrex']}
 Plug 'edkolev/tmuxline.vim'
 Plug 'fatih/vim-go'
 Plug 'honza/vim-snippets'
@@ -454,9 +453,10 @@ let g:LanguageClient_rootMarkers.haskell = ['*.cabal', 'stack.yaml']
 
 " python {{{2
 
-" jedi-vim {{{3
-let g:jedi#show_call_signatures = 0
-let g:jedi#use_tabs_not_buffers = 1
+" LanguageClient {{{3
+if executable('pyls')
+	let g:LanguageClient_serverCommands.rust = ['pyls']
+endif
 
 " rust {{{2
 let g:rustfmt_autosave = 1
