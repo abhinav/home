@@ -3,30 +3,39 @@ package main
 import (
 	"flag"
 	"fmt"
-	"log"
+	"io"
 	"os"
 )
 
-const _name = "FIXME"
-
 func main() {
-	log.SetFlags(0)
-	if err := run(os.Args[1:]); err != nil && err != flag.ErrHelp {
-		log.Fatalf("%+v", err)
+	cmd := mainCmd{
+		Stdin:  os.Stdin,
+		Stdout: os.Stdout,
+		Stderr: os.Stderr,
+	}
+	if err := cmd.Run(os.Args[1:]); err != nil && err != flag.ErrHelp {
+		fmt.Fprint(cmd.Stderr, err)
+		os.Exit(1)
 	}
 }
 
-const _usage = `usage: %v [options] ...
+type mainCmd struct {
+	Stdin  io.Reader
+	Stdout io.Writer
+	Stderr io.Writer
+}
+
+const _usage = `USAGE: %v [OPTIONS] ...
 `
 
-func run(args []string) error {
-	flag := flag.NewFlagSet(_name, flag.ContinueOnError)
+func (cmd *mainCmd) Run(args []string) error {
+	flag := flag.NewFlagSet("FIXME", flag.ContinueOnError)
 	flag.Usage = func() {
-		fmt.Fprintf(flag.Output(), _usage, _name)
+		fmt.Fprintf(flag.Output(), _usage, flag.Name())
 		flag.PrintDefaults()
 	}
 
-	// ...
+	// XXX: register options
 
 	if err := flag.Parse(args); err != nil {
 		return err
