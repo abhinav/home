@@ -14,7 +14,7 @@ func main() {
 		Stderr: os.Stderr,
 	}
 	if err := cmd.Run(os.Args[1:]); err != nil && err != flag.ErrHelp {
-		fmt.Fprint(cmd.Stderr, err)
+		fmt.Fprintln(cmd.Stderr, err)
 		os.Exit(1)
 	}
 }
@@ -30,6 +30,7 @@ const _usage = `USAGE: %v [OPTIONS] ...
 
 func (cmd *mainCmd) Run(args []string) error {
 	flag := flag.NewFlagSet("FIXME", flag.ContinueOnError)
+	flag.SetOutput(cmd.Stderr)
 	flag.Usage = func() {
 		fmt.Fprintf(flag.Output(), _usage, flag.Name())
 		flag.PrintDefaults()
