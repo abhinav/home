@@ -13,6 +13,7 @@ call plug#begin('~/.config/nvim/plugged')
 "  Plugins {{{1
 Plug 'autozimu/LanguageClient-neovim', {'branch': 'next', 'do': 'bash install.sh'}
 Plug 'camspiers/lens.vim'
+Plug 'cappyzawa/starlark.vim'
 Plug 'cespare/vim-toml'
 Plug 'chrisbra/NrrwRgn'
 Plug 'chrisbra/csv.vim'
