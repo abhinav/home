@@ -39,6 +39,7 @@ Plug 'ncm2/ncm2-markdown-subscope'
 Plug 'ncm2/ncm2-path'
 Plug 'ncm2/ncm2-ultisnips'
 Plug 'ntpeters/vim-better-whitespace'
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'rhysd/git-messenger.vim'
 Plug 'roxma/nvim-yarp'
 Plug 'rust-lang/rust.vim'
@@ -406,6 +407,24 @@ nnoremap <silent> <C-J> :TmuxNavigateDown<CR>
 nnoremap <silent> <C-K> :TmuxNavigateUp<CR>
 nnoremap <silent> <C-L> :TmuxNavigateRight<CR>
 nnoremap <silent> <C-H> :TmuxNavigateLeft<CR>
+
+" tree-sitter {{{2
+lua <<EOF
+require'nvim-treesitter.configs'.setup {
+	ensure_installed = "maintained", -- install all maintained parsers
+	highlight = {enable = true},
+	incremental_selection = {
+		enable = true,
+		keymaps = {
+			init_selection = "gnn",
+			node_incremental = "grn",
+			scope_incremental = "grc",
+			node_decremental = "grm",
+		},
+	},
+}
+EOF
+
 
 "  File Types {{{1
 
