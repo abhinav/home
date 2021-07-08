@@ -450,7 +450,8 @@ if $VIM_GO_BIN_PATH != ""
 	let g:go_bin_path = $VIM_GO_BIN_PATH
 endif
 
-if $VIM_GOPLS_DISABLED
+" Disable gopls if in diff mode or if explicitly disabled.
+if $VIM_GOPLS_DISABLED || &diff
 	let g:go_gopls_enabled = 0
 endif
 
