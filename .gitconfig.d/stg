@@ -1,2 +1,4 @@
 [stgit.alias]
 	ci = stg-ci
+[stgit.series]
+	description = true
