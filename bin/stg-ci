@@ -53,5 +53,10 @@ if [[ "$diff" == yes ]]; then
 	refresh_args+=("-d")
 fi
 
+if [[ -z "$(git diff --name-only --cached)" ]]; then
+	echo >&2 "Index is empty. Did you mean to stage files?"
+	exit 1
+fi
+
 stg new -m "$msg" "$patch" &&
 	stg refresh "${refresh_args[@]}"
