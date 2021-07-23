@@ -455,6 +455,8 @@ endif
 " Disable gopls if in diff mode or if explicitly disabled.
 if $VIM_GOPLS_DISABLED || &diff
 	let g:go_gopls_enabled = 0
+	let g:ale_lint_on_save = 0
+	let g:LanguageClient_autoStart = 0
 endif
 
 " LanguageClient {{{3
