@@ -60,7 +60,6 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'vim-scripts/visualrepeat'
 Plug 'vimwiki/vimwiki'
 Plug 'wellle/tmux-complete.vim'
-Plug 'w0rp/ale'
 
 call plug#end()
 
@@ -206,25 +205,10 @@ augroup end
 " airline {{{2
 let g:airline_theme = "molokai"
 let g:airline#extensions#branch#displayed_head_limit = 10
-let g:airline#extensions#ale#enabled = 1
 
 " We want to do this manually with,
 "   :Tmuxline airline | TmuxlineSnapshot ~/.tmux-molokai.conf
 let g:airline#extensions#tmuxline#enabled = 0
-
-" ale {{{2
-let g:ale_open_list = 1
-let g:ale_sign_error='⊘'
-let g:ale_sign_warning='⚠'
-let g:ale_lint_on_save = 1
-let g:ale_lint_on_enter = 0
-let g:ale_lint_on_text_changed = 0
-let g:ale_emit_conflict_warnings = 0
-let g:ale_linters = {}
-let g:ale_linter_aliases = {}
-
-nmap <silent> <leader>ep <Plug>(ale_previous_wrap)
-nmap <silent> <leader>en <Plug>(ale_next_wrap)
 
 " ncm2 {{{2
 autocmd BufEnter * call ncm2#enable_for_buffer()
@@ -455,7 +439,6 @@ endif
 " Disable gopls if in diff mode or if explicitly disabled.
 if $VIM_GOPLS_DISABLED || &diff
 	let g:go_gopls_enabled = 0
-	let g:ale_lint_on_save = 0
 	let g:LanguageClient_autoStart = 0
 endif
 
@@ -463,14 +446,9 @@ endif
 let g:LanguageClient_serverCommands.go = ['gopls']
 let g:LanguageClient_rootMarkers.go = ['go.mod', 'Gopkg.toml', 'glide.lock']
 
-" ale {{{3
-let g:ale_linters.go = ['gopls']
-
 " haskell {[{2
 
 " LanguageClient {{{3
-let g:ale_linters.haskell = ['hie', 'stylish-haskell', 'hlint']
-let g:ale_haskell_hie_executable = 'hie-wrapper'
 let g:LanguageClient_serverCommands.haskell = ['hie-wrapper']
 let g:LanguageClient_rootMarkers.haskell = ['*.cabal', 'stack.yaml']
 
@@ -520,6 +498,3 @@ let g:vimwiki_auto_chdir = 1
 let g:vimwiki_folding = 'expr'
 let g:vimwiki_use_mouse = 1
 let g:vimwiki_listsyms = ' x'
-
-" ale {{{3
-let g:ale_linter_aliases.vimwiki = ['markdown']
