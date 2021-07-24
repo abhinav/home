@@ -425,16 +425,14 @@ EOF
 
 " vim-go {{{3
 let g:go_def_mapping_enabled = 0
+let g:go_code_completion_enabled = 0
+let g:go_doc_keywordprg_enabled = 0
+let g:go_metalinter_autosave_enabled = []
+let g:go_gopls_enabled = 0
 
 let g:go_term_enabled = 1
 let g:go_term_reuse = 1
 let g:go_term_mode = "split"
-
-let g:go_gopls_staticcheck = v:true
-let g:go_gopls_gofumpt = v:true
-
-let g:go_snippet_engine = "neosnippet"
-let g:go_metalinter_command = "gopls"
 
 let g:go_template_file = $HOME . "/.config/vim-go/main.go"
 let g:go_template_test_file = $HOME . "/.config/vim-go/test.go"
@@ -445,12 +443,20 @@ endif
 
 " Disable gopls if in diff mode or if explicitly disabled.
 if $VIM_GOPLS_DISABLED || &diff
-	let g:go_gopls_enabled = 0
 	let g:LanguageClient_autoStart = 0
 endif
 
 " LanguageClient {{{3
-let g:LanguageClient_serverCommands.go = ['gopls']
+let g:LanguageClient_serverCommands.go =
+	\ {
+	\ 'name': 'gopls',
+	\ 'command': ['gopls', '-remote=auto'],
+	\ 'initializationOptions':
+		\ {
+		\ 'gofumpt': v:true,
+		\ 'staticcheck': v:true,
+		\ }
+	\ }
 let g:LanguageClient_rootMarkers.go = ['go.mod', 'Gopkg.toml', 'glide.lock']
 
 " haskell {[{2
