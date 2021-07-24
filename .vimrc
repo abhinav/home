@@ -469,7 +469,7 @@ let g:LanguageClient_rootMarkers.haskell = ['*.cabal', 'stack.yaml']
 
 " LanguageClient {{{3
 if executable('pyls')
-	let g:LanguageClient_serverCommands.rust = ['pyls']
+	let g:LanguageClient_serverCommands.python = ['pyls']
 endif
 
 " rust {{{2
