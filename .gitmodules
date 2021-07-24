@@ -16,3 +16,6 @@
 [submodule ".zsh/zsh-autosuggestions"]
 	path = .zsh/zsh-autosuggestions
 	url = https://github.com/zsh-users/zsh-autosuggestions
+[submodule ".tmux/plugins/tmux-thumbs"]
+	path = .tmux/plugins/tmux-thumbs
+	url = https://github.com/fcsonline/tmux-thumbs
