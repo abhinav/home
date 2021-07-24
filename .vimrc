@@ -319,11 +319,18 @@ let g:LanguageClient_serverCommands = {}
 let g:LanguageClient_rootMarkers = {}
 let g:LanguageClient_autoStart = 1
 
+" Always show hover preview instead of echoing.
+let g:LanguageClient_hoverPreview = "Always"
+
+" Don't wait too long for LSP output.
+let g:LanguageClient_waitOutputTimeout = 3
+
 " Don't spam language server. Wait a second before sending updates.
 let g:LanguageClient_changeThrottle = 1
 
-" Don't show signs in the gutter since the inline diagnostics are loud enough.
-let g:LanguageClient_diagnosticsSignsMax = 0
+" Gutter already contains diagnoistc markers. Use virtual text only for
+" CodeLens.
+let g:LanguageClient_useVirtualText = "CodeLens"
 
 augroup LanguageClientHooks
 	autocmd!
