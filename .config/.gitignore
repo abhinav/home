@@ -3,12 +3,12 @@
 
 !.gitignore
 
-# Karabiner
-!/karabiner
-
-# Neovim configuration.
+# Neovim
 !/nvim
 !/vim-go
 
-# tig
+# Self explanatory
+!/bat
+!/karabiner
+!/ripgrep
 !/tig
