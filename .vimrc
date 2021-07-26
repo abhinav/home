@@ -330,6 +330,9 @@ let g:LanguageClient_waitOutputTimeout = 3
 " Don't spam language server. Wait a second before sending updates.
 let g:LanguageClient_changeThrottle = 1
 
+" Avoid crash loops.
+let g:LanguageClient_restartOnCrash = 0
+
 " Gutter already contains diagnoistc markers. Use virtual text only for
 " CodeLens.
 let g:LanguageClient_useVirtualText = "CodeLens"
