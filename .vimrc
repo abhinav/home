@@ -361,7 +361,8 @@ function! s:SetupLanguageClient() " {{{3
 endfunction
 
 " lens {{{2
-let g:lens#disabled_filetypes = ['fzf', 'qf']
+let g:lens#disabled_filetypes = ['fzf']
+let g:lens#disabled_buftypes = ['quickfix']
 let g:lens#animate = 0
 
 " markdown-preview {{{2
