@@ -51,7 +51,6 @@ Plug 'solarnz/thrift.vim', {'for': 'thrift'}
 Plug 'stacked-git/stgit', {'rtp': 'contrib/vim'}
 Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-commentary'
-Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
 Plug 'voldikss/vim-floaterm', {'do': 'pip install --upgrade neovim-remote'}
