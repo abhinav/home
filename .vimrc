@@ -304,6 +304,9 @@ let g:grepper =
 	\ 'dir': 'filecwd',
 	\ }
 
+" Work around mhinz/vim-grepper#244
+let g:grepper.rg = {'grepprg': 'rg -H --no-heading --vimgrep --sort-files $* .'}
+
 if executable('rg')
 	nnoremap <leader>gg :Grepper -tool rg<cr>
 else
