@@ -132,20 +132,6 @@ let g:python_host_prog = '/usr/local/bin/python'
 " Space = leader
 let mapleader = "\<Space>"
 
-" Configuration available on OSX only:
-if has("unix")
-	let s:uname = system("uname")
-	if s:uname == "Darwin"
-		set macmeta        " Use Option key as Meta
-		set fuopt=maxvert  " Don't change width in OSX full screen mode
-	endif
-endif
-
-" If using gnome-terminal, use 256 colors.
-if $COLORTERM == 'gnome-terminal'
-	set t_Co=256
-endif
-
 " Easier tabbing
 nmap <silent> <C-M-T> :tabe<CR>
 nmap <silent> <C-M-H> :tabp<CR>
