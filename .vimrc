@@ -387,10 +387,6 @@ xmap T <Plug>Sneak_T
 omap t <Plug>Sneak_t
 omap T <Plug>Sneak_T
 
-" taskwiki {{{2
-let g:taskwiki_markup_syntax = "markdown"
-let g:taskwiki_disable_concealcursor = 1
-
 " tmux-navigator {{{2
 
 " We have our own mappings
