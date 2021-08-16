@@ -117,9 +117,6 @@ endif
 
 colorscheme molokai
 
-" Use terminal background for performance.
-highlight Normal ctermbg=NONE guibg=NONE
-
 " Make line numbers in terminal more readable
 highlight LineNr ctermfg=245
 
