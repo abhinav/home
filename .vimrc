@@ -258,8 +258,8 @@ let g:floaterm_keymap_toggle = '<F9>'
 let g:floaterm_autoclose = 1
 let g:floaterm_wintype   = 'floating'
 
-nnoremap <silent> <F6> :FloatermNew --height=0.4 --width=0.98  --position=bottom<CR>
-tnoremap <silent> <F6> <C-\><C-n>:FloatermNew --height=0.4 --width=0.98  --position=bottom<CR>
+nnoremap <silent> <F6> :FloatermNew --height=0.4 --width=0.98 --cwd=<buffer> --position=bottom<CR>
+tnoremap <silent> <F6> <C-\><C-n>:FloatermNew --height=0.4 --width=0.98 --cwd=<buffer> --position=bottom<CR>
 tnoremap <silent> <F7> <C-\><C-n>
 
 " :NNN for nnn
