@@ -15,3 +15,19 @@ bind main B !git checkout -B "%(prompt Enter branch name: )" %(commit)
 bind main D ?<git checkout --detach %(commit)
 
 bind main <Ctrl-p> ?git push "%(prompt Enter remote name: )" %(commit):"%(prompt Enter branch name: )"
+
+# Unbind Ctrl-L (screen-redraw) because if set, then coupled with the Ctrl-l
+# binding below, we get:
+#   tig warning: ~/.config/tig/config:27: Key binding for screen-redraw and run
+#   request conflict; keys using Ctrl are case insensitive
+bind generic <Ctrl-L> none
+
+# When vim is spawned from inside tmux, the {pane_current_command} for tmux is
+# still tig, so the standard "is_vim" detectin in tmux.conf won't work. It has
+# to also match on "tig", but that means that when we're inside plain tig, we
+# receive a meaningless C-{h,j,k,l}. Turn these back into tmux pane commands in
+# that case.
+bind generic <Ctrl-h> @tmux select-pane -L
+bind generic <Ctrl-j> @tmux select-pane -D
+bind generic <Ctrl-k> @tmux select-pane -U
+bind generic <Ctrl-l> @tmux select-pane -R
