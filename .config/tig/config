@@ -27,7 +27,9 @@ bind generic <Ctrl-L> none
 # to also match on "tig", but that means that when we're inside plain tig, we
 # receive a meaningless C-{h,j,k,l}. Turn these back into tmux pane commands in
 # that case.
-bind generic <Ctrl-h> @tmux select-pane -L
 bind generic <Ctrl-j> @tmux select-pane -D
 bind generic <Ctrl-k> @tmux select-pane -U
 bind generic <Ctrl-l> @tmux select-pane -R
+
+# Ctrl-h is backspace for tig.
+bind generic <Backspace> @tmux select-pane -L
