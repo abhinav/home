@@ -5,10 +5,13 @@ if [ -d "$HOMEBREW_PREFIX/opt/go/libexec/bin" ]; then
 	PATH=$(IFS=:; prepend "$HOMEBREW_PREFIX/opt/go/libexec/bin" $PATH)
 fi
 
-GOPATH="$HOME/dev/.go"
-if [ -d "$GOPATH" ]; then
-	# shellcheck disable=2086
-	PATH=$(IFS=:; prepend "$GOPATH/bin" $PATH)
+GOPATH="$HOME/go"
+if [ -d "$HOME/dev/.go" ]; then
+	GOPATH="$HOME/dev/.go"
 fi
+export GOPATH
 
-export GOPATH PATH
+# shellcheck disable=2086
+PATH=$(IFS=:; prepend "$GOPATH/bin" $PATH)
+
+export PATH
