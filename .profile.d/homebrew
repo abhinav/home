@@ -12,5 +12,14 @@ export HOMEBREW_PREFIX
 export HOMEBREW_AUTO_UPDATE_SECS=604800
 
 # shellcheck disable=2086
+PATH=$(IFS=:; prepend "$HOMEBREW_PREFIX/sbin" $PATH)
 PATH=$(IFS=:; prepend "$HOMEBREW_PREFIX/bin" $PATH)
 export PATH
+
+# shellcheck disable=2086
+MANPATH=$(IFS=:; prepend "$HOMEBREW_PREFIX/share/man" $MANPATH)
+export MANPATH
+
+# shellcheck disable=2086
+INFOPATH=$(IFS=:; prepend "$HOMEBREW_PREFIX/share/info" $INFOPATH)
+export INFOPATH
