@@ -1,7 +1,12 @@
 #!/bin/bash
 
 export HOMEBREW_NO_ANALYTICS=1
-export HOMEBREW_PREFIX=/usr/local
+
+HOMEBREW_PREFIX=/usr/local
+if [[ -d /home/linuxbrew/.linuxbrew ]]; then
+	HOMEBREW_PREFIX=/home/linuxbrew/.linuxbrew
+fi
+export HOMEBREW_PREFIX
 
 # Check for updates once a week.
 export HOMEBREW_AUTO_UPDATE_SECS=604800
