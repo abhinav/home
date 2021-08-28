@@ -70,5 +70,5 @@ function s:HandleSelection(lines)
 	let dest = a:lines[2]
 	let cmd = get(s:action, key, 'edit')
 
-	exec cmd . ' ' . dest
+	exec cmd . ' ' . fnameescape(dest)
 endfunction
