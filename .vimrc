@@ -40,6 +40,7 @@ Plug 'ncm2/ncm2-markdown-subscope'
 Plug 'ncm2/ncm2-path'
 Plug 'ncm2/ncm2-ultisnips'
 Plug 'ntpeters/vim-better-whitespace'
+Plug 'ojroques/vim-oscyank'
 Plug 'rbgrouleff/bclose.vim'
 Plug 'rhysd/git-messenger.vim'
 Plug 'roxma/nvim-yarp'
@@ -374,6 +375,21 @@ let g:mkdp_filetypes = ['markdown', 'vimwiki']
 
 " netrw {{{2
 let g:netrw_liststyle = 3
+
+" oscyank {{{2
+
+" Set up a hook to send an OSC52 code if the system register is used.
+augroup OSCHook
+	autocmd!
+
+	autocmd TextYankPost * call s:SendOSC52(v:event)
+augroup END
+
+function! s:SendOSC52(event) " {{{3
+	if a:event.operator is 'y' && a:event.regname is '+'
+		OSCYankReg +
+	endif
+endfunction
 
 " sneak {{{2
 nmap f <Plug>Sneak_f
