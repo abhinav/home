@@ -25,3 +25,8 @@ $ cd home-int && \
 	git remote add local ~ && \
 	git push -u local $name
 ```
+
+Following that, install [GNU Stow] and inside the `stow/` directory, run
+`stow $system` for the kind of system.
+
+  [GNU Stow]: https://www.gnu.org/software/stow/

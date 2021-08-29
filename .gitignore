@@ -72,3 +72,6 @@
 
 # Atreus
 !/.atreus
+
+# Don't opt out system-specific configurations.
+!/stow
