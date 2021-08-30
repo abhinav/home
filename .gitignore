@@ -37,9 +37,6 @@
 # GHC
 !.ghci
 
-# hammerspoon
-!/.hammerspoon/
-
 # spacemacs
 !/.spacemacs.d/
 
@@ -69,9 +66,6 @@
 !/.task/
 /.task/*
 !/.task/hooks
-
-# Atreus
-!/.atreus
 
 # Don't opt out system-specific configurations.
 !/stow
