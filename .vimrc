@@ -135,6 +135,9 @@ let g:python_host_prog = '/usr/local/bin/python'
 " Space = leader
 let mapleader = "\<Space>"
 
+" Escape with jk.
+inoremap jk <Esc>
+
 " Easier tabbing
 nmap <silent> <C-M-T> :tabe<CR>
 nmap <silent> <C-M-H> :tabp<CR>
