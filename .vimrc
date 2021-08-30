@@ -57,6 +57,7 @@ Plug 'voldikss/vim-floaterm', {'do': 'pip install --upgrade neovim-remote'}
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'vim-scripts/visualrepeat'
+Plug 'vim-utils/vim-husk'
 Plug 'vimwiki/vimwiki'
 Plug 'wellle/tmux-complete.vim'
 Plug 'dense-analysis/ale'
