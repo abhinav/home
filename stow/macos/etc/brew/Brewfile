@@ -1,0 +1,57 @@
+tap "homebrew/cask"
+tap "homebrew/cask-fonts"
+tap "homebrew/core"
+tap "homebrew/bundle"
+
+brew "bat"        # > cat
+brew "curl"
+brew "exa"        # > ls
+brew "go"
+brew "hyperfine"  # CLI benchmarks
+brew "jq"         # JSON munging
+brew "pandoc"
+brew "pv"
+brew "ripgrep"    # > grep
+brew "shellcheck" # lint .sh
+brew "shfmt"
+brew "stow"
+brew "tmux"
+brew "watch"
+
+# Shell and friends.
+brew "direnv"
+brew "fasd"  # cd from/to anywhere
+brew "zsh"
+brew "zsh-completions"
+
+# Editing.
+tap "neovim/neovim"
+brew "neovim", args: ["HEAD"]
+brew "svn"  # needed weirdly for the font
+cask "font-liberation-mono-for-powerline"
+
+# Git and friends.
+brew "git"
+brew "git-absorb"  # automatic fixup commits
+brew "git-lfs"
+brew "tig"
+tap "github/gh"
+brew "gh"
+
+cask "appcleaner"
+cask "caffeine"      # don't sleep
+cask "firefox"
+cask "flux"
+cask "google-drive"
+cask "iterm2"
+cask "kap"           # screen cap
+cask "little-snitch" # firewall
+cask "obsidian"      # notes
+
+cask "alfred"              # command space
+cask "hammerspoon"         # window management
+cask "karabiner-elements"  # keyboard control
+cask "scroll-reverser"     # use normal scrolling on mouse
+cask "sensiblesidebuttons" # back/fwd with mouse
+
+# vim:set ft=ruby:
