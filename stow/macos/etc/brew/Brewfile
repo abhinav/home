@@ -29,6 +29,7 @@ tap "neovim/neovim"
 brew "neovim", args: ["HEAD"]
 brew "svn"  # needed weirdly for the font
 cask "font-liberation-mono-for-powerline"
+cask "font-iosevka"
 
 # Git and friends.
 brew "git"
