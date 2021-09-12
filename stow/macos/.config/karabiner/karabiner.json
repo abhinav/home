@@ -294,46 +294,6 @@
                             "key_code": "escape"
                         }
                     ]
-                },
-                {
-                    "from": {
-                        "key_code": "down_arrow"
-                    },
-                    "to": [
-                        {
-                            "key_code": "vk_none"
-                        }
-                    ]
-                },
-                {
-                    "from": {
-                        "key_code": "left_arrow"
-                    },
-                    "to": [
-                        {
-                            "key_code": "vk_none"
-                        }
-                    ]
-                },
-                {
-                    "from": {
-                        "key_code": "right_arrow"
-                    },
-                    "to": [
-                        {
-                            "key_code": "vk_none"
-                        }
-                    ]
-                },
-                {
-                    "from": {
-                        "key_code": "up_arrow"
-                    },
-                    "to": [
-                        {
-                            "key_code": "vk_none"
-                        }
-                    ]
                 }
             ],
             "virtual_hid_keyboard": {
