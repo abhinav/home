@@ -2,6 +2,7 @@ tap "homebrew/cask"
 tap "homebrew/cask-fonts"
 tap "homebrew/core"
 tap "homebrew/bundle"
+tap "abhinav/tap"
 
 brew "bat"        # > cat
 brew "curl"
@@ -38,6 +39,8 @@ brew "git-lfs"
 brew "tig"
 tap "github/gh"
 brew "gh"
+brew "abhinav/tap/gitprompt"
+brew "abhinav/tap/restack"
 
 cask "appcleaner"
 cask "caffeine"      # don't sleep
