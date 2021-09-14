@@ -22,8 +22,6 @@ let &l:equalprg = 'pandoc -f markdown -t markdown --reference-links --markdown-h
 " to the next line.
 command! -buffer VimwikiFollowLink call wikilink#Follow()
 
-EnableWhitespace
-
 " Treat blockquotes as comments so gq formats them nicely.
 setlocal comments=n:>
 
