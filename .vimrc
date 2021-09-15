@@ -40,6 +40,7 @@ Plug 'ncm2/ncm2-bufword'
 Plug 'ncm2/ncm2-markdown-subscope'
 Plug 'ncm2/ncm2-path'
 Plug 'ncm2/ncm2-ultisnips'
+Plug 'ntpeters/vim-better-whitespace'
 Plug 'ojroques/vim-oscyank'
 Plug 'rbgrouleff/bclose.vim'
 Plug 'rhysd/git-messenger.vim'
@@ -409,12 +410,6 @@ map <leader>h <Plug>(operator-quickhl-manual-this-motion)
 
 nmap <leader>M <Plug>(quickhl-manual-reset)
 xmap <leader>M <Plug>(quickhl-manual-reset)
-
-let g:quickhl_manual_enable_at_startup = 1
-let g:quickhl_manual_keywords =
-	\ [
-	\ {"pattern": '\s\+$', "regexp": 1 },
-	\ ]
 
 " sneak {{{2
 nmap f <Plug>Sneak_f
