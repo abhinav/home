@@ -10,9 +10,9 @@ scrolling:
   history: 0
 
 font:
-  size: 9
+  size: 11
   normal:
-    family: Liberation Mono for Powerline
+    family: Iosevka Fixed
 
 colors:
   primary:
