@@ -53,8 +53,8 @@
 	process = git-lfs filter-process
 	required = true
 [include]
+	path = ~/.config/netlify/helper/git-config
 	path = ~/.gitconfig.d/go
 	path = ~/.gitconfig.d/stg
 	path = ~/.gitconfig.d/local
 	path = ~/.gitconfig.d/mergetool
-	path = ~/.netlify/helper/git-config
