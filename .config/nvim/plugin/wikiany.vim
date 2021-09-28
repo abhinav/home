@@ -4,6 +4,10 @@ endif
 let g:loaded_wikiany = 1
 
 function! VimwikiLinkHandler(link)
+	if a:link =~ '^https\?:'
+		return 0
+	end
+
 	" Don't require file: prefix on attachments.
 	if a:link =~ '\.\(pdf\|jpg\|jpeg\|png\|gif\)$'
 		call vimwiki#base#open_link(':e ', 'file:' . a:link)
@@ -20,5 +24,3 @@ function! VimwikiLinkHandler(link)
 
 	return 0
 endfunction
-
-
