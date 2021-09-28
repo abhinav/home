@@ -1,7 +1,3 @@
-if $VIM_PATH != ""
-	let $PATH=$VIM_PATH
-endif
-
 if empty(glob('~/.config/nvim/autoload/plug.vim'))
 	silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs
 		\ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
@@ -69,57 +65,117 @@ Plug 'dense-analysis/ale'
 
 call plug#end()
 
-"  General {{{1
-set nocompatible        " Don't need compatibility with vi.
-set nobackup writebackup
-                        " Don't backup edited files but temporarily backup
-                        " before overwiting.
-set backspace=indent,eol,start
-set history=50          " History of : commands.
-set ruler               " Show the cursor position.
-set laststatus=2        " Always show status line.
-set showcmd             " Display incomplete commands.
-set hidden              " Allow buffers to be hidden without saving.
-set relativenumber number
-                        " Show the line number of the current line and
-                        " relative numbers of all other lines.
-set noexpandtab softtabstop=0 shiftwidth=8 tabstop=8
-                        " Use 8 tabs for indentation.
-set copyindent preserveindent
-                        " Preserve existing indentation as much as possible.
-set incsearch
-set autoindent
-set nowrap              " No wrapping
-set nojoinspaces        " Don't add two spaces after punctuation when joining
-                        " two lines.
-set ignorecase smartcase tagcase=followscs
-                        " Ignore casing during search except if uppercase
-                        " characters are used. Use the same settings for tag
-                        " searches.
-set shortmess+=c
-set inccommand=split    " Show :s result incrementally.
-set background=dark
-set textwidth=79
-set lazyredraw          " Don't redraw the screen while executing macros.
-                        " Useful if the macros does a lot of transformation.
-set virtualedit=all
-set visualbell          " No beeping.
-set splitbelow splitright
-                        " Split below or to the right of the current window.
-set foldmethod=marker
-set hlsearch            " Highlight search results.
-set wildmenu            " Show options for :-command completion.
-set mouse=a             " Support mouse everywhere.
-set scrolloff=10        " Lines to leave below cursor when scrolling.
-set list listchars=tab:»\ ,trail:·
-                        " Show tabs and trailing whitespace.
-set wildignore+=*/cabal-dev,*/dist,*.o,*.class,*.pyc,*.hi
-                        " Ignore in wildcard expansions.
+lua << EOF
+if vim.env.VIM_PATH then
+	vim.env.PATH = vim.env.VIM_PATH
+end
 
-" Use true color if not on Terminal.app
-if $TERM_PROGRAM != "Apple_Terminal"
-	set termguicolors
-endif
+-- General {{{1
+local options = {
+	compatible = false, -- no backwards compatibility with vi
+
+	backup      = false, -- don't backup edited files
+	writebackup = true, -- but temporarily backup before overwiting
+
+	backspace = {'indent', 'eol', 'start'}, -- sane backspace handling
+
+	ruler      = true, -- show the cursor position
+	laststatus = 2,    -- always show status line
+	showcmd    = true, -- display incomplete commands
+	hidden     = true, -- allow buffers to be hidden without saving
+
+	history    = 50, -- history of : commands
+	wildmenu = true, -- show options for : completion
+
+	number         = true, -- show line number of the current line and
+	relativenumber = true, -- relative numbers of all other lines
+
+	-- Use 8 tabs for indentation.
+	expandtab   = false,
+	softtabstop = 0,
+	shiftwidth  = 8,
+	tabstop     = 8,
+
+	textwidth   = 79,    -- default to narrow text
+	virtualedit = 'all', -- use virtual spaces
+	scrolloff   = 5,     -- lines below cursor when scrolling
+
+	-- Preserve existing indentation as much as possible.
+	copyindent     = true,
+	preserveindent = true,
+	autoindent     = true,
+
+	incsearch = true, -- show search results incrementally
+	wrap      = false, -- don't wrap long lines
+
+	-- Don't add two spaces after a punctuation when joining lines with J.
+	joinspaces = false,
+
+	ignorecase = true,        -- ignore caing during search
+	smartcase  = true,        -- except if uppercase characters were used
+	tagcase    = 'followscs', -- and use the same for tag searches
+
+	inccommand = 'split', -- show :s results incrementally
+	hlsearch = true, -- highlight search results
+
+	lazyredraw = true,  -- don't redraw while running macros
+	visualbell = true, -- don't beep
+	mouse = 'a', -- support mouse
+
+	background = 'dark',
+
+	-- New splits should go below or to the right of the current window.
+	splitbelow = true,
+	splitright = true,
+
+	foldmethod = 'marker', -- don't fold unless there are markers
+
+	-- Show tabs and trailing spaces.
+	list = true,
+	listchars = {tab = '» ', trail = '.'},
+
+	-- Patterns to ignore in wildcard expansions.
+	wildignore = {
+		'*/cabal-dev', '*/dist', '*.o', '*.class', '*.pyc', '*.hi',
+	},
+
+	completeopt = {'noinsert', 'menuone', 'noselect', 'preview'},
+}
+
+for name, val in pairs(options) do
+	vim.opt[name] = val
+end
+
+-- Use true colors if we're not on Apple Terminal.
+if vim.env.TERM_PROGRAM ~= 'Apple_Terminal' then
+	vim.opt.termguicolors = true
+end
+
+-- let_g(table)
+-- let_g(prefix, table)
+--
+-- Sets values on g:*. If prefix is non-empty, it's added to every key.
+function let_g(prefix, opts)
+	if opts == nil then
+		opts, prefix = prefix, ''
+	end
+
+	for key, val in pairs(opts) do
+		if prefix ~= '' then
+			key = prefix .. key
+		end
+		vim.g[key] = val
+	end
+end
+
+let_g {
+	-- Use global python.
+	-- Ensures nvim works with Python plugins inside a virtualenv.
+	python_host_prog = '/usr/local/bin/python',
+
+	mapleader = ' ', -- space = leader
+}
+EOF
 
 colorscheme molokai
 
@@ -131,12 +187,6 @@ highlight LineNr ctermfg=245
 
 " Invisible vertical split
 highlight VertSplit guibg=bg guifg=bg
-
-" Use global python. Ensures nvim works with Python plugins inside a virtualenv.
-let g:python_host_prog = '/usr/local/bin/python'
-
-" Space = leader
-let mapleader = "\<Space>"
 
 " Escape with jk.
 inoremap jk <Esc>
@@ -207,23 +257,25 @@ let g:airline#extensions#ale#enabled = 1
 let g:airline#extensions#tmuxline#enabled = 0
 
 " ale {{{2
-let g:ale_open_list = 1
-let g:ale_sign_error='⊘'
-let g:ale_sign_warning='⚠'
-let g:ale_lint_on_save = 1
-let g:ale_lint_on_enter = 0
-let g:ale_lint_on_text_changed = 0
-let g:ale_emit_conflict_warnings = 0
-let g:ale_linters = {}
-let g:ale_linter_aliases = {}
+lua <<EOF
+ale = {
+	open_list              = 1,
+	sign_error             = '⊘',
+	sign_warning           = '⚠',
+	lint_on_save           = 1,
+	lint_on_enter          = 0,
+	lint_on_text_changed   = 0,
+	emit_conflict_warnings = 0,
+	linters                = {},
+	linter_aliases         = {},
+}
+EOF
 
 nmap <silent> <leader>ep <Plug>(ale_previous_wrap)
 nmap <silent> <leader>en <Plug>(ale_next_wrap)
 
 " ncm2 {{{2
 autocmd BufEnter * call ncm2#enable_for_buffer()
-
-set completeopt=noinsert,menuone,noselect,preview
 
 inoremap <silent> <C-Space> <c-r>=ncm2#force_trigger()<cr>
 
@@ -254,21 +306,29 @@ endfunction
 
 " UltiSnips {{{3
 imap <c-u> <Plug>(ultisnips_expand)
-let g:UltiSnipsExpandTrigger            = "<Plug>(ultisnips_expand)"
-let g:UltiSnipsJumpForwardTrigger       = "<c-j>"
-let g:UltiSnipsJumpBackwardTrigger      = "<c-k>"
-let g:UltiSnipsRemoveSelectModeMappings = 0
+lua << EOF
+let_g('UltiSnips', {
+	ExpandTrigger            = "<Plug>(ultisnips_expand)",
+	JumpForwardTrigger       = "<c-j>",
+	JumpBackwardTrigger      = "<c-k>",
+	RemoveSelectModeMappings = 0,
+})
+EOF
 
 " easy-align {{{2
 xmap ga <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
 
 " floaterm {{{2
-let g:floaterm_keymap_prev   = '<F4>'
-let g:floaterm_keymap_next   = '<F5>'
-let g:floaterm_keymap_toggle = '<F9>'
-let g:floaterm_autoclose = 1
-let g:floaterm_wintype   = 'floating'
+lua <<EOF
+let_g('floaterm_', {
+	keymap_prev   = '<F4>',
+	keymap_next   = '<F5>',
+	keymap_toggle = '<F9>',
+	autoclose     = 1,
+	wintype       = 'floating',
+})
+EOF
 
 nnoremap <silent> <F6> :FloatermNew --height=0.4 --width=0.98 --cwd=<buffer> --position=bottom<CR>
 tnoremap <silent> <F6> <C-\><C-n>:FloatermNew --height=0.4 --width=0.98 --cwd=<buffer> --position=bottom<CR>
@@ -302,18 +362,19 @@ endfunction
 command! Trees call s:FZFDirs({'sink': 'edit'})
 
 " grepper {{{2
-let g:grepper =
-	\ {
-	\ 'tools': ['rg', 'ag', 'git'],
-	\ 'side': 1,
-	\ 'side_cmd': 'new',
-	\ 'prompt_text': '$t> ',
-	\ 'prompt_quote': 2,
-	\ 'quickfix': 1,
-	\ 'switch': 1,
-	\ 'jump': 0,
-	\ 'dir': 'filecwd',
-	\ }
+lua <<EOF
+vim.g.grepper = {
+	tools        = {'rg', 'ag', 'git'},
+	side         = 1,
+	side_cmd     = 'new',
+	prompt_text  = '$t> ',
+	prompt_quote = 2,
+	quickfix     = 1,
+	switch       = 1,
+	jump         = 0,
+	dir          = 'filecwd',
+}
+EOF
 
 if executable('rg')
 	nnoremap <leader>gg :Grepper -tool rg<cr>
@@ -371,13 +432,21 @@ function! s:SetupLanguageClient() " {{{3
 endfunction
 
 " lens {{{2
-let g:lens#disabled_filetypes = ['fzf']
-let g:lens#disabled_buftypes = ['quickfix']
-let g:lens#animate = 0
+lua <<EOF
+let_g('lens#', {
+	disabled_filetypes = {'fzf'},
+	disabled_buftypes  = {'quickfix'},
+	animate            = 0,
+})
+EOF
 
 " markdown-preview {{{2
-let g:mkdp_auto_close = 0
-let g:mkdp_filetypes = ['markdown', 'vimwiki']
+lua <<EOF
+let_g('mkdp_', {
+	auto_close = 0,
+	filetypes = {'markdown', 'vimwiki'},
+})
+EOF
 
 " netrw {{{2
 let g:netrw_liststyle = 3
@@ -439,26 +508,27 @@ nnoremap <silent> <C-H> :TmuxNavigateLeft<CR>
 " go {{{2
 
 " vim-go {{{3
-let g:go_def_mapping_enabled = 0
-let g:go_code_completion_enabled = 0
-let g:go_doc_keywordprg_enabled = 0
-let g:go_metalinter_autosave_enabled = []
-let g:go_gopls_enabled = 0
+lua <<EOF
+let_g('go_', {
+	def_mapping_enabled = 0,
+	code_completion_enabled = 0,
+	doc_keywordprg_enabled = 0,
+	metalinter_autosave_enabled = {},
+	gopls_enabled = 0,
+	term_enabled = 1,
+	term_reuse = 1,
+	term_mode = "split",
+	template_file = vim.env.HOME .. "/.config/vim-go/main.go",
+	template_test_file = vim.env.HOME .. "/.config/vim-go/test.go",
+})
 
-let g:go_term_enabled = 1
-let g:go_term_reuse = 1
-let g:go_term_mode = "split"
-
-let g:go_template_file = $HOME . "/.config/vim-go/main.go"
-let g:go_template_test_file = $HOME . "/.config/vim-go/test.go"
-
-if $VIM_GO_BIN_PATH != ""
-	let g:go_bin_path = $VIM_GO_BIN_PATH
-endif
+if vim.env.VIM_GO_BIN_PATH then
+	vim.g.go_bin_path = vim.env.VIM_GO_BIN_PATH
+end
+EOF
 
 " ale {{{3
-let g:ale_linters.go = []
-
+lua ale.linters.go = {}
 
 " Disable gopls if in diff mode or if explicitly disabled.
 if $VIM_GOPLS_DISABLED || &diff
@@ -481,8 +551,10 @@ let g:LanguageClient_rootMarkers.go = ['go.mod', 'Gopkg.toml', 'glide.lock']
 " haskell {{{2
 
 " LanguageClient {{{3
-let g:ale_linters.haskell = ['hie', 'stylish-haskell', 'hlint']
-let g:ale_haskell_hie_executable = 'hie-wrapper'
+lua << EOF
+ale.linters.haskell = {'hie', 'stylish-haskell', 'hlint'}
+ale.haskell_hie_executable = 'hie-wrapper'
+EOF
 let g:LanguageClient_serverCommands.haskell = ['hie-wrapper']
 let g:LanguageClient_rootMarkers.haskell = ['*.cabal', 'stack.yaml']
 
@@ -497,7 +569,7 @@ endif
 let g:rustfmt_autosave = 1
 
 " ale {{{3
-let g:ale_linters.rust = []
+lua ale.linters.rust = {}
 
 " LanguageClient {{{3
 if executable('rust-analyzer')
@@ -508,33 +580,48 @@ endif
 
 " vimwiki {{{2
 
-function! s:buildWiki(path)
-	return {
-		\ 'syntax': 'markdown',
-		\ 'ext': '.md',
-		\ 'auto_toc': 1,
-		\ 'list_margin': 0,
-		\ 'path': a:path,
-		\ }
-endfunction
+lua <<EOF
+-- accepts an optional table of options.
+local function buildWiki(path, opts)
+	opts = opts or {}
+	return vim.tbl_extend('force', {
+		syntax      = 'markdown',
+		ext         = '.md',
+		auto_toc    = 1,
+		list_margin = 0,
+		path        = path,
+	}, opts)
+end
 
-" Use ~/.notes as the wiki location by default. Support overriding by setting
-" VIMWIKI_PATH.
-let g:vimwiki_list = [s:buildWiki('~/.notes')]
-let g:vimwiki_list[0].index = '000000000001 Home'
+-- Use ~/.notes as the wiki location by default.
+local vimwiki_list = {
+	buildWiki('~/.notes', {
+		index = '000000000001 Home',
+	}),
+}
 
-if $VIMWIKI_PATH != ""
-	call insert(g:vimwiki_list, s:buildWiki($VIMWIKI_PATH))
-endif
+-- Support overriding by setting VIMWIKI_PATH.
+if vim.env.VIMWIKI_PATH then
+	table.insert(vimwiki_list, 1, buildWiki(vim.env.VIMWIKI_PATH))
+end
 
-let g:vimwiki_hl_headers = 1
-let g:vimwiki_hl_cb_checked = 1
-let g:vimwiki_ext2syntax = {'.md': 'markdown'}
-let g:vimwiki_autowriteall = 1
-let g:vimwiki_auto_chdir = 1
-let g:vimwiki_folding = 'expr'
-let g:vimwiki_use_mouse = 1
-let g:vimwiki_listsyms = ' x'
+let_g('vimwiki_', {
+	list          = vimwiki_list,
+	hl_headers    = 1,
+	hl_cb_checked = 1,
+	ext2syntax    = {['.md'] = 'markdown'},
+	autowriteall  = 1,
+	auto_chdir    = 1,
+	folding       = 'expr',
+	use_mouse     = 1,
+	listsyms      = ' x',
+})
+EOF
 
 " ale {{{3
-let g:ale_linter_aliases.vimwiki = ['markdown']
+lua ale.linter_aliases.vimwiki = {'markdown'}
+
+" After {{{1
+
+" ale {{{2
+lua let_g('ale_', ale)
