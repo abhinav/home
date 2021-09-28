@@ -2,24 +2,33 @@
 
 export HOMEBREW_NO_ANALYTICS=1
 
-HOMEBREW_PREFIX=/usr/local
-if [[ -d /home/linuxbrew/.linuxbrew ]]; then
+setup-homebrew() {
+	export HOMEBREW_PREFIX
+
+	# Check for updates once a week.
+	export HOMEBREW_AUTO_UPDATE_SECS=604800
+
+	# shellcheck disable=2086
+	PATH=$(IFS=:; prepend "$HOMEBREW_PREFIX/sbin" $PATH)
+	# shellcheck disable=2086
+	PATH=$(IFS=:; prepend "$HOMEBREW_PREFIX/bin" $PATH)
+	export PATH
+
+	# shellcheck disable=2086
+	MANPATH=$(IFS=:; prepend "$HOMEBREW_PREFIX/share/man" $MANPATH)
+	export MANPATH
+
+	# shellcheck disable=2086
+	INFOPATH=$(IFS=:; prepend "$HOMEBREW_PREFIX/share/info" $INFOPATH)
+	export INFOPATH
+}
+
+if [[ -d /usr/local/Homebrew ]]; then
+	HOMEBREW_PREFIX=/usr/local
+elif [[ -d /home/linuxbrew/.linuxbrew ]]; then
 	HOMEBREW_PREFIX=/home/linuxbrew/.linuxbrew
 fi
-export HOMEBREW_PREFIX
 
-# Check for updates once a week.
-export HOMEBREW_AUTO_UPDATE_SECS=604800
-
-# shellcheck disable=2086
-PATH=$(IFS=:; prepend "$HOMEBREW_PREFIX/sbin" $PATH)
-PATH=$(IFS=:; prepend "$HOMEBREW_PREFIX/bin" $PATH)
-export PATH
-
-# shellcheck disable=2086
-MANPATH=$(IFS=:; prepend "$HOMEBREW_PREFIX/share/man" $MANPATH)
-export MANPATH
-
-# shellcheck disable=2086
-INFOPATH=$(IFS=:; prepend "$HOMEBREW_PREFIX/share/info" $INFOPATH)
-export INFOPATH
+if [[ -n "$HOMEBREW_PREFIX" ]]; then
+	setup-homebrew
+fi
