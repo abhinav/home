@@ -14,7 +14,7 @@ function! VimwikiLinkHandler(link)
 	" directory, matching exclusively by name.
 	let file = findfile(a:link . '.md', wikimemo#CurrentWikiDir() . '**')
 	if file != ''
-		call vimwiki#base#open_link(':e ', file)
+		exec 'edit ' . file
 		return 1
 	end
 
