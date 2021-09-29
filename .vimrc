@@ -47,7 +47,6 @@ Plug 'rbgrouleff/bclose.vim'
 Plug 'rhysd/git-messenger.vim'
 Plug 'roxma/nvim-yarp'
 Plug 'rust-lang/rust.vim'
-Plug 'sickill/vim-pasta'
 Plug 'SirVer/ultisnips'
 Plug 'solarnz/thrift.vim', {'for': 'thrift'}
 Plug 'stacked-git/stgit', {'rtp': 'contrib/vim'}
