@@ -11,6 +11,7 @@ endif
 call plug#begin('~/.config/nvim/plugged')
 
 "  Plugins {{{1
+Plug 'andymass/vim-matchup'
 Plug 'autozimu/LanguageClient-neovim', {'branch': 'next', 'do': 'bash install.sh'}
 Plug 'camspiers/lens.vim'
 Plug 'cappyzawa/starlark.vim'
