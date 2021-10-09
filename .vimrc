@@ -440,6 +440,15 @@ let_g('lens#', {
 })
 EOF
 
+" matchup {{{2
+lua <<EOF
+let_g('matchup_', {
+	matchparen_offscreen = {
+		method = 'popup',
+	},
+})
+EOF
+
 " markdown-preview {{{2
 lua <<EOF
 let_g('mkdp_', {
