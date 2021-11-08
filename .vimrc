@@ -188,9 +188,6 @@ highlight LineNr ctermfg=245
 " Invisible vertical split
 highlight VertSplit guibg=bg guifg=bg
 
-" Escape with jk.
-inoremap jk <Esc>
-
 " Easier tabbing
 nmap <silent> <C-M-T> :tabe<CR>
 nmap <silent> <C-M-H> :tabp<CR>
