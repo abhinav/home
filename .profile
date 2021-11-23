@@ -9,6 +9,7 @@ source ~/.profile.d/homebrew
 source ~/.profile.d/term
 source ~/.profile.d/pager
 source ~/.profile.d/editor
+source ~/.profile.d/man
 source ~/.profile.d/dircolors
 source ~/.profile.d/ripgrep
 
