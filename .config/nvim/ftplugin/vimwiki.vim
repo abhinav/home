@@ -22,7 +22,7 @@ setlocal breakindent
 setlocal nohidden
 
 let b:vimwiki_title_search_source =
-	\ "rg -g '*.md' -g '!/archive' --files"
+	\ "rg -g '/pages/**/*.md' -g '/journals/**/*.md' --files"
 
 " FZF options to search wikis by title.
 let b:vimwiki_title_search = {
@@ -60,6 +60,6 @@ nmap <buffer><silent> <C-P> :NV<CR>
 
 " Builds a Markdown-style link.
 function! s:buildWikiOpenLink(lines)
-	let dest = fnamemodify(a:lines[0],  ':r')
+	let dest = fnamemodify(a:lines[0],  ':t:r')
 	return printf('[[%s]]', dest)
 endfunction

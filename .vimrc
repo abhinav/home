@@ -604,8 +604,8 @@ end
 
 -- Use ~/.notes as the wiki location by default.
 local vimwiki_list = {
-	buildWiki('~/.notes', {
-		index = '000000000001 Home',
+	buildWiki('~/notes', {
+		index = 'pages/000000000001 Home',
 	}),
 }
 

@@ -29,7 +29,7 @@ let g:loaded_nvalt = 1
 " the file name or line numbers.
 command! -nargs=* NV
 	\ call fzf#run(fzf#vim#with_preview({
-		\ 'source': "rg -g '*.md' -g '!/archive' --files" .
+		\ 'source': "rg -g '/pages/**/*.md' -g '/journals/**/*.md' --files" .
 			\ (<q-args> == '' ? '' : (' | rg ' . shellescape(<q-args>))),
 		\ 'sink*': function('<SID>HandleSelection'),
 		\ 'dir': wikimemo#CurrentWikiDir(),
