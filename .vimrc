@@ -8,7 +8,6 @@ call plug#begin('~/.config/nvim/plugged')
 
 "  Plugins {{{1
 Plug 'andymass/vim-matchup'
-Plug 'autozimu/LanguageClient-neovim', {'branch': 'next', 'do': 'bash install.sh'}
 Plug 'camspiers/lens.vim'
 Plug 'cappyzawa/starlark.vim'
 Plug 'cespare/vim-toml'
@@ -37,6 +36,7 @@ Plug 'ncm2/ncm2-bufword'
 Plug 'ncm2/ncm2-markdown-subscope'
 Plug 'ncm2/ncm2-path'
 Plug 'ncm2/ncm2-ultisnips'
+Plug 'neovim/nvim-lspconfig'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'ojroques/vim-oscyank'
 Plug 'rbgrouleff/bclose.vim'
@@ -382,51 +382,43 @@ endif
 nmap gs <plug>(GrepperOperator)
 xmap gs <plug>(GrepperOperator)
 
-" LanguageClient {{{2
-let g:LanguageClient_serverCommands = {}
-let g:LanguageClient_rootMarkers = {}
-let g:LanguageClient_autoStart = 1
+" lspconfig {{{2
+lua << EOF
+local nvim_lsp = require('lspconfig')
 
-" Always show hover preview instead of echoing.
-let g:LanguageClient_hoverPreview = "Always"
+function setup_lsp(server, lsp_opts)
+	lsp_opts.on_attach = function(client, bufnr)
+		local function buf_set_keymap(...)
+			vim.api.nvim_buf_set_keymap(bufnr, ...)
+		end
 
-" Don't wait too long for LSP output.
-let g:LanguageClient_waitOutputTimeout = 3
+		local function buf_set_option(...)
+			vim.api.nvim_buf_set_option(bufnr, ...)
+		end
 
-" Don't spam language server. Wait a second before sending updates.
-let g:LanguageClient_changeThrottle = 1
+		buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
+		local opts = { noremap = true, silent = true }
 
-" Avoid crash loops.
-let g:LanguageClient_restartOnCrash = 0
+		-- Keybindings
+		--  K            Documentation
+		--  <leader>d    Go to definition
+		--  F2           Rename
+		--  Ctrl-Space   Code action
 
-" Gutter already contains diagnoistc markers. Use virtual text only for
-" CodeLens.
-let g:LanguageClient_useVirtualText = "CodeLens"
+		buf_set_keymap('n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
+		buf_set_keymap('n', '<leader>d', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
+		buf_set_keymap('n', '<F1>', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
+		buf_set_keymap('n', '<C-Space>', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
+	end
 
-augroup LanguageClientHooks
-	autocmd!
-	autocmd FileType * call s:SetupLanguageClient()
-augroup END
+	lsp_opts.flags = {
+		-- Don't spam LSP with changes. Wait a second between updates.
+		debounce_text_changes = 1000,
+	}
 
-function! s:SetupLanguageClient() " {{{3
-	if !has_key(g:LanguageClient_serverCommands, &filetype)
-		return
-	endif
-
-	" Keybindings
-	"  K            Documentation
-	"  <leader>d    Go to definition
-	"  F2           Rename
-	"  Ctrl-Space   Code action
-	"  Alt-Enter    Context Menu
-
-	nmap <buffer> <silent> K         <Plug>(lcn-hover)
-	nmap <buffer> <silent> <leader>d <Plug>(lcn-definition)
-	nmap <buffer> <silent> <F1>      <Plug>(lcn-rename)
-	nmap <buffer> <silent> <M-CR>    <Plug>(lcn-menu)
-	nmap <buffer> <silent> <C-Space> <Plug>(lcn-code-action)
-	vmap <buffer> <silent> <C-Space> <Plug>(lcn-code-action)
-endfunction
+	nvim_lsp[server].setup(lsp_opts)
+end
+EOF
 
 " lens {{{2
 lua <<EOF
@@ -536,40 +528,33 @@ EOF
 " ale {{{3
 lua ale.linters.go = {}
 
-" Disable gopls if in diff mode or if explicitly disabled.
-if $VIM_GOPLS_DISABLED || &diff
-	let g:LanguageClient_autoStart = 0
-endif
-
-" LanguageClient {{{3
-let g:LanguageClient_serverCommands.go =
-	\ {
-	\ 'name': 'gopls',
-	\ 'command': ['gopls', '-remote=auto'],
-	\ 'initializationOptions':
-		\ {
-		\ 'gofumpt': v:true,
-		\ 'staticcheck': v:true,
-		\ }
-	\ }
-let g:LanguageClient_rootMarkers.go = ['go.mod', 'Gopkg.toml', 'glide.lock']
+" lsp {{{3
+lua << EOF
+setup_lsp('gopls', {
+	cmd = {'gopls', '-remote=auto'},
+	init_options = {
+		gofumpt     = true,
+		staticcheck = true,
+	},
+})
+EOF
 
 " haskell {{{2
 
-" LanguageClient {{{3
+" lsp {{{3
 lua << EOF
 ale.linters.haskell = {'hie', 'stylish-haskell', 'hlint'}
 ale.haskell_hie_executable = 'hie-wrapper'
+
+setup_lsp('hie', {})
 EOF
-let g:LanguageClient_serverCommands.haskell = ['hie-wrapper']
-let g:LanguageClient_rootMarkers.haskell = ['*.cabal', 'stack.yaml']
 
 " python {{{2
 
-" LanguageClient {{{3
-if executable('pyls')
-	let g:LanguageClient_serverCommands.python = ['pyls']
-endif
+" lsp {{{3
+lua << EOF
+setup_lsp('pylsp', {})
+EOF
 
 " rust {{{2
 let g:rustfmt_autosave = 1
@@ -577,12 +562,10 @@ let g:rustfmt_autosave = 1
 " ale {{{3
 lua ale.linters.rust = {}
 
-" LanguageClient {{{3
-if executable('rust-analyzer')
-	let g:LanguageClient_serverCommands.rust = ['rust-analyzer']
-else
-	let g:LanguageClient_serverCommands.rust = ['rustup', 'run', 'stable', 'rls']
-endif
+" lsp {{{3
+lua << EOF
+setup_lsp('rust_analyzer', {})
+EOF
 
 " vimwiki {{{2
 
