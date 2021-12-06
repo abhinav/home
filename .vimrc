@@ -18,6 +18,8 @@ Plug 'christoomey/vim-tmux-navigator'
 Plug 'direnv/direnv.vim'
 Plug 'edkolev/tmuxline.vim'
 Plug 'fatih/vim-go'
+Plug 'folke/lsp-colors.nvim'
+Plug 'folke/trouble.nvim'
 Plug 'honza/vim-snippets'
 Plug 'hrsh7th/cmp-buffer'
 Plug 'hrsh7th/cmp-cmdline'
@@ -569,6 +571,33 @@ nnoremap <silent> <C-J> :TmuxNavigateDown<CR>
 nnoremap <silent> <C-K> :TmuxNavigateUp<CR>
 nnoremap <silent> <C-L> :TmuxNavigateRight<CR>
 nnoremap <silent> <C-H> :TmuxNavigateLeft<CR>
+
+" trouble {{{2 "
+lua << EOF
+require('trouble').setup {
+	icons = false,
+	auto_open = true,
+	auto_close = true,
+
+	-- Non-patched font:
+	fold_open = "v",
+	fold_closed = ">",
+	indent_lines = false,
+	signs = {
+		error =  'error',
+		warning = 'warn',
+		hint = 'hint',
+		information = 'info',
+	},
+	use_lsp_diagnostic_signs = false,
+}
+
+-- Don't use virtual text to display diagnostics.
+-- Signs in the gutter + trouble is enough.
+vim.diagnostic.config({
+	virtual_text = false,
+})
+EOF
 
 "  File Types {{{1
 
