@@ -579,7 +579,6 @@ nnoremap <silent> <C-H> :TmuxNavigateLeft<CR>
 lua << EOF
 require('trouble').setup {
 	icons = false,
-	auto_open = true,
 	auto_close = true,
 
 	-- Non-patched font:
