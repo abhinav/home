@@ -335,8 +335,8 @@ cmp.setup {
 		-- Ctrl-Space: force completion
 		['<C-Space>'] = cmp.mapping(cmp.mapping.complete(), { 'i', 'c' }),
 
-		-- Ctr-c: cancel completion
-		['<C-c>'] = cmp.mapping({
+		-- Ctr-e: cancel completion
+		['<C-e>'] = cmp.mapping({
 			i = cmp.mapping.abort(),
 			c = cmp.mapping.close(),
 		}),
