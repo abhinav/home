@@ -631,8 +631,9 @@ lua << EOF
 setup_lsp('gopls', {
 	cmd = {'gopls', '-remote=auto'},
 	init_options = {
-		gofumpt     = true,
-		staticcheck = true,
+		gofumpt         = true,
+		staticcheck     = true,
+		usePlaceholders = true,
 	},
 })
 EOF
