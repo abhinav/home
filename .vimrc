@@ -310,10 +310,12 @@ cmp.setup {
 		--  1. no item is selected, select the first/last one
 		--  2. an item is selected, start completion with it
 		['<Tab>'] = cmp.mapping(function(fallback)
-			if cmp.get_selected_entry() ~= nil then
-				cmp.confirm()
-			elseif cmp.visible() then
-				cmp.select_next_item()
+			if cmp.visible() then
+				if cmp.get_selected_entry() ~= nil then
+					cmp.confirm()
+				else
+					cmp.select_next_item()
+				end
 			elseif vim.fn['UltiSnips#CanJumpForwards']() == 1 then
 				feedkey("<Plug>(ultisnips_jump_forward)", "")
 			else
