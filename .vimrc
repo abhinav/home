@@ -7,6 +7,7 @@ endif
 call plug#begin('~/.config/nvim/plugged')
 
 "  Plugins {{{1
+Plug 'andersevenrud/cmp-tmux'
 Plug 'andymass/vim-matchup'
 Plug 'camspiers/lens.vim'
 Plug 'cappyzawa/starlark.vim'
@@ -18,6 +19,11 @@ Plug 'direnv/direnv.vim'
 Plug 'edkolev/tmuxline.vim'
 Plug 'fatih/vim-go'
 Plug 'honza/vim-snippets'
+Plug 'hrsh7th/cmp-buffer'
+Plug 'hrsh7th/cmp-cmdline'
+Plug 'hrsh7th/cmp-nvim-lsp'
+Plug 'hrsh7th/cmp-path'
+Plug 'hrsh7th/nvim-cmp'
 Plug 'hynek/vim-python-pep8-indent'
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
 Plug 'iberianpig/tig-explorer.vim'
@@ -31,14 +37,10 @@ Plug 'justinmk/vim-sneak'
 Plug 'kana/vim-operator-user'  " needed for quickhl
 Plug 'machakann/vim-highlightedyank'
 Plug 'mhinz/vim-grepper'
-Plug 'ncm2/ncm2'
-Plug 'ncm2/ncm2-bufword'
-Plug 'ncm2/ncm2-markdown-subscope'
-Plug 'ncm2/ncm2-path'
-Plug 'ncm2/ncm2-ultisnips'
 Plug 'neovim/nvim-lspconfig'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'ojroques/vim-oscyank'
+Plug 'quangnguyen30192/cmp-nvim-ultisnips'
 Plug 'rbgrouleff/bclose.vim'
 Plug 'rhysd/git-messenger.vim'
 Plug 'roxma/nvim-yarp'
@@ -271,43 +273,108 @@ EOF
 nmap <silent> <leader>ep <Plug>(ale_previous_wrap)
 nmap <silent> <leader>en <Plug>(ale_next_wrap)
 
-" ncm2 {{{2
-autocmd BufEnter * call ncm2#enable_for_buffer()
+" nvim-cmp {{{2
+lua << EOF
+local cmp = require 'cmp'
 
-inoremap <silent> <C-Space> <c-r>=ncm2#force_trigger()<cr>
+local feedkey = function(key, mode)
+	vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(key, true, true, true), mode, true)
+end
 
-" CTRL-C doesn't trigger the InsertLeave autocmd . map to <ESC> instead.
-inoremap <c-c> <ESC>
+cmp.setup {
+	snippet = {
+		expand = function(args)
+			vim.fn["UltiSnips#Anon"](args.body)
+		end,
+	},
+	mapping = {
+		-- Ctrl-u/d: scroll docs of completion item if available.
+		['<C-u>'] = cmp.mapping(cmp.mapping.scroll_docs(-4), { 'i', 'c' }),
+		['<C-d>'] = cmp.mapping(cmp.mapping.scroll_docs(4), { 'i', 'c' }),
 
-" When <CR> is pressed while the popup menu is visible, it only
-" hides the menu. This hides the menu and moves on to the next line.
-inoremap <expr> <CR> (pumvisible() ? "\<c-y>\<cr>" : "\<CR>")
+		-- tab: If completion menu is visible and nothing has been selected,
+		-- select first item. If something is selected, start completion with that.
+		-- If in the middle of the completion, jump to next snippet position.
 
-" Use <TAB> to select the popup menu:
-inoremap <expr> <Tab> <SID>HandleTab()
-inoremap <expr> <S-Tab> (pumvisible() ? "\<C-p>" : "\<S-Tab>")
+		-- Tab/Shift-Tab:
+		-- If completion menu is not visible,
+		--  1. if we're in the middle of a snippet, move forwards/backwards
+		--  2. Otherwise use regular key behavior
+		--
+		-- If completion menu is visible and,
+		--  1. no item is selected, select the first/last one
+		--  2. an item is selected, start completion with it
+		['<Tab>'] = cmp.mapping(function(fallback)
+			if cmp.get_selected_entry() ~= nil then
+				cmp.confirm()
+			elseif cmp.visible() then
+				cmp.select_next_item()
+			elseif vim.fn['UltiSnips#CanJumpForwards']() == 1 then
+				feedkey("<Plug>(ultisnips_jump_forward)", "")
+			else
+				fallback()
+			end
+		end, {'i', 's'}),
+		['<S-Tab>'] = cmp.mapping(function(fallback)
+			if cmp.visible() then
+				cmp.select_prev_item()
+			elseif vim.fn['UltiSnips#CanJumpBackwards']() == 1 then
+				feedkey("<Plug>(ultisnips_jump_backward)", "")
+			else
+				fallback()
+			end
+		end, {'i', 's'}),
 
-function s:HandleTab()
-	" Select the first item if popup is open but nothing has been
-	" selected. Otherwise, expand the selected item.
-	if pumvisible()
-		if empty(v:completed_item)
-			return "\<c-n>"
-		else
-			return ncm2_ultisnips#expand_or("", 'n')
-		endif
-	endif
+		-- Ctrl-Space: force completion
+		['<C-Space>'] = cmp.mapping(cmp.mapping.complete(), { 'i', 'c' }),
 
-	return "\<tab>"
-endfunction
+		-- Ctr-c: cancel completion
+		['<C-c>'] = cmp.mapping({
+			i = cmp.mapping.abort(),
+			c = cmp.mapping.close(),
+		}),
+
+		-- Enter: confirm completion
+		['<CR>'] = cmp.mapping.confirm({select = false}),
+	},
+	sources = cmp.config.sources({
+		{name = 'nvim_lsp'},
+		{name = 'ultisnips'},
+	}, {
+		{name = 'path'},
+		{name = 'buffer'},
+		{name = 'tmux'},
+	}),
+	experimental = {
+		ghost_text = true,
+	},
+}
+
+cmp.setup.cmdline('/', {
+	completion = { autocomplete = false },
+	sources = {
+		{name = 'buffer'},
+	},
+})
+
+cmp.setup.cmdline(':', {
+	completion = { autocomplete = false },
+	sources = cmp.config.sources({
+		{name = 'path'},
+	}, {
+		{name = 'cmdline'},
+	}),
+})
+EOF
 
 " UltiSnips {{{3
 imap <c-u> <Plug>(ultisnips_expand)
 lua << EOF
 let_g('UltiSnips', {
 	ExpandTrigger            = "<Plug>(ultisnips_expand)",
-	JumpForwardTrigger       = "<c-j>",
-	JumpBackwardTrigger      = "<c-k>",
+	JumpForwardTrigger       = "<Plug>(ultisnips_jump_forward)",
+	JumpBackwardTrigger      = "<Plug>(ultisnips_jump_backward)",
+	ListSnippets             = "<c-x><c-s>",
 	RemoveSelectModeMappings = 0,
 })
 EOF
@@ -385,6 +452,7 @@ xmap gs <plug>(GrepperOperator)
 " lspconfig {{{2
 lua << EOF
 local nvim_lsp = require('lspconfig')
+local lsp_capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
 
 function setup_lsp(server, lsp_opts)
 	lsp_opts.on_attach = function(client, bufnr)
@@ -411,6 +479,7 @@ function setup_lsp(server, lsp_opts)
 		buf_set_keymap('n', '<C-Space>', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
 	end
 
+	lsp_opts.capabilities = lsp_capabilities
 	lsp_opts.flags = {
 		-- Don't spam LSP with changes. Wait a second between updates.
 		debounce_text_changes = 1000,
