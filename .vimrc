@@ -632,14 +632,27 @@ lua ale.linters.go = {}
 
 " lsp {{{3
 lua << EOF
-setup_lsp('gopls', {
-	cmd = {'gopls', '-remote=auto'},
-	init_options = {
-		gofumpt         = true,
-		staticcheck     = true,
-		usePlaceholders = true,
-	},
-})
+-- Support disabling gopls and LSP by setting an environment variable,
+-- and in diff mode.
+local disable_gopls = vim.env.VIM_GOPLS_DISABLED or vim.opt.diff:get()
+
+local gopls_options = {
+	gofumpt         = true,
+	staticcheck     = true,
+	usePlaceholders = true,
+}
+
+-- Support overriding memory mode with an environment variable.
+if vim.env.VIM_GOPLS_MEMORY_MODE then
+	gopls_options.memoryMode = vim.env.VIM_GOPLS_MEMORY_MODE
+end
+
+if not disabled_gopls then
+	setup_lsp('gopls', {
+		cmd = {'gopls', '-remote=auto'},
+		init_options = gopls_options,
+	})
+end
 EOF
 
 " haskell {{{2
