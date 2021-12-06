@@ -22,11 +22,21 @@ let &l:equalprg = 'pandoc -f markdown -t markdown --reference-links --markdown-h
 " to the next line.
 command! -buffer VimwikiFollowLink call wikilink#Follow()
 
-EnableWhitespace
+" Don't highlight whitespace issues.
+DisableWhitespace
 
 " Treat blockquotes as comments so gq formats them nicely.
 setlocal comments=n:>
 
-" Don't suggest file-name based completions. When needed, these are provided
-" by [[.
-call ncm2#blacklist_for_buffer(['bufpath', 'rootpath', 'cwdpath'])
+lua << EOF
+local cmp = require 'cmp'
+
+-- Less noisy completions for writing.
+cmp.setup.buffer({
+	sources = cmp.config.sources({
+		{name = 'ultisnips'},
+		{name = 'buffer'},
+		{name = 'tmux'},
+	}),
+})
+EOF
