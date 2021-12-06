@@ -284,6 +284,9 @@ local feedkey = function(key, mode)
 end
 
 cmp.setup {
+	completion = {
+		keyword_length = 3,
+	},
 	snippet = {
 		expand = function(args)
 			vim.fn["UltiSnips#Anon"](args.body)
