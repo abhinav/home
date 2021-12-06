@@ -478,12 +478,12 @@ function setup_lsp(server, lsp_opts)
 		--  K            Documentation
 		--  <leader>d    Go to definition
 		--  F2           Rename
-		--  Ctrl-Space   Code action
+		--  Alt-Enter    Code action
 
 		buf_set_keymap('n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
 		buf_set_keymap('n', '<leader>d', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
 		buf_set_keymap('n', '<F1>', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
-		buf_set_keymap('n', '<C-Space>', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
+		buf_set_keymap('n', '<M-CR>', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
 	end
 
 	lsp_opts.capabilities = lsp_capabilities
