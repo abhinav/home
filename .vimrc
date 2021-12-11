@@ -673,6 +673,17 @@ lua << EOF
 setup_lsp('rust_analyzer', {})
 EOF
 
+" typescript {{{2
+
+" lsp {{{3
+lua <<EOF
+setup_lsp('tsserver', {
+	init_options = {
+		disableAutomaticTypingAcquisition = true,
+	},
+})
+EOF
+
 " vimwiki {{{2
 
 lua <<EOF
