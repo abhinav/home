@@ -283,6 +283,20 @@ local feedkey = function(key, mode)
 	vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(key, true, true, true), mode, true)
 end
 
+local handleTab = function(fallback)
+	if cmp.visible() then
+		if cmp.get_selected_entry() ~= nil then
+			cmp.confirm()
+		else
+			cmp.select_next_item()
+		end
+	elseif vim.fn['UltiSnips#CanJumpForwards']() == 1 then
+		feedkey("<Plug>(ultisnips_jump_forward)", "")
+	else
+		fallback()
+	end
+end
+
 cmp.setup {
 	completion = {
 		keyword_length = 3,
@@ -309,19 +323,10 @@ cmp.setup {
 		-- If completion menu is visible and,
 		--  1. no item is selected, select the first/last one
 		--  2. an item is selected, start completion with it
-		['<Tab>'] = cmp.mapping(function(fallback)
-			if cmp.visible() then
-				if cmp.get_selected_entry() ~= nil then
-					cmp.confirm()
-				else
-					cmp.select_next_item()
-				end
-			elseif vim.fn['UltiSnips#CanJumpForwards']() == 1 then
-				feedkey("<Plug>(ultisnips_jump_forward)", "")
-			else
-				fallback()
-			end
-		end, {'i', 's'}),
+		['<Tab>'] = cmp.mapping({
+			i = handleTab,
+			s = handleTab,
+		}),
 		['<S-Tab>'] = cmp.mapping(function(fallback)
 			if cmp.visible() then
 				cmp.select_prev_item()
@@ -353,25 +358,10 @@ cmp.setup {
 		{name = 'tmux'},
 	}),
 	experimental = {
-		ghost_text = true,
+		ghost_text  = true,
+		native_menu = true,
 	},
 }
-
-cmp.setup.cmdline('/', {
-	completion = { autocomplete = false },
-	sources = {
-		{name = 'buffer'},
-	},
-})
-
-cmp.setup.cmdline(':', {
-	completion = { autocomplete = false },
-	sources = cmp.config.sources({
-		{name = 'path'},
-	}, {
-		{name = 'cmdline'},
-	}),
-})
 EOF
 
 " UltiSnips {{{3
