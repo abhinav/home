@@ -36,7 +36,6 @@ Plug 'junegunn/vim-easy-align'
 Plug 'justinmk/molokai'
 Plug 'justinmk/vim-dirvish'
 Plug 'justinmk/vim-sneak'
-Plug 'kana/vim-operator-user'  " needed for quickhl
 Plug 'machakann/vim-highlightedyank'
 Plug 'mhinz/vim-grepper'
 Plug 'neovim/nvim-lspconfig'
@@ -50,7 +49,6 @@ Plug 'rust-lang/rust.vim'
 Plug 'SirVer/ultisnips'
 Plug 'solarnz/thrift.vim', {'for': 'thrift'}
 Plug 'stacked-git/stgit', {'rtp': 'contrib/vim'}
-Plug 't9md/vim-quickhl'
 Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
@@ -528,18 +526,6 @@ function! s:SendOSC52(event) " {{{3
 		OSCYankReg +
 	endif
 endfunction
-
-" quickhl {{{2
-
-" <leader>m: highlight current word
-" <leader>h<motion>: highlight text selected by motion
-" <leader>M: clear
-
-nmap <leader>m <Plug>(quickhl-manual-this)
-map <leader>h <Plug>(operator-quickhl-manual-this-motion)
-
-nmap <leader>M <Plug>(quickhl-manual-reset)
-xmap <leader>M <Plug>(quickhl-manual-reset)
 
 " sneak {{{2
 nmap f <Plug>Sneak_f
