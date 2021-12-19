@@ -7,72 +7,88 @@ endif
 call plug#begin('~/.config/nvim/plugged')
 
 "  Plugins {{{1
+
+" Completion and snippets {{{2
 Plug 'andersevenrud/cmp-tmux'
-Plug 'andymass/vim-matchup'
-Plug 'camspiers/lens.vim'
-Plug 'cappyzawa/starlark.vim'
-Plug 'cespare/vim-toml'
-Plug 'chrisbra/NrrwRgn'
-Plug 'chrisbra/csv.vim'
-Plug 'christoomey/vim-tmux-navigator'
-Plug 'direnv/direnv.vim'
-Plug 'edkolev/tmuxline.vim'
-Plug 'fatih/vim-go'
-Plug 'folke/lsp-colors.nvim'
-Plug 'folke/trouble.nvim'
 Plug 'honza/vim-snippets'
 Plug 'hrsh7th/cmp-buffer'
 Plug 'hrsh7th/cmp-cmdline'
 Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'hrsh7th/cmp-path'
 Plug 'hrsh7th/nvim-cmp'
+Plug 'quangnguyen30192/cmp-nvim-ultisnips'
+Plug 'SirVer/ultisnips'
+
+" Editing {{{2
+Plug 'andymass/vim-matchup'
+Plug 'junegunn/vim-easy-align'
+Plug 'justinmk/vim-sneak'
+Plug 'machakann/vim-highlightedyank'
+Plug 'ntpeters/vim-better-whitespace'
+Plug 'tpope/vim-abolish'
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-sleuth'
+Plug 'tpope/vim-surround'
+Plug 'vim-scripts/visualrepeat'
+
+" Filetype-specific {{{2
+Plug 'cappyzawa/starlark.vim'
+Plug 'cespare/vim-toml'
+Plug 'chrisbra/csv.vim'
+Plug 'direnv/direnv.vim'
+Plug 'fatih/vim-go'
 Plug 'hynek/vim-python-pep8-indent'
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
+Plug 'rust-lang/rust.vim'
+Plug 'solarnz/thrift.vim', {'for': 'thrift'}
+Plug 'stacked-git/stgit', {'rtp': 'contrib/vim'}
+Plug 'vimwiki/vimwiki'
+
+" Git {{{2
 Plug 'iberianpig/tig-explorer.vim'
+Plug 'rhysd/git-messenger.vim'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-rhubarb'
+
+" Look and feel {{{2
+Plug 'edkolev/tmuxline.vim'
+Plug 'justinmk/molokai'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+
+" LSP and language features {{{2
+Plug 'dense-analysis/ale'
+Plug 'folke/lsp-colors.nvim'
+Plug 'folke/trouble.nvim'
+Plug 'neovim/nvim-lspconfig'
+
+" Navigation and window management {{{2
+Plug 'camspiers/lens.vim'
+Plug 'chrisbra/NrrwRgn'
 Plug 'junegunn/fzf', {'dir': '~/.fzf', 'do': './install --all --no-update-rc'}
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/goyo.vim', {'on': 'Goyo'}
-Plug 'junegunn/vim-easy-align'
-Plug 'justinmk/molokai'
 Plug 'justinmk/vim-dirvish'
-Plug 'justinmk/vim-sneak'
-Plug 'machakann/vim-highlightedyank'
 Plug 'mhinz/vim-grepper'
-Plug 'neovim/nvim-lspconfig'
-Plug 'ntpeters/vim-better-whitespace'
-Plug 'ojroques/vim-oscyank'
-Plug 'quangnguyen30192/cmp-nvim-ultisnips'
 Plug 'rbgrouleff/bclose.vim'
-Plug 'rhysd/git-messenger.vim'
-Plug 'roxma/nvim-yarp'
-Plug 'rust-lang/rust.vim'
-Plug 'SirVer/ultisnips'
-Plug 'solarnz/thrift.vim', {'for': 'thrift'}
-Plug 'stacked-git/stgit', {'rtp': 'contrib/vim'}
-Plug 'tpope/vim-abolish'
-Plug 'tpope/vim-commentary'
-Plug 'tpope/vim-fugitive'
-Plug 'tpope/vim-repeat'
-Plug 'tpope/vim-rhubarb'
-Plug 'tpope/vim-sleuth'
-Plug 'tpope/vim-surround'
-Plug 'voldikss/vim-floaterm', {'do': 'pip install --upgrade neovim-remote'}
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
-Plug 'vim-scripts/visualrepeat'
+
+" Terminal integration {{{2
+Plug 'christoomey/vim-tmux-navigator'
+Plug 'ojroques/vim-oscyank'
 Plug 'vim-utils/vim-husk'
-Plug 'vimwiki/vimwiki'
-Plug 'wellle/tmux-complete.vim'
-Plug 'dense-analysis/ale'
+Plug 'voldikss/vim-floaterm', {'do': 'pip install --upgrade neovim-remote'}
+
+" End plugins {{{2
 
 call plug#end()
 
+" General {{{1
 lua << EOF
 if vim.env.VIM_PATH then
 	vim.env.PATH = vim.env.VIM_PATH
 end
 
--- General {{{1
 local options = {
 	compatible = false, -- no backwards compatibility with vi
 
