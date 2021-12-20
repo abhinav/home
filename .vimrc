@@ -30,6 +30,7 @@ Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-sleuth'
 Plug 'tpope/vim-surround'
+Plug 'tversteeg/registers.nvim'
 Plug 'vim-scripts/visualrepeat'
 
 " Filetype-specific {{{2
@@ -542,6 +543,17 @@ function! s:SendOSC52(event) " {{{3
 		OSCYankReg +
 	endif
 endfunction
+
+" registers {{{2
+
+lua <<EOF
+let_g('registers_', {
+	-- Wait 500 milliseconds before registers popup.
+	delay = 500,
+	hide_only_whitespace = 1,
+	window_border = 'shadow',
+})
+EOF
 
 " sneak {{{2
 nmap f <Plug>Sneak_f
