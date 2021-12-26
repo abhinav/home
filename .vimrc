@@ -21,7 +21,6 @@ Plug 'SirVer/ultisnips'
 
 " Editing {{{2
 Plug 'andymass/vim-matchup'
-Plug 'chaoren/vim-wordmotion'
 Plug 'junegunn/vim-easy-align'
 Plug 'justinmk/vim-sneak'
 Plug 'machakann/vim-highlightedyank'
