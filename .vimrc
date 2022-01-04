@@ -188,10 +188,6 @@ function let_g(prefix, opts)
 end
 
 let_g {
-	-- Use global python.
-	-- Ensures nvim works with Python plugins inside a virtualenv.
-	python_host_prog = '/usr/local/bin/python',
-
 	mapleader = ' ', -- space = leader
 }
 EOF
