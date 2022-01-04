@@ -42,6 +42,7 @@ brew "gh"
 brew "abhinav/tap/gitprompt"
 brew "abhinav/tap/restack"
 
+cask "1password"
 cask "appcleaner"
 cask "caffeine"      # don't sleep
 cask "firefox"
@@ -49,8 +50,10 @@ cask "flux"
 cask "google-drive"
 cask "iterm2"
 cask "kap"           # screen cap
+cask "licecap"       # ^
 cask "little-snitch" # firewall
 cask "obsidian"      # notes
+cask "logseq"        # ^
 
 cask "alfred"              # command space
 cask "hammerspoon"         # window management
