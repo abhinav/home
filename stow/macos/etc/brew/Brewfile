@@ -54,6 +54,7 @@ cask "licecap"       # ^
 cask "little-snitch" # firewall
 cask "obsidian"      # notes
 cask "logseq"        # ^
+cask "spotify"
 
 cask "alfred"              # command space
 cask "hammerspoon"         # window management
