@@ -63,6 +63,7 @@ Plug 'dense-analysis/ale'
 Plug 'folke/lsp-colors.nvim'
 Plug 'folke/trouble.nvim'
 Plug 'neovim/nvim-lspconfig'
+Plug 'ray-x/lsp_signature.nvim'
 
 " Navigation and window management {{{2
 Plug 'camspiers/lens.vim'
@@ -460,6 +461,7 @@ xmap gs <plug>(GrepperOperator)
 lua << EOF
 local nvim_lsp = require('lspconfig')
 local lsp_capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+local lsp_signature = require('lsp_signature')
 
 function setup_lsp(server, lsp_opts)
 	lsp_opts.on_attach = function(client, bufnr)
@@ -470,6 +472,15 @@ function setup_lsp(server, lsp_opts)
 		local function buf_set_option(...)
 			vim.api.nvim_buf_set_option(bufnr, ...)
 		end
+
+		-- Show hints for every parameter, but don't need to report the
+		-- signature again since it's easily accessible.
+		lsp_signature.on_attach({
+			bind = true,
+			floating_window = false,
+			hint_enable = true,
+			always_trigger = true,
+		}, bufnr)
 
 		buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
 		local opts = { noremap = true, silent = true }
