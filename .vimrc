@@ -589,19 +589,42 @@ nnoremap <silent> <C-H> :TmuxNavigateLeft<CR>
 
 " trouble {{{2 "
 lua << EOF
+local diagnostic_signs = {
+	Error = '🚫',
+	Warn  = '⚠️',
+	Hint  = '💡',
+	Info  = 'ℹ️',
+}
+
+for type, icon in pairs(diagnostic_signs) do
+	local hl = "DiagnosticSign" .. type
+	vim.fn.sign_define(hl, {
+		text   = icon,
+		texthl = hl,
+		numhl  = hl,
+	})
+end
+
 require('trouble').setup {
-	icons = false,
+	-- Report errors for this file only by default.
+	-- We can use 'm' in the Trouble window to get workspace-level errors.
+	mode = "document_diagnostics",
+
+	auto_open = true,
 	auto_close = true,
+	auto_preview = false,
 
 	-- Non-patched font:
 	fold_open = "v",
 	fold_closed = ">",
+	icons = false,
+	padding = false,
 	indent_lines = false,
 	signs = {
-		error =  'error',
-		warning = 'warn',
-		hint = 'hint',
-		information = 'info',
+		error       = diagnostic_signs.Error,
+		warning     = diagnostic_signs.Warn,
+		hint        = diagnostic_signs.Hint,
+		information = diagnostic_signs.Info,
 	},
 	use_lsp_diagnostic_signs = false,
 }
