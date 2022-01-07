@@ -505,6 +505,18 @@ function setup_lsp(server, lsp_opts)
 
 	nvim_lsp[server].setup(lsp_opts)
 end
+
+-- LSP implementations that don't need any configuration.
+local default_lsps = {
+	'clojure_lsp',
+	'hie',
+	'pylsp',
+	'rust_analyzer',
+}
+
+for _, server in pairs(default_lsps) do
+	setup_lsp(server, {})
+end
 EOF
 
 " lens {{{2
@@ -694,15 +706,6 @@ EOF
 lua << EOF
 ale.linters.haskell = {'hie', 'stylish-haskell', 'hlint'}
 ale.haskell_hie_executable = 'hie-wrapper'
-
-setup_lsp('hie', {})
-EOF
-
-" python {{{2
-
-" lsp {{{3
-lua << EOF
-setup_lsp('pylsp', {})
 EOF
 
 " rust {{{2
@@ -710,11 +713,6 @@ let g:rustfmt_autosave = 1
 
 " ale {{{3
 lua ale.linters.rust = {}
-
-" lsp {{{3
-lua << EOF
-setup_lsp('rust_analyzer', {})
-EOF
 
 " typescript {{{2
 
