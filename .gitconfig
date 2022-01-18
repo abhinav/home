@@ -54,6 +54,7 @@
 	required = true
 [include]
 	path = ~/.config/netlify/helper/git-config
+	path = ~/.gitconfig.d/delta
 	path = ~/.gitconfig.d/go
 	path = ~/.gitconfig.d/stg
 	path = ~/.gitconfig.d/local

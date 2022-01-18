@@ -35,6 +35,7 @@ cask "font-iosevka"
 # Git and friends.
 brew "git"
 brew "git-absorb"  # automatic fixup commits
+brew "git-delta"   # git pager
 brew "git-lfs"
 brew "tig"
 tap "github/gh"
