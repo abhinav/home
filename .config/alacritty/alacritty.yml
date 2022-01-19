@@ -5,6 +5,9 @@ shell:
   args:
     - main
 
+env:
+  TERM: screen-256color
+
 # Tmux does the scrollback for us.
 scrolling:
   history: 0
