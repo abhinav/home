@@ -511,7 +511,6 @@ local default_lsps = {
 	'clojure_lsp',
 	'hie',
 	'pylsp',
-	'rust_analyzer',
 }
 
 for _, server in pairs(default_lsps) do
@@ -713,6 +712,22 @@ let g:rustfmt_autosave = 1
 
 " ale {{{3
 lua ale.linters.rust = {}
+
+" lsp {{{3
+lua << EOF
+setup_lsp('rust_analyzer', {
+	settings = {
+		['rust-analyzer'] = {
+			assist = {
+				importGranularity = "module",
+			},
+			checkOnSave = {
+				command = "clippy",
+			},
+		},
+	},
+})
+EOF
 
 " typescript {{{2
 
