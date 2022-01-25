@@ -617,17 +617,13 @@ for type, icon in pairs(diagnostic_signs) do
 end
 
 require('trouble').setup {
-	-- Report errors for this file only by default.
-	-- We can use 'm' in the Trouble window to get workspace-level errors.
-	mode = "document_diagnostics",
-
-	auto_open = true,
+	auto_open = false,
 	auto_close = true,
 	auto_preview = false,
 
 	-- Non-patched font:
-	fold_open = "v",
-	fold_closed = ">",
+	fold_open = "▼",
+	fold_closed = "▶",
 	icons = false,
 	padding = false,
 	indent_lines = false,
@@ -643,7 +639,7 @@ require('trouble').setup {
 -- Don't use virtual text to display diagnostics.
 -- Signs in the gutter + trouble is enough.
 vim.diagnostic.config({
-	virtual_text = false,
+	virtual_text = true,
 })
 EOF
 
