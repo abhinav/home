@@ -20,6 +20,7 @@
 	s = status
 	co = checkout
 	c = commit
+	pushf = push --force-with-lease
 [http]
 	cookiefile = /Users/abg/.gitcookies
 [log]
