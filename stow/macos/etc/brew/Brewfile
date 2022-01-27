@@ -29,7 +29,6 @@ brew "zsh-completions"
 tap "neovim/neovim"
 brew "neovim", args: ["HEAD"]
 brew "svn"  # needed weirdly for the font
-cask "font-liberation-mono-for-powerline"
 cask "font-iosevka"
 
 # Git and friends.
@@ -54,7 +53,6 @@ cask "kap"           # screen cap
 cask "licecap"       # ^
 cask "little-snitch" # firewall
 cask "obsidian"      # notes
-cask "logseq"        # ^
 cask "spotify"
 cask "todoist"
 
