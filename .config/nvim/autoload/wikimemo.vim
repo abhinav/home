@@ -6,6 +6,7 @@ function wikimemo#New(...)
 	let wiki_nr = vimwiki#vars#get_bufferlocal('wiki_nr')
 	let in_wiki = wiki_nr != -1
 	let wiki_dir = wikimemo#CurrentWikiDir()
+	let note_id = s:generateMemoID()
 
 	" If invoked as an operator (via a motion), the ranged-over text will
 	" be the title.
@@ -35,7 +36,7 @@ function wikimemo#New(...)
 		if in_wiki
 			let new_line
 				\ = (startcol ? line[:startcol-1] : '')
-				\ . printf("[[%s]]", title)
+				\ . printf("[[%s %s]]", note_id, title)
 				\ . line[endcol + 1:]
 			call setline(startline, new_line)
 		endif
@@ -43,48 +44,28 @@ function wikimemo#New(...)
 		let title = input("Title: ")
 	endif
 
-	call s:newWikiNote(wiki_dir, title)
+	call s:newWikiNote(wiki_dir, note_id, title)
 endfunction
 
 " Given a valid wiki directory and a note name relative to the root of the
 " directory, creates a new note with the given title if it doesn't already
 " exist.
-function s:newWikiNote(wiki_dir, title)
-	let name = a:title
-	if name =~ '\d\{4\}_\d\{2\}_\d\{2\}'
-		let note_name = printf("journals/%s", name)
-	else
-		" logseq replaces '/' in the name with '.'.
-		let name = substitute(name, '/', '.', 'g')
-		let note_name = printf("pages/%s", name)
-	end
+function s:newWikiNote(wiki_dir, note_id, title)
+	" TODO: validate title
 
+	let note_name = printf("%s %s", a:note_id, a:title)
 	let wiki_index = a:wiki_dir . '/index.md'
-	let link = vimwiki#base#resolve_link(note_name, wiki_index)
-	let already_exists = !empty(glob(link.filename))
 
-	call vimwiki#base#open_link(':e ', note_name . '.md', wiki_index)
+	call vimwiki#base#open_link(':e ', note_name, wiki_index)
+endfunction
 
-	if already_exists
-		return
-	end
-
-	" If this is a new file and the name of the file does not
-	" match the title provided by the user, or it contains a '.',
-	" add a 'title::' propery.
-	if name != a:title || a:title =~ '\.'
-		call append(line('1'),
-			\ [ printf('title:: %s', a:title),
-			\ ])
-	end
-
-	exec 'normal G'
-	startinsert!
+function s:generateMemoID()
+	return strftime('%Y%m%d%H%M')
 endfunction
 
 " Creates and opens a new wiki page with the given title.
 function wikimemo#NewWithTitle(title)
-	call s:newWikiNote(wikimemo#CurrentWikiDir(), a:title)
+	call s:newWikiNote(wikimemo#CurrentWikiDir(), s:generateMemoID(), a:title)
 endfunction
 
 " Returns the path to the current wiki directory, or the default directory if
