@@ -45,6 +45,7 @@ Plug 'rust-lang/rust.vim'
 Plug 'solarnz/thrift.vim', {'for': 'thrift'}
 Plug 'stacked-git/stgit', {'rtp': 'contrib/vim'}
 Plug 'vimwiki/vimwiki'
+Plug 'ziglang/zig.vim'
 
 " Git {{{2
 Plug 'iberianpig/tig-explorer.vim'
@@ -511,6 +512,7 @@ local default_lsps = {
 	'clojure_lsp',
 	'hie',
 	'pylsp',
+	'zls',
 }
 
 for _, server in pairs(default_lsps) do
