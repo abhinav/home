@@ -714,9 +714,6 @@ lua << EOF
 setup_lsp('rust_analyzer', {
 	settings = {
 		['rust-analyzer'] = {
-			assist = {
-				importGranularity = "module",
-			},
 			checkOnSave = {
 				command = "clippy",
 			},
