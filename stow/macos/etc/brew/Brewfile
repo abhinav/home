@@ -10,6 +10,8 @@ brew "exa"        # > ls
 brew "go"
 brew "hyperfine"  # CLI benchmarks
 brew "jq"         # JSON munging
+brew "gron"       # JSON grepping
+brew "jless"      # JSON reading
 brew "pandoc"
 brew "pv"
 brew "ripgrep"    # > grep
