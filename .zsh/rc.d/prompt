@@ -11,7 +11,7 @@ if [ "$ITERM_PROFILE" = "Presentation" ]; then
     return
 fi
 
-local ret_status="%(?:%{$fg_bold[green]%}➜ :%{$fg_bold[red]%}➜ %s)"
+local ret_status="%(?:%{$fg_bold[green]%}#:%{$fg_bold[red]%}#%s)"
 
 _GITPROMPT=$(command -v gitprompt)
 if [ -z "$_GITPROMPT" ]; then
@@ -20,5 +20,5 @@ else
 	_GITPROMPT="$_GITPROMPT zsh"
 fi
 
-PROMPT='%{$fg_bold[white]%}%M%{$reset_color%} ${ret_status}%{$fg_bold[green]%}%p %{$fg[cyan]%}%~ %{$reset_color%}$($_GITPROMPT)
+PROMPT='${ret_status}%{$fg_bold[green]%} %{$fg[cyan]%}%~ %{$reset_color%}$($_GITPROMPT)
 %{$fg[blue]%}%% %{$reset_color%}'
