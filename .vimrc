@@ -655,6 +655,9 @@ let_g('go_', {
 	def_mapping_enabled = 0,
 	code_completion_enabled = 0,
 	doc_keywordprg_enabled = 0,
+	-- Don't use vim-go for format/imports/lint on save.
+	fmt_autosave = 0,
+	imports_autosave = 0,
 	metalinter_autosave_enabled = {},
 	gopls_enabled = 0,
 	term_enabled = 1,
