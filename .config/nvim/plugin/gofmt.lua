@@ -1,6 +1,6 @@
 -- Reformat and organize imports on save.
 
-function GoFormatAndImports(wait_ms)
+local goFormatAndImports = function(wait_ms)
 	vim.lsp.buf.formatting_sync(nil, wait_ms)
 
 	local params = vim.lsp.util.make_range_params()
@@ -17,9 +17,9 @@ function GoFormatAndImports(wait_ms)
 	end
 end
 
-vim.cmd([[
-augroup GoFormatAndImports
-	autocmd!
-	autocmd BufWritePre *.go lua GoFormatAndImports(3000)
-augroup end
-]])
+vim.api.nvim_create_autocmd("BufWritePre", {
+	pattern = "*.go",
+	callback = function(args)
+		goFormatAndImports(3000)
+	end,
+})

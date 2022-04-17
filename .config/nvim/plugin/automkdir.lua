@@ -4,9 +4,12 @@
 local uri_re = vim.regex([[\v^\w+\:\/]])
 local uv = vim.loop
 
-function _G.automkdir(file, buf)
-  	-- skip non-standard buffers and URIs.
-  	local btype = vim.api.nvim_buf_get_option(buf, 'buftype')
+local automkdir = function(args)
+	local file = args.file
+	local buf = args.buf
+
+	-- skip non-standard buffers and URIs.
+	local btype = vim.api.nvim_buf_get_option(buf, 'buftype')
 	if btype ~= '' or uri_re:match_str(file) then
 		return
 	end
@@ -17,9 +20,7 @@ function _G.automkdir(file, buf)
 	end
 end
 
-vim.cmd([[
-augroup Automkdir
-	autocmd!
-	autocmd BufWritePre * call v:lua.automkdir(expand('<afile>'), +expand('<abuf>'))
-augroup end
-]])
+vim.api.nvim_create_autocmd("BufWritePre", {
+	pattern = "*",
+	callback = automkdir,
+})
