@@ -12,3 +12,13 @@
 !/ripgrep
 !/tig
 !/alacritty
+
+{{- if eq .chezmoi.os "linux" }}
+# Add fonts alias on Linux.
+!/fontconfig
+{{- end }}
+
+{{- if eq .chezmoi.os "darwin" }}
+# Custom key bindings.
+!/karabiner
+{{- end }}

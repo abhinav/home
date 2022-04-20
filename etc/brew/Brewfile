@@ -6,6 +6,7 @@ tap "abhinav/tap"
 
 brew "bat"        # > cat
 brew "curl"
+brew "chezmoi"    # dotfile management
 brew "exa"        # > ls
 brew "go"
 brew "hyperfine"  # CLI benchmarks
@@ -17,7 +18,6 @@ brew "pv"
 brew "ripgrep"    # > grep
 brew "shellcheck" # lint .sh
 brew "shfmt"
-brew "stow"
 brew "tmux"
 brew "watch"
 

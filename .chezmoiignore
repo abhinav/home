@@ -1,9 +1,6 @@
 # Ignore everything by default and whitelist things explicitly.
 /*
 
-!.gitignore
-!.gitmodules
-
 # XDG home
 !/.config
 
@@ -31,15 +28,6 @@
 !/.gitconfig.d/
 /.gitconfig.d/local
 
-# GHC
-!.ghci
-
-# spacemacs
-!/.spacemacs.d/
-
-# stack
-!/.stack
-
 # tig
 !.tigrc
 
@@ -49,20 +37,10 @@
 
 # [n]vim
 !.vimrc
-!/.config/nvim
 
 # restack
 !/.restack
 
-# ripgrep
-!/.ripgreprc
-
-# TaskWarrior
-!/.taskrc
-!/.taskrc.d/
-!/.task/
-/.task/*
-!/.task/hooks
-
-# Don't opt out system-specific configurations.
-!/stow
+{{- if eq .chezmoi.os "darwin" }}
+!/.hammerspoon
+{{- end }}
