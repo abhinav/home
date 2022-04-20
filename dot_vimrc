@@ -29,6 +29,7 @@ Plug 'tversteeg/registers.nvim'
 Plug 'vim-scripts/visualrepeat'
 
 " Filetype-specific {{{2
+Plug 'alker0/chezmoi.vim'
 Plug 'cappyzawa/starlark.vim'
 Plug 'cespare/vim-toml'
 Plug 'chrisbra/csv.vim'
