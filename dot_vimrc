@@ -678,7 +678,7 @@ if vim.env.VIM_GOPLS_MEMORY_MODE then
 	gopls_options.memoryMode = vim.env.VIM_GOPLS_MEMORY_MODE
 end
 
-if not disabled_gopls then
+if not disable_gopls then
 	setup_lsp('gopls', {
 		cmd = {'gopls', '-remote=auto'},
 		init_options = gopls_options,
