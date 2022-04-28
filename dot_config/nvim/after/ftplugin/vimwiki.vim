@@ -17,6 +17,10 @@ unmap <buffer> <leader>wn
 unmap <buffer> =
 let &l:equalprg = 'pandoc -f markdown -t markdown --reference-links --markdown-heading=atx --columns=' . &textwidth
 
+" Drop other unused bindings:
+"  -  decrease heading level
+unmap <buffer> -
+
 " Redefine VimwikiFollowLink so that <CR> on text that isn't a link doesn't
 " try to convert it into a link. Instead, act like <CR> in normal mode, moving
 " to the next line.
