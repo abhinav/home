@@ -755,7 +755,6 @@ let_g('vimwiki_', {
 	ext2syntax    = {['.md'] = 'markdown'},
 	autowriteall  = 1,
 	auto_chdir    = 1,
-	folding       = 'expr',
 	use_mouse     = 1,
 	listsyms      = ' x',
 })
