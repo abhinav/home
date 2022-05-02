@@ -1,1 +1,1 @@
-set nonu nornu
+set nonu nornu spell
