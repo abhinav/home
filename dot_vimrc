@@ -699,6 +699,11 @@ lua << EOF
 setup_lsp('rust_analyzer', {
 	settings = {
 		['rust-analyzer'] = {
+			completion = {
+				postfix = {
+					enable = false,
+				},
+			},
 			checkOnSave = {
 				command = "clippy",
 			},
