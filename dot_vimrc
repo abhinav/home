@@ -18,6 +18,7 @@ Plug 'SirVer/ultisnips'
 Plug 'andymass/vim-matchup'
 Plug 'junegunn/vim-easy-align'
 Plug 'justinmk/vim-sneak'
+Plug 'mg979/vim-visual-multi'
 Plug 'machakann/vim-highlightedyank'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'tpope/vim-abolish'
@@ -581,7 +582,7 @@ nnoremap <silent> <C-K> :TmuxNavigateUp<CR>
 nnoremap <silent> <C-L> :TmuxNavigateRight<CR>
 nnoremap <silent> <C-H> :TmuxNavigateLeft<CR>
 
-" trouble {{{2 "
+" trouble {{{2
 lua << EOF
 local diagnostic_signs = {
 	Error = '🚫',
@@ -623,6 +624,16 @@ require('trouble').setup {
 -- Signs in the gutter + trouble is enough.
 vim.diagnostic.config({
 	virtual_text = true,
+})
+EOF
+
+" vim-visual-multi {{{2
+lua << EOF
+let_g('VM_', {
+	maps = {
+		['Add Cursor Down'] = '<M-S-j>',
+		['Add Cursor Up'] = '<M-S-k>',
+	},
 })
 EOF
 
