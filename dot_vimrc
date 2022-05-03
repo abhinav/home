@@ -312,7 +312,7 @@ cmp.setup {
 			vim.fn["UltiSnips#Anon"](args.body)
 		end,
 	},
-	mapping = {
+	mapping = cmp.mapping.preset.insert({
 		-- Ctrl-u/d: scroll docs of completion item if available.
 		['<C-u>'] = cmp.mapping(cmp.mapping.scroll_docs(-4), { 'i', 'c' }),
 		['<C-d>'] = cmp.mapping(cmp.mapping.scroll_docs(4), { 'i', 'c' }),
@@ -354,7 +354,7 @@ cmp.setup {
 
 		-- Enter: confirm completion
 		['<CR>'] = cmp.mapping.confirm({select = false}),
-	},
+	}),
 	sources = cmp.config.sources({
 		{name = 'nvim_lsp'},
 		{ name = 'nvim_lsp_signature_help' },
@@ -364,9 +364,6 @@ cmp.setup {
 		{name = 'buffer'},
 		{name = 'tmux'},
 	}),
-	experimental = {
-		ghost_text  = true,
-	},
 }
 EOF
 
