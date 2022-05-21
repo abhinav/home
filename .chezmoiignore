@@ -43,6 +43,7 @@
 
 # fzf
 !/.fzf
+/.fzf/bin/fzf
 
 {{- if eq .chezmoi.os "darwin" }}
 !/.hammerspoon
