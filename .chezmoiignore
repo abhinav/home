@@ -41,6 +41,9 @@
 # restack
 !/.restack
 
+# fzf
+!/.fzf
+
 {{- if eq .chezmoi.os "darwin" }}
 !/.hammerspoon
 {{- end }}

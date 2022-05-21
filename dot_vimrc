@@ -66,12 +66,14 @@ Plug 'neovim/nvim-lspconfig'
 " Navigation and window management {{{2
 Plug 'camspiers/lens.vim'
 Plug 'chrisbra/NrrwRgn'
-Plug 'junegunn/fzf', {'dir': '~/.fzf', 'do': './install --all --no-update-rc'}
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/goyo.vim', {'on': 'Goyo'}
 Plug 'justinmk/vim-dirvish'
 Plug 'mhinz/vim-grepper'
 Plug 'rbgrouleff/bclose.vim'
+
+" fzf is managed by chezmoi.
+set rtp+=~/.fzf
 
 " Terminal integration {{{2
 Plug 'christoomey/vim-tmux-navigator'
