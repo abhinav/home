@@ -3,4 +3,5 @@ set -euo pipefail
 IFS=$'\n\t'
 
 echo "Building tmux-fastcopy v{{ .fastcopyVersion }}"
+rm tmux-fastcopy/bin/tmux-fastcopy
 make -C tmux-fastcopy bin/tmux-fastcopy
