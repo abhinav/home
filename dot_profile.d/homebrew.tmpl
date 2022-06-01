@@ -23,13 +23,17 @@ setup-homebrew() {
 	export INFOPATH
 }
 
+{{ if eq .chezmoi.os "darwin" -}}
 if [[ -d /opt/homebrew ]]; then
 	HOMEBREW_PREFIX=/opt/homebrew
-elif [[ -d /usr/local/Homebrew ]]; then
+else [[ -d /usr/local/Homebrew ]]; then
 	HOMEBREW_PREFIX=/usr/local
-elif [[ -d /home/linuxbrew/.linuxbrew ]]; then
+fi
+{{- else if eq .chezmoi.os "linux" -}}
+if [[ -d /home/linuxbrew/.linuxbrew ]]; then
 	HOMEBREW_PREFIX=/home/linuxbrew/.linuxbrew
 fi
+{{- end }}
 
 if [[ -n "$HOMEBREW_PREFIX" ]]; then
 	setup-homebrew
