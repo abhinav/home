@@ -26,7 +26,7 @@ setup-homebrew() {
 {{ if eq .chezmoi.os "darwin" -}}
 if [[ -d /opt/homebrew ]]; then
 	HOMEBREW_PREFIX=/opt/homebrew
-else [[ -d /usr/local/Homebrew ]]; then
+elif [[ -d /usr/local/Homebrew ]]; then
 	HOMEBREW_PREFIX=/usr/local
 fi
 {{- else if eq .chezmoi.os "linux" -}}
