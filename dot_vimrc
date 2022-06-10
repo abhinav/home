@@ -657,8 +657,6 @@ let_g('go_', {
 	term_enabled = 1,
 	term_reuse = 1,
 	term_mode = "split",
-	template_file = vim.env.HOME .. "/.config/vim-go/main.go",
-	template_test_file = vim.env.HOME .. "/.config/vim-go/test.go",
 })
 
 if vim.env.VIM_GO_BIN_PATH then
