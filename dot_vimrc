@@ -35,7 +35,6 @@ Plug 'cappyzawa/starlark.vim'
 Plug 'cespare/vim-toml'
 Plug 'chrisbra/csv.vim'
 Plug 'direnv/direnv.vim'
-Plug 'fatih/vim-go'
 Plug 'habamax/vim-asciidoctor'
 Plug 'hynek/vim-python-pep8-indent'
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
@@ -642,27 +641,6 @@ EOF
 "  File Types {{{1
 
 " go {{{2
-
-" vim-go {{{3
-lua <<EOF
-let_g('go_', {
-	def_mapping_enabled = 0,
-	code_completion_enabled = 0,
-	doc_keywordprg_enabled = 0,
-	-- Don't use vim-go for format/imports/lint on save.
-	fmt_autosave = 0,
-	imports_autosave = 0,
-	metalinter_autosave_enabled = {},
-	gopls_enabled = 0,
-	term_enabled = 1,
-	term_reuse = 1,
-	term_mode = "split",
-})
-
-if vim.env.VIM_GO_BIN_PATH then
-	vim.g.go_bin_path = vim.env.VIM_GO_BIN_PATH
-end
-EOF
 
 " ale {{{3
 lua ale.linters.go = {}
