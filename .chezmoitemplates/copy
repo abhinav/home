@@ -1,5 +1,9 @@
 {{ if eq .chezmoi.os "darwin" -}}
 	pbcopy
 {{- else if eq .chezmoi.os "linux" -}}
-	wl-copy
+	{{ if lookPath "wl-copy" -}}
+		wl-copy
+	{{- else -}}
+		tmux load-buffer -w -
+	{{- end }}
 {{- end -}}
