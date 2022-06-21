@@ -45,6 +45,9 @@
 !/.fzf
 /.fzf/bin/fzf
 
+# Third-party packages managed by chezmoi.
+!/pkg
+
 {{- if eq .chezmoi.os "darwin" }}
 !/.hammerspoon
 {{- end }}
