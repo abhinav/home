@@ -2,10 +2,10 @@ bind main <Ctrl-R> <git rebase --autosquash -i %(commit)
 bind main = !git commit --fixup=%(commit)
 
 # Copy commit hash to clipboard.
-bind main Y +bash -c "printf '%s' %(commit) | tee >(pbcopy)"
+bind main Y +bash -c "printf '%s' %(commit) | tee >({{ template "copy" . }})"
 
 # Copy commit or file name to clipboard.
-bind diff Y +bash -c "( [ -n '%(file)' ] && echo '%(file)' || echo '%(commit)' ) | tee >(pbcopy)"
+bind diff Y +bash -c "( [ -n '%(file)' ] && echo '%(file)' || echo '%(commit)' ) | tee >({{ template "copy" . }})"
 
 # Branch checkouts.
 bind main b !git checkout -b "%(prompt Enter branch name: )" %(commit)

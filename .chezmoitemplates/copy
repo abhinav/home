@@ -1,0 +1,5 @@
+{{ if eq .chezmoi.os "darwin" -}}
+	pb-copy
+{{- else if eq .chezmoi.os "linux" -}}
+	wl-copy
+{{- end -}}
