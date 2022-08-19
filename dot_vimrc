@@ -21,6 +21,7 @@ Plug 'justinmk/vim-sneak'
 Plug 'mg979/vim-visual-multi'
 Plug 'machakann/vim-highlightedyank'
 Plug 'ntpeters/vim-better-whitespace'
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-repeat'
@@ -571,6 +572,23 @@ xmap t <Plug>Sneak_t
 xmap T <Plug>Sneak_T
 omap t <Plug>Sneak_t
 omap T <Plug>Sneak_T
+
+" tree-sitter {{{2
+lua << EOF
+require 'nvim-treesitter.configs'.setup {
+	ensure_installed = {
+		"bash", "c", "cpp", "css", "dot", "gitignore", "go", "gomod",
+		"gowork", "graphql", "html", "java", "javascript", "json",
+		"lua", "make", "markdown", "markdown_inline", "perl", "php",
+		"proto", "python", "regex", "rust", "ruby", "sql", "toml",
+		"typescript", "vim", "yaml", "zig",
+	},
+	auto_install = true,
+	highlight = {
+		enable = true,
+	},
+}
+EOF
 
 " tmux-navigator {{{2
 
