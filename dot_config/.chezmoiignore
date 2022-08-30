@@ -12,6 +12,7 @@
 !/ripgrep
 !/tig
 !/alacritty
+!/espanso
 
 {{- if eq .chezmoi.os "linux" }}
 # Add fonts alias on Linux.

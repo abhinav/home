@@ -1,0 +1,8 @@
+matches:
+  - trigger: \\today
+    replace: "[[{{isodate}}]]"
+    vars:
+      - name: isodate
+        type: date
+        params:
+          format: "%Y-%m-%d"

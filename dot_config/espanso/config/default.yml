@@ -1,0 +1,5 @@
+# Alt-Space is used for tmux.
+search_shortcut: ALT+SHIFT+SPACE
+
+extra_includes:
+  - "../match/_date.yml"
