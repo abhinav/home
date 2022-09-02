@@ -29,6 +29,7 @@ Plug 'tpope/vim-sleuth'
 Plug 'tpope/vim-surround'
 Plug 'tversteeg/registers.nvim'
 Plug 'vim-scripts/visualrepeat'
+Plug 'wsdjeg/vim-fetch'
 
 " Filetype-specific {{{2
 Plug 'alker0/chezmoi.vim'
