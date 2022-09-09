@@ -2,6 +2,7 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-echo "Building tmux-fastcopy v{{ .fastcopyVersion }}"
+# CHANGELOG: {{ include (joinPath .chezmoi.homeDir  ".tmux/plugins/tmux-fastcopy/CHANGELOG.md") | sha256sum }}
+echo "Building tmux-fastcopy {{ template "fastcopyVersion" }}"
 rm tmux-fastcopy/bin/tmux-fastcopy
 make -C tmux-fastcopy bin/tmux-fastcopy

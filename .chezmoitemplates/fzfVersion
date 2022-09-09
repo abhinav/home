@@ -1,0 +1,1 @@
+{{- (gitHubLatestRelease "junegunn/fzf").TagName -}}

@@ -1,0 +1,1 @@
+{{- (gitHubLatestRelease "abhinav/tmux-fastcopy").TagName -}}
