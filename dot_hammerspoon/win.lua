@@ -40,3 +40,21 @@ local screenMovers = {'left', 'right'}
 for k, dir in pairs(screenMovers) do
     hs.hotkey.bind({'ctrl', 'alt', 'shift'}, dir, screenMover(dir))
 end
+
+-- move to a different space
+local function moveWindowToSpace(offset)
+    return function()
+        local allSpaces = hs.spaces.spacesForScreen(nil)
+        local spaceIdx = hs.fnutils.indexOf(allSpaces, hs.spaces.focusedSpace())
+        local targetSpace = allSpaces[spaceIdx + offset]
+        if targetSpace ~= nil then
+            hs.spaces.moveWindowToSpace(hs.window.focusedWindow(), targetSpace)
+            hs.spaces.gotoSpace(targetSpace)
+        end
+    end
+end
+
+local spacers = {h = -1, l = 1}
+for k, offset in pairs(spacers) do
+    hs.hotkey.bind({'alt', 'shift'}, k, moveWindowToSpace(offset))
+end
