@@ -40,6 +40,7 @@ Plug 'direnv/direnv.vim'
 Plug 'habamax/vim-asciidoctor'
 Plug 'hynek/vim-python-pep8-indent'
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
+Plug 'NoahTheDuke/vim-just'
 Plug 'rust-lang/rust.vim'
 Plug 'solarnz/thrift.vim', {'for': 'thrift'}
 Plug 'stacked-git/stgit', {'rtp': 'contrib/vim'}
