@@ -1,9 +1,13 @@
 -- Reformat and organize imports on save.
 
 local goFormatAndImports = function(wait_ms)
-	vim.lsp.buf.format({
-		timeout_ms = wait_ms,
-	})
+	if vim.lsp.buf.format == nil then
+		vim.lsp.buf.formatting_sync(nil, wait_ms)
+	else
+		vim.lsp.buf.format({
+			timeout_ms = wait_ms,
+		})
+	end
 
 	local params = vim.lsp.util.make_range_params()
 	params.context = {only = {"source.organizeImports"}}
