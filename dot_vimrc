@@ -537,6 +537,9 @@ let g:netrw_liststyle = 3
 
 " oscyank {{{2
 
+" https://github.com/ojroques/vim-oscyank/issues/26#issuecomment-1179722561
+let g:oscyank_term = 'default'
+
 " Set up a hook to send an OSC52 code if the system register is used.
 augroup OSCHook
 	autocmd!
