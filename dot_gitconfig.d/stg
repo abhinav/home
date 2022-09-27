@@ -1,4 +1,4 @@
 [stgit.alias]
-	ci = stg-ci
+	ci = new --refresh --index --diff
 [stgit.series]
 	description = true
