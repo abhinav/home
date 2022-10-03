@@ -556,12 +556,17 @@ endfunction
 " registers {{{2
 
 lua <<EOF
-let_g('registers_', {
-	-- Wait 500 milliseconds before registers popup.
-	delay = 500,
+local registers = require('registers')
+registers.setup {
 	hide_only_whitespace = 1,
-	window_border = 'shadow',
-})
+	window = {border = 'shadow'},
+	show_empty = false,
+	bind_keys = {
+		normal = registers.show_window({mode = "motion", delay = 0.5}),
+		visual = registers.show_window({mode = "motion", delay = 0.5}),
+		insert = registers.show_window({mode = "insert", delay = 0.5}),
+	},
+}
 EOF
 
 " sneak {{{2
