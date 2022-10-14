@@ -8,6 +8,7 @@
 !/vim-go
 
 # Self explanatory
+!/atuin
 !/bat
 !/ripgrep
 !/tig
