@@ -768,15 +768,18 @@ if vim.env.VIMWIKI_PATH then
 end
 
 let_g('vimwiki_', {
-	list          = vimwiki_list,
-	hl_headers    = 1,
-	hl_cb_checked = 1,
-	ext2syntax    = {['.md'] = 'markdown'},
-	autowriteall  = 1,
-	auto_chdir    = 1,
-	use_mouse     = 1,
-	listsyms      = ' x',
+	list           = vimwiki_list,
+	hl_headers     = 1,
+	hl_cb_checked  = 1,
+	ext2syntax     = {['.md'] = 'markdown'},
+	autowriteall   = 1,
+	auto_chdir     = 1,
+	use_mouse      = 1,
+	listsyms       = ' x',
+	table_auto_fmt = 0, -- too many false positives
+	conceallevel   = 0, -- don't conceal text
 })
+
 EOF
 
 " ale {{{3
