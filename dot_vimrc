@@ -64,6 +64,7 @@ Plug 'dense-analysis/ale'
 Plug 'folke/lsp-colors.nvim'
 Plug 'folke/trouble.nvim'
 Plug 'neovim/nvim-lspconfig'
+Plug 'vim-test/vim-test'
 
 " Navigation and window management {{{2
 Plug 'camspiers/lens.vim'
@@ -663,6 +664,13 @@ let_g('VM_', {
 		['Add Cursor Down'] = '<M-S-j>',
 		['Add Cursor Up'] = '<M-S-k>',
 	},
+})
+EOF
+
+" vim-test {{{2
+lua << EOF
+let_g({
+	['test#strategy'] = 'neovim',
 })
 EOF
 
