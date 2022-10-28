@@ -692,6 +692,10 @@ local gopls_options = {
 	staticcheck = true,
 }
 
+if vim.env.VIM_GOPLS_BUILD_TAGS then
+	gopls_options.buildFlags = {'-tags', vim.env.VIM_GOPLS_BUILD_TAGS}
+end
+
 -- Support overriding memory mode with an environment variable.
 if vim.env.VIM_GOPLS_MEMORY_MODE then
 	gopls_options.memoryMode = vim.env.VIM_GOPLS_MEMORY_MODE
