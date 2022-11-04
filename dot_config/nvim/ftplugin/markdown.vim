@@ -1,7 +1,7 @@
-if exists('b:markdown_extra_loaded')
+if exists("b:did_markdown_custom")
 	finish
 endif
-let b:markdown_extra_loaded = 1
+let b:did_markdown_custom = 1
 
 setlocal nolist nonumber norelativenumber
 setlocal shiftwidth=4 tabstop=4 expandtab
@@ -12,14 +12,14 @@ setlocal wrap linebreak
 nnoremap <buffer> j gj
 nnoremap <buffer> k gk
 
-" Don't automatically wrap lines while typing.
-setlocal formatoptions+=l
-
 " For long lines that are part of lists, match indentation of the list item.
 setlocal breakindent
 
 " Let autowrite do its thing.
 setlocal nohidden
+
+" Don't automatically wrap lines while typing.
+setlocal formatoptions+=l
 
 " Treat blockquotes as comments so gq formats them nicely.
 setlocal comments=n:>
