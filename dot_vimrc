@@ -732,6 +732,13 @@ ale.linters.haskell = {'hie', 'stylish-haskell', 'hlint'}
 ale.haskell_hie_executable = 'hie-wrapper'
 EOF
 
+" markdown {{{2
+lua << EOF
+let_g('pandoc#syntax#', {
+	['conceal#use'] = 0,
+})
+EOF
+
 " rust {{{2
 let g:rustfmt_autosave = 1
 
