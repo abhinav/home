@@ -9,6 +9,7 @@ Plug 'hrsh7th/cmp-buffer'
 Plug 'hrsh7th/cmp-cmdline'
 Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'hrsh7th/cmp-nvim-lsp-signature-help'
+Plug 'hrsh7th/cmp-omni'
 Plug 'hrsh7th/cmp-path'
 Plug 'hrsh7th/nvim-cmp'
 Plug 'quangnguyen30192/cmp-nvim-ultisnips'
@@ -40,11 +41,12 @@ Plug 'direnv/direnv.vim'
 Plug 'habamax/vim-asciidoctor'
 Plug 'hynek/vim-python-pep8-indent'
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
+Plug 'lervag/wiki.vim'
 Plug 'NoahTheDuke/vim-just'
 Plug 'rust-lang/rust.vim'
 Plug 'solarnz/thrift.vim', {'for': 'thrift'}
 Plug 'stacked-git/stgit', {'rtp': 'contrib/vim'}
-Plug 'vimwiki/vimwiki'
+Plug 'vim-pandoc/vim-pandoc-syntax'
 Plug 'ziglang/zig.vim'
 
 " Git {{{2
@@ -280,7 +282,6 @@ ale = {
 	lint_on_text_changed   = 0,
 	emit_conflict_warnings = 0,
 	linters                = {},
-	linter_aliases         = {},
 }
 EOF
 
@@ -363,7 +364,7 @@ cmp.setup {
 	}),
 	sources = cmp.config.sources({
 		{name = 'nvim_lsp'},
-		{ name = 'nvim_lsp_signature_help' },
+		{name = 'nvim_lsp_signature_help'},
 		{name = 'ultisnips'},
 	}, {
 		{name = 'path'},
@@ -371,6 +372,20 @@ cmp.setup {
 		{name = 'tmux'},
 	}),
 }
+
+cmp.setup.filetype('markdown', {
+	sources = cmp.config.sources({
+		{
+			name = 'omni',
+			trigger_characters = {"[["},
+			keyword_length = 0,
+			keyword_pattern = "\\w+",
+		},
+		{name = 'ultisnips'},
+		{name = 'buffer'},
+		{name = 'tmux'},
+	}),
+})
 EOF
 
 " UltiSnips {{{3
@@ -529,7 +544,7 @@ EOF
 lua <<EOF
 let_g('mkdp_', {
 	auto_close = 0,
-	filetypes = {'markdown', 'vimwiki'},
+	filetypes = {'markdown'},
 })
 EOF
 
@@ -752,50 +767,19 @@ setup_lsp('tsserver', {
 })
 EOF
 
-" vimwiki {{{2
-
+" wiki.vim {{{2
 lua <<EOF
--- accepts an optional table of options.
-local function buildWiki(path, opts)
-	opts = opts or {}
-	return vim.tbl_extend('force', {
-		syntax      = 'markdown',
-		ext         = '.md',
-		auto_toc    = 1,
-		list_margin = 0,
-		path        = path,
-	}, opts)
-end
-
--- Use ~/notes as the wiki location by default.
-local vimwiki_list = {
-	buildWiki('~/notes', {
-		index = 'Home',
-	}),
-}
-
--- Support overriding by setting VIMWIKI_PATH.
-if vim.env.VIMWIKI_PATH then
-	table.insert(vimwiki_list, 1, buildWiki(vim.env.VIMWIKI_PATH))
-end
-
-let_g('vimwiki_', {
-	list           = vimwiki_list,
-	hl_headers     = 1,
-	hl_cb_checked  = 1,
-	ext2syntax     = {['.md'] = 'markdown'},
-	autowriteall   = 1,
-	auto_chdir     = 1,
-	use_mouse      = 1,
-	listsyms       = ' x',
-	table_auto_fmt = 0, -- too many false positives
-	conceallevel   = 0, -- don't conceal text
+let_g('wiki_', {
+	filetypes = {'md'},
+	index_name = 'README',
+	link_extension = '.md',
+	link_target_type = 'md',
+	mappings_use_defaults = 'local',
+	mappings_local = {
+		['<plug>(wiki-link-follow)'] = '<leader><CR>',
+	},
 })
-
 EOF
-
-" ale {{{3
-lua ale.linter_aliases.vimwiki = {'markdown'}
 
 " After {{{1
 
