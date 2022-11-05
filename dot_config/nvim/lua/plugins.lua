@@ -31,7 +31,6 @@ return require('packer').startup(function(use)
 	use 'junegunn/vim-easy-align'
 	use 'justinmk/vim-sneak'
 	use 'mg979/vim-visual-multi'
-	use 'machakann/vim-highlightedyank'
 	use 'ntpeters/vim-better-whitespace'
 	use {'nvim-treesitter/nvim-treesitter', run = ':TSUpdate'}
 	use 'tpope/vim-abolish'
