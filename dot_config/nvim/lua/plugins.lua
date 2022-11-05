@@ -6,6 +6,10 @@ vim.cmd([[
 	augroup end
 ]])
 
+-- Disable netrw.
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
 return require('packer').startup(function(use)
 	use 'wbthomason/packer.nvim'
 
