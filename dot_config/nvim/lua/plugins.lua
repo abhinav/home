@@ -57,7 +57,6 @@ return require('packer').startup(function(use)
 	use 'lervag/wiki.vim'
 	use 'NoahTheDuke/vim-just'
 	use 'rust-lang/rust.vim'
-	use {'solarnz/thrift.vim', ft = {'thrift'}}
 	use {'stacked-git/stgit', rtp = 'contrib/vim'}
 	use 'vim-pandoc/vim-pandoc-syntax'
 	use 'ziglang/zig.vim'
