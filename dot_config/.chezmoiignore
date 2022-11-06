@@ -14,6 +14,7 @@
 !/tig
 !/alacritty
 !/espanso
+!/git
 
 {{- if eq .chezmoi.os "linux" }}
 # Add fonts alias on Linux.
