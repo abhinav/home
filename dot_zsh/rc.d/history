@@ -1,8 +1,8 @@
 #!/bin/zsh
 
 HISTFILE="${ZDOTDIR:-$HOME}/.zhistory"
-HISTSIZE=10000  # Number of events to save in internal history
-SAVEHIST=10000  # Number of events to save in history file
+HISTSIZE=10000000  # Number of events to save in internal history
+SAVEHIST=10000000  # Number of events to save in history file
 
 setopt EXTENDED_HISTORY       # Write in ':start:elapsed;command' format
 setopt INC_APPEND_HISTORY     # Write history file immediately, not on exit
