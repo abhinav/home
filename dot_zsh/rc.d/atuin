@@ -1,9 +1,0 @@
-#!/bin/zsh
-
-# Don't want atuin's up/down widgets.
-export ATUIN_NOBIND=1
-if command -v atuin &>/dev/null; then
-	eval "$(atuin init zsh)"
-	bindkey '^r' _atuin_search_widget
-fi
-unset ATUIN_NOBIND

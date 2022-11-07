@@ -19,7 +19,6 @@ source ~/.zsh/rc.d/highlighting
 source ~/.zsh/rc.d/autosuggestions
 source ~/.zsh/rc.d/history
 source ~/.zsh/rc.d/fzf
-source ~/.zsh/rc.d/atuin # must be after fzf
 source ~/.zsh/rc.d/netlify
 
 source ~/.aliases
