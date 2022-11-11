@@ -463,22 +463,24 @@ EOF
 let g:netrw_liststyle = 3
 
 " oscyank {{{2
+lua <<EOF
 
-" https://github.com/ojroques/vim-oscyank/issues/26#issuecomment-1179722561
-let g:oscyank_term = 'default'
+let_g('oscyank_', {
+	-- https://github.com/ojroques/vim-oscyank/issues/26#issuecomment-1179722561
+	term = 'default',
+})
 
-" Set up a hook to send an OSC52 code if the system register is used.
-augroup OSCHook
-	autocmd!
-
-	autocmd TextYankPost * call s:SendOSC52(v:event)
-augroup END
-
-function! s:SendOSC52(event) " {{{3
-	if a:event.operator is 'y' && a:event.regname is '+'
-		OSCYankReg +
-	endif
-endfunction
+-- Set up a hook to send an OSC52 code if the system register is used.
+vim.api.nvim_create_autocmd("TextYankPost", {
+	pattern = "*",
+	callback = function(args)
+		 local ev = vim.v.event
+		 if ev.operator == 'y' and ev.regname == '+' then
+			  vim.cmd.OSCYankReg('+')
+		 end
+	end,
+})
+EOF
 
 " registers {{{2
 
