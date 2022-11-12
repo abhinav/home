@@ -28,7 +28,7 @@ zstyle ':completion:*' matcher-list '' 'm:{[:lower:]}={[:upper:]}' 'm:{[:lower:]
 zstyle ':completion:*' menu select=1
 zstyle ':completion:*' original true
 zstyle ':completion:*' select-prompt '%SScrolling active: current selection at %p%s'
-zstyle :compinstall filename '/Users/abg/.zsh/rc.d/completion'
+zstyle :compinstall filename "$HOME/.zsh/rc.d/completion"
 
 autoload -Uz compinit
 compinit
