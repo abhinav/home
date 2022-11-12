@@ -22,7 +22,6 @@ zstyle ':completion:*' file-sort name
 zstyle ':completion:*' ignore-parents parent pwd directory
 zstyle ':completion:*:*:-command-:*:*' ignored-patterns '_*'
 zstyle ':completion:*' insert-unambiguous true
-zstyle ':completion:*' special-dirs true
 zstyle ':completion:*' list-colors ''
 zstyle ':completion:*' matcher-list '' 'm:{[:lower:]}={[:upper:]}' 'm:{[:lower:][:upper:]}={[:upper:][:lower:]}' 'r:|[._-]=* r:|=* l:|=*'
 zstyle ':completion:*' menu select=1
