@@ -13,5 +13,3 @@ setopt HIST_FIND_NO_DUPS      # Don't display previously found event
 setopt HIST_IGNORE_SPACE      # Don't record events starting with a space
 setopt HIST_SAVE_NO_DUPS      # Don't write duplicate event to file
 setopt HIST_VERIFY            # Don't execute immediately upon expansion
-
-bindkey '^r' history-incremental-search-backward
