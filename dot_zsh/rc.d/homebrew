@@ -1,0 +1,5 @@
+#!/bin/zsh
+
+if [[ -d "$HOMEBREW_PREFIX/share/zsh/site-functions" ]]; then
+	fpath=("$HOMEBREW_PREFIX/share/zsh/site-functions" $fpath)
+fi

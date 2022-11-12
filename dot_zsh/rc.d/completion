@@ -1,7 +1,5 @@
 #!/bin/zsh
 
-fpath=(/usr/local/share/zsh/site-functions $fpath)
-
 # In the middle of a word, tab completion takes both sides into account.
 setopt COMPLETE_IN_WORD
 
