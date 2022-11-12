@@ -15,10 +15,8 @@ local ret_status="%(?:%{$fg_bold[green]%}#:%{$fg_bold[red]%}#%s)"
 
 _GITPROMPT=$(command -v gitprompt)
 if [ -z "$_GITPROMPT" ]; then
-    _GITPROMPT='echo (gitprompt is not installed)'
-else
-	_GITPROMPT="$_GITPROMPT zsh"
+    _GITPROMPT=true
 fi
 
-PROMPT='${ret_status}%{$fg_bold[green]%} %{$fg[cyan]%}%~ %{$reset_color%}$($_GITPROMPT)
+PROMPT='${ret_status}%{$fg_bold[green]%} %{$fg[cyan]%}%~ %{$reset_color%}$($_GITPROMPT zsh)
 %{$fg[blue]%}%% %{$reset_color%}'
