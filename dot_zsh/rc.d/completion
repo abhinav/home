@@ -5,7 +5,6 @@ setopt COMPLETE_IN_WORD
 
 # Completions plugin
 source ~/.zsh/zsh-completions/zsh-completions.plugin.zsh
-source ~/.zsh/zsh-fzf-tab/fzf-tab.plugin.zsh
 
 # Colored file lists in completion
 if [ -n "$LS_COLORS" ]; then
@@ -21,6 +20,7 @@ bashcompinit
 zstyle ':completion:*' completer _expand _complete _approximate
 zstyle ':completion:*' file-sort name
 zstyle ':completion:*' ignore-parents parent pwd directory
+zstyle ':completion:*:*:-command-:*:*' ignored-patterns '_*'
 zstyle ':completion:*' insert-unambiguous true
 zstyle ':completion:*' list-colors ''
 zstyle ':completion:*' matcher-list '' 'm:{[:lower:]}={[:upper:]}' 'm:{[:lower:][:upper:]}={[:upper:][:lower:]}' 'r:|[._-]=* r:|=* l:|=*'

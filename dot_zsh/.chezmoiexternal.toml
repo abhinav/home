@@ -18,9 +18,3 @@
     exact = true
     stripComponents = 1
     refreshPeriod = "168h" # update weekly
-
-["zsh-fzf-tab"]
-    type = "archive"
-    url = "https://github.com/Aloxaf/fzf-tab/archive/master.tar.gz"
-    stripComponents = 1
-    refreshPeriod = "168h" # update weekly
