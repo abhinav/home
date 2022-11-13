@@ -1,0 +1,80 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+
+format = "# $all"
+
+# No newline between prompts.
+add_newline = false
+
+[character]
+success_symbol = "[%](bold green)"
+error_symbol = "[%](bold red)"
+vimcmd_symbol = "[N](bold green)"
+vimcmd_replace_one_symbol = "[R](bold purple)"
+vimcmd_replace_symbol = "[R](bold purple)"
+vimcmd_visual_symbol = "[V](bold yellow)"
+
+# Don't report container information for ChromeOS.
+[container]
+disabled = true
+
+[git_branch]
+format = '\([$branch(:$remote_branch)]($style)'
+symbol = ""
+style = "bold purple"
+
+[git_commit]
+format = '\([$hash]($style)$tag'
+
+[git_status]
+format = '($ahead_behind)(|[$staged$conflicted](red)[$deleted$renamed$modified](blue)$untracked)\) '
+staged = "●${count}"
+conflicted = "=${count}"
+deleted = "✘${count}"
+renamed = "»${count}"
+modified = "✚${count}"
+untracked = "…"
+ahead = "↑${count}"
+diverged = "↑${ahead_count}↓${behind_count}"
+behind = "↓${count}"
+style = ""
+
+# More Nerd Font symbols:
+# ref: https://starship.rs/presets/nerd-font.html
+[aws]
+symbol = "  "
+
+[c]
+symbol = " "
+
+[directory]
+read_only = " "
+
+[docker_context]
+symbol = " "
+
+[golang]
+symbol = " "
+
+[haskell]
+symbol = " "
+
+[java]
+symbol = " "
+
+[lua]
+symbol = " "
+
+[nodejs]
+symbol = " "
+
+[package]
+symbol = " "
+
+[python]
+symbol = " "
+
+[ruby]
+symbol = " "
+
+[rust]
+symbol = " "
