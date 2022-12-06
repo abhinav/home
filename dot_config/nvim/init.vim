@@ -451,6 +451,11 @@ let_g('matchup_', {
 })
 EOF
 
+" Map z% to something else, leaving 'z' free for vim-sneak.
+nmap <nop> <plug>(matchup-z%)
+xmap <nop> <plug>(matchup-z%)
+omap <nop> <plug>(matchup-z%)
+
 " markdown-preview {{{2
 lua <<EOF
 let_g('mkdp_', {
