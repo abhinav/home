@@ -9,13 +9,17 @@ brew "curl"
 brew "chezmoi"    # dotfile management
 brew "exa"        # > ls
 brew "go"
+brew "gopls"
 brew "hyperfine"  # CLI benchmarks
 brew "jq"         # JSON munging
 brew "gron"       # JSON grepping
 brew "jless"      # JSON reading
+brew "node"
 brew "pandoc"
 brew "pv"
+brew "python"
 brew "ripgrep"    # > grep
+brew "rustup"
 brew "shellcheck" # lint .sh
 brew "starship"   # prompt
 brew "shfmt"
@@ -34,6 +38,7 @@ tap "neovim/neovim"
 brew "neovim", args: ["HEAD"]
 brew "svn"  # needed weirdly for the font
 cask "font-iosevka"
+cask "font-iosevka-nerd-font"
 cask "espanso"             # text expansion
 
 # Git and friends.
@@ -62,6 +67,7 @@ cask "spotify"
 cask "alfred"              # command space
 cask "hammerspoon"         # window management
 cask "karabiner-elements"  # keyboard control
+cask "spaceman"            # report current space in menu gar
 cask "scroll-reverser"     # use normal scrolling on mouse
 cask "sensiblesidebuttons" # back/fwd with mouse
 
