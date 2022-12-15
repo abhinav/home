@@ -48,6 +48,9 @@
 # Third-party packages managed by chezmoi.
 !/pkg
 
+# Extras
+!/etc
+
 {{- if eq .chezmoi.os "darwin" }}
 !/.hammerspoon
 {{- end }}
