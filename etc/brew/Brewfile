@@ -20,6 +20,7 @@ brew "shellcheck" # lint .sh
 brew "starship"   # prompt
 brew "shfmt"
 brew "tmux"
+brew "abhinav/tap/tmux-fastcopy"
 brew "watch"
 
 # Shell and friends.
