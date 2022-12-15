@@ -171,6 +171,16 @@ augroup AutoReload
 	autocmd FocusGained,BufEnter * :checktime
 augroup end
 
+lua <<EOF
+-- Neovide {{{2
+if vim.g.neovide then
+	vim.opt.guifont = "Iosevka Term:h10"
+	let_g('neovide_', {
+		cursor_animation_length = 0,
+	})
+end
+EOF
+
 "  Plugin {{{1
 
 " airline {{{2
