@@ -17,6 +17,7 @@ brew "pandoc"
 brew "pv"
 brew "ripgrep"    # > grep
 brew "shellcheck" # lint .sh
+brew "starship"   # prompt
 brew "shfmt"
 brew "tmux"
 brew "watch"
@@ -42,7 +43,6 @@ brew "git-lfs"
 brew "tig"
 tap "github/gh"
 brew "gh"
-brew "abhinav/tap/gitprompt"
 brew "abhinav/tap/restack"
 
 cask "1password"
