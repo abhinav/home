@@ -18,3 +18,10 @@
     exact = true
     stripComponents = 1
     refreshPeriod = "168h" # update weekly
+
+["fzf-tab"]
+    type = "archive"
+    url = "https://github.com/Aloxaf/fzf-tab/archive/master.tar.gz"
+    exact = true
+    stripComponents = 1
+    refreshPeriod = "168h" # update weekly
