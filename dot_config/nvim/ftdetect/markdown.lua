@@ -3,7 +3,7 @@ vim.api.nvim_create_autocmd(
 	{
 		pattern = {"*.md"},
 		callback = function()
-			vim.bo.syntax = "markdown.pandoc"
+			vim.bo.filetype = "markdown.pandoc"
 		end,
 	}
 )
