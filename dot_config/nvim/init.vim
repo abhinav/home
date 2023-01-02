@@ -240,6 +240,7 @@ cmp.setup {
 			vim.fn["UltiSnips#Anon"](args.body)
 		end,
 	},
+	preselect = cmp.PreselectMode.None,
 	mapping = cmp.mapping.preset.insert({
 		-- Ctrl-u/d: scroll docs of completion item if available.
 		['<C-u>'] = cmp.mapping(cmp.mapping.scroll_docs(-4), { 'i', 'c' }),
