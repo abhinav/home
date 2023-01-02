@@ -1,3 +1,6 @@
 #!/bin/zsh
 
 source ~/.zsh/fzf-tab/fzf-tab.plugin.zsh
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'exa -1 --color=always $realpath'
+zstyle ':fzf-tab:complete:git-log:*' fzf-preview \
+	'git log --color=always $word'
