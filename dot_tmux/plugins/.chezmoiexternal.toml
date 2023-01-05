@@ -14,6 +14,6 @@
 
 ["tmux-fastcopy"]
     type = "archive"
-    url = "https://github.com/abhinav/tmux-fastcopy/archive/{{ template "fastcopyVersion" }}.tar.gz"
+    url = "https://github.com/abhinav/tmux-fastcopy/archive/v{{ .fastcopyVersion }}.tar.gz"
     exact = true
     stripComponents = 1

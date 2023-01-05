@@ -2,7 +2,6 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-# CHANGELOG: {{ include (joinPath .chezmoi.homeDir  ".fzf/CHANGELOG.md") | sha256sum }}
-echo "Building fzf v{{ template "fzfVersion" }}"
+echo "Building fzf v{{ .fzfVersion }}"
 (cd ~/.fzf &&
 	./install --all --no-update-rc)

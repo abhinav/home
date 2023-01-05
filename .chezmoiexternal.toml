@@ -1,6 +1,6 @@
 [".fzf"]
     type = "archive"
-    url = "https://github.com/junegunn/fzf/archive/refs/tags/{{ template "fzfVersion" }}.tar.gz"
+    url = "https://github.com/junegunn/fzf/archive/refs/tags/{{ .fzfVersion }}.tar.gz"
     exact = true
     stripComponents = 1
 
