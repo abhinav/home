@@ -57,6 +57,7 @@
 	path = ~/.config/netlify/helper/git-config
 	path = ~/.gitconfig.d/delta
 	path = ~/.gitconfig.d/go
+	path = ~/.gitconfig.d/github
 	path = ~/.gitconfig.d/stg
 	path = ~/.gitconfig.d/local
 	path = ~/.gitconfig.d/mergetool
