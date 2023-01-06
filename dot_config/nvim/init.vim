@@ -636,6 +636,10 @@ local gopls_options = {
 	staticcheck = true,
 }
 
+if vim.env.VIM_GOPLS_NO_GOFUMPT then
+	gopls_options.gofumpt = false
+end
+
 if vim.env.VIM_GOPLS_BUILD_TAGS then
 	gopls_options.buildFlags = {'-tags', vim.env.VIM_GOPLS_BUILD_TAGS}
 end
