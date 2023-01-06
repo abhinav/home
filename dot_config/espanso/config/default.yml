@@ -4,3 +4,4 @@ show_icon: false
 
 extra_includes:
   - "../match/_date.yml"
+  - "../match/_github.yml"
