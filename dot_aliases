@@ -9,6 +9,7 @@ alias l="ls"
 alias ll="ls -l"
 alias la="ls -a"
 alias lla="ls -la"
+alias cdroot='cd $(git rev-parse --show-toplevel)'
 
 if [ "$EDITOR" = "nvim" ]; then
 	alias vi=nvim
