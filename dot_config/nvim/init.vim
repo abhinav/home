@@ -380,15 +380,11 @@ vim.g.grepper = {
 	switch       = 1,
 	jump         = 0,
 	dir          = 'filecwd',
+	prompt_mapping_tool = '<leader>g',
 }
 EOF
 
-if executable('rg')
-	nnoremap <leader>gg :Grepper -tool rg<cr>
-else
-	nnoremap <leader>gg :Grepper -tool ag<cr>
-endif
-
+nnoremap <leader>gg :Grepper<cr>
 nmap gs <plug>(GrepperOperator)
 xmap gs <plug>(GrepperOperator)
 
