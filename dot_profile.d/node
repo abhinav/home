@@ -1,5 +1,9 @@
 #!/bin/sh
 
+if command -v yarn >/dev/null; then
+	export PATH="$HOME/.yarn/bin:$PATH"
+fi
+
 _setup_nvm_alias()
 {
 	name="$1"
