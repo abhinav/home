@@ -167,6 +167,14 @@ require('lazy').setup({
 		build = 'pip install --upgrade neovim-remote',
 		keys = {'F4', 'F5', 'F6', 'F9'},
 	},
+
+	-- Other
+	{
+		'glacambre/firenvim',
+		build = function()
+			vim.fn['firenvim#install'](0)
+		end,
+	},
 })
 
 -- General {{{1
@@ -365,6 +373,42 @@ if vim.g.neovide then
 		cursor_animation_length = 0,
 	})
 end
+EOF
+
+lua <<EOF
+-- firenvim {{{2
+let_g('firenvim_', {
+	config = {
+		localSettings = {
+			[".*"] = {
+				takeover = 'never',
+				priority = 0,
+				cmdline = 'neovim',
+			},
+		},
+	},
+})
+
+vim.api.nvim_create_autocmd("UIEnter", {
+	pattern = "*",
+	callback = function(args)
+		 local ev = vim.deepcopy(vim.v.event)
+		 local info = vim.api.nvim_get_chan_info(ev.chan)
+		 if not info then
+		 	 return
+		 end
+		 local client = info.client
+		 if not client then
+		 	 return
+		 end
+		 if client.name == 'Firenvim' then
+		 	 vim.opt.laststatus = 0
+		 	 vim.opt.number = false
+		 	 vim.opt.relativenumber = false
+		 	 vim.opt.guifont = "Iosevka Term:h18"
+		 end
+	end,
+})
 EOF
 
 "  Plugin {{{1
