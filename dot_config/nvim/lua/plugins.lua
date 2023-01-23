@@ -39,7 +39,6 @@ return require('packer').startup(function(use)
 	use 'tpope/vim-repeat'
 	use 'tpope/vim-sleuth'
 	use 'tpope/vim-surround'
-	use 'tversteeg/registers.nvim'
 	use 'vim-scripts/visualrepeat'
 	use 'wsdjeg/vim-fetch'
 
@@ -96,6 +95,7 @@ return require('packer').startup(function(use)
 	}
 	use 'nvim-telescope/telescope-ui-select.nvim'
 	use 'rbgrouleff/bclose.vim'
+	use 'folke/which-key.nvim'
 
 	-- Terminal integration {{{2
 	use 'christoomey/vim-tmux-navigator'

@@ -66,6 +66,11 @@ local options = {
 
 	foldmethod = 'marker', -- don't fold unless there are markers
 
+	-- Timeout for partial key sequences.
+	-- Needed for which-key.
+	timeout = true,
+	timeoutlen = 250,
+
 	-- Show tabs and trailing spaces.
 	list = true,
 	listchars = {tab = '» ', trail = '.'},
@@ -150,15 +155,33 @@ if has('nvim')
 	tnoremap <C-M-H> <C-\><C-n><C-W><C-H>
 endif
 
-" Edit the local vimrc
-nnoremap <silent> <leader>evf :tabe $MYVIMRC<cr>
-nnoremap <silent> <leader>svf :source $MYVIMRC<cr>
+lua << EOF
+-- Edit the current vimrc
+vim.keymap.set('n', '<leader>evf', ':tabe $MYVIMRC<cr>', {
+	noremap = true,
+	silent = true,
+	desc = "Edit my vimrc",
+})
 
-" Buffer shortcuts
-nmap <silent> <leader>q :bd<CR>
-nmap <silent> <leader>Q :bd!<CR>
-nmap <silent> <leader>bn :bn<CR>
-nmap <silent> <leader>bN :bN<CR>
+
+-- Buffer shortcuts
+vim.keymap.set('n', '<leader>q', ':bd<CR>', {
+	desc = "Buffer delete",
+	silent = true,
+})
+vim.keymap.set('n', '<leader>Q', ':bd!<CR>', {
+	desc = "Buffer delete (force)",
+	silent = true,
+})
+vim.keymap.set('n', '<leader>bn', ':bn<CR>', {
+	desc = "Buffer next",
+	silent = true,
+})
+vim.keymap.set('n', '<leader>bN', ':bN<CR>', {
+	desc = "Buffer previous",
+	silent = true,
+})
+EOF
 
 " Don't show line numbers in terminal.
 autocmd TermOpen * setlocal nonu nornu
@@ -204,10 +227,17 @@ ale = {
 	emit_conflict_warnings = 0,
 	linters                = {},
 }
-EOF
 
-nmap <silent> <leader>ep <Plug>(ale_previous_wrap)
-nmap <silent> <leader>en <Plug>(ale_next_wrap)
+vim.keymap.set('n', '<leader>ep', '<Plug>(ale_previous_wrap)', {
+	silent = true,
+	desc = "Error previous",
+})
+vim.keymap.set('n', '<leader>en', '<Plug>(ale_next_wrap)', {
+	silent = true,
+	desc = "Error next",
+})
+
+EOF
 
 " nvim-cmp {{{2
 lua << EOF
@@ -377,31 +407,40 @@ function setup_lsp(server, lsp_opts)
 			vim.api.nvim_buf_set_option(bufnr, ...)
 		end
 
+		local function lsp_nmap(key, fn, desc)
+			vim.keymap.set('n', key, fn, {
+				noremap = true,
+				silent = true,
+				desc = desc,
+			})
+		end
+
 		buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
 		local opts = { noremap = true, silent = true }
 
 		-- Keybindings
 		--  K            Documentation
 		--  gd           Go to definition
-		--  gi           Go to implementation
-		--  F1           Rename
 		--  Alt-Enter    Code action
 
-		vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
-		vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
-		vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
-		vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
-		vim.keymap.set('n', '<F1>', vim.lsp.buf.rename, opts)
-		vim.keymap.set('n', '<M-CR>', vim.lsp.buf.code_action, opts)
+		lsp_nmap('K', vim.lsp.buf.hover, "Documentation")
+		lsp_nmap('gd', vim.lsp.buf.definition, "Go to definition")
+		lsp_nmap('<M-CR>', vim.lsp.buf.code_action, "Code action")
 
 		local telescopes = require('telescope.builtin')
 		-- Mneomonics:
-		-- sr   Search references
-		-- ssd  Search symbol document
-		-- ssw  Search symbol workspace
-		vim.keymap.set('n', '<leader>sr', telescopes.lsp_references, opts)
-		vim.keymap.set('n', '<leader>ssd', telescopes.lsp_document_symbols, opts)
-		vim.keymap.set('n', '<leader>ssw', telescopes.lsp_workspace_symbols, opts)
+		-- lr   Language rename
+		-- lgr  Language go-to references
+		-- lgr  Language go-to implementation
+		-- lsr  Language search references
+		-- lsd  Language search definitions
+		-- lsw  Language search workspace
+		lsp_nmap('<leader>lr', vim.lsp.buf.rename, "Rename")
+		lsp_nmap('<leader>lgr', vim.lsp.buf.references, "Go to references")
+		lsp_nmap('<leader>lgi', vim.lsp.buf.implementation, "Go to implementation")
+		lsp_nmap('<leader>lsr', telescopes.lsp_references, "Search references")
+		lsp_nmap('<leader>lsd', telescopes.lsp_document_symbols, "Search symbols (document)")
+		lsp_nmap('<leader>lsw', telescopes.lsp_workspace_symbols, "Search symbols (workspace)")
 	end
 
 	lsp_opts.capabilities = lsp_capabilities
@@ -479,22 +518,6 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 })
 EOF
 
-" registers {{{2
-
-lua <<EOF
-local registers = require('registers')
-registers.setup {
-	hide_only_whitespace = 1,
-	window = {border = 'shadow'},
-	show_empty = false,
-	bind_keys = {
-		normal = registers.show_window({mode = "motion", delay = 0.5}),
-		visual = registers.show_window({mode = "motion", delay = 0.5}),
-		insert = registers.show_window({mode = "insert", delay = 0.5}),
-	},
-}
-EOF
-
 " sneak {{{2
 nmap f <Plug>Sneak_f
 nmap F <Plug>Sneak_F
@@ -556,17 +579,29 @@ telescope.load_extension('ui-select')
 -- st  search treesitter
 -- s:  search ":" commands
 -- s?  "I forgot"
-vim.keymap.set('n', '<leader>sf', telescopes.find_files, {})
+vim.keymap.set('n', '<leader>sf', telescopes.find_files, {
+	desc = "Search files",
+})
 vim.keymap.set('n', '<leader>sb', function()
 	telescopes.buffers {
 		ignore_current_buffer = true,
 	}
-end, {})
-vim.keymap.set('n', '<leader>sg', telescopes.live_grep, {})
-vim.keymap.set('n', '<leader>sh', telescopes.help_tags, {})
-vim.keymap.set('n', '<leader>st', telescopes.treesitter, {})
-vim.keymap.set('n', '<leader>:', telescopes.commands, {})
-vim.keymap.set('n', '<leader>s?', telescopes.builtin, {})
+end, {desc = "Search buffers"})
+vim.keymap.set('n', '<leader>sg', telescopes.live_grep, {
+	desc = "Search all files (grep)",
+})
+vim.keymap.set('n', '<leader>sh', telescopes.help_tags, {
+	desc = "Search help",
+})
+vim.keymap.set('n', '<leader>st', telescopes.treesitter, {
+	desc = "Search treesitter",
+})
+vim.keymap.set('n', '<leader>:', telescopes.commands, {
+	desc = "Search commands",
+})
+vim.keymap.set('n', '<leader>s?', telescopes.builtin, {
+	desc = "Search telescopes",
+})
 EOF
 
 " tree-sitter {{{2
@@ -664,6 +699,12 @@ lua << EOF
 let_g({
 	['test#strategy'] = 'neovim',
 })
+EOF
+
+lua <<EOF
+-- which-key {{{2
+require('which-key').setup {
+}
 EOF
 
 "  File Types {{{1
