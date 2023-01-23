@@ -398,7 +398,13 @@ function setup_lsp(server, lsp_opts)
 		vim.keymap.set('n', '<M-CR>', vim.lsp.buf.code_action, opts)
 
 		local telescopes = require('telescope.builtin')
+		-- Mneomonics:
+		-- sr   Search references
+		-- ssd  Search symbol document
+		-- ssw  Search symbol workspace
 		vim.keymap.set('n', '<leader>sr', telescopes.lsp_references, opts)
+		vim.keymap.set('n', '<leader>ssd', telescopes.lsp_document_symbols, opts)
+		vim.keymap.set('n', '<leader>ssw', telescopes.lsp_workspace_symbols, opts)
 	end
 
 	lsp_opts.capabilities = lsp_capabilities
@@ -521,8 +527,6 @@ telescope.setup {
 			i = {
 				-- Show help.
 				["<C-h>"] = teleactions.which_key,
-				-- Clear prompt.
-				["<C-u>"] = false,
 				-- Open in trouble.
 				["<M-t>"] = teletrouble.open_with_trouble,
 			},
@@ -548,19 +552,25 @@ telescope.setup {
 
 telescope.load_extension('ui-select')
 
-vim.keymap.set('n', '<C-P>', telescopes.find_files, {})
-vim.keymap.set('n', '<leader><space>', function()
+-- Mneomonics:
+-- sf  search files
+-- sf  search buffers
+-- sg  search grep
+-- sh  search help
+-- st  search treesitter
+-- s:  search ":" commands
+-- s?  "I forgot"
+vim.keymap.set('n', '<leader>sf', telescopes.find_files, {})
+vim.keymap.set('n', '<leader>sb', function()
 	telescopes.buffers {
 		ignore_current_buffer = true,
 	}
 end, {})
-vim.keymap.set('n', '<leader>?', telescopes.oldfiles, {})
-vim.keymap.set('n', '<leader>:', telescopes.commands, {})
-
-vim.keymap.set('n', '<leader>sb', telescopes.current_buffer_fuzzy_find, {})
 vim.keymap.set('n', '<leader>sg', telescopes.live_grep, {})
 vim.keymap.set('n', '<leader>sh', telescopes.help_tags, {})
 vim.keymap.set('n', '<leader>st', telescopes.treesitter, {})
+vim.keymap.set('n', '<leader>:', telescopes.commands, {})
+vim.keymap.set('n', '<leader>s?', telescopes.builtin, {})
 EOF
 
 " tree-sitter {{{2
