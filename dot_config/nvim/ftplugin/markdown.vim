@@ -24,7 +24,5 @@ setlocal formatoptions+=l
 " Treat blockquotes as comments so gq formats them nicely.
 setlocal comments=n:>
 
-nmap <buffer><silent> <C-P> :WikiFzfPages<CR>
-
 " Use pandoc to reformat.
 let &l:equalprg = 'pandoc -f markdown -t markdown --markdown-heading=atx --columns=' . &textwidth

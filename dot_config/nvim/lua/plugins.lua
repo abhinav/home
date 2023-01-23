@@ -87,8 +87,6 @@ return require('packer').startup(function(use)
 	-- Navigation and window management {{{2
 	use 'camspiers/lens.vim'
 	use 'chrisbra/NrrwRgn'
-	use 'junegunn/fzf.vim'
-	vim.opt.rtp:append { "~/.fzf" } -- managed by chezmoi
 	use {'junegunn/goyo.vim', cmd = 'Goyo'}
 	use 'justinmk/vim-dirvish'
 	use 'mhinz/vim-grepper'

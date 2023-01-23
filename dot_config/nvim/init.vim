@@ -346,9 +346,6 @@ if executable('nnn')
 	command! NNN FloatermNew nnn
 endif
 
-" fzf {{{2
-let g:fzf_layout = { 'down': '~15%' }
-
 " grepper {{{2
 lua <<EOF
 vim.g.grepper = {
@@ -432,7 +429,6 @@ EOF
 " lens {{{2
 lua <<EOF
 let_g('lens#', {
-	disabled_filetypes = {'fzf'},
 	disabled_buftypes  = {'quickfix'},
 	animate            = 0,
 })
