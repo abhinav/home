@@ -349,25 +349,6 @@ endif
 " fzf {{{2
 let g:fzf_layout = { 'down': '~15%' }
 
-nmap <silent> <C-P> :Files<CR>
-nmap <silent> <leader>tt :Trees<CR>
-nmap <silent> <leader>r :History<CR>
-nmap <silent> <leader>bb :Buffers<CR>
-nmap <silent> <leader>: :Commands<CR>
-
-" :Trees support {{{3
-
-" FZFDirs runs FZF, displaying only directories.
-function! s:FZFDirs(opts) " {{{4
-	let cmd = 'find -L .
-		\ \( -path ''*/\.*'' -o -fstype dev -o -fstype proc \) -prune
-		\ -o -type d -print | sed 1d | cut -b3-'
-	call fzf#run(extend({'source': cmd}, a:opts))
-endfunction
-
-" Fuzzy find a directory and open a directory.
-command! Trees call s:FZFDirs({'sink': 'edit'})
-
 " grepper {{{2
 lua <<EOF
 vim.g.grepper = {
@@ -395,10 +376,6 @@ local lsp_capabilities = require('cmp_nvim_lsp').default_capabilities()
 
 function setup_lsp(server, lsp_opts)
 	lsp_opts.on_attach = function(client, bufnr)
-		local function buf_set_keymap(...)
-			vim.api.nvim_buf_set_keymap(bufnr, ...)
-		end
-
 		local function buf_set_option(...)
 			vim.api.nvim_buf_set_option(bufnr, ...)
 		end
@@ -408,14 +385,20 @@ function setup_lsp(server, lsp_opts)
 
 		-- Keybindings
 		--  K            Documentation
-		--  <leader>d    Go to definition
-		--  F2           Rename
+		--  gd           Go to definition
+		--  gi           Go to implementation
+		--  F1           Rename
 		--  Alt-Enter    Code action
 
-		buf_set_keymap('n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
-		buf_set_keymap('n', '<leader>d', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
-		buf_set_keymap('n', '<F1>', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
-		buf_set_keymap('n', '<M-CR>', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
+		vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
+		vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
+		vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
+		vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
+		vim.keymap.set('n', '<F1>', vim.lsp.buf.rename, opts)
+		vim.keymap.set('n', '<M-CR>', vim.lsp.buf.code_action, opts)
+
+		local telescopes = require('telescope.builtin')
+		vim.keymap.set('n', '<leader>sr', telescopes.lsp_references, opts)
 	end
 
 	lsp_opts.capabilities = lsp_capabilities
@@ -524,6 +507,62 @@ xmap T <Plug>Sneak_T
 omap t <Plug>Sneak_t
 omap T <Plug>Sneak_T
 
+" telescope {{{2
+lua << EOF
+local telescope = require('telescope')
+local telescopes = require('telescope.builtin')
+local teleactions = require('telescope.actions')
+local telethemes = require('telescope.themes')
+local teletrouble = require('trouble.providers.telescope')
+
+telescope.setup {
+	defaults = {
+		mappings = {
+			i = {
+				-- Show help.
+				["<C-h>"] = teleactions.which_key,
+				-- Clear prompt.
+				["<C-u>"] = false,
+				-- Open in trouble.
+				["<M-t>"] = teletrouble.open_with_trouble,
+			},
+		},
+	},
+	pickers = {
+		buffers = {
+			mappings = {
+				i = {
+					-- Ctrl-D in buffers to delete.
+					["<C-d>"] = teleactions.delete_buffer,
+				},
+			},
+		},
+	},
+	extensions = {
+		["ui-select"] = {
+			telethemes.get_dropdown {
+			}
+		},
+	}
+}
+
+telescope.load_extension('ui-select')
+
+vim.keymap.set('n', '<C-P>', telescopes.find_files, {})
+vim.keymap.set('n', '<leader><space>', function()
+	telescopes.buffers {
+		ignore_current_buffer = true,
+	}
+end, {})
+vim.keymap.set('n', '<leader>?', telescopes.oldfiles, {})
+vim.keymap.set('n', '<leader>:', telescopes.commands, {})
+
+vim.keymap.set('n', '<leader>sb', telescopes.current_buffer_fuzzy_find, {})
+vim.keymap.set('n', '<leader>sg', telescopes.live_grep, {})
+vim.keymap.set('n', '<leader>sh', telescopes.help_tags, {})
+vim.keymap.set('n', '<leader>st', telescopes.treesitter, {})
+EOF
+
 " tree-sitter {{{2
 lua << EOF
 require 'nvim-treesitter.configs'.setup {
@@ -573,7 +612,13 @@ end
 require('trouble').setup {
 	auto_open = false,
 	auto_close = true,
-	auto_preview = false,
+	auto_preview = true,
+
+	action_keys = {
+		close = "q",
+		cancel = "<esc>",
+		toggle_preview = "P",
+	},
 
 	-- Non-patched font:
 	fold_open = "▼",
@@ -581,6 +626,7 @@ require('trouble').setup {
 	icons = false,
 	padding = false,
 	indent_lines = false,
+	group = true,
 	signs = {
 		error       = diagnostic_signs.Error,
 		warning     = diagnostic_signs.Warn,

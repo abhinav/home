@@ -92,6 +92,11 @@ return require('packer').startup(function(use)
 	use {'junegunn/goyo.vim', cmd = 'Goyo'}
 	use 'justinmk/vim-dirvish'
 	use 'mhinz/vim-grepper'
+	use {
+		'nvim-telescope/telescope.nvim', tag = '0.1.1',
+		requires = {{'nvim-lua/plenary.nvim'}},
+	}
+	use 'nvim-telescope/telescope-ui-select.nvim'
 	use 'rbgrouleff/bclose.vim'
 
 	-- Terminal integration {{{2
