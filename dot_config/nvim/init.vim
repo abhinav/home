@@ -162,11 +162,7 @@ require('lazy').setup({
 	},
 	'ojroques/vim-oscyank',
 	'vim-utils/vim-husk',
-	{
-		'voldikss/vim-floaterm',
-		build = 'pip install --upgrade neovim-remote',
-		keys = {'F4', 'F5', 'F6', 'F9'},
-	},
+	{'voldikss/vim-floaterm', build = 'pip install --upgrade neovim-remote'},
 
 	-- Other
 	{
