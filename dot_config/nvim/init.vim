@@ -38,7 +38,11 @@ require('lazy').setup({
 	},
 	'machakann/vim-highlightedyank',
 	'ntpeters/vim-better-whitespace',
-	{'nvim-treesitter/nvim-treesitter', build = ':TSUpdate'},
+	{
+		'nvim-treesitter/nvim-treesitter',
+		build = ':TSUpdate',
+		dependencies = {'nvim-treesitter/nvim-treesitter-textobjects'},
+	},
 	'tpope/vim-abolish',
 	'tpope/vim-commentary',
 	'tpope/vim-repeat',
@@ -316,7 +320,7 @@ endif
 
 lua << EOF
 -- Edit the current vimrc
-vim.keymap.set('n', '<leader>evf', ':tabe $MYVIMRC<cr>', {
+vim.keymap.set('n', '<leader>evf', ':e $MYVIMRC<cr>', {
 	noremap = true,
 	silent = true,
 	desc = "Edit my vimrc",
@@ -702,6 +706,34 @@ require 'nvim-treesitter.configs'.setup {
 	auto_install = true,
 	highlight = {
 		enable = true,
+	},
+	textobjects = {
+		select = {
+			enable = true,
+			lookahead = true,
+			keymaps = {
+				['af'] = {query = '@function.outer', desc = "a function"},
+				['if'] = {query = '@function.inner', desc = "in function"},
+			},
+		},
+		swap = {
+			enable = true,
+			swap_next = {
+				["<leader>al"] = {query = '@parameter.inner', desc = "Swap with next argument"},
+			},
+			swap_previous = {
+				["<leader>ah"] = {query = '@parameter.inner', desc = "Swap with previous argument"},
+			},
+		},
+		move = {
+			enable = true,
+			goto_next_start = {
+				["]a"] = {query = "@parameter.inner", desc = "Next argument"},
+			},
+			goto_previous_start = {
+				["[a"] = {query = "@parameter.inner", desc = "Previous argument"},
+			},
+		},
 	},
 }
 EOF
