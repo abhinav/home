@@ -344,15 +344,9 @@ vim.keymap.set('n', '<leader>en', '<Plug>(ale_next_wrap)', {
 	desc = "Error next",
 })
 
-EOF
-
-" nvim-cmp {{{2
-lua << EOF
+-- nvim-cmp {{{2
 local cmp = require 'cmp'
-
-local feedkey = function(key, mode)
-	vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(key, true, true, true), mode, true)
-end
+local cmp_ultisnips_mappings = require 'cmp_nvim_ultisnips.mappings'
 
 local handleTab = function(fallback)
 	if cmp.visible() then
@@ -362,7 +356,7 @@ local handleTab = function(fallback)
 			cmp.select_next_item()
 		end
 	elseif vim.fn['UltiSnips#CanJumpForwards']() == 1 then
-		feedkey("<Plug>(ultisnips_jump_forward)", "")
+		cmp_ultisnips_mappings.jump_forwards(fallback)
 	else
 		fallback()
 	end
@@ -403,7 +397,7 @@ cmp.setup {
 			if cmp.visible() then
 				cmp.select_prev_item()
 			elseif vim.fn['UltiSnips#CanJumpBackwards']() == 1 then
-				feedkey("<Plug>(ultisnips_jump_backward)", "")
+				cmp_ultisnips_mappings.jump_backwards(fallback)
 			else
 				fallback()
 			end
@@ -444,18 +438,6 @@ cmp.setup.filetype('markdown', {
 		{name = 'buffer'},
 		{name = 'tmux'},
 	}),
-})
-EOF
-
-" UltiSnips {{{3
-imap <c-u> <Plug>(ultisnips_expand)
-lua << EOF
-let_g('UltiSnips', {
-	ExpandTrigger            = "<Plug>(ultisnips_expand)",
-	JumpForwardTrigger       = "<Plug>(ultisnips_jump_forward)",
-	JumpBackwardTrigger      = "<Plug>(ultisnips_jump_backward)",
-	ListSnippets             = "<c-x><c-s>",
-	RemoveSelectModeMappings = 0,
 })
 EOF
 
