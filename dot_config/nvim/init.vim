@@ -13,6 +13,7 @@ if not vim.loop.fs_stat(lazypath) then
 	})
 end
 vim.opt.rtp:prepend(lazypath)
+vim.g.mapleader = ' ' -- space is leader
 
 require('lazy').setup({
 	-- Completion and snippets {{{2
@@ -29,7 +30,7 @@ require('lazy').setup({
 	'SirVer/ultisnips',
 
 	-- Editing {{{2
-	{'junegunn/vim-easy-align', keys = "ga"},
+	'junegunn/vim-easy-align',
 	'justinmk/vim-sneak',
 	{
 		'mg979/vim-visual-multi',
@@ -50,7 +51,7 @@ require('lazy').setup({
 	'alker0/chezmoi.vim',
 	{'cappyzawa/starlark.vim', ft = 'starlark'},
 	{'cespare/vim-toml', ft = 'toml'},
-	'chrisbra/csv.vim',
+	{'chrisbra/csv.vim', ft = 'csv'},
 	'direnv/direnv.vim',
 	{'habamax/vim-asciidoctor', ft = {'asciidoc', 'asciidoctor'}},
 	{'hynek/vim-python-pep8-indent', ft = 'python'},
@@ -73,8 +74,11 @@ require('lazy').setup({
 
 	-- Git {{{2
 	{'rhysd/git-messenger.vim', keys = '<leader>gm'},
-	{'tpope/vim-fugitive', cmd = {"G", "Git"}},
-	{'tpope/vim-rhubarb', cmd = {"G", "Git"}},
+	{
+		'tpope/vim-fugitive',
+		dependencies = {'tpope/vim-rhubarb'},
+		cmd = {"G", "Git", "GBrowse", "GRename"},
+	},
 
 	-- Look and feel {{{2
 	'edkolev/tmuxline.vim',
@@ -83,8 +87,21 @@ require('lazy').setup({
 		lazy = false,
 		priority = 1000,
 	},
-	'vim-airline/vim-airline',
-	'vim-airline/vim-airline-themes',
+	{
+		'vim-airline/vim-airline',
+		dependencies = {'vim-airline/vim-airline-themes'},
+		config = function()
+			vim.cmd [[
+				let g:airline_theme = "molokai"
+				let g:airline#extensions#branch#displayed_head_limit = 10
+				let g:airline#extensions#ale#enabled = 1
+
+				" We want to do this manually with,
+				"   :Tmuxline airline | TmuxlineSnapshot ~/.tmux-molokai.conf
+				let g:airline#extensions#tmuxline#enabled = 0
+			]]
+		end,
+	},
 
 	-- LSP and language features {{{2
 	'dense-analysis/ale',
@@ -94,8 +111,29 @@ require('lazy').setup({
 
 	-- Navigation and window management {{{2
 	'camspiers/lens.vim',
-	{'justinmk/vim-dirvish', keys = '-'},
-	{'mhinz/vim-grepper', keys = {'gs', 'gg'}},
+	'justinmk/vim-dirvish',
+	{
+		'mhinz/vim-grepper',
+		config = function()
+			vim.g.grepper = {
+				tools        = {'rg', 'ag', 'git'},
+				side         = 1,
+				side_cmd     = 'new',
+				prompt_text  = '$t> ',
+				prompt_quote = 2,
+				quickfix     = 1,
+				switch       = 1,
+				jump         = 0,
+				dir          = 'filecwd',
+				prompt_mapping_tool = '<leader>g',
+			}
+		end,
+		keys = {
+			{'<leader>gg', ':Grepper<cr>', 'n', noremap = true},
+			{'gs', '<plug>(GrepperOperator)', 'n'},
+			{'gs', '<plug>(GrepperOperator)', 'x'},
+		},
+	},
 	{
 		'nvim-telescope/telescope.nvim', tag = '0.1.1',
 		dependencies = {'nvim-lua/plenary.nvim'},
@@ -105,7 +143,19 @@ require('lazy').setup({
 	'folke/which-key.nvim',
 
 	-- Terminal integration {{{2
-	'christoomey/vim-tmux-navigator',
+	{
+		'christoomey/vim-tmux-navigator',
+		config = function()
+			-- We'll use our own mappings.
+			vim.g.tmux_navigator_no_mappings = 1
+		end,
+		keys = {
+			{'<C-J>', ':TmuxNavigateDown', 'n', noremap = true, silent = true},
+			{'<C-K>', ':TmuxNavigateUp', 'n', noremap = true, silent = true},
+			{'<C-L>', ':TmuxNavigateRight', 'n', noremap = true, silent = true},
+			{'<C-H>', ':TmuxNavigateLeft', 'n', noremap = true, silent = true},
+		},
+	},
 	'ojroques/vim-oscyank',
 	'vim-utils/vim-husk',
 	{
@@ -221,10 +271,6 @@ function let_g(prefix, opts)
 		vim.g[key] = val
 	end
 end
-
-let_g {
-	mapleader = ' ', -- space = leader
-}
 EOF
 
 colorscheme molokai
@@ -318,15 +364,6 @@ end
 EOF
 
 "  Plugin {{{1
-
-" airline {{{2
-let g:airline_theme = "molokai"
-let g:airline#extensions#branch#displayed_head_limit = 10
-let g:airline#extensions#ale#enabled = 1
-
-" We want to do this manually with,
-"   :Tmuxline airline | TmuxlineSnapshot ~/.tmux-molokai.conf
-let g:airline#extensions#tmuxline#enabled = 0
 
 " ale {{{2
 lua <<EOF
@@ -465,26 +502,6 @@ EOF
 nnoremap <silent> <F6> :FloatermNew --height=0.4 --width=0.98 --cwd=<buffer> --position=bottom<CR>
 tnoremap <silent> <F6> <C-\><C-n>:FloatermNew --height=0.4 --width=0.98 --cwd=<buffer> --position=bottom<CR>
 tnoremap <silent> <F7> <C-\><C-n>
-
-" grepper {{{2
-lua <<EOF
-vim.g.grepper = {
-	tools        = {'rg', 'ag', 'git'},
-	side         = 1,
-	side_cmd     = 'new',
-	prompt_text  = '$t> ',
-	prompt_quote = 2,
-	quickfix     = 1,
-	switch       = 1,
-	jump         = 0,
-	dir          = 'filecwd',
-	prompt_mapping_tool = '<leader>g',
-}
-EOF
-
-nnoremap <leader>gg :Grepper<cr>
-nmap gs <plug>(GrepperOperator)
-xmap gs <plug>(GrepperOperator)
 
 " lspconfig {{{2
 lua << EOF
@@ -689,16 +706,6 @@ require 'nvim-treesitter.configs'.setup {
 }
 EOF
 
-" tmux-navigator {{{2
-
-" We have our own mappings
-let g:tmux_navigator_no_mappings = 1
-
-" Better split navigation
-nnoremap <silent> <C-J> :TmuxNavigateDown<CR>
-nnoremap <silent> <C-K> :TmuxNavigateUp<CR>
-nnoremap <silent> <C-L> :TmuxNavigateRight<CR>
-nnoremap <silent> <C-H> :TmuxNavigateLeft<CR>
 
 " trouble {{{2
 lua << EOF
