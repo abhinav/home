@@ -1,8 +1,115 @@
-lua require('plugins')
-
-" General {{{1
 lua << EOF
+-- Plugins {{{1
 
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+	vim.fn.system({
+		"git",
+		"clone",
+		"--filter=blob:none",
+		"https://github.com/folke/lazy.nvim.git",
+		"--branch=stable", -- latest stable release
+		lazypath,
+	})
+end
+vim.opt.rtp:prepend(lazypath)
+
+require('lazy').setup({
+	-- Completion and snippets {{{2
+	'andersevenrud/cmp-tmux',
+	'honza/vim-snippets',
+	'hrsh7th/cmp-buffer',
+	'hrsh7th/cmp-cmdline',
+	'hrsh7th/cmp-nvim-lsp',
+	'hrsh7th/cmp-nvim-lsp-signature-help',
+	'hrsh7th/cmp-omni',
+	'hrsh7th/cmp-path',
+	'hrsh7th/nvim-cmp',
+	'quangnguyen30192/cmp-nvim-ultisnips',
+	'SirVer/ultisnips',
+
+	-- Editing {{{2
+	'andymass/vim-matchup',
+	'junegunn/vim-easy-align',
+	'justinmk/vim-sneak',
+	'mg979/vim-visual-multi',
+	'machakann/vim-highlightedyank',
+	'ntpeters/vim-better-whitespace',
+	{'nvim-treesitter/nvim-treesitter', build = ':TSUpdate'},
+	'tpope/vim-abolish',
+	'tpope/vim-commentary',
+	'tpope/vim-repeat',
+	'tpope/vim-sleuth',
+	'tpope/vim-surround',
+	'vim-scripts/visualrepeat',
+	'wsdjeg/vim-fetch',
+
+	-- Filetype-specific {{{2
+	'alker0/chezmoi.vim',
+	'cappyzawa/starlark.vim',
+	'cespare/vim-toml',
+	'chrisbra/csv.vim',
+	'direnv/direnv.vim',
+	'habamax/vim-asciidoctor',
+	'hynek/vim-python-pep8-indent',
+	{
+		'iamcco/markdown-preview.nvim',
+		ft = 'markdown',
+		build = function()
+			vim.fn['mkdp#util#install']()
+		end,
+	},
+	'lervag/wiki.vim',
+	'NoahTheDuke/vim-just',
+	'rust-lang/rust.vim',
+	'vim-pandoc/vim-pandoc-syntax',
+	'ziglang/zig.vim',
+
+	-- Git {{{2
+	'iberianpig/tig-explorer.vim',
+	'rhysd/git-messenger.vim',
+	'tpope/vim-fugitive',
+	'tpope/vim-rhubarb',
+
+	-- Look and feel {{{2
+	'edkolev/tmuxline.vim',
+	{
+		'justinmk/molokai',
+		lazy = false,
+		priority = 1000,
+	},
+	'vim-airline/vim-airline',
+	'vim-airline/vim-airline-themes',
+
+	-- LSP and language features {{{2
+	'dense-analysis/ale',
+	'folke/lsp-colors.nvim',
+	'folke/trouble.nvim',
+	'neovim/nvim-lspconfig',
+	'vim-test/vim-test',
+
+	-- Navigation and window management {{{2
+	'camspiers/lens.vim',
+	'chrisbra/NrrwRgn',
+	{'junegunn/goyo.vim', cmd = 'Goyo'},
+	'justinmk/vim-dirvish',
+	'mhinz/vim-grepper',
+	{
+		'nvim-telescope/telescope.nvim', tag = '0.1.1',
+		dependencies = {'nvim-lua/plenary.nvim'},
+	},
+	'nvim-telescope/telescope-ui-select.nvim',
+	'rbgrouleff/bclose.vim',
+	'folke/which-key.nvim',
+
+	-- Terminal integration {{{2
+	'christoomey/vim-tmux-navigator',
+	'ojroques/vim-oscyank',
+	'vim-utils/vim-husk',
+	{'voldikss/vim-floaterm', build = 'pip install --upgrade neovim-remote'},
+})
+
+-- General {{{1
 if vim.env.VIM_PATH then
 	vim.env.PATH = vim.env.VIM_PATH
 end
