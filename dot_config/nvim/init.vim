@@ -69,7 +69,7 @@ local options = {
 	-- Timeout for partial key sequences.
 	-- Needed for which-key.
 	timeout = true,
-	timeoutlen = 250,
+	timeoutlen = 500,
 
 	-- Show tabs and trailing spaces.
 	list = true,
