@@ -30,9 +30,9 @@ require('lazy').setup({
 
 	-- Editing {{{2
 	'andymass/vim-matchup',
-	'junegunn/vim-easy-align',
+	{'junegunn/vim-easy-align', keys = "ga"},
 	'justinmk/vim-sneak',
-	'mg979/vim-visual-multi',
+	{'mg979/vim-visual-multi', keys = "<C-n>"},
 	'machakann/vim-highlightedyank',
 	'ntpeters/vim-better-whitespace',
 	{'nvim-treesitter/nvim-treesitter', build = ':TSUpdate'},
@@ -46,12 +46,12 @@ require('lazy').setup({
 
 	-- Filetype-specific {{{2
 	'alker0/chezmoi.vim',
-	'cappyzawa/starlark.vim',
-	'cespare/vim-toml',
+	{'cappyzawa/starlark.vim', ft = 'starlark'},
+	{'cespare/vim-toml', ft = 'toml'},
 	'chrisbra/csv.vim',
 	'direnv/direnv.vim',
-	'habamax/vim-asciidoctor',
-	'hynek/vim-python-pep8-indent',
+	{'habamax/vim-asciidoctor', ft = {'asciidoc', 'asciidoctor'}},
+	{'hynek/vim-python-pep8-indent', ft = 'python'},
 	{
 		'iamcco/markdown-preview.nvim',
 		ft = 'markdown',
@@ -59,17 +59,16 @@ require('lazy').setup({
 			vim.fn['mkdp#util#install']()
 		end,
 	},
-	'lervag/wiki.vim',
-	'NoahTheDuke/vim-just',
-	'rust-lang/rust.vim',
-	'vim-pandoc/vim-pandoc-syntax',
-	'ziglang/zig.vim',
+	{'lervag/wiki.vim', ft = 'markdown'},
+	{'NoahTheDuke/vim-just', ft = 'just'},
+	{'rust-lang/rust.vim', ft = 'rust'},
+	{'vim-pandoc/vim-pandoc-syntax', ft = {'markdown', 'pandoc'}},
+	{'ziglang/zig.vim', ft = {'zig'}},
 
 	-- Git {{{2
-	'iberianpig/tig-explorer.vim',
-	'rhysd/git-messenger.vim',
-	'tpope/vim-fugitive',
-	'tpope/vim-rhubarb',
+	{'rhysd/git-messenger.vim', keys = '<leader>gm'},
+	{'tpope/vim-fugitive', cmd = {"G", "Git"}},
+	{'tpope/vim-rhubarb', cmd = {"G", "Git"}},
 
 	-- Look and feel {{{2
 	'edkolev/tmuxline.vim',
@@ -86,14 +85,11 @@ require('lazy').setup({
 	'folke/lsp-colors.nvim',
 	'folke/trouble.nvim',
 	'neovim/nvim-lspconfig',
-	'vim-test/vim-test',
 
 	-- Navigation and window management {{{2
 	'camspiers/lens.vim',
-	'chrisbra/NrrwRgn',
-	{'junegunn/goyo.vim', cmd = 'Goyo'},
-	'justinmk/vim-dirvish',
-	'mhinz/vim-grepper',
+	{'justinmk/vim-dirvish', keys = '-'},
+	{'mhinz/vim-grepper', keys = {'gs', 'gg'}},
 	{
 		'nvim-telescope/telescope.nvim', tag = '0.1.1',
 		dependencies = {'nvim-lua/plenary.nvim'},
@@ -224,7 +220,7 @@ EOF
 colorscheme molokai
 
 " Use terminal background for performance.
-highlight Normal ctermbg=NONE guibg=NONE
+" highlight Normal ctermbg=NONE guibg=NONE
 
 " Make line numbers in terminal more readable
 highlight LineNr ctermfg=245
@@ -783,12 +779,6 @@ let_g('VM_', {
 })
 EOF
 
-" vim-test {{{2
-lua << EOF
-let_g({
-	['test#strategy'] = 'neovim',
-})
-EOF
 
 lua <<EOF
 -- which-key {{{2
