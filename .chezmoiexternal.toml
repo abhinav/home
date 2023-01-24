@@ -3,9 +3,3 @@
     url = "https://github.com/junegunn/fzf/archive/refs/tags/{{ .fzfVersion }}.tar.gz"
     exact = true
     stripComponents = 1
-
-[".local/share/nvim/site/pack/packer/start/packer.nvim"]
-    type = "archive"
-    url = "https://github.com/wbthomason/packer.nvim/archive/master.tar.gz"
-    stripComponents = 1
-    # Don't refresh -- packer manages itself after bootstrapping.

@@ -29,10 +29,12 @@ require('lazy').setup({
 	'SirVer/ultisnips',
 
 	-- Editing {{{2
-	'andymass/vim-matchup',
 	{'junegunn/vim-easy-align', keys = "ga"},
 	'justinmk/vim-sneak',
-	{'mg979/vim-visual-multi', keys = "<C-n>"},
+	{
+		'mg979/vim-visual-multi',
+		keys = {"<C-n>", '<M-S-j>', '<M-S-k>'},
+	},
 	'machakann/vim-highlightedyank',
 	'ntpeters/vim-better-whitespace',
 	{'nvim-treesitter/nvim-treesitter', build = ':TSUpdate'},
@@ -57,6 +59,10 @@ require('lazy').setup({
 		ft = 'markdown',
 		build = function()
 			vim.fn['mkdp#util#install']()
+		end,
+		config = function()
+			vim.g.mkdp_auto_close = 0
+			vim.g.mkdp_filetypes = {'markdown'}
 		end,
 	},
 	{'lervag/wiki.vim', ft = 'markdown'},
@@ -102,7 +108,11 @@ require('lazy').setup({
 	'christoomey/vim-tmux-navigator',
 	'ojroques/vim-oscyank',
 	'vim-utils/vim-husk',
-	{'voldikss/vim-floaterm', build = 'pip install --upgrade neovim-remote'},
+	{
+		'voldikss/vim-floaterm',
+		build = 'pip install --upgrade neovim-remote',
+		keys = {'F4', 'F5', 'F6', 'F9'},
+	},
 })
 
 -- General {{{1
@@ -456,11 +466,6 @@ nnoremap <silent> <F6> :FloatermNew --height=0.4 --width=0.98 --cwd=<buffer> --p
 tnoremap <silent> <F6> <C-\><C-n>:FloatermNew --height=0.4 --width=0.98 --cwd=<buffer> --position=bottom<CR>
 tnoremap <silent> <F7> <C-\><C-n>
 
-" :NNN for nnn
-if executable('nnn')
-	command! NNN FloatermNew nnn
-endif
-
 " grepper {{{2
 lua <<EOF
 vim.g.grepper = {
@@ -555,28 +560,6 @@ lua <<EOF
 let_g('lens#', {
 	disabled_buftypes  = {'quickfix'},
 	animate            = 0,
-})
-EOF
-
-" matchup {{{2
-lua <<EOF
-let_g('matchup_', {
-	matchparen_offscreen = {
-		method = 'popup',
-	},
-})
-EOF
-
-" Map z% to something else, leaving 'z' free for vim-sneak.
-nmap <nop> <plug>(matchup-z%)
-xmap <nop> <plug>(matchup-z%)
-omap <nop> <plug>(matchup-z%)
-
-" markdown-preview {{{2
-lua <<EOF
-let_g('mkdp_', {
-	auto_close = 0,
-	filetypes = {'markdown'},
 })
 EOF
 
