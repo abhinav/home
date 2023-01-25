@@ -30,11 +30,40 @@ require('lazy').setup({
 	'SirVer/ultisnips',
 
 	-- Editing {{{2
-	'junegunn/vim-easy-align',
-	'justinmk/vim-sneak',
+	{
+		'junegunn/vim-easy-align',
+		cmd = 'EasyAlign',
+		keys = {
+			{'ga', '<Plug>(EasyAlign)', 'n'},
+			{'ga', '<Plug>(EasyAlign)', 'x'},
+		},
+	},
+	{
+		'justinmk/vim-sneak',
+		keys = {
+			{'f', '<Plug>Sneak_f', 'n'},
+			{'F', '<Plug>Sneak_F', 'n'},
+			{'f', '<Plug>Sneak_f', 'x'},
+			{'F', '<Plug>Sneak_F', 'x'},
+			{'f', '<Plug>Sneak_f', 'o'},
+			{'F', '<Plug>Sneak_F', 'o'},
+			{'t', '<Plug>Sneak_t', 'n'},
+			{'T', '<Plug>Sneak_T', 'n'},
+			{'t', '<Plug>Sneak_t', 'x'},
+			{'T', '<Plug>Sneak_T', 'x'},
+			{'t', '<Plug>Sneak_t', 'o'},
+			{'T', '<Plug>Sneak_T', 'o'},
+		},
+	},
 	{
 		'mg979/vim-visual-multi',
 		keys = {"<C-n>", '<M-S-j>', '<M-S-k>'},
+		config = function()
+			vim.g.VM_maps = {
+				['Add Cursor Down'] = '<M-S-j>',
+				['Add Cursor Up'] = '<M-S-k>',
+			}
+		end,
 	},
 	'machakann/vim-highlightedyank',
 	'ntpeters/vim-better-whitespace',
@@ -43,7 +72,7 @@ require('lazy').setup({
 		build = ':TSUpdate',
 		dependencies = {'nvim-treesitter/nvim-treesitter-textobjects'},
 	},
-	'tpope/vim-abolish',
+	{'tpope/vim-abolish', command = "S"},
 	'tpope/vim-commentary',
 	'tpope/vim-repeat',
 	'tpope/vim-sleuth',
@@ -110,7 +139,13 @@ require('lazy').setup({
 	'neovim/nvim-lspconfig',
 
 	-- Navigation and window management {{{2
-	'camspiers/lens.vim',
+	{
+		'camspiers/lens.vim',
+		config = function()
+			vim.g['lens#disabled_buftypes'] = {'quickfix'}
+			vim.g['lens#animate']           = 0
+		end,
+	},
 	'justinmk/vim-dirvish',
 	{
 		'mhinz/vim-grepper',
@@ -140,7 +175,12 @@ require('lazy').setup({
 	},
 	'nvim-telescope/telescope-ui-select.nvim',
 	'rbgrouleff/bclose.vim',
-	'folke/which-key.nvim',
+	{
+		'folke/which-key.nvim',
+		config = function()
+			require('which-key').setup {}
+		end,
+	},
 
 	-- Terminal integration {{{2
 	{
@@ -156,9 +196,42 @@ require('lazy').setup({
 			{'<C-H>', ':TmuxNavigateLeft', 'n', noremap = true, silent = true},
 		},
 	},
-	'ojroques/vim-oscyank',
+	{
+		'ojroques/vim-oscyank',
+		config = function()
+			-- oscyank {{{2
+			-- https://github.com/ojroques/vim-oscyank/issues/26#issuecomment-1179722561
+			vim.g.oscyank_term = 'default'
+
+			-- Set up a hook to send an OSC52 code if the system register is used.
+			vim.api.nvim_create_autocmd("TextYankPost", {
+				pattern = "*",
+				callback = function(args)
+					local ev = vim.v.event
+					if ev.operator == 'y' and ev.regname == '+' then
+						vim.cmd.OSCYankReg('+')
+					end
+				end,
+			})
+		end,
+	},
 	'vim-utils/vim-husk',
-	{'voldikss/vim-floaterm', build = 'pip install --upgrade neovim-remote'},
+	{
+		'voldikss/vim-floaterm',
+		build = 'pip install --upgrade neovim-remote',
+		config = function()
+			let_g('floaterm_', {
+				keymap_prev   = '<F4>',
+				keymap_next   = '<F5>',
+				autoclose     = 1,
+				wintype       = 'floating',
+			})
+		end,
+		keys = {
+			{'<F6>', ':FloatermNew --height=0.4 --width=0.98 --cwd=<buffer> --position=bottom<CR>', 'n', silent = true, noremap = true},
+			{'<F9>', ':FloatermToggle<CR>', 'n', silent = true, noremap = true},
+		},
+	},
 })
 
 -- General {{{1
@@ -456,25 +529,6 @@ cmp.setup.filetype('markdown', {
 	}),
 })
 
--- easy-align {{{2
-vim.keymap.set('x', 'ga', '<Plug>(EasyAlign)', {})
-vim.keymap.set('n', 'ga', '<Plug>(EasyAlign)', {})
-
--- floaterm {{{2
-let_g('floaterm_', {
-	keymap_prev   = '<F4>',
-	keymap_next   = '<F5>',
-	keymap_toggle = '<F9>',
-	autoclose     = 1,
-	wintype       = 'floating',
-})
-
-vim.cmd [[
-nnoremap <silent> <F6> :FloatermNew --height=0.4 --width=0.98 --cwd=<buffer> --position=bottom<CR>
-tnoremap <silent> <F6> <C-\><C-n>:FloatermNew --height=0.4 --width=0.98 --cwd=<buffer> --position=bottom<CR>
-tnoremap <silent> <F7> <C-\><C-n>
-]]
-
 -- lspconfig {{{2
 local nvim_lsp = require('lspconfig')
 local lsp_capabilities = require('cmp_nvim_lsp').default_capabilities()
@@ -542,43 +596,10 @@ for _, server in pairs(default_lsps) do
 	setup_lsp(server, {})
 end
 
--- lens {{{2
-let_g('lens#', {
-	disabled_buftypes  = {'quickfix'},
-	animate            = 0,
-})
-
 -- netrw {{{2
 vim.g.netrw_liststyle = 3
 
--- oscyank {{{2
--- https://github.com/ojroques/vim-oscyank/issues/26#issuecomment-1179722561
-vim.g.oscyank_term = 'default'
 
--- Set up a hook to send an OSC52 code if the system register is used.
-vim.api.nvim_create_autocmd("TextYankPost", {
-	pattern = "*",
-	callback = function(args)
-		 local ev = vim.v.event
-		 if ev.operator == 'y' and ev.regname == '+' then
-			  vim.cmd.OSCYankReg('+')
-		 end
-	end,
-})
-
--- sneak {{{2
-vim.keymap.set('n', 'f', '<Plug>Sneak_f', {})
-vim.keymap.set('n', 'F', '<Plug>Sneak_F', {})
-vim.keymap.set('x', 'f', '<Plug>Sneak_f', {})
-vim.keymap.set('x', 'F', '<Plug>Sneak_F', {})
-vim.keymap.set('o', 'f', '<Plug>Sneak_f', {})
-vim.keymap.set('o', 'F', '<Plug>Sneak_F', {})
-vim.keymap.set('n', 't', '<Plug>Sneak_t', {})
-vim.keymap.set('n', 'T', '<Plug>Sneak_T', {})
-vim.keymap.set('x', 't', '<Plug>Sneak_t', {})
-vim.keymap.set('x', 'T', '<Plug>Sneak_T', {})
-vim.keymap.set('o', 't', '<Plug>Sneak_t', {})
-vim.keymap.set('o', 'T', '<Plug>Sneak_T', {})
 
 -- telescope {{{2
 local telescope = require('telescope')
@@ -751,16 +772,6 @@ require('trouble').setup {
 vim.diagnostic.config({
 	virtual_text = true,
 })
-
--- vim-visual-multi {{{2
-vim.g.VM_maps = {
-	['Add Cursor Down'] = '<M-S-j>',
-	['Add Cursor Up'] = '<M-S-k>',
-}
-
--- which-key {{{2
-require('which-key').setup {
-}
 
 --  File Types {{{1
 
