@@ -31,7 +31,7 @@ require('lazy').setup({
 
 	-- Editing {{{2
 	{
-		'junegunn/vim-easy-align',
+		'junegunn/vim-easy-align', -- {{{3
 		cmd = 'EasyAlign',
 		keys = {
 			{'ga', '<Plug>(EasyAlign)', 'n'},
@@ -39,7 +39,7 @@ require('lazy').setup({
 		},
 	},
 	{
-		'justinmk/vim-sneak',
+		'justinmk/vim-sneak', -- {{{3
 		keys = {
 			{'f', '<Plug>Sneak_f', 'n'},
 			{'F', '<Plug>Sneak_F', 'n'},
@@ -56,7 +56,7 @@ require('lazy').setup({
 		},
 	},
 	{
-		'mg979/vim-visual-multi',
+		'mg979/vim-visual-multi', -- {{{3
 		keys = {"<C-n>", '<M-S-j>', '<M-S-k>'},
 		config = function()
 			vim.g.VM_maps = {
@@ -68,7 +68,7 @@ require('lazy').setup({
 	'machakann/vim-highlightedyank',
 	'ntpeters/vim-better-whitespace',
 	{
-		'nvim-treesitter/nvim-treesitter',
+		'nvim-treesitter/nvim-treesitter', -- {{{3
 		build = ':TSUpdate',
 		dependencies = {'nvim-treesitter/nvim-treesitter-textobjects'},
 	},
@@ -87,7 +87,7 @@ require('lazy').setup({
 	{'habamax/vim-asciidoctor', ft = {'asciidoc', 'asciidoctor'}},
 	{'hynek/vim-python-pep8-indent', ft = 'python'},
 	{
-		'iamcco/markdown-preview.nvim',
+		'iamcco/markdown-preview.nvim', -- {{{3
 		ft = 'markdown',
 		build = function()
 			vim.fn['mkdp#util#install']()
@@ -106,7 +106,7 @@ require('lazy').setup({
 	-- Git {{{2
 	{'rhysd/git-messenger.vim', keys = '<leader>gm'},
 	{
-		'tpope/vim-fugitive',
+		'tpope/vim-fugitive', -- {{{3
 		dependencies = {'tpope/vim-rhubarb'},
 		cmd = {"G", "Git", "GBrowse", "GRename"},
 	},
@@ -114,12 +114,12 @@ require('lazy').setup({
 	-- Look and feel {{{2
 	'edkolev/tmuxline.vim',
 	{
-		'justinmk/molokai',
+		'justinmk/molokai', -- {{{3
 		lazy = false,
 		priority = 1000,
 	},
 	{
-		'vim-airline/vim-airline',
+		'vim-airline/vim-airline', -- {{{3
 		dependencies = {'vim-airline/vim-airline-themes'},
 		config = function()
 			vim.cmd [[
@@ -140,7 +140,7 @@ require('lazy').setup({
 
 	-- Navigation and window management {{{2
 	{
-		'camspiers/lens.vim',
+		'camspiers/lens.vim', -- {{{3
 		config = function()
 			vim.g['lens#disabled_buftypes'] = {'quickfix'}
 			vim.g['lens#animate']           = 0
@@ -148,7 +148,7 @@ require('lazy').setup({
 	},
 	'justinmk/vim-dirvish',
 	{
-		'mhinz/vim-grepper',
+		'mhinz/vim-grepper', -- {{{3
 		config = function()
 			vim.g.grepper = {
 				tools        = {'rg', 'ag', 'git'},
@@ -170,13 +170,14 @@ require('lazy').setup({
 		},
 	},
 	{
-		'nvim-telescope/telescope.nvim', tag = '0.1.1',
+		'nvim-telescope/telescope.nvim', -- {{{3
+		tag = '0.1.1',
 		dependencies = {'nvim-lua/plenary.nvim'},
 	},
 	'nvim-telescope/telescope-ui-select.nvim',
 	'rbgrouleff/bclose.vim',
 	{
-		'folke/which-key.nvim',
+		'folke/which-key.nvim', -- {{{3
 		config = function()
 			require('which-key').setup {}
 		end,
@@ -184,7 +185,7 @@ require('lazy').setup({
 
 	-- Terminal integration {{{2
 	{
-		'christoomey/vim-tmux-navigator',
+		'christoomey/vim-tmux-navigator', -- {{{3
 		config = function()
 			-- We'll use our own mappings.
 			vim.g.tmux_navigator_no_mappings = 1
@@ -197,7 +198,7 @@ require('lazy').setup({
 		},
 	},
 	{
-		'ojroques/vim-oscyank',
+		'ojroques/vim-oscyank', -- {{{3
 		config = function()
 			-- oscyank {{{2
 			-- https://github.com/ojroques/vim-oscyank/issues/26#issuecomment-1179722561
@@ -217,7 +218,7 @@ require('lazy').setup({
 	},
 	'vim-utils/vim-husk',
 	{
-		'voldikss/vim-floaterm',
+		'voldikss/vim-floaterm', -- {{{3
 		build = 'pip install --upgrade neovim-remote',
 		config = function()
 			let_g('floaterm_', {
