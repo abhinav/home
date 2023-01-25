@@ -31,11 +31,19 @@ require('lazy').setup({
 
 	-- Editing {{{2
 	{
-		'junegunn/vim-easy-align', -- {{{3
-		cmd = 'EasyAlign',
-		keys = {
-			{'ga', '<Plug>(EasyAlign)', {'n', 'x', 'v'}},
-		},
+		'echasnovski/mini.nvim',
+		version = false,
+		config = function()
+			require('mini.align').setup()
+			require('mini.comment').setup()
+			require('mini.jump').setup({
+				-- Already repeats with 'f' and 't'.
+				-- Leave this free for treesitter.
+				repeat_jump = '',
+			})
+			require('mini.surround').setup()
+			require('mini.trailspace').setup()
+		end,
 	},
 	{
 		'nvim-treesitter/nvim-treesitter-textobjects', -- {{{3
@@ -43,11 +51,6 @@ require('lazy').setup({
 			local ts_repeat_move = require "nvim-treesitter.textobjects.repeatable_move"
 			vim.keymap.set({ "n", "x", "o" }, ";", ts_repeat_move.repeat_last_move)
 			vim.keymap.set({ "n", "x", "o" }, ",", ts_repeat_move.repeat_last_move_opposite)
-
-			vim.keymap.set({ "n", "x", "o" }, "f", ts_repeat_move.builtin_f)
-			vim.keymap.set({ "n", "x", "o" }, "F", ts_repeat_move.builtin_F)
-			vim.keymap.set({ "n", "x", "o" }, "t", ts_repeat_move.builtin_t)
-			vim.keymap.set({ "n", "x", "o" }, "T", ts_repeat_move.builtin_T)
 		end,
 	},
 	{
@@ -64,17 +67,14 @@ require('lazy').setup({
 		},
 	},
 	'machakann/vim-highlightedyank',
-	'ntpeters/vim-better-whitespace',
 	{
 		'nvim-treesitter/nvim-treesitter', -- {{{3
 		build = ':TSUpdate',
 		dependencies = {'nvim-treesitter/nvim-treesitter-textobjects'},
 	},
 	{'tpope/vim-abolish', command = "S"},
-	'tpope/vim-commentary',
 	'tpope/vim-repeat',
 	'tpope/vim-sleuth',
-	'tpope/vim-surround',
 	'vim-scripts/visualrepeat',
 	'wsdjeg/vim-fetch',
 
