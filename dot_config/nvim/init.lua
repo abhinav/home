@@ -1,6 +1,6 @@
-lua << EOF
 -- Plugins {{{1
 
+-- Setup plugin loader {{{2
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
 	vim.fn.system({
@@ -267,8 +267,8 @@ function let_g(prefix, opts)
 		vim.g[key] = val
 	end
 end
-EOF
 
+vim.cmd [[
 colorscheme molokai
 
 " Use terminal background for performance.
@@ -309,8 +309,8 @@ if has('nvim')
 	tnoremap <C-M-L> <C-\><C-n><C-W><C-L>
 	tnoremap <C-M-H> <C-\><C-n><C-W><C-H>
 endif
+]]
 
-lua << EOF
 -- Edit the current vimrc
 vim.keymap.set('n', '<leader>evf', ':e $MYVIMRC<cr>', {
 	noremap = true,
@@ -336,8 +336,8 @@ vim.keymap.set('n', '<leader>bN', ':bN<CR>', {
 	desc = "Buffer previous",
 	silent = true,
 })
-EOF
 
+vim.cmd [[
 " Don't show line numbers in terminal.
 autocmd TermOpen * setlocal nonu nornu
 
@@ -348,8 +348,8 @@ augroup AutoReload
 	autocmd!
 	autocmd FocusGained,BufEnter * :checktime
 augroup end
+]]
 
-lua <<EOF
 -- Neovide {{{2
 if vim.g.neovide then
 	vim.opt.guifont = "Iosevka Term:h10"
@@ -357,11 +357,9 @@ if vim.g.neovide then
 		cursor_animation_length = 0,
 	})
 end
-EOF
 
-"  Plugin {{{1
+--  Plugin {{{1
 
-lua <<EOF
 -- nvim-cmp {{{2
 local cmp = require 'cmp'
 local cmp_ultisnips_mappings = require 'cmp_nvim_ultisnips.mappings'
@@ -457,14 +455,12 @@ cmp.setup.filetype('markdown', {
 		{name = 'tmux'},
 	}),
 })
-EOF
 
-" easy-align {{{2
-xmap ga <Plug>(EasyAlign)
-nmap ga <Plug>(EasyAlign)
+-- easy-align {{{2
+vim.keymap.set('x', 'ga', '<Plug>(EasyAlign)', {})
+vim.keymap.set('n', 'ga', '<Plug>(EasyAlign)', {})
 
-" floaterm {{{2
-lua <<EOF
+-- floaterm {{{2
 let_g('floaterm_', {
 	keymap_prev   = '<F4>',
 	keymap_next   = '<F5>',
@@ -472,14 +468,14 @@ let_g('floaterm_', {
 	autoclose     = 1,
 	wintype       = 'floating',
 })
-EOF
 
+vim.cmd [[
 nnoremap <silent> <F6> :FloatermNew --height=0.4 --width=0.98 --cwd=<buffer> --position=bottom<CR>
 tnoremap <silent> <F6> <C-\><C-n>:FloatermNew --height=0.4 --width=0.98 --cwd=<buffer> --position=bottom<CR>
 tnoremap <silent> <F7> <C-\><C-n>
+]]
 
-" lspconfig {{{2
-lua << EOF
+-- lspconfig {{{2
 local nvim_lsp = require('lspconfig')
 local lsp_capabilities = require('cmp_nvim_lsp').default_capabilities()
 
@@ -545,26 +541,19 @@ local default_lsps = {
 for _, server in pairs(default_lsps) do
 	setup_lsp(server, {})
 end
-EOF
 
-" lens {{{2
-lua <<EOF
+-- lens {{{2
 let_g('lens#', {
 	disabled_buftypes  = {'quickfix'},
 	animate            = 0,
 })
-EOF
 
-" netrw {{{2
-let g:netrw_liststyle = 3
+-- netrw {{{2
+vim.g.netrw_liststyle = 3
 
-" oscyank {{{2
-lua <<EOF
-
-let_g('oscyank_', {
-	-- https://github.com/ojroques/vim-oscyank/issues/26#issuecomment-1179722561
-	term = 'default',
-})
+-- oscyank {{{2
+-- https://github.com/ojroques/vim-oscyank/issues/26#issuecomment-1179722561
+vim.g.oscyank_term = 'default'
 
 -- Set up a hook to send an OSC52 code if the system register is used.
 vim.api.nvim_create_autocmd("TextYankPost", {
@@ -576,24 +565,22 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 		 end
 	end,
 })
-EOF
 
-" sneak {{{2
-nmap f <Plug>Sneak_f
-nmap F <Plug>Sneak_F
-xmap f <Plug>Sneak_f
-xmap F <Plug>Sneak_F
-omap f <Plug>Sneak_f
-omap F <Plug>Sneak_F
-nmap t <Plug>Sneak_t
-nmap T <Plug>Sneak_T
-xmap t <Plug>Sneak_t
-xmap T <Plug>Sneak_T
-omap t <Plug>Sneak_t
-omap T <Plug>Sneak_T
+-- sneak {{{2
+vim.keymap.set('n', 'f', '<Plug>Sneak_f', {})
+vim.keymap.set('n', 'F', '<Plug>Sneak_F', {})
+vim.keymap.set('x', 'f', '<Plug>Sneak_f', {})
+vim.keymap.set('x', 'F', '<Plug>Sneak_F', {})
+vim.keymap.set('o', 'f', '<Plug>Sneak_f', {})
+vim.keymap.set('o', 'F', '<Plug>Sneak_F', {})
+vim.keymap.set('n', 't', '<Plug>Sneak_t', {})
+vim.keymap.set('n', 'T', '<Plug>Sneak_T', {})
+vim.keymap.set('x', 't', '<Plug>Sneak_t', {})
+vim.keymap.set('x', 'T', '<Plug>Sneak_T', {})
+vim.keymap.set('o', 't', '<Plug>Sneak_t', {})
+vim.keymap.set('o', 'T', '<Plug>Sneak_T', {})
 
-" telescope {{{2
-lua << EOF
+-- telescope {{{2
 local telescope = require('telescope')
 local telescopes = require('telescope.builtin')
 local teleactions = require('telescope.actions')
@@ -662,10 +649,8 @@ vim.keymap.set('n', '<leader>:', telescopes.commands, {
 vim.keymap.set('n', '<leader>s?', telescopes.builtin, {
 	desc = "Search telescopes",
 })
-EOF
 
-" tree-sitter {{{2
-lua << EOF
+-- tree-sitter {{{2
 require 'nvim-treesitter.configs'.setup {
 	ensure_installed = {
 		"bash", "c", "cpp", "css", "dot", "gitignore", "go", "gomod",
@@ -715,11 +700,9 @@ require 'nvim-treesitter.configs'.setup {
 		},
 	},
 }
-EOF
 
 
-" trouble {{{2
-lua << EOF
+-- trouble {{{2
 local diagnostic_signs = {
 	Error = '🚫',
 	Warn  = '⚠️',
@@ -768,31 +751,21 @@ require('trouble').setup {
 vim.diagnostic.config({
 	virtual_text = true,
 })
-EOF
 
-" vim-visual-multi {{{2
-lua << EOF
-let_g('VM_', {
-	maps = {
-		['Add Cursor Down'] = '<M-S-j>',
-		['Add Cursor Up'] = '<M-S-k>',
-	},
-})
-EOF
+-- vim-visual-multi {{{2
+vim.g.VM_maps = {
+	['Add Cursor Down'] = '<M-S-j>',
+	['Add Cursor Up'] = '<M-S-k>',
+}
 
-
-lua <<EOF
 -- which-key {{{2
 require('which-key').setup {
 }
-EOF
 
-"  File Types {{{1
+--  File Types {{{1
 
-" go {{{2
+-- go {{{2
 
-" lsp {{{3
-lua << EOF
 -- Support disabling gopls and LSP by setting an environment variable,
 -- and in diff mode.
 local disable_gopls = vim.env.VIM_GOPLS_DISABLED or vim.opt.diff:get()
@@ -821,22 +794,14 @@ if not disable_gopls then
 		init_options = gopls_options,
 	})
 end
-EOF
 
-" haskell {{{2
+-- markdown {{{2
+vim.g['pandoc#syntax#conceal#use'] = 0
 
-" markdown {{{2
-lua << EOF
-let_g('pandoc#syntax#', {
-	['conceal#use'] = 0,
-})
-EOF
+-- rust {{{2
+vim.g.rustfmt_autosave = 1
 
-" rust {{{2
-let g:rustfmt_autosave = 1
-
-" lsp {{{3
-lua << EOF
+-- lsp {{{3
 setup_lsp('rust_analyzer', {
 	settings = {
 		['rust-analyzer'] = {
@@ -851,21 +816,15 @@ setup_lsp('rust_analyzer', {
 		},
 	},
 })
-EOF
 
-" typescript {{{2
-
-" lsp {{{3
-lua <<EOF
+-- typescript {{{2
 setup_lsp('tsserver', {
 	init_options = {
 		disableAutomaticTypingAcquisition = true,
 	},
 })
-EOF
 
-" wiki.vim {{{2
-lua <<EOF
+-- wiki.vim {{{2
 let_g('wiki_', {
 	filetypes = {'md'},
 	index_name = 'README',
@@ -876,4 +835,3 @@ let_g('wiki_', {
 		['<plug>(wiki-link-follow)'] = '<leader><CR>',
 	},
 })
-EOF
