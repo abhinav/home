@@ -636,36 +636,50 @@ telescope.setup {
 
 telescope.load_extension('ui-select')
 
+-- All keys preceded by <leader>:
+--
 -- Mneomonics:
--- sf  search files
--- sf  search buffers
--- sg  search grep
--- sh  search help
--- st  search treesitter
--- s:  search ":" commands
--- s?  "I forgot"
-vim.keymap.set('n', '<leader>sf', telescopes.find_files, {
-	desc = "Search files",
+-- ff  find files
+-- fF  find local files (buffer directory)
+-- fb  find buffers
+-- fh  find help
+-- fr  find recent
+-- ft  find treesitter
+-- f?  "I forgot"
+--
+-- Others:
+-- /  find in files
+-- :  find ":" commands
+vim.keymap.set('n', '<leader>ff', telescopes.find_files, {
+	desc = "Find files",
 })
-vim.keymap.set('n', '<leader>sb', function()
+vim.keymap.set('n', '<leader>fF', function()
+	telescopes.find_files({
+		cwd = require('telescope.utils').buffer_dir(),
+	})
+end, {desc = "Find files (bufdir)"})
+vim.keymap.set('n', '<leader>fb', function()
 	telescopes.buffers {
 		ignore_current_buffer = true,
 	}
-end, {desc = "Search buffers"})
-vim.keymap.set('n', '<leader>sg', telescopes.live_grep, {
-	desc = "Search all files (grep)",
+end, {desc = "Find buffers"})
+vim.keymap.set('n', '<leader>fh', telescopes.help_tags, {
+	desc = "Find help",
 })
-vim.keymap.set('n', '<leader>sh', telescopes.help_tags, {
-	desc = "Search help",
+vim.keymap.set('n', '<leader>fr', telescopes.oldfiles, {
+	desc = "Find recent files",
 })
-vim.keymap.set('n', '<leader>st', telescopes.treesitter, {
-	desc = "Search treesitter",
+vim.keymap.set('n', '<leader>ft', telescopes.treesitter, {
+	desc = "Find treesitter",
+})
+vim.keymap.set('n', '<leader>f?', telescopes.builtin, {
+	desc = "Find telescopes",
+})
+vim.keymap.set('n', '<leader>/', telescopes.live_grep, {
+	desc = "Find all files (grep)",
 })
 vim.keymap.set('n', '<leader>:', telescopes.commands, {
-	desc = "Search commands",
-})
-vim.keymap.set('n', '<leader>s?', telescopes.builtin, {
-	desc = "Search telescopes",
+	desc = "Find commands",
 })
 
 -- tree-sitter {{{2
