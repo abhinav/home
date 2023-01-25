@@ -34,8 +34,7 @@ require('lazy').setup({
 		'junegunn/vim-easy-align', -- {{{3
 		cmd = 'EasyAlign',
 		keys = {
-			{'ga', '<Plug>(EasyAlign)', 'n'},
-			{'ga', '<Plug>(EasyAlign)', 'x'},
+			{'ga', '<Plug>(EasyAlign)', {'n', 'x', 'v'}},
 		},
 	},
 	{
@@ -53,13 +52,16 @@ require('lazy').setup({
 	},
 	{
 		'mg979/vim-visual-multi', -- {{{3
-		keys = {"<C-n>", '<M-S-j>', '<M-S-k>'},
-		config = function()
-			vim.g.VM_maps = {
-				['Add Cursor Down'] = '<M-S-j>',
-				['Add Cursor Up'] = '<M-S-k>',
-			}
-		end,
+		keys = {
+			{'<M-S-j>', '<Plug>(VM-Add-Cursor-Down)', 'n', desc = "Add cursor (down)"},
+			{'<M-S-k>', '<Plug>(VM-Add-Cursor-Up)', 'n', desc = "Add cursor (up)"},
+			{'<C-n>', '<Plug>(VM-Find-Under)', {'n', 'v'}, desc = "Add cursor (matching)"},
+			{'<S-Right>', '<Plug>(VM-Select-l)', 'n', desc = "Select (right)"},
+			{'<S-Left>', '<Plug>(VM-Select-h)', 'n', desc = "Select (left)"},
+			{'\\A', '<Plug>(VM-Visual-All)', 'n', desc = "Select all matching"},
+			{'\\/', '<Plug>(VM-Visual-Regex)', 'n', desc = "Select all matching regex"},
+			{'\\f', '<Plug>(VM-Visual-Find)', 'n', desc = "Select all matching '/' register"},
+		},
 	},
 	'machakann/vim-highlightedyank',
 	'ntpeters/vim-better-whitespace',
