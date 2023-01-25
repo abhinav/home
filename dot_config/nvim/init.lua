@@ -692,6 +692,8 @@ require 'nvim-treesitter.configs'.setup {
 			keymaps = {
 				['af'] = {query = '@function.outer', desc = "a function"},
 				['if'] = {query = '@function.inner', desc = "in function"},
+				['ab'] = {query = '@block.outer', desc = "a block"},
+				['ib'] = {query = '@block.inner', desc = "in block"},
 			},
 		},
 		swap = {
@@ -706,17 +708,19 @@ require 'nvim-treesitter.configs'.setup {
 		move = {
 			enable = true,
 			goto_next_start = {
-				["]a"] = {query = "@parameter.inner", desc = "Next argument"},
+				["]a"] = {query = "@parameter.inner", desc = "Next argument start"},
 				["]m"] = {query = "@function.outer", desc = "Next function start"},
 			},
 			goto_next_end = {
+				["]A"] = {query = "@parameter.inner", desc = "Next argument end"},
 				["]M"] = {query = "@function.outer", desc = "Next function end"},
 			},
 			goto_previous_start = {
-				["[a"] = {query = "@parameter.inner", desc = "Previous argument"},
+				["[a"] = {query = "@parameter.inner", desc = "Previous argument start"},
 				["[m"] = {query = "@function.outer", desc = "Previous function start"},
 			},
 			goto_previous_end = {
+				["[A"] = {query = "@parameter.inner", desc = "Previous argument end"},
 				["[M"] = {query = "@function.outer", desc = "Previous function end"},
 			},
 		},
