@@ -54,8 +54,6 @@ require('lazy').setup({
 	-- Filetype-specific {{{2
 	'alker0/chezmoi.vim',
 	{'cappyzawa/starlark.vim', ft = 'starlark'},
-	{'cespare/vim-toml', ft = 'toml'},
-	{'chrisbra/csv.vim', ft = 'csv'},
 	'direnv/direnv.vim',
 	{'habamax/vim-asciidoctor', ft = {'asciidoc', 'asciidoctor'}},
 	{'hynek/vim-python-pep8-indent', ft = 'python'},
@@ -98,7 +96,6 @@ require('lazy').setup({
 			vim.cmd [[
 				let g:airline_theme = "molokai"
 				let g:airline#extensions#branch#displayed_head_limit = 10
-				let g:airline#extensions#ale#enabled = 1
 
 				" We want to do this manually with,
 				"   :Tmuxline airline | TmuxlineSnapshot ~/.tmux-molokai.conf
@@ -108,7 +105,6 @@ require('lazy').setup({
 	},
 
 	-- LSP and language features {{{2
-	'dense-analysis/ale',
 	'folke/lsp-colors.nvim',
 	'folke/trouble.nvim',
 	'neovim/nvim-lspconfig',
@@ -365,28 +361,7 @@ EOF
 
 "  Plugin {{{1
 
-" ale {{{2
 lua <<EOF
-ale = {
-	open_list              = 1,
-	sign_error             = '⊘',
-	sign_warning           = '⚠',
-	lint_on_save           = 1,
-	lint_on_enter          = 0,
-	lint_on_text_changed   = 0,
-	emit_conflict_warnings = 0,
-	linters                = {},
-}
-
-vim.keymap.set('n', '<leader>ep', '<Plug>(ale_previous_wrap)', {
-	silent = true,
-	desc = "Error previous",
-})
-vim.keymap.set('n', '<leader>en', '<Plug>(ale_next_wrap)', {
-	silent = true,
-	desc = "Error next",
-})
-
 -- nvim-cmp {{{2
 local cmp = require 'cmp'
 local cmp_ultisnips_mappings = require 'cmp_nvim_ultisnips.mappings'
@@ -816,9 +791,6 @@ EOF
 
 " go {{{2
 
-" ale {{{3
-lua ale.linters.go = {}
-
 " lsp {{{3
 lua << EOF
 -- Support disabling gopls and LSP by setting an environment variable,
@@ -853,12 +825,6 @@ EOF
 
 " haskell {{{2
 
-" lsp {{{3
-lua << EOF
-ale.linters.haskell = {'hie', 'stylish-haskell', 'hlint'}
-ale.haskell_hie_executable = 'hie-wrapper'
-EOF
-
 " markdown {{{2
 lua << EOF
 let_g('pandoc#syntax#', {
@@ -868,9 +834,6 @@ EOF
 
 " rust {{{2
 let g:rustfmt_autosave = 1
-
-" ale {{{3
-lua ale.linters.rust = {}
 
 " lsp {{{3
 lua << EOF
@@ -914,8 +877,3 @@ let_g('wiki_', {
 	},
 })
 EOF
-
-" After {{{1
-
-" ale {{{2
-lua let_g('ale_', ale)
