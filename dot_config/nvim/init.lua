@@ -39,21 +39,17 @@ require('lazy').setup({
 		},
 	},
 	{
-		'justinmk/vim-sneak', -- {{{3
-		keys = {
-			{'f', '<Plug>Sneak_f', 'n'},
-			{'F', '<Plug>Sneak_F', 'n'},
-			{'f', '<Plug>Sneak_f', 'x'},
-			{'F', '<Plug>Sneak_F', 'x'},
-			{'f', '<Plug>Sneak_f', 'o'},
-			{'F', '<Plug>Sneak_F', 'o'},
-			{'t', '<Plug>Sneak_t', 'n'},
-			{'T', '<Plug>Sneak_T', 'n'},
-			{'t', '<Plug>Sneak_t', 'x'},
-			{'T', '<Plug>Sneak_T', 'x'},
-			{'t', '<Plug>Sneak_t', 'o'},
-			{'T', '<Plug>Sneak_T', 'o'},
-		},
+		'nvim-treesitter/nvim-treesitter-textobjects', -- {{{3
+		config = function()
+			local ts_repeat_move = require "nvim-treesitter.textobjects.repeatable_move"
+			vim.keymap.set({ "n", "x", "o" }, ";", ts_repeat_move.repeat_last_move)
+			vim.keymap.set({ "n", "x", "o" }, ",", ts_repeat_move.repeat_last_move_opposite)
+
+			vim.keymap.set({ "n", "x", "o" }, "f", ts_repeat_move.builtin_f)
+			vim.keymap.set({ "n", "x", "o" }, "F", ts_repeat_move.builtin_F)
+			vim.keymap.set({ "n", "x", "o" }, "t", ts_repeat_move.builtin_t)
+			vim.keymap.set({ "n", "x", "o" }, "T", ts_repeat_move.builtin_T)
+		end,
 	},
 	{
 		'mg979/vim-visual-multi', -- {{{3
