@@ -563,15 +563,15 @@ function setup_lsp(server, lsp_opts)
 		-- lr   Language rename
 		-- lgr  Language go-to references
 		-- lgr  Language go-to implementation
-		-- lsr  Language search references
-		-- lsd  Language search definitions
-		-- lsw  Language search workspace
+		-- lfr  Language find references
+		-- lfd  Language find definitions
+		-- lfw  Language find workspace
 		lsp_nmap('<leader>lr', vim.lsp.buf.rename, "Rename")
 		lsp_nmap('<leader>lgr', vim.lsp.buf.references, "Go to references")
 		lsp_nmap('<leader>lgi', vim.lsp.buf.implementation, "Go to implementation")
-		lsp_nmap('<leader>lsr', telescopes.lsp_references, "Search references")
-		lsp_nmap('<leader>lsd', telescopes.lsp_document_symbols, "Search symbols (document)")
-		lsp_nmap('<leader>lsw', telescopes.lsp_workspace_symbols, "Search symbols (workspace)")
+		lsp_nmap('<leader>lfr', telescopes.lsp_references, "Search references")
+		lsp_nmap('<leader>lfd', telescopes.lsp_document_symbols, "Search symbols (document)")
+		lsp_nmap('<leader>lfw', telescopes.lsp_workspace_symbols, "Search symbols (workspace)")
 	end
 
 	lsp_opts.capabilities = lsp_capabilities
