@@ -721,19 +721,19 @@ require 'nvim-treesitter.configs'.setup {
 			enable = true,
 			goto_next_start = {
 				["]a"] = {query = "@parameter.inner", desc = "Next argument start"},
-				["]m"] = {query = "@function.outer", desc = "Next function start"},
+				["]f"] = {query = "@function.outer", desc = "Next function start"},
 			},
 			goto_next_end = {
 				["]A"] = {query = "@parameter.inner", desc = "Next argument end"},
-				["]M"] = {query = "@function.outer", desc = "Next function end"},
+				["]F"] = {query = "@function.outer", desc = "Next function end"},
 			},
 			goto_previous_start = {
 				["[a"] = {query = "@parameter.inner", desc = "Previous argument start"},
-				["[m"] = {query = "@function.outer", desc = "Previous function start"},
+				["[f"] = {query = "@function.outer", desc = "Previous function start"},
 			},
 			goto_previous_end = {
 				["[A"] = {query = "@parameter.inner", desc = "Previous argument end"},
-				["[M"] = {query = "@function.outer", desc = "Previous function end"},
+				["[F"] = {query = "@function.outer", desc = "Previous function end"},
 			},
 		},
 	},
