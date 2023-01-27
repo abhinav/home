@@ -131,12 +131,96 @@ require('lazy').setup({
 	},
 
 	-- LSP and language features {{{2
-	'folke/lsp-colors.nvim',
 	'folke/trouble.nvim',
-	'neovim/nvim-lspconfig',
 	{
-		'jose-elias-alvarez/null-ls.nvim',
+		'neovim/nvim-lspconfig', -- {{{3
+		dependencies = {
+			'folke/lsp-colors.nvim',
+		},
+		-- Table of options for each language server.
+		-- Items can be key-value pairs to specify configuration,
+		-- and strings to use default configuration.
+		-- The configuration can be a function.
+		opts = {
+			gopls = function()
+				if vim.env.VIM_GOPLS_DISABLED then
+					return nil
+				end
+
+				local init_opts = {
+					gofumpt = not vim.env.VIM_GOPLS_NO_GOFUMPT,
+					staticcheck = true,
+				}
+				if vim.env.VIM_GOPLS_BUILD_TAGS then
+					init_opts.buildFlags = {
+						'-tags', vim.env.VIM_GOPLS_BUILD_TAGS,
+					}
+				end
+
+				return {
+					cmd = {'gopls', '-remote=auto'},
+					init_options = init_opts,
+				}
+			end,
+			'pylsp',
+			rust_analyzer = {
+				settings = {
+					['rust-analyzer'] = {
+						completion = {
+							postfix = {
+								enable = false,
+							},
+						},
+						checkOnSave = {
+							command = "clippy",
+						},
+					},
+				},
+			},
+			tsserver = {
+				init_options = {
+					disableAutomaticTypingAcquisition = true,
+				},
+			},
+			'zls',
+		},
+		config = function(_, opts)
+			for name, cfg in pairs(opts) do
+				local nvim_lsp = require('lspconfig')
+				local lsp_capabilities = require('cmp_nvim_lsp').default_capabilities()
+
+				if type(name) == "number" then
+					name = cfg
+					cfg = {}
+				end
+				if type(cfg) == "function" then
+					cfg = cfg()
+				end
+				if cfg ~= nil then
+					cfg.capabilities = lsp_capabilities
+					cfg.flags = {
+						-- Don't spam LSP with changes. Wait a second between updates.
+						debounce_text_changes = 1000,
+					}
+					nvim_lsp[name].setup(cfg)
+				end
+
+			end
+		end,
+	},
+	{
+		'jose-elias-alvarez/null-ls.nvim', -- {{{3
 		dependencies = {'nvim-lua/plenary.nvim'},
+		config = function()
+			local null_ls = require('null-ls')
+			null_ls.setup({
+				sources = {
+					null_ls.builtins.code_actions.shellcheck,
+					null_ls.builtins.diagnostics.shellcheck,
+					null_ls.builtins.formatting.jq,
+				},
+			})
+		end,
 	},
 
 	-- Navigation and window management {{{2
@@ -501,6 +585,55 @@ end
 
 --  Plugin {{{1
 
+-- lspconfig {{{2
+
+local function lsp_on_attach(client, bufnr)
+	local function lsp_nmap(key, fn, desc)
+		vim.keymap.set('n', key, fn, {
+			noremap = true,
+			silent = true,
+			desc = desc,
+		})
+	end
+
+	vim.bo.omnifunc =  'v:lua.vim.lsp.omnifunc'
+	local opts = { noremap = true, silent = true }
+
+	-- Keybindings
+	--  K            Documentation
+	--  gd           Go to definition
+	--  Alt-Enter    Code action
+
+	lsp_nmap('K', vim.lsp.buf.hover, "Documentation")
+	lsp_nmap('gd', vim.lsp.buf.definition, "Go to definition")
+
+	local telescopes = require('telescope.builtin')
+	-- lgr  Language go-to references
+	-- lgi  Language go-to implementation
+	-- lfr  Language find references
+	-- lfd  Language find definitions
+	-- lfw  Language find workspace
+	lsp_nmap('<leader>lgr', vim.lsp.buf.references, "Go to references")
+	lsp_nmap('<leader>lgi', vim.lsp.buf.implementation, "Go to implementation")
+	lsp_nmap('<leader>lfr', telescopes.lsp_references, "Find references")
+	lsp_nmap('<leader>lfd', telescopes.lsp_document_symbols, "Find symbols (document)")
+	lsp_nmap('<leader>lfw', telescopes.lsp_workspace_symbols, "Find symbols (workspace)")
+
+	-- Mneomonics:
+	-- cr   Code rename
+	-- ca   Code action
+	lsp_nmap('<leader>ca', vim.lsp.buf.code_action, "Code action")
+	lsp_nmap('<leader>cr', vim.lsp.buf.rename, "Rename")
+end
+
+vim.api.nvim_create_autocmd("LspAttach", {
+	callback = function(args)
+		local buffer = args.buf
+		local client = vim.lsp.get_client_by_id(args.data.client_id)
+		lsp_on_attach(client, buffer)
+	end,
+})
+
 -- nvim-cmp {{{2
 local cmp = require 'cmp'
 local cmp_ultisnips_mappings = require 'cmp_nvim_ultisnips.mappings'
@@ -595,86 +728,6 @@ cmp.setup.filetype('markdown', {
 		{name = 'buffer'},
 		{name = 'tmux'},
 	}),
-})
-
--- lspconfig {{{2
-local nvim_lsp = require('lspconfig')
-local lsp_capabilities = require('cmp_nvim_lsp').default_capabilities()
-
-local function lsp_on_attach(client, bufnr)
-	local function buf_set_option(...)
-		vim.api.nvim_buf_set_option(bufnr, ...)
-	end
-
-	local function lsp_nmap(key, fn, desc)
-		vim.keymap.set('n', key, fn, {
-			noremap = true,
-			silent = true,
-			desc = desc,
-		})
-	end
-
-	buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
-	local opts = { noremap = true, silent = true }
-
-	-- Keybindings
-	--  K            Documentation
-	--  gd           Go to definition
-	--  Alt-Enter    Code action
-
-	lsp_nmap('K', vim.lsp.buf.hover, "Documentation")
-	lsp_nmap('gd', vim.lsp.buf.definition, "Go to definition")
-
-	local telescopes = require('telescope.builtin')
-	-- lgr  Language go-to references
-	-- lgi  Language go-to implementation
-	-- lfr  Language find references
-	-- lfd  Language find definitions
-	-- lfw  Language find workspace
-	lsp_nmap('<leader>lgr', vim.lsp.buf.references, "Go to references")
-	lsp_nmap('<leader>lgi', vim.lsp.buf.implementation, "Go to implementation")
-	lsp_nmap('<leader>lfr', telescopes.lsp_references, "Find references")
-	lsp_nmap('<leader>lfd', telescopes.lsp_document_symbols, "Find symbols (document)")
-	lsp_nmap('<leader>lfw', telescopes.lsp_workspace_symbols, "Find symbols (workspace)")
-
-	-- Mneomonics:
-	-- cr   Code rename
-	-- ca   Code action
-	lsp_nmap('<leader>ca', vim.lsp.buf.code_action, "Code action")
-	lsp_nmap('<leader>cr', vim.lsp.buf.rename, "Rename")
-end
-
-function setup_lsp(server, lsp_opts)
-	lsp_opts.on_attach = lsp_on_attach
-	lsp_opts.capabilities = lsp_capabilities
-	lsp_opts.flags = {
-		-- Don't spam LSP with changes. Wait a second between updates.
-		debounce_text_changes = 1000,
-	}
-	nvim_lsp[server].setup(lsp_opts)
-end
-
--- LSP implementations that don't need any configuration.
-local default_lsps = {
-	'clojure_lsp',
-	'hie',
-	'pylsp',
-	'zls',
-}
-
-for _, server in pairs(default_lsps) do
-	setup_lsp(server, {})
-end
-
--- null-ls {{{3
-local null_ls = require('null-ls')
-null_ls.setup({
-	on_attach = lsp_on_attach,
-	sources = {
-		null_ls.builtins.code_actions.shellcheck,
-		null_ls.builtins.diagnostics.shellcheck,
-		null_ls.builtins.formatting.jq,
-	},
 })
 
 -- netrw {{{2
@@ -879,65 +932,11 @@ end, {desc = "Previous diagnostic"})
 
 --  File Types {{{1
 
--- go {{{2
-
--- Support disabling gopls and LSP by setting an environment variable,
--- and in diff mode.
-local disable_gopls = vim.env.VIM_GOPLS_DISABLED or vim.opt.diff:get()
-
-local gopls_options = {
-	gofumpt     = true,
-	staticcheck = true,
-}
-
-if vim.env.VIM_GOPLS_NO_GOFUMPT then
-	gopls_options.gofumpt = false
-end
-
-if vim.env.VIM_GOPLS_BUILD_TAGS then
-	gopls_options.buildFlags = {'-tags', vim.env.VIM_GOPLS_BUILD_TAGS}
-end
-
--- Support overriding memory mode with an environment variable.
-if vim.env.VIM_GOPLS_MEMORY_MODE then
-	gopls_options.memoryMode = vim.env.VIM_GOPLS_MEMORY_MODE
-end
-
-if not disable_gopls then
-	setup_lsp('gopls', {
-		cmd = {'gopls', '-remote=auto'},
-		init_options = gopls_options,
-	})
-end
-
 -- markdown {{{2
 vim.g['pandoc#syntax#conceal#use'] = 0
 
 -- rust {{{2
 vim.g.rustfmt_autosave = 1
-
--- lsp {{{3
-setup_lsp('rust_analyzer', {
-	settings = {
-		['rust-analyzer'] = {
-			completion = {
-				postfix = {
-					enable = false,
-				},
-			},
-			checkOnSave = {
-				command = "clippy",
-			},
-		},
-	},
-})
-
--- typescript {{{2
-setup_lsp('tsserver', {
-	init_options = {
-		disableAutomaticTypingAcquisition = true,
-	},
-})
 
 -- wiki.vim {{{2
 let_g('wiki_', {
