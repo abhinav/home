@@ -83,7 +83,6 @@ require('lazy').setup({
 	{'cappyzawa/starlark.vim', ft = 'starlark'},
 	'direnv/direnv.vim',
 	{'habamax/vim-asciidoctor', ft = {'asciidoc', 'asciidoctor'}},
-	{'hynek/vim-python-pep8-indent', ft = 'python'},
 	{
 		'iamcco/markdown-preview.nvim', -- {{{3
 		ft = 'markdown',
@@ -135,6 +134,10 @@ require('lazy').setup({
 	'folke/lsp-colors.nvim',
 	'folke/trouble.nvim',
 	'neovim/nvim-lspconfig',
+	{
+		'jose-elias-alvarez/null-ls.nvim',
+		dependencies = {'nvim-lua/plenary.nvim'},
+	},
 
 	-- Navigation and window management {{{2
 	{
@@ -660,10 +663,19 @@ for _, server in pairs(default_lsps) do
 	setup_lsp(server, {})
 end
 
+-- null-ls {{{3
+local null_ls = require('null-ls')
+null_ls.setup({
+	on_attach = lsp_on_attach,
+	sources = {
+		null_ls.builtins.code_actions.shellcheck,
+		null_ls.builtins.diagnostics.shellcheck,
+		null_ls.builtins.formatting.jq,
+	},
+})
+
 -- netrw {{{2
 vim.g.netrw_liststyle = 3
-
-
 
 -- telescope {{{2
 local telescope = require('telescope')
