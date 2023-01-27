@@ -760,7 +760,7 @@ end
 require('trouble').setup {
 	auto_open = false,
 	auto_close = true,
-	auto_preview = true,
+	auto_preview = false,
 
 	action_keys = {
 		close = "q",
@@ -789,6 +789,14 @@ require('trouble').setup {
 vim.diagnostic.config({
 	virtual_text = true,
 })
+
+vim.keymap.set('n', ']e', function()
+	vim.diagnostic.goto_next({float = false, wrap = false})
+end, {desc = "Next diagnostic"})
+
+vim.keymap.set('n', '[e', function()
+	vim.diagnostic.goto_prev({float = false, wrap = false})
+end, {desc = "Previous diagnostic"})
 
 --  File Types {{{1
 
