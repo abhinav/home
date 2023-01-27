@@ -652,8 +652,8 @@ telescope.load_extension('ui-select')
 -- Others:
 -- /  find in files
 -- :  find ":" commands
-vim.keymap.set('n', '<leader>ff', telescopes.find_files, {
-	desc = "Find files",
+vim.keymap.set('n', '<leader>f<leader>', telescopes.resume, {
+	desc = "Find (resume)",
 })
 vim.keymap.set('n', '<leader>fF', function()
 	telescopes.find_files({
