@@ -561,6 +561,10 @@ vim.keymap.set('n', '<leader>ws', '<C-W>s', {
 	desc = "Split window horizontally",
 	silent = true,
 })
+vim.keymap.set('n', '<leader>ws', '<C-W>o', {
+	desc = "Hide all other windows",
+	silent = true,
+})
 
 vim.cmd [[
 " Don't show line numbers in terminal.
