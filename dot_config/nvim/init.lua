@@ -595,54 +595,56 @@ cmp.setup.filetype('markdown', {
 local nvim_lsp = require('lspconfig')
 local lsp_capabilities = require('cmp_nvim_lsp').default_capabilities()
 
-function setup_lsp(server, lsp_opts)
-	lsp_opts.on_attach = function(client, bufnr)
-		local function buf_set_option(...)
-			vim.api.nvim_buf_set_option(bufnr, ...)
-		end
-
-		local function lsp_nmap(key, fn, desc)
-			vim.keymap.set('n', key, fn, {
-				noremap = true,
-				silent = true,
-				desc = desc,
-			})
-		end
-
-		buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
-		local opts = { noremap = true, silent = true }
-
-		-- Keybindings
-		--  K            Documentation
-		--  gd           Go to definition
-		--  Alt-Enter    Code action
-
-		lsp_nmap('K', vim.lsp.buf.hover, "Documentation")
-		lsp_nmap('gd', vim.lsp.buf.definition, "Go to definition")
-		lsp_nmap('<M-CR>', vim.lsp.buf.code_action, "Code action")
-
-		local telescopes = require('telescope.builtin')
-		-- Mneomonics:
-		-- lr   Language rename
-		-- lgr  Language go-to references
-		-- lgr  Language go-to implementation
-		-- lfr  Language find references
-		-- lfd  Language find definitions
-		-- lfw  Language find workspace
-		lsp_nmap('<leader>lr', vim.lsp.buf.rename, "Rename")
-		lsp_nmap('<leader>lgr', vim.lsp.buf.references, "Go to references")
-		lsp_nmap('<leader>lgi', vim.lsp.buf.implementation, "Go to implementation")
-		lsp_nmap('<leader>lfr', telescopes.lsp_references, "Find references")
-		lsp_nmap('<leader>lfd', telescopes.lsp_document_symbols, "Find symbols (document)")
-		lsp_nmap('<leader>lfw', telescopes.lsp_workspace_symbols, "Find symbols (workspace)")
+local function lsp_on_attach(client, bufnr)
+	local function buf_set_option(...)
+		vim.api.nvim_buf_set_option(bufnr, ...)
 	end
 
+	local function lsp_nmap(key, fn, desc)
+		vim.keymap.set('n', key, fn, {
+			noremap = true,
+			silent = true,
+			desc = desc,
+		})
+	end
+
+	buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
+	local opts = { noremap = true, silent = true }
+
+	-- Keybindings
+	--  K            Documentation
+	--  gd           Go to definition
+	--  Alt-Enter    Code action
+
+	lsp_nmap('K', vim.lsp.buf.hover, "Documentation")
+	lsp_nmap('gd', vim.lsp.buf.definition, "Go to definition")
+
+	local telescopes = require('telescope.builtin')
+	-- lgr  Language go-to references
+	-- lgi  Language go-to implementation
+	-- lfr  Language find references
+	-- lfd  Language find definitions
+	-- lfw  Language find workspace
+	lsp_nmap('<leader>lgr', vim.lsp.buf.references, "Go to references")
+	lsp_nmap('<leader>lgi', vim.lsp.buf.implementation, "Go to implementation")
+	lsp_nmap('<leader>lfr', telescopes.lsp_references, "Find references")
+	lsp_nmap('<leader>lfd', telescopes.lsp_document_symbols, "Find symbols (document)")
+	lsp_nmap('<leader>lfw', telescopes.lsp_workspace_symbols, "Find symbols (workspace)")
+
+	-- Mneomonics:
+	-- cr   Code rename
+	-- ca   Code action
+	lsp_nmap('<leader>ca', vim.lsp.buf.code_action, "Code action")
+	lsp_nmap('<leader>cr', vim.lsp.buf.rename, "Rename")
+end
+
+function setup_lsp(server, lsp_opts)
+	lsp_opts.on_attach = lsp_on_attach
 	lsp_opts.capabilities = lsp_capabilities
 	lsp_opts.flags = {
 		-- Don't spam LSP with changes. Wait a second between updates.
 		debounce_text_changes = 1000,
 	}
-
 	nvim_lsp[server].setup(lsp_opts)
 end
 
