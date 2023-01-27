@@ -198,6 +198,7 @@ require('lazy').setup({
 				},
 				["<leader>b"] = {name = "+buffer"},
 				["<leader>t"] = {name = "+tabs"},
+				["<leader>q"] = {name = "+quit"},
 				["<leader>w"] = {name = "+windows"},
 				["<leader>x"] = {name = "+diagnostics"},
 			})
@@ -376,6 +377,8 @@ highlight LineNr ctermfg=245
 highlight VertSplit guibg=bg guifg=bg
 ]]
 
+-- Quit
+vim.keymap.set('n', '<leader>qq', ':qa<cr>', {desc = "Quit all"})
 
 -- Disable ex mode from Q.
 vim.keymap.set('n', 'Q', '<Nop>', {noremap = true})
