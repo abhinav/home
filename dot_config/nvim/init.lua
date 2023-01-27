@@ -136,6 +136,8 @@ require('lazy').setup({
 		'neovim/nvim-lspconfig', -- {{{3
 		dependencies = {
 			'folke/lsp-colors.nvim',
+			'williamboman/mason.nvim',
+			'williamboman/mason-lspconfig.nvim',
 		},
 		-- Table of options for each language server.
 		-- Items can be key-value pairs to specify configuration,
@@ -185,9 +187,11 @@ require('lazy').setup({
 			'zls',
 		},
 		config = function(_, opts)
+			local nvim_lsp = require('lspconfig')
+			local lsp_capabilities = require('cmp_nvim_lsp').default_capabilities()
+
+			ensure_installed = {}
 			for name, cfg in pairs(opts) do
-				local nvim_lsp = require('lspconfig')
-				local lsp_capabilities = require('cmp_nvim_lsp').default_capabilities()
 
 				if type(name) == "number" then
 					name = cfg
@@ -202,15 +206,28 @@ require('lazy').setup({
 						-- Don't spam LSP with changes. Wait a second between updates.
 						debounce_text_changes = 1000,
 					}
-					nvim_lsp[name].setup(cfg)
+					opts[name] = cfg
+					table.insert(ensure_installed, name)
 				end
-
 			end
+
+			local mason_lspconfig = require('mason-lspconfig')
+			mason_lspconfig.setup({
+				ensure_installed = ensure_installed,
+			})
+			mason_lspconfig.setup_handlers({
+				function(name)
+					nvim_lsp[name].setup(opts[name])
+				end
+			})
 		end,
 	},
 	{
 		'jose-elias-alvarez/null-ls.nvim', -- {{{3
-		dependencies = {'nvim-lua/plenary.nvim'},
+		dependencies = {
+			'nvim-lua/plenary.nvim',
+			'williamboman/mason.nvim',
+		},
 		config = function()
 			local null_ls = require('null-ls')
 			null_ls.setup({
@@ -220,6 +237,25 @@ require('lazy').setup({
 					null_ls.builtins.formatting.jq,
 				},
 			})
+		end,
+	},
+	{
+		'williamboman/mason.nvim',
+		opts = {
+			ensure_installed = {
+				'shellcheck', 'jq',
+			},
+		},
+		config = function(_, opts)
+			require('mason').setup(opts)
+
+			local mr = require('mason-registry')
+			for _, tool in ipairs(opts.ensure_installed) do
+				local p = mr.get_package(tool)
+				if not p:is_installed() then
+					p:install()
+				end
+			end
 		end,
 	},
 
