@@ -162,9 +162,8 @@ require('lazy').setup({
 			}
 		end,
 		keys = {
-			{'<leader>gg', ':Grepper<cr>', 'n', noremap = true},
-			{'gs', '<plug>(GrepperOperator)', 'n'},
-			{'gs', '<plug>(GrepperOperator)', 'x'},
+			{'<leader>gg', ':Grepper<cr>', 'n', noremap = true, desc = "Grepper (interactive)"},
+			{'gs', '<plug>(GrepperOperator)', {'n', 'x'}, desc = "Grepper (operator)"},
 		},
 	},
 	{
@@ -176,8 +175,29 @@ require('lazy').setup({
 	'rbgrouleff/bclose.vim',
 	{
 		'folke/which-key.nvim', -- {{{3
-		config = function()
-			require('which-key').setup {}
+		opts = {
+			spelling = {
+				enabled = true,
+			},
+			-- ignore_missing = false,
+		},
+		config = function(_, opts)
+			local wk = require('which-key')
+			wk.setup()
+
+			wk.register({
+				mode = {'n', 'v'},
+				["<leader>f"] = {name = "+find"},
+				["<leader>l"] = {
+					name = "+language",
+					g    = "+goto",
+					f    = "+find",
+				},
+				["<leader>b"] = {name = "+buffer"},
+				["<leader>t"] = {name = "+tabs"},
+				["<leader>w"] = {name = "+windows"},
+				["<leader>x"] = {name = "+diagnostics"},
+			})
 		end,
 	},
 
@@ -351,37 +371,49 @@ highlight LineNr ctermfg=245
 
 " Invisible vertical split
 highlight VertSplit guibg=bg guifg=bg
-
-" Easier tabbing
-nmap <silent> <C-M-T> :tabe<CR>
-nmap <silent> <C-M-H> :tabp<CR>
-nmap <silent> <C-M-L> :tabn<CR>
-
-" Disable ex mode from Q
-nnoremap Q <Nop>
-
-" Clear highlights on enter
-nnoremap <silent> <CR> :nohlsearch<CR><CR>
-
-" Yank and paste operations preceded by <leader> should use system clipboard.
-nnoremap <leader>y "+y
-nnoremap <leader>Y "+yg_
-vnoremap <leader>y "+y
-
-nnoremap <leader>p "+p
-nnoremap <leader>P "+P
-vnoremap <leader>p "+p
-vnoremap <leader>P "+P
-
-" Neovim specific configs.
-if has('nvim')
-	" Split navigation inside nvim's terminal emulator.
-	tnoremap <C-M-J> <C-\><C-n><C-W><C-J>
-	tnoremap <C-M-K> <C-\><C-n><C-W><C-K>
-	tnoremap <C-M-L> <C-\><C-n><C-W><C-L>
-	tnoremap <C-M-H> <C-\><C-n><C-W><C-H>
-endif
 ]]
+
+
+-- Disable ex mode from Q.
+vim.keymap.set('n', 'Q', '<Nop>', {noremap = true})
+
+-- Yank and paste operations preceded by <leader> should use system clipboard.
+vim.keymap.set({'n', 'v'}, '<leader>y', '"+y', {
+	noremap = true,
+	desc = "Yank to clipboard",
+})
+vim.keymap.set({'n', 'v'}, '<leader>p', '"+p', {
+	noremap = true,
+	desc = "Paste from clipboard (above)",
+})
+vim.keymap.set({'n', 'v'}, '<leader>P', '"+P', {
+	noremap = true,
+	desc = "Paste from clipboard (below)",
+})
+
+-- Split navigation inside :terminal
+vim.keymap.set('t', '<C-M-J>', [[<C-\><C-n><C-W><C-J>]], {
+	noremap = true,
+	desc = 'Move to split below',
+})
+vim.keymap.set('t', '<C-M-K>', [[<C-\><C-n><C-W><C-K>]], {
+	noremap = true,
+	desc = 'Move to split above',
+})
+vim.keymap.set('t', '<C-M-L>', [[<C-\><C-n><C-W><C-L>]], {
+	noremap = true,
+	desc = 'Move to split right',
+})
+vim.keymap.set('t', '<C-M-H>', [[<C-\><C-n><C-W><C-H>]], {
+	noremap = true,
+	desc = 'Move to split left',
+})
+
+-- Clear highlight after search.
+vim.keymap.set('n', '<CR>', ':nohlsearch<CR><CR>', {
+	silent = true,
+	noremap = true,
+})
 
 -- Edit the current vimrc
 vim.keymap.set('n', '<leader>evf', ':e $MYVIMRC<cr>', {
@@ -390,22 +422,53 @@ vim.keymap.set('n', '<leader>evf', ':e $MYVIMRC<cr>', {
 	desc = "Edit my vimrc",
 })
 
-
--- Buffer shortcuts
-vim.keymap.set('n', '<leader>q', ':bd<CR>', {
-	desc = "Buffer delete",
+-- Tab shortcuts
+vim.keymap.set('n', '<leader>tt', ':tabnew<CR>', {
+	desc = 'New tab',
 	silent = true,
 })
-vim.keymap.set('n', '<leader>Q', ':bd!<CR>', {
-	desc = "Buffer delete (force)",
+vim.keymap.set('n', '<leader>tn', ':tabnext<CR>', {
+	desc = 'Next tab',
+	silent = true,
+})
+vim.keymap.set('n', '<leader>tp', ':tabprev<CR>', {
+	desc = 'Previous tab',
+	silent = true,
+})
+vim.keymap.set('n', '<leader>td', ':tabclose<CR>', {
+	desc = 'Close tab',
+	silent = true,
+})
+
+-- Buffer shortcuts
+vim.keymap.set('n', '<leader>bd', ':bd<CR>', {
+	desc = "Delete buffer",
+	silent = true,
+})
+vim.keymap.set('n', '<leader>bD', ':bd!<CR>', {
+	desc = "Delete buffer (force)",
 	silent = true,
 })
 vim.keymap.set('n', '<leader>bn', ':bn<CR>', {
-	desc = "Buffer next",
+	desc = "Next buffer",
 	silent = true,
 })
 vim.keymap.set('n', '<leader>bN', ':bN<CR>', {
-	desc = "Buffer previous",
+	desc = "Previous buffer",
+	silent = true,
+})
+
+-- Window shortcuts
+vim.keymap.set('n', '<leader>wd', '<C-W>c', {
+	desc = "Delete window",
+	silent = true,
+})
+vim.keymap.set('n', '<leader>wv', '<C-W>v', {
+	desc = "Split window vertically",
+	silent = true,
+})
+vim.keymap.set('n', '<leader>ws', '<C-W>s', {
+	desc = "Split window horizontally",
 	silent = true,
 })
 
@@ -569,9 +632,9 @@ function setup_lsp(server, lsp_opts)
 		lsp_nmap('<leader>lr', vim.lsp.buf.rename, "Rename")
 		lsp_nmap('<leader>lgr', vim.lsp.buf.references, "Go to references")
 		lsp_nmap('<leader>lgi', vim.lsp.buf.implementation, "Go to implementation")
-		lsp_nmap('<leader>lfr', telescopes.lsp_references, "Search references")
-		lsp_nmap('<leader>lfd', telescopes.lsp_document_symbols, "Search symbols (document)")
-		lsp_nmap('<leader>lfw', telescopes.lsp_workspace_symbols, "Search symbols (workspace)")
+		lsp_nmap('<leader>lfr', telescopes.lsp_references, "Find references")
+		lsp_nmap('<leader>lfd', telescopes.lsp_document_symbols, "Find symbols (document)")
+		lsp_nmap('<leader>lfw', telescopes.lsp_workspace_symbols, "Find symbols (workspace)")
 	end
 
 	lsp_opts.capabilities = lsp_capabilities
@@ -655,16 +718,21 @@ telescope.load_extension('ui-select')
 vim.keymap.set('n', '<leader>f<leader>', telescopes.resume, {
 	desc = "Find (resume)",
 })
+vim.keymap.set('n', '<leader>ff', telescopes.find_files, {desc = "Find files"})
 vim.keymap.set('n', '<leader>fF', function()
 	telescopes.find_files({
 		cwd = require('telescope.utils').buffer_dir(),
 	})
 end, {desc = "Find files (bufdir)"})
-vim.keymap.set('n', '<leader>fb', function()
+
+local function find_buffers()
 	telescopes.buffers {
 		ignore_current_buffer = true,
 	}
-end, {desc = "Find buffers"})
+end
+vim.keymap.set('n', '<leader>fb', find_buffers, {desc = "Find buffers"})
+vim.keymap.set('n', '<leader>bf', find_buffers, {desc = "Find buffers"})
+
 vim.keymap.set('n', '<leader>fh', telescopes.help_tags, {
 	desc = "Find help",
 })
@@ -706,15 +774,6 @@ require 'nvim-treesitter.configs'.setup {
 				['if'] = {query = '@function.inner', desc = "in function"},
 				['ab'] = {query = '@block.outer', desc = "a block"},
 				['ib'] = {query = '@block.inner', desc = "in block"},
-			},
-		},
-		swap = {
-			enable = true,
-			swap_next = {
-				["<leader>al"] = {query = '@parameter.inner', desc = "Swap with next argument"},
-			},
-			swap_previous = {
-				["<leader>ah"] = {query = '@parameter.inner', desc = "Swap with previous argument"},
 			},
 		},
 		move = {
@@ -790,11 +849,14 @@ vim.diagnostic.config({
 	virtual_text = true,
 })
 
-vim.keymap.set('n', ']e', function()
+vim.keymap.set('n', '<leader>xx', ':TroubleToggle<cr>', {desc = "Diagnostics list"})
+vim.keymap.set('n', '<leader>xl', ':lopen<cr>', {desc = "Location list"})
+vim.keymap.set('n', '<leader>xq', ':copen<cr>', {desc = "Quickfix list"})
+vim.keymap.set('n', '<leader>xn', function()
 	vim.diagnostic.goto_next({float = false, wrap = false})
 end, {desc = "Next diagnostic"})
 
-vim.keymap.set('n', '[e', function()
+vim.keymap.set('n', '<leader>xp', function()
 	vim.diagnostic.goto_prev({float = false, wrap = false})
 end, {desc = "Previous diagnostic"})
 
