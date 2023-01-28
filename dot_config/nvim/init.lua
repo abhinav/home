@@ -96,6 +96,13 @@ require('lazy').setup({
 	},
 	{'lervag/wiki.vim', ft = 'markdown'},
 	{'NoahTheDuke/vim-just', ft = 'just'},
+	{
+		'rafaelsq/nvim-goc.lua',
+		ft = 'go',
+		config = function()
+			require('nvim-goc').setup()
+		end,
+	},
 	{'rust-lang/rust.vim', ft = 'rust'},
 	{'vim-pandoc/vim-pandoc-syntax', ft = {'markdown', 'pandoc'}},
 	{'ziglang/zig.vim', ft = {'zig'}},
