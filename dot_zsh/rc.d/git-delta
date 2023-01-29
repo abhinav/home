@@ -1,0 +1,20 @@
+#!/bin/zsh
+
+# If the terminal is wider than 140 characters
+# use side-by-side mode in delta.
+
+_delta_hook() {
+	local cols=$(tput cols)
+	if [[ "$cols" -ge 140 ]]; then
+		export GIT_PAGER="delta --side-by-side"
+	else
+		export GIT_PAGER=delta
+	fi
+}
+
+if command -v delta >/dev/null; then
+	typeset -ag preexec_functions;
+	if [[ -z "${preexec_functions[(r)_delta_hook]+1}" ]]; then
+		preexec_functions=( _delta_hook ${preexec_functions[@]} )
+	fi
+fi
