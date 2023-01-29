@@ -242,6 +242,7 @@ require('lazy').setup({
 					null_ls.builtins.code_actions.shellcheck,
 					null_ls.builtins.diagnostics.shellcheck,
 					null_ls.builtins.formatting.jq,
+					null_ls.builtins.formatting.shfmt,
 				},
 			})
 		end,
@@ -250,7 +251,8 @@ require('lazy').setup({
 		'williamboman/mason.nvim',
 		opts = {
 			ensure_installed = {
-				'shellcheck', 'jq',
+				'shellcheck', 'shfmt',
+				'jq',
 			},
 		},
 		config = function(_, opts)
@@ -668,8 +670,10 @@ local function lsp_on_attach(client, bufnr)
 
 	-- Mneomonics:
 	-- cr   Code rename
+	-- cf   Code format
 	-- ca   Code action
 	lsp_nmap('<leader>ca', vim.lsp.buf.code_action, "Code action")
+	lsp_nmap('<leader>cf', vim.lsp.buf.format, "Reformat file")
 	lsp_nmap('<leader>cr', vim.lsp.buf.rename, "Rename")
 end
 
