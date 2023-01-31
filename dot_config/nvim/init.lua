@@ -171,6 +171,7 @@ require('lazy').setup({
 					init_options = init_opts,
 				}
 			end,
+			omnisharp = {optional = true},
 			'pylsp',
 			rust_analyzer = {
 				settings = {
@@ -199,7 +200,6 @@ require('lazy').setup({
 
 			ensure_installed = {}
 			for name, cfg in pairs(opts) do
-
 				if type(name) == "number" then
 					name = cfg
 					cfg = {}
@@ -214,7 +214,9 @@ require('lazy').setup({
 						debounce_text_changes = 1000,
 					}
 					opts[name] = cfg
-					table.insert(ensure_installed, name)
+					if not cfg.optional then
+						table.insert(ensure_installed, name)
+					end
 				end
 			end
 
@@ -224,7 +226,10 @@ require('lazy').setup({
 			})
 			mason_lspconfig.setup_handlers({
 				function(name)
-					nvim_lsp[name].setup(opts[name])
+					local cfg = opts[name]
+					if cfg ~= nil then
+						nvim_lsp[name].setup(opts[name])
+					end
 				end
 			})
 		end,
