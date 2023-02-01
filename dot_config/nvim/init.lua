@@ -71,6 +71,24 @@ require('lazy').setup({
 		'nvim-treesitter/nvim-treesitter', -- {{{3
 		build = ':TSUpdate',
 		dependencies = {'nvim-treesitter/nvim-treesitter-textobjects'},
+		config = function()
+			vim.api.nvim_create_autocmd("BufEnter", {
+				pattern = "*",
+				callback = function()
+					local buf = vim.api.nvim_get_current_buf()
+					local highlighter = require("vim.treesitter.highlighter")
+					if highlighter.active[buf] then
+						-- If treesitter is enabled for
+						-- the current buffer,
+						-- use it also for folding.
+						vim.wo.foldmethod = 'expr'
+						vim.wo.foldexpr = 'nvim_treesitter#foldexpr()'
+						vim.wo.foldlevel = 5
+						vim.wo.foldenable = false
+					end
+				end,
+			})
+		end,
 	},
 	{'tpope/vim-abolish', command = "S"},
 	'tpope/vim-repeat',
