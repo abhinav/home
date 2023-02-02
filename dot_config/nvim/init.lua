@@ -870,6 +870,7 @@ telescope.load_extension('ui-select')
 --
 -- Others:
 -- /  find in files
+-- ?  find in files (buffer directory)
 -- :  find ":" commands
 vim.keymap.set('n', '<leader>f<leader>', telescopes.resume, {
 	desc = "Find (resume)",
@@ -902,8 +903,13 @@ vim.keymap.set('n', '<leader>f?', telescopes.builtin, {
 	desc = "Find telescopes",
 })
 vim.keymap.set('n', '<leader>/', telescopes.live_grep, {
-	desc = "Find all files (grep)",
+	desc = "Find in files",
 })
+vim.keymap.set('n', '<leader>?', function()
+	telescopes.live_grep({
+		cwd = require('telescope.utils').buffer_dir(),
+	})
+end, {desc = "Find in files (bufdir)"})
 vim.keymap.set('n', '<leader>:', telescopes.commands, {
 	desc = "Find commands",
 })
