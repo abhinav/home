@@ -536,6 +536,9 @@ highlight LineNr ctermfg=245
 
 " Invisible vertical split
 highlight VertSplit guibg=bg guifg=bg
+
+" Add a line below the treesitter context.
+hi TreesitterContextBottom gui=underline guisp=gray
 ]]
 
 -- Quit
