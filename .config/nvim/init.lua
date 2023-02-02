@@ -122,7 +122,6 @@ require('lazy').setup({
 			{'\\\\f', '<Plug>(VM-Visual-Find)', 'n', desc = "Select all matching '/' register"},
 		},
 	},
-	'machakann/vim-highlightedyank',
 	{
 		'nvim-treesitter/nvim-treesitter', -- {{{3
 		build = ':TSUpdate',
@@ -564,6 +563,7 @@ require('lazy').setup({
 	'lambdalisue/vim-manpager',
 	{
 		'ojroques/vim-oscyank', -- {{{3
+		event = "TextYankPost",
 		config = function()
 			-- oscyank {{{2
 			-- https://github.com/ojroques/vim-oscyank/issues/26#issuecomment-1179722561
@@ -722,6 +722,18 @@ highlight VertSplit guibg=bg guifg=bg
 " Add a line below the treesitter context.
 hi TreesitterContextBottom gui=underline guisp=gray
 ]]
+
+-- Highlight selections
+vim.api.nvim_create_autocmd("TextYankPost", {
+	pattern = "*",
+	callback = function(args)
+		vim.highlight.on_yank {
+			higroup = "IncSearch",
+			timeout = 350,
+			on_visual = false,
+		}
+	end,
+})
 
 -- Quit
 vim.keymap.set('n', '<leader>qq', ':qa<cr>', {desc = "Quit all"})
