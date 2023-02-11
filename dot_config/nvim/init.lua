@@ -827,18 +827,10 @@ cmp.setup {
 	},
 	preselect = cmp.PreselectMode.None,
 	mapping = {
-		['<Down>'] = cmp.mapping({
-			i = cmp.mapping.select_next_item({behavior = cmp.SelectBehavior}),
-		}),
-		['<C-n>'] = cmp.mapping({
-			i = cmp.mapping.select_next_item({behavior = cmp.SelectBehavior}),
-		}),
-		['<Up>'] = cmp.mapping({
-			i = cmp.mapping.select_prev_item({behavior = cmp.SelectBehavior}),
-		}),
-		['<C-p>'] = cmp.mapping({
-			i = cmp.mapping.select_prev_item({behavior = cmp.SelectBehavior}),
-		}),
+		['<Down>'] = {i = cmp.mapping.select_next_item()},
+		['<C-n>']  = {i = cmp.mapping.select_next_item()},
+		['<Up>']   = {i = cmp.mapping.select_prev_item()},
+		['<C-p>']  = {i = cmp.mapping.select_prev_item()},
 
 		-- Ctrl-u/d: scroll docs of completion item if available.
 		['<C-u>'] = cmp.mapping(cmp.mapping.scroll_docs(-4), { 'i', 'c' }),
