@@ -31,6 +31,60 @@ require('lazy').setup({
 
 	-- Editing {{{2
 	{
+		'zbirenbaum/copilot.lua', -- {{{3
+		command = 'Copilot',
+		config = function()
+			-- Opt-into auto-triggering suggestions
+			-- or opt-out of the whole thing with env vars.
+
+			local auto_trigger = vim.env.GITHUB_COPILOT_AUTO_TRIGGER
+			if auto_trigger == "1" or auto_trigger == "true" then
+				auto_trigger = true
+			else
+				auto_trigger = false
+			end
+
+			local disabled = vim.env.GITHUB_COPILOT_DISABLED
+			if disabled == "1" or disabled == "true" then
+				disabled = true
+			else
+				disabled = false
+			end
+
+			-- Keymaps
+			--
+			-- <C-e>/<Tab> - Accept suggestion
+			-- <M-.> - Next suggestion
+			-- <M-,> - Previous suggestion
+			-- <C-c> - Dismiss suggestion
+			--
+			-- Tab integration is implemented separately below
+			-- to work with nvim-cmp and snippets.
+			require('copilot').setup {
+				suggestion = {
+					enabled = not disabled,
+					auto_trigger = auto_trigger,
+					keymap = {
+						accept = '<C-e>',
+						next = "<M-.>",
+						prev = "<M-,>",
+						dismiss = "<C-C>",
+					},
+				},
+			}
+
+			local copilot_suggestion = require 'copilot.suggestion'
+			vim.keymap.set('n', '<leader>ct', function()
+				copilot_suggestion.toggle_auto_trigger()
+				if vim.b.copilot_suggestion_auto_trigger then
+					print("Copilot: Auto-trigger enabled")
+				else
+					print("Copilot: Auto-trigger disabled")
+				end
+			end, {desc = "Toggle GitHub Copilot"})
+		end,
+	},
+	{
 		'echasnovski/mini.nvim',
 		version = false,
 		config = function()
@@ -725,14 +779,19 @@ vim.api.nvim_create_autocmd("LspAttach", {
 -- nvim-cmp {{{2
 local cmp = require 'cmp'
 local cmp_ultisnips_mappings = require 'cmp_nvim_ultisnips.mappings'
+local copilot_suggestion = require 'copilot.suggestion'
 
 local handleTab = function(fallback)
+	-- Completion suggestions take precedence over Copilot suggestions.
+	-- Copilot suggestions are still accessible with <C-e>.
 	if cmp.visible() then
 		if cmp.get_selected_entry() ~= nil then
 			cmp.confirm()
 		else
 			cmp.select_next_item()
 		end
+	elseif copilot_suggestion.is_visible() then
+		copilot_suggestion.accept()
 	elseif vim.fn['UltiSnips#CanJumpForwards']() == 1 then
 		cmp_ultisnips_mappings.jump_forwards(fallback)
 	else
