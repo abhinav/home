@@ -68,12 +68,12 @@ require('lazy').setup({
 						accept = '<C-e>',
 						next = "<M-.>",
 						prev = "<M-,>",
-						dismiss = "<C-C>",
 					},
 				},
 			}
 
 			local copilot_suggestion = require 'copilot.suggestion'
+
 			vim.keymap.set('n', '<leader>ct', function()
 				copilot_suggestion.toggle_auto_trigger()
 				if vim.b.copilot_suggestion_auto_trigger then
@@ -799,6 +799,23 @@ local handleTab = function(fallback)
 	end
 end
 
+local handleCancel = function(cancelFn)
+	return function(fallback)
+		local used = false
+		if cmp.visible() then
+			cancelFn()
+			used = true
+		end
+		if copilot_suggestion.is_visible() then
+			copilot_suggestion.dismiss()
+			used = true
+		end
+		if not used then
+			fallback()
+		end
+	end
+end
+
 cmp.setup {
 	completion = {
 		keyword_length = 3,
@@ -809,7 +826,20 @@ cmp.setup {
 		end,
 	},
 	preselect = cmp.PreselectMode.None,
-	mapping = cmp.mapping.preset.insert({
+	mapping = {
+		['<Down>'] = cmp.mapping({
+			i = cmp.mapping.select_next_item({behavior = cmp.SelectBehavior}),
+		}),
+		['<C-n>'] = cmp.mapping({
+			i = cmp.mapping.select_next_item({behavior = cmp.SelectBehavior}),
+		}),
+		['<Up>'] = cmp.mapping({
+			i = cmp.mapping.select_prev_item({behavior = cmp.SelectBehavior}),
+		}),
+		['<C-p>'] = cmp.mapping({
+			i = cmp.mapping.select_prev_item({behavior = cmp.SelectBehavior}),
+		}),
+
 		-- Ctrl-u/d: scroll docs of completion item if available.
 		['<C-u>'] = cmp.mapping(cmp.mapping.scroll_docs(-4), { 'i', 'c' }),
 		['<C-d>'] = cmp.mapping(cmp.mapping.scroll_docs(4), { 'i', 'c' }),
@@ -843,15 +873,15 @@ cmp.setup {
 		-- Ctrl-Space: force completion
 		['<C-Space>'] = cmp.mapping(cmp.mapping.complete(), { 'i', 'c' }),
 
-		-- Ctr-e: cancel completion
-		['<C-e>'] = cmp.mapping({
-			i = cmp.mapping.abort(),
-			c = cmp.mapping.close(),
+		-- Ctrl-c: cancel completion
+		['<C-c>'] = cmp.mapping({
+			i = handleCancel(cmp.mapping.abort()),
+			c = handleCancel(cmp.mapping.close()),
 		}),
 
 		-- Enter: confirm completion
 		['<CR>'] = cmp.mapping.confirm({select = false}),
-	}),
+	},
 	sources = cmp.config.sources({
 		{name = 'nvim_lsp'},
 		{name = 'nvim_lsp_signature_help'},
