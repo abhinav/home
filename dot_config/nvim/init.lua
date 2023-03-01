@@ -751,11 +751,13 @@ local function lsp_on_attach(client, bufnr)
 	-- lgr  Language go-to references
 	-- lgi  Language go-to implementation
 	-- lfr  Language find references
-	-- lfd  Language find definitions
-	-- lfw  Language find workspace
+	-- lfi  Language find implementations
+	-- lfd  Language find symbols (document)
+	-- lfw  Language find symbols (workspace)
 	lsp_nmap('<leader>lgr', vim.lsp.buf.references, "Go to references")
 	lsp_nmap('<leader>lgi', vim.lsp.buf.implementation, "Go to implementation")
 	lsp_nmap('<leader>lfr', telescopes.lsp_references, "Find references")
+	lsp_nmap('<leader>lfi', telescopes.lsp_implementations, "Find implementations")
 	lsp_nmap('<leader>lfd', telescopes.lsp_document_symbols, "Find symbols (document)")
 	lsp_nmap('<leader>lfw', telescopes.lsp_workspace_symbols, "Find symbols (workspace)")
 
