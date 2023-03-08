@@ -3,12 +3,13 @@
 PAGER="$(command -v less)"
 
 # sets default options to less
-LESS='-SMRci'
+LESS='-SMRci --mouse'
 # -S truncate rather than wraplong lines; type at runtime to toggle
 # -M verbose prompts
 # -R pass through raw control codes (e.g. ANSI color sequences)
 # -c better full screen repaints
 # -i case insensitive searches
+# --mouse: self explanatory
 
 # Colors for less, especially useful for man pages
 export LESS_TERMCAP_mb=$'\E[01;31m'    # begin blinking
