@@ -449,7 +449,7 @@ require('lazy').setup({
 				callback = function(args)
 					local ev = vim.v.event
 					if ev.operator == 'y' and ev.regname == '+' then
-						vim.cmd.OSCYankReg('+')
+						vim.cmd 'OSCYankRegister +'
 					end
 				end,
 			})
