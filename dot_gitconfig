@@ -16,11 +16,28 @@
 [core]
 	editor = nvim
 [alias]
-	cam = commit --amend
-	s = status
+	a = add
+	ap = add -p
+	au = add -u
+	b = branch
+	bc = checkout -b
+	bco = branch checkout
+	bd = branch -d
+	bD = branch -D
+	brn = branch -m
+	ca = commit --amend
+	can = commit --amend --no-edit
+	cc = commit
 	co = checkout
-	c = commit
+	d = diff
+	dc = diff --cached
 	pushf = push --force-with-lease
+	r = rebase
+	ri = rebase --interactive
+	rc = rebase --continue
+	ra = rebase --abort
+	re = rebase --edit-todo
+	s = status
 [http]
 	cookiefile = /Users/abg/.gitcookies
 [log]
