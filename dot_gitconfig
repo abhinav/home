@@ -21,7 +21,7 @@
 	au = add -u
 	b = branch
 	bc = checkout -b
-	bco = branch checkout
+	bco = checkout
 	bd = branch -d
 	bD = branch -D
 	brn = branch -m
