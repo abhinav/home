@@ -1,6 +1,7 @@
 # Alt-Space is used for tmux.
 search_shortcut: ALT+SHIFT+SPACE
 show_icon: false
+show_notifications: false
 
 extra_includes:
   - "../match/_date.yml"
