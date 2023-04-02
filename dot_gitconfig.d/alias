@@ -1,0 +1,76 @@
+[alias]
+	# a	add
+	# ap	add patch
+	# au	add update
+	a = add
+	ap = add -p
+	au = add -u
+
+	# b	branch
+	# bc	branch create
+	# bco	branch checkout
+	# bd	branch delete
+	# bD	branch delete force
+	# bf	branch force
+	# br	branch rename
+	b = branch
+	bc = checkout -b
+	bco = checkout
+	bd = branch -d
+	bD = branch -D
+	bf = branch -f
+	br = branch -m
+
+	# c	commit
+	# cc	commit create
+	# ca	commit amend
+	# can	commit amend no edit
+	c = commit
+	ca = commit --amend
+	can = commit --amend --no-edit
+	cc = commit
+
+	# co	branch checkout (legacy alias)
+	co = checkout
+
+	# d	diff
+	# dc	diff cached
+	d = diff
+	dc = diff --cached
+
+	# f	fetch
+	# fp	fetch prune
+	f = fetch
+	fp = fetch --prune
+
+	# l	log
+	# lg	log graph
+	l = log
+	lg = log --graph --oneline --decorate
+
+	# pl	pull
+	# plr	pull rebase
+	pl = pull
+	plr = pull --rebase
+
+	# pu	push
+	# puf	push force with lease
+	pu = push
+	puf = push --force-with-lease
+	pushf = push --force-with-lease
+
+	# rb	rebase
+	# rbi	rebase interactive
+	# rbc	rebase continue
+	# rba	rebase abort
+	# rbe	rebase edit todo
+	rb = rebase
+	rbi = rebase --interactive
+	rbc = rebase --continue
+	rba = rebase --abort
+	rbe = rebase --edit-todo
+
+	# s	status
+	# ss	status short
+	s = status
+	ss = status --short
