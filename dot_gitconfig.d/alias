@@ -25,10 +25,12 @@
 	# cc	commit create
 	# ca	commit amend
 	# can	commit amend no edit
+	# cf	commit fixup
 	c = commit
 	ca = commit --amend
 	can = commit --amend --no-edit
 	cc = commit
+	cf = commit --fixup
 
 	# co	branch checkout (legacy alias)
 	co = checkout
