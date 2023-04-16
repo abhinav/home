@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+set -euo pipefail
+IFS=$'\n\t'
+
+fzf_select_ref() {
+	fzf --height=30% --preview 'git log --color --oneline {} ^$(git merge-base HEAD {})'
+}
+
+BRANCH=""
+if [ $# -eq 1 ]; then
+	BRANCH="$1"; shift
+else
+	BRANCH=$(git branch | rg -v '^[+*]' | cut -c3- | fzf_select_ref)
+fi
+
+if [ -z "$BRANCH" ]; then
+	echo "No branch selected"
+	exit 1
+fi
+
+git checkout "$BRANCH"

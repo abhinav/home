@@ -8,14 +8,12 @@
 
 	# b	branch
 	# bc	branch create
-	# bco	branch checkout
 	# bd	branch delete
 	# bD	branch delete force
 	# bf	branch force
 	# br	branch rename
 	b = branch
 	bc = checkout -b
-	bco = checkout
 	bd = branch -d
 	bD = branch -D
 	bf = branch -f
