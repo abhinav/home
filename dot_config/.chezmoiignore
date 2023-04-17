@@ -25,4 +25,7 @@
 {{- if eq .chezmoi.os "darwin" }}
 # Custom key bindings.
 !/karabiner
+
+!/skhd
+!/yabai
 {{- end }}

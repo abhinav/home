@@ -3,6 +3,7 @@ tap "homebrew/cask-fonts"
 tap "homebrew/core"
 tap "homebrew/bundle"
 tap "abhinav/tap"
+tap "koekeishiya/formulae"
 
 brew "bat"        # > cat
 brew "curl"
@@ -26,6 +27,10 @@ brew "shfmt"
 brew "tmux"
 brew "abhinav/tap/tmux-fastcopy"
 brew "watch"
+
+# Window management and hot keys.
+brew "koekeishiya/formulae/yabai"
+brew "koekeishiya/formulae/skhd"
 
 # Shell and friends.
 brew "direnv"
