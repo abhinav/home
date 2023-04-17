@@ -6,11 +6,22 @@ fzf_select_ref() {
 	fzf --height=30% --preview 'git log --color --oneline {} ^$(git merge-base HEAD {})'
 }
 
+ARGS=()
 BRANCH=""
-if [ $# -eq 1 ]; then
-	BRANCH="$1"; shift
-else
-	BRANCH=$(git branch | rg -v '^[+*]' | cut -c3- | fzf_select_ref)
+while [ $# -gt 0 ]; do
+	case "$1" in
+		-*)
+			ARGS+=("$1"); shift
+			;;
+		*)
+			BRANCH="$1"; shift
+			break
+			;;
+	esac
+done
+
+if [ -z "$BRANCH" ]; then
+	BRANCH=$(git branch | rg -v '^\*' | cut -c3- | fzf_select_ref)
 fi
 
 if [ -z "$BRANCH" ]; then
@@ -18,4 +29,5 @@ if [ -z "$BRANCH" ]; then
 	exit 1
 fi
 
-git checkout "$BRANCH"
+ARGS+=("$BRANCH")
+git checkout "${ARGS[@]}"
