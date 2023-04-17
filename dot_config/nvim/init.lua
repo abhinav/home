@@ -240,11 +240,23 @@ require('lazy').setup({
 				local init_opts = {
 					gofumpt = not vim.env.VIM_GOPLS_NO_GOFUMPT,
 					staticcheck = true,
+					analyses = {
+						-- "x.foo = y" when x is a struct value
+						-- and not propagated or used afterwards.
+						unusedwrite = true,
+						-- Finds some common nil deref issues.
+						nilness = true,
+					},
 				}
 				if vim.env.VIM_GOPLS_BUILD_TAGS then
 					init_opts.buildFlags = {
 						'-tags', vim.env.VIM_GOPLS_BUILD_TAGS,
 					}
+				end
+				if vim.env.VIM_GOPLS_NILNESS_DISABLED then
+					-- nilness is resource-heavy.
+					-- Allow opting out if necessary.
+					init_opts.analyses.nilness = false
 				end
 
 				return {
