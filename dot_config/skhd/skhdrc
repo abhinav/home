@@ -102,9 +102,9 @@ cmd + alt + shift - n : yabai -m space --create && \
 cmd + alt - n : yabai -m space --create && \
                 index="$(~/.config/yabai/last-space-same-display)" && \
                 yabai -m space --focus "${index}"
-cmd + alt - w : index=$(~/.config/yabai/space-sibling next || ~/.config/yabai/space-sibling prev) && \
-                yabai -m space --destroy && \
-                yabai -m space --focus "${index}"
+cmd + alt - w : index="$(yabai -m query --spaces --space | jq .index)" && \
+                yabai -m space --focus "$(~/.config/yabai/space-sibling next || ~/.config/yabai/space-sibling prev)" && \
+                yabai -m space --destroy "$index"
 
 # Cycle through layouts for the current space.
 cmd + alt - space : layout="$(yabai -m query --spaces --space | jq -r '["stack", "bsp"] as $modes | .type as $mode | ($modes | index($mode) + 1) % ($modes | length) | $modes[.]')" && \
