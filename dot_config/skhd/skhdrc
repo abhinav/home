@@ -165,18 +165,22 @@ ctrl + alt - left : yabai -m window --move rel:-80:0
 ctrl + alt - right : yabai -m window --move rel:80:0
 
 # Resize windows
-alt + cmd - right : yabai -m window --resize right:80:0 || yabai -m window --resize left:80:0
-alt + cmd - left : yabai -m window --resize right:-80:0 || yabai -m window --resize left:-80:0
-alt + cmd - up : yabai -m window --resize top:0:-80 || yabai -m window --resize bottom:0:-80
-alt + cmd - down : yabai -m window --resize top:0:80 || yabai -m window --resize bottom:0:80
+ctrl + alt + cmd - right : yabai -m window --resize right:80:0 || yabai -m window --resize left:80:0
+ctrl + alt + cmd - left : yabai -m window --resize right:-80:0 || yabai -m window --resize left:-80:0
+ctrl + alt + cmd - up : yabai -m window --resize top:0:-80 || yabai -m window --resize bottom:0:-80
+ctrl + alt + cmd - down : yabai -m window --resize top:0:80 || yabai -m window --resize bottom:0:80
 
 # Toggle window zoom.
 ctrl + shift - return : yabai -m window --toggle zoom-fullscreen
 ctrl - return : yabai -m window --toggle zoom-parent
 
-# float / unfloat window and center on screen
-alt + shift - t : yabai -m window --toggle float --grid 8:8:1:1:6:6
-alt + shift - f : yabai -m window --toggle float --grid 2:2:0:0:2:2
+# float / unfloat window and center/full/half.
+alt + cmd - t : yabai -m window --toggle float --grid 8:8:1:1:6:6
+alt + cmd - f : yabai -m window --toggle float --grid 1:1:0:0:1:1
+alt + cmd - left : yabai -m window --toggle float --grid 1:2:0:0:1:1
+alt + cmd - right : yabai -m window --toggle float --grid 1:2:1:0:1:1
+alt + cmd - up : yabai -m window --toggle float --grid 2:1:0:0:1:1
+alt + cmd - down : yabai -m window --toggle float --grid 2:1:0:1:1:1
 
 # toggle sticky(+float), topmost, picture-in-picture
 # alt - p : yabai -m window --toggle sticky --toggle topmost --toggle pip
