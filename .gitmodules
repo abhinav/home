@@ -13,6 +13,6 @@
 [submodule ".zsh/zsh-syntax-highlighting"]
 	path = .zsh/zsh-syntax-highlighting
 	url = https://github.com/zsh-users/zsh-syntax-highlighting/
-[submodule ".zsh/fzf-tab"]
-	path = .zsh/fzf-tab
-	url = https://github.com/Aloxaf/fzf-tab
+[submodule ".zsh/fzf-tab-completion"]
+	path = .zsh/fzf-tab-completion
+	url = https://github.com/lincheney/fzf-tab-completion
