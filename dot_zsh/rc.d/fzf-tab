@@ -1,6 +1,21 @@
 #!/bin/zsh
 
-source ~/.zsh/fzf-tab/fzf-tab.plugin.zsh
-zstyle ':fzf-tab:complete:cd:*' fzf-preview 'exa -1 --color=always $realpath'
-zstyle ':fzf-tab:complete:git-log:*' fzf-preview \
-	'git log --color=always $word'
+source ~/.zsh/fzf-tab-completion/zsh/fzf-zsh-completion.sh
+
+export FZF_COMPLETION_OPTS='--bind=tab:down --bind=btab:up'
+
+# completion previews for ls, exa, and cd.
+zstyle ':completion::*:(ls|exa)::*' fzf-completion-opts --preview='
+	P=$(eval echo {1})
+	if [ -f "$P" ]; then
+		bat --color=always "$P"
+	else
+		exa -1 --color=always "$P"
+	fi
+'
+zstyle ':completion::*:cd::*' fzf-completion-opts \
+	--preview='eval exa -1 --color=always {1}' \
+	--bind=/:accept
+
+# Show log previews for git-log.
+zstyle ':completion::*:git::git,log,*' fzf-completion-opts --preview='eval git log --oneline --color=always {1}'
