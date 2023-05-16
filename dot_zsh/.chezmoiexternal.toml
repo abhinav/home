@@ -19,9 +19,9 @@
     stripComponents = 1
     refreshPeriod = "168h" # update weekly
 
-["fzf-tab-completion"]
+["fzf-tab"]
     type = "archive"
-    url = "https://github.com/lincheney/fzf-tab-completion/archive/master.tar.gz"
+    url = "https://github.com/Aloxaf/fzf-tab/archive/master.tar.gz"
     exact = true
     stripComponents = 1
     refreshPeriod = "168h" # update weekly
