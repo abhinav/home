@@ -729,10 +729,12 @@ augroup end
 
 -- Neovide {{{2
 if vim.g.neovide then
-	vim.opt.guifont = "Iosevka Term:h10"
+	vim.opt.guifont = "Iosevka Term:h9"
 	let_g('neovide_', {
 		cursor_animation_length = 0,
+		scroll_animation_length = 0.2,
 	})
+	let_g({linespace = -1})
 end
 
 --  Plugin {{{1
