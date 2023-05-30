@@ -456,7 +456,7 @@ require('lazy').setup({
 			vim.g.oscyank_term = 'default'
 
 			-- Set up a hook to send an OSC52 code if the system register is used.
-			vim.api.nvim_create_autocmd("TextYankPost", {
+			vim.g.oscyank_autocmd_id = vim.api.nvim_create_autocmd("TextYankPost", {
 				pattern = "*",
 				callback = function(args)
 					local ev = vim.v.event
@@ -729,12 +729,47 @@ augroup end
 
 -- Neovide {{{2
 if vim.g.neovide then
-	vim.opt.guifont = "Iosevka Term:h9"
+	vim.opt.guifont = "Iosevka Term:h10"
+	vim.opt.linespace = -1
 	let_g('neovide_', {
 		cursor_animation_length = 0,
 		scroll_animation_length = 0.2,
+		-- Treat alt as Meta instead of sending special characters.
+		input_macos_alt_is_meta = true,
+		input_use_logo = true, -- Use Win/MacOS/Super key
 	})
-	let_g({linespace = -1})
+
+	local scale_factor = vim.env.NEOVIDE_SCALE_FACTOR
+	if scale_factor then
+		scale_factor = tonumber(scale_factor)
+	else
+		scale_factor = 1.0
+	end
+	-- HACK: Setting the scale factor at startup races sometimes.
+	vim.defer_fn(function()
+ 		vim.g.neovide_scale_factor = scale_factor
+	end, 250)
+
+	-- Support adjusting scale factor with Ctrl = and Ctrl -.
+	local adjust_scale_factor = function(delta)
+		vim.g.neovide_scale_factor = vim.g.neovide_scale_factor * delta
+	end
+	vim.keymap.set('n', '<C-=>', function()
+		adjust_scale_factor(1.25)
+	end, {desc = "Increase scale factor"})
+	vim.keymap.set('n', '<C-->', function()
+		adjust_scale_factor(1/1.25)
+	end, {desc = "Decrease scale factor"})
+
+	-- Super+C/V for copy-paste.
+	vim.keymap.set({'n', 'v'}, '<D-c>', '"+y')
+	vim.keymap.set({'n', 'v'}, '<D-v>', '"+P')
+	vim.keymap.set({'c', 'i'}, '<D-v>', '<C-R>+') -- cmd and insert mode
+
+	-- HACK: OSC52 is not supported in neovide.
+	if vim.g.oscyank_autocmd_id then
+		vim.api.nvim_del_autocmd(vim.g.oscyank_autocmd_id)
+	end
 end
 
 --  Plugin {{{1

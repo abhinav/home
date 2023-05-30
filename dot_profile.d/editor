@@ -1,8 +1,0 @@
-#!/bin/bash
-
-EDITOR=vim
-if command -v nvim &> /dev/null; then
-	EDITOR=nvim
-fi
-export EDITOR
-export HOMEBREW_EDITOR="$EDITOR"
