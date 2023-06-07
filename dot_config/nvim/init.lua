@@ -381,7 +381,7 @@ require('lazy').setup({
 					disableAutomaticTypingAcquisition = true,
 				},
 			},
-			'zls',
+			zls = {optional = true},
 		},
 		config = function(_, opts)
 			local nvim_lsp = require('lspconfig')
