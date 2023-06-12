@@ -95,13 +95,17 @@ shift + cmd - 0 : yabai -m space --balance
 
 # create desktop, move window and follow focus - uses jq for parsing json (brew install jq)
 cmd + alt + shift - n : yabai -m space --create && \
-                index="$(~/.config/yabai/last-space-same-display)" && \
-                yabai -m window --space "${index}" && \
-                yabai -m space --focus "${index}"
+                new_index="$(~/.config/yabai/last-space-same-display)" && \
+                targ_index="$(~/.config/yabai/space-sibling next)" && \
+                yabai -m window --space "${new_index}" && \
+                yabai -m space "$new_index" --move "$targ_index" && \
+                yabai -m space --focus "${targ_index}"
 # create desktop and focus
 cmd + alt - n : yabai -m space --create && \
-                index="$(~/.config/yabai/last-space-same-display)" && \
-                yabai -m space --focus "${index}"
+                new_index="$(~/.config/yabai/last-space-same-display)" && \
+                targ_index="$(~/.config/yabai/space-sibling next)" && \
+                yabai -m space "$new_index" --move "$targ_index" && \
+                yabai -m space --focus "${targ_index}"
 cmd + alt - w : index="$(yabai -m query --spaces --space | jq .index)" && \
                 yabai -m space --focus "$(~/.config/yabai/space-sibling next || ~/.config/yabai/space-sibling prev)" && \
                 yabai -m space --destroy "$index"
