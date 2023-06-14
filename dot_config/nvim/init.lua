@@ -189,11 +189,82 @@ require('lazy').setup({
 	{'ziglang/zig.vim', ft = {'zig'}},
 
 	-- Git {{{2
-	{'rhysd/git-messenger.vim', keys = '<leader>gm'},
 	{
 		'tpope/vim-fugitive', -- {{{3
 		dependencies = {'tpope/vim-rhubarb'},
 		cmd = {"G", "Git", "GBrowse", "GRename"},
+	},
+	{
+		'lewis6991/gitsigns.nvim',
+		config = function()
+			local gitsigns = require('gitsigns')
+			gitsigns.setup {
+				on_attach = function(bufnr)
+					-- ]c, [c: next/prev hunk
+					vim.keymap.set('n', ']c', function()
+						if vim.wo.diff then
+							return ']c'
+						end
+						vim.schedule(function()
+							gitsigns.next_hunk()
+						end)
+						return '<Ignore>'
+					end, {desc = "Next hunk", expr = true})
+					vim.keymap.set('n', '[c', function()
+						if vim.wo.diff then
+							return '[c'
+						end
+						vim.schedule(function()
+							gitsigns.prev_hunk()
+						end)
+						return '<Ignore>'
+					end, {desc = "Previous hunk", expr = true})
+
+					-- <leader>gh{s,r}: stage and reset hunk
+					vim.keymap.set('n', '<leader>ghs', gitsigns.stage_hunk, {desc = "Stage hunk"})
+					vim.keymap.set('n', '<leader>ghr', gitsigns.reset_hunk, {desc = "Reset hunk"})
+
+					--
+					vim.keymap.set('v', '<leader>ghs', function()
+						gitsigns.stage_hunk(vim.fn.line('.'), vim.fn.line('v'))
+					end, {desc = "Stage hunk"})
+					vim.keymap.set('v', '<leader>ghr', function()
+						gitsigns.reset_hunk(vim.fn.line('.'), vim.fn.line('v'))
+					end, {desc = "Reset hunk"})
+
+					-- <leader>ghp: preview hunk
+					vim.keymap.set('n', '<leader>ghp', gitsigns.preview_hunk, {desc = "Preview hunk"})
+
+					-- <leader>gm: blame current line
+					vim.keymap.set('n', '<leader>gm', function()
+						gitsigns.blame_line {full = true}
+					end, {desc = "Blame current line"})
+
+					-- <leader>gb{s,r}: stage and reset buffer
+					vim.keymap.set('n', '<leader>gbs', gitsigns.stage_buffer, {desc = "Stage buffer"})
+					vim.keymap.set('n', '<leader>gbr', gitsigns.reset_buffer, {desc = "Reset buffer"})
+
+					-- <leader>gdi: diff index
+					-- <leader>gdc: diff previous commit
+					vim.keymap.set('n', '<leader>gdi', gitsigns.diffthis, {desc = "Diff against index"})
+					vim.keymap.set('n', '<leader>gdc', function()
+						gitsigns.diffthis('~')
+					end, {desc = "Diff against previous commit"})
+
+					-- <leader>gtb: toggle line blame
+					-- <leader>gtd: toggle deleted
+					-- <leader>gtw: toggle word diff
+					vim.keymap.set('n', '<leader>gtb', gitsigns.toggle_current_line_blame, {desc = "Line blame"})
+					vim.keymap.set('n', '<leader>gtd', gitsigns.toggle_deleted, {desc = "Show deleted"})
+					vim.keymap.set('n', '<leader>gtw', gitsigns.toggle_word_diff, {desc = "Word diff"})
+
+					-- ih: hunk text object
+					vim.keymap.set({'o', 'x'}, 'ih', ':<C-U>Gitsigns select_hunk<CR>', {
+						desc = "Select hunk",
+					})
+				end,
+			}
+		end,
 	},
 
 	-- Look and feel {{{2
@@ -337,6 +408,7 @@ require('lazy').setup({
 			local null_ls = require('null-ls')
 			null_ls.setup({
 				sources = {
+					null_ls.builtins.code_actions.gitsigns,
 					null_ls.builtins.code_actions.shellcheck,
 					null_ls.builtins.diagnostics.actionlint,
 					null_ls.builtins.diagnostics.shellcheck,
@@ -420,6 +492,13 @@ require('lazy').setup({
 			wk.register({
 				mode = {'n', 'v'},
 				["<leader>f"] = {name = "+find"},
+				["<leader>g"] = {
+					name = "+git",
+					b    = "+buffer",
+					h    = "+hunk",
+					d    = "+diff",
+					t    = "+toggle",
+				},
 				["<leader>l"] = {
 					name = "+language",
 					g    = "+goto",
