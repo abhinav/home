@@ -222,6 +222,10 @@ require('lazy').setup({
 						return '<Ignore>'
 					end, {desc = "Previous hunk", expr = true})
 
+					-- <leader>g{n,p}: next/prev hunk
+					vim.keymap.set('n', '<leader>gn', gitsigns.next_hunk, {desc = "Next hunk"})
+					vim.keymap.set('n', '<leader>gp', gitsigns.prev_hunk, {desc = "Previous hunk"})
+
 					-- <leader>gm: blame current line
 					vim.keymap.set('n', '<leader>gm', function()
 						gitsigns.blame_line {full = true}
@@ -243,16 +247,16 @@ require('lazy').setup({
 					-- <leader>ghp: preview hunk
 					vim.keymap.set('n', '<leader>ghp', gitsigns.preview_hunk, {desc = "Preview hunk"})
 
-					-- <leader>gb{s,r}: stage and reset buffer
-					vim.keymap.set('n', '<leader>gbs', gitsigns.stage_buffer, {desc = "Stage buffer"})
-					vim.keymap.set('n', '<leader>gbr', gitsigns.reset_buffer, {desc = "Reset buffer"})
+					-- <leader>gh{S,R}: stage and reset buffer
+					vim.keymap.set('n', '<leader>ghS', gitsigns.stage_buffer, {desc = "Stage buffer"})
+					vim.keymap.set('n', '<leader>ghR', gitsigns.reset_buffer, {desc = "Reset buffer"})
 
 					-- <leader>gdi: diff index
-					-- <leader>gdc: diff previous commit
-					vim.keymap.set('n', '<leader>gdi', gitsigns.diffthis, {desc = "Diff against index"})
-					vim.keymap.set('n', '<leader>gdc', function()
+					-- <leader>gdp: diff previous commit
+					vim.keymap.set('n', '<leader>gdi', gitsigns.diffthis, {desc = "Diff (default base)"})
+					vim.keymap.set('n', '<leader>gdp', function()
 						gitsigns.diffthis('~')
-					end, {desc = "Diff against previous commit"})
+					end, {desc = "Diff (parent)"})
 
 					-- <leader>gtb: toggle line blame
 					-- <leader>gtd: toggle deleted
@@ -265,6 +269,24 @@ require('lazy').setup({
 					vim.keymap.set({'o', 'x'}, 'ih', ':<C-U>Gitsigns select_hunk<CR>', {
 						desc = "Select hunk",
 					})
+
+					local function change_base(key, arg, desc)
+						vim.keymap.set('n', '<leader>gb' .. key, function()
+							gitsigns.change_base(arg)
+						end, {desc = desc})
+						vim.keymap.set('n', '<leader>gB' .. key, function()
+							gitsigns.change_base(arg, true)
+						end, {desc = desc .. ' (Global)'})
+					end
+
+					-- <leader>gbb: change base to index
+					-- <leader>gbu: change base to upstream
+					-- <leader>gbp: change base to parent commit
+					--
+					-- gB variants change base globally
+					change_base('b', nil, "Set base to index")
+					change_base('u', '@{upstream}', "Set base to upstream")
+					change_base('p', '~', "Set base to parent commit")
 				end,
 			}
 		end,
@@ -497,7 +519,8 @@ require('lazy').setup({
 				["<leader>f"] = {name = "+find"},
 				["<leader>g"] = {
 					name = "+git",
-					b    = "+buffer",
+					b    = "+change base",
+					B    = "+change base (global)",
 					h    = "+hunk",
 					d    = "+diff",
 					t    = "+toggle",
