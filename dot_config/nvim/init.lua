@@ -190,9 +190,11 @@ require('lazy').setup({
 
 	-- Git {{{2
 	{
-		'tpope/vim-fugitive', -- {{{3
-		dependencies = {'tpope/vim-rhubarb'},
-		cmd = {"G", "Git", "GBrowse", "GRename"},
+		'ruifm/gitlinker.nvim',
+		dependencies = {'nvim-lua/plenary.nvim'},
+		config = function()
+			require('gitlinker').setup()
+		end,
 	},
 	{
 		'lewis6991/gitsigns.nvim',
@@ -220,6 +222,12 @@ require('lazy').setup({
 						return '<Ignore>'
 					end, {desc = "Previous hunk", expr = true})
 
+					-- <leader>gm: blame current line
+					vim.keymap.set('n', '<leader>gm', function()
+						gitsigns.blame_line {full = true}
+					end, {desc = "Blame current line"})
+
+
 					-- <leader>gh{s,r}: stage and reset hunk
 					vim.keymap.set('n', '<leader>ghs', gitsigns.stage_hunk, {desc = "Stage hunk"})
 					vim.keymap.set('n', '<leader>ghr', gitsigns.reset_hunk, {desc = "Reset hunk"})
@@ -234,11 +242,6 @@ require('lazy').setup({
 
 					-- <leader>ghp: preview hunk
 					vim.keymap.set('n', '<leader>ghp', gitsigns.preview_hunk, {desc = "Preview hunk"})
-
-					-- <leader>gm: blame current line
-					vim.keymap.set('n', '<leader>gm', function()
-						gitsigns.blame_line {full = true}
-					end, {desc = "Blame current line"})
 
 					-- <leader>gb{s,r}: stage and reset buffer
 					vim.keymap.set('n', '<leader>gbs', gitsigns.stage_buffer, {desc = "Stage buffer"})
@@ -498,6 +501,7 @@ require('lazy').setup({
 					h    = "+hunk",
 					d    = "+diff",
 					t    = "+toggle",
+					y    = "Copy link",
 				},
 				["<leader>l"] = {
 					name = "+language",
