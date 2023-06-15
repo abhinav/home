@@ -23,6 +23,7 @@ source ~/.profile.d/golang
 source ~/.profile.d/rust
 source ~/.profile.d/haskell
 source ~/.profile.d/node
+source ~/.profile.d/zig
 
 source ~/.profile.d/netlify
 

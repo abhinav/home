@@ -1,0 +1,6 @@
+#!/bin/bash
+
+if [ -d "$HOME/zig/bin" ] ; then
+	PATH=$(IFS=:; prepend "$HOME/zig/bin" $PATH)
+	export PATH
+fi
