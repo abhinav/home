@@ -42,6 +42,6 @@ yabai -m config                                 \
     mouse_drop_action            swap
 
 # Don't mess with system settings window or activity monitor.
-yabai -m rule --add app="^(System Settings|Activity Monitor|1Password)$" manage=off
+yabai -m rule --add app="^(System Settings|Activity Monitor|1Password|Archive Utility)$" manage=off
 
 echo "yabai configuration loaded.."
