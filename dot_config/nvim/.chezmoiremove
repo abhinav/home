@@ -1,8 +1,0 @@
-/autoload/preview.vim
-/ftplugin/go.vim
-/ftplugin/javascript.vim
-/ftplugin/c.vim
-/ftplugin/nerdtree.vim
-/ftplugin/cpp.vim
-/ftplugin/sh.vim
-/plugin/gofmt.lua

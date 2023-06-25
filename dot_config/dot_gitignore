@@ -1,0 +1,18 @@
+# Ignore everything except...
+/*
+
+!.gitignore
+
+# Neovim
+!/nvim
+!/vim-go
+
+# Self explanatory
+!/atuin
+!/bat
+!/ripgrep
+!/tig
+!/alacritty
+!/espanso
+!/git
+!/starship.toml

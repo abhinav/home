@@ -2,7 +2,19 @@
 
 export HOMEBREW_NO_ANALYTICS=1
 
-setup-homebrew() {
+if [[ "$(uname)" == Darwin ]]; then
+	if [[ -d /opt/homebrew ]]; then
+		HOMEBREW_PREFIX=/opt/homebrew
+	elif [[ -d /usr/local/Homebrew ]]; then
+		HOMEBREW_PREFIX=/usr/local
+	fi
+elif [[ "$(uname)" == Linux ]]; then
+	if [[ -d /home/linuxbrew/.linuxbrew ]]; then
+		HOMEBREW_PREFIX=/home/linuxbrew/.linuxbrew
+	fi
+fi
+
+if [[ -n "${HOMEBREW_PREFIX:-}" ]]; then
 	export HOMEBREW_PREFIX
 
 	# Check for updates once a week.
@@ -21,20 +33,4 @@ setup-homebrew() {
 	# shellcheck disable=2086
 	INFOPATH=$(IFS=:; prepend "$HOMEBREW_PREFIX/share/info" $INFOPATH)
 	export INFOPATH
-}
-
-{{ if eq .chezmoi.os "darwin" -}}
-if [[ -d /opt/homebrew ]]; then
-	HOMEBREW_PREFIX=/opt/homebrew
-elif [[ -d /usr/local/Homebrew ]]; then
-	HOMEBREW_PREFIX=/usr/local
-fi
-{{- else if eq .chezmoi.os "linux" -}}
-if [[ -d /home/linuxbrew/.linuxbrew ]]; then
-	HOMEBREW_PREFIX=/home/linuxbrew/.linuxbrew
-fi
-{{- end }}
-
-if [[ -n "$HOMEBREW_PREFIX" ]]; then
-	setup-homebrew
 fi
