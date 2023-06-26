@@ -8,6 +8,7 @@ tap "koekeishiya/formulae"
 brew "bat"        # > cat
 brew "curl"
 brew "exa"        # > ls
+brew "fzf"        # fuzzy match
 brew "go"
 brew "gopls"
 brew "hyperfine"  # CLI benchmarks
@@ -23,6 +24,7 @@ brew "rustup"
 brew "shellcheck" # lint .sh
 brew "starship"   # prompt
 brew "shfmt"
+brew "stow"
 brew "tmux"
 brew "abhinav/tap/tmux-fastcopy"
 brew "watch"
