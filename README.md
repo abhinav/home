@@ -39,6 +39,12 @@ To install into a new home, take the following steps:
     git fetch local
     ```
 
+- Set up hooks to be able to push to `$HOME`.
+
+    ```bash
+    ~/home-int/etc/git-setup-checkout-push/setup.sh
+    ```
+
 ## Machine-specific setup
 
 Install [GNU Stow](https://www.gnu.org/software/stow/)
