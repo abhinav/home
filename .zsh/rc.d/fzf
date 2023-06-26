@@ -19,12 +19,14 @@ export FZF_ALT_C_COMMAND='
 unset fzf_search_command
 
 if [[ -d "/usr/share/fzf" ]]; then
-	_fzf_share="/usr/share/fzf"
+	_fzf_shell="/usr/share/fzf"
+elif [[ -d "/opt/homebrew/opt/fzf/shell" ]]; then
+	_fzf_shell="/opt/homebrew/opt/fzf/shell"
 fi
 
-if [[ -n "${_fzf_share:-}" ]]; then
-	source "${_fzf_share}/completion.zsh" 2> /dev/null
-	source "${_fzf_share}/key-bindings.zsh"
-	unset _fzf_share
+if [[ -n "${_fzf_shell:-}" ]]; then
+	source "${_fzf_shell}/completion.zsh" 2> /dev/null
+	source "${_fzf_shell}/key-bindings.zsh"
+	unset _fzf_shell
 fi
 
