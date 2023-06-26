@@ -7,7 +7,6 @@ tap "koekeishiya/formulae"
 
 brew "bat"        # > cat
 brew "curl"
-brew "chezmoi"    # dotfile management
 brew "exa"        # > ls
 brew "go"
 brew "gopls"

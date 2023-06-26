@@ -160,7 +160,6 @@ require('lazy').setup({
 	'wsdjeg/vim-fetch',
 
 	-- Filetype-specific {{{2
-	'alker0/chezmoi.vim',
 	{'cappyzawa/starlark.vim', ft = 'starlark'},
 	'direnv/direnv.vim',
 	{'habamax/vim-asciidoctor', ft = {'asciidoc', 'asciidoctor'}},
