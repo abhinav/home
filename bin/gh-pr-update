@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+set -euo pipefail
+IFS=$'\n\t'
+
+# Updates the title and body of a PR with the subject and body of a commit.
+COMMIT="HEAD"
+if [ $# -gt 0 ]; then
+    COMMIT="$1"; shift
+fi
+
+gh pr edit \
+	--title "$(git log -n1 --pretty=%s "$COMMIT")" \
+	--body "$(git log -n1 --pretty=%b "$COMMIT")"
