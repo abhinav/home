@@ -18,4 +18,13 @@ export FZF_ALT_C_COMMAND='
 
 unset fzf_search_command
 
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+if [[ -d "/usr/share/fzf" ]]; then
+	_fzf_share="/usr/share/fzf"
+fi
+
+if [[ -n "${_fzf_share:-}" ]]; then
+	source "${_fzf_share}/completion.zsh" 2> /dev/null
+	source "${_fzf_share}/key-bindings.zsh"
+	unset _fzf_share
+fi
+

@@ -41,10 +41,6 @@
 # restack
 !/.restack
 
-# fzf
-!/.fzf
-/.fzf/bin/fzf
-
 # Third-party packages managed by chezmoi.
 !/pkg
 

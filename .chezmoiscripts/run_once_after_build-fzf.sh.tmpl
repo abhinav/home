@@ -1,7 +1,0 @@
-#!/usr/bin/env bash
-set -euo pipefail
-IFS=$'\n\t'
-
-echo "Building fzf v{{ .fzfVersion }}"
-(cd ~/.fzf &&
-	./install --all --no-update-rc)
