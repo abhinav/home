@@ -48,9 +48,10 @@ To install into a new home, take the following steps:
 ## Machine-specific setup
 
 Install [GNU Stow](https://www.gnu.org/software/stow/)
-and inside the stow/ directory, run:
+and inside the sys/ directory, run:
 
 ```bash
+cd sys
 stow $system
 ```
 
