@@ -1,0 +1,18 @@
+[submodule ".tmux/plugins/tmux-continuum"]
+	path = .tmux/plugins/tmux-continuum
+	url = https://github.com/tmux-plugins/tmux-continuum
+[submodule ".tmux/plugins/tmux-resurrect"]
+	path = .tmux/plugins/tmux-resurrect
+	url = https://github.com/tmux-plugins/tmux-resurrect
+[submodule ".zsh/zsh-autosuggestions"]
+	path = .zsh/zsh-autosuggestions
+	url = https://github.com/zsh-users/zsh-autosuggestions
+[submodule ".zsh/zsh-completions"]
+	path = .zsh/zsh-completions
+	url = https://github.com/zsh-users/zsh-completions
+[submodule ".zsh/zsh-syntax-highlighting"]
+	path = .zsh/zsh-syntax-highlighting
+	url = https://github.com/zsh-users/zsh-syntax-highlighting/
+[submodule ".zsh/fzf-tab"]
+	path = .zsh/fzf-tab
+	url = https://github.com/Aloxaf/fzf-tab

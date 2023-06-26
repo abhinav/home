@@ -1,6 +1,9 @@
 # Ignore everything by default and whitelist things explicitly.
 /*
 
+!/.gitignore
+!/README.md
+
 # XDG home
 !/.config
 
@@ -41,8 +44,6 @@
 # restack
 !/.restack
 
-# Third-party packages managed by chezmoi.
-!/pkg
-
 # Extras
 !/etc
+!/stow
