@@ -11,9 +11,3 @@
     exact = true
     stripComponents = 1
     refreshPeriod = "168h" # update weekly
-
-["tmux-fastcopy"]
-    type = "archive"
-    url = "https://github.com/abhinav/tmux-fastcopy/archive/v{{ .fastcopyVersion }}.tar.gz"
-    exact = true
-    stripComponents = 1
