@@ -1173,6 +1173,11 @@ require 'nvim-treesitter.configs'.setup {
 		"vim", "yaml", "zig",
 	},
 	auto_install = true,
+	-- The gitcommit tree-sitter parser does not support highlighting in
+	-- verbose mode itself; it expects injections for those.
+	-- However, the query injections defined in tree-sitter-gitcommit
+	-- aren't picked up for some reason.
+	ignore_install = {"gitcommit"},
 	highlight = {
 		enable = true,
 	},
