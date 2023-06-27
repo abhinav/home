@@ -123,8 +123,8 @@ shift + ctrl - right : yabai -m window --space "$(~/.config/yabai/space-sibling 
 shift + ctrl - left : yabai -m window --space "$(~/.config/yabai/space-sibling prev)" --focus
 
 # Move window to another monitor
-shift + ctrl + alt - right : yabai -m window --display next --focus
-shift + ctrl + alt - left : yabai -m window --display prev --focus
+shift + ctrl + alt - right : yabai -m window --display next --focus || yabai -m window --display first --focus
+shift + ctrl + alt - left : yabai -m window --display prev --focus || yabai -m window --display last --focus
 
 # Close the current window.
 shift + alt - c : yabai -m window --close
