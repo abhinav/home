@@ -49,10 +49,10 @@
 	required = true
 [include]
 	path = ~/.config/netlify/helper/git-config
-	path = ~/.gitconfig.d/alias
-	path = ~/.gitconfig.d/delta
-	path = ~/.gitconfig.d/go
-	path = ~/.gitconfig.d/github
-	path = ~/.gitconfig.d/stg
-	path = ~/.gitconfig.d/local
-	path = ~/.gitconfig.d/mergetool
+	path = ~/.config/git/config.d/alias
+	path = ~/.config/git/config.d/delta
+	path = ~/.config/git/config.d/go
+	path = ~/.config/git/config.d/github
+	path = ~/.config/git/config.d/stg
+	path = ~/.config/git/config.d/local
+	path = ~/.config/git/config.d/mergetool

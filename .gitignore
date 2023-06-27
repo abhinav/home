@@ -26,11 +26,6 @@
 !.zshrc
 /.zsh/rc.d/local
 
-# git
-!.gitconfig
-!/.gitconfig.d/
-/.gitconfig.d/local
-
 # tig
 !.tigrc
 
