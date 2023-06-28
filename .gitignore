@@ -36,6 +36,11 @@
 # [n]vim
 !.vimrc
 
+# Rust
+!/.cargo
+/.cargo/*
+!/.cargo/config.toml
+
 # restack
 !/.restack
 
