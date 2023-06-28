@@ -39,10 +39,11 @@ To install into a new home, take the following steps:
     git fetch local
     ```
 
-- Set up hooks to be able to push to `$HOME`.
+- Change `denyCurrentBranch` in `$HOME` to be able to push to it
+  from the staging repository.
 
     ```bash
-    ~/home-int/etc/git-setup-checkout-push/setup.sh
+    git config receive.denyCurrentBranch updateInstead
     ```
 
 ## Machine-specific setup
