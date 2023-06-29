@@ -1,13 +1,8 @@
 #!/bin/zsh
 
-fzf_search_command='ag -g ""'
-if (command -v rg &> /dev/null); then
-    fzf_search_command='rg --files'
-fi
-
 export FZF_DEFAULT_OPTS="--cycle"
 export FZF_DEFAULT_COMMAND='
-  ('"$fzf_search_command"' || git ls-tree -r --name-only HEAD ||
+  (rg --hidden --files || git ls-tree -r --name-only HEAD ||
    find . -path "*/\.*" -prune -o -type f -print -o -type l -print |
       sed s/^..//) 2> /dev/null'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
