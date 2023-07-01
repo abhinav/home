@@ -402,14 +402,14 @@ require('lazy').setup({
 						debounce_text_changes = 1000,
 					}
 					opts[name] = cfg
-					if cfg.optional then
-						-- For optional LSPs,
-						-- if they're installed globally,
-						-- still set them up.
-						if vim.fn.executable(name) then
-							nvim_lsp[name].setup(cfg)
-						end
-					else
+
+					-- If the LSP is installed globally,
+					-- set it up.
+					-- Otherwise, add it to the list of LSPs to install
+					-- only if it's required.
+					if vim.fn.executable(name) then
+						nvim_lsp[name].setup(cfg)
+					elseif not cfg.optional then
 						table.insert(ensure_installed, name)
 					end
 				end
