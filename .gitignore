@@ -3,6 +3,7 @@
 
 !/.gitignore
 !/README.md
+!/tools
 
 # XDG home
 !/.config
