@@ -94,33 +94,18 @@ shift + cmd - 0 : yabai -m space --balance
 
 
 # create desktop, move window and follow focus - uses jq for parsing json (brew install jq)
-cmd + alt + shift - n : yabai -m space --create && \
-                new_index="$(~/.config/yabai/last-space-same-display)" && \
-                targ_index="$(~/.config/yabai/space-sibling next)" && \
-                yabai -m window --space "${new_index}" && \
-                yabai -m space "$new_index" --move "$targ_index" && \
-                yabai -m space --focus "${targ_index}"
-# create desktop and focus
-cmd + alt - n : yabai -m space --create && \
-                new_index="$(~/.config/yabai/last-space-same-display)" && \
-                targ_index="$(~/.config/yabai/space-sibling next)" && \
-                yabai -m space "$new_index" --move "$targ_index" && \
-                yabai -m space --focus "${targ_index}"
-cmd + alt - w : index="$(yabai -m query --spaces --space | jq .index)" && \
-                yabai -m space --focus "$(~/.config/yabai/space-sibling next || ~/.config/yabai/space-sibling prev)" && \
-                yabai -m space --destroy "$index"
-
-# Cycle through layouts for the current space.
-cmd + alt - space : layout="$(yabai -m query --spaces --space | jq -r '["stack", "bsp"] as $modes | .type as $mode | ($modes | index($mode) + 1) % ($modes | length) | $modes[.]')" && \
-                    yabai -m space --layout "$layout"
+cmd + alt + shift - n : yabaictl space create --move-window
+cmd + alt - n : yabaictl space create
+cmd + alt - w : yabaictl space delete
+cmd + alt - space : yabaictl space cycle-layout
 
 # Move to another space
-ctrl - right : yabai -m space --focus "$(~/.config/yabai/space-sibling next)"
-ctrl - left : yabai -m space --focus "$(~/.config/yabai/space-sibling prev)"
+ctrl - right : yabaictl space next
+ctrl - left : yabaictl space previous
 
 # Move window to another space
-shift + ctrl - right : yabai -m window --space "$(~/.config/yabai/space-sibling next)" --focus
-shift + ctrl - left : yabai -m window --space "$(~/.config/yabai/space-sibling prev)" --focus
+shift + ctrl - right : yabaictl space next --move-window
+shift + ctrl - left : yabaictl space previous --move-window
 
 # Move window to another monitor
 shift + ctrl + alt - right : yabai -m window --display next --focus || yabai -m window --display first --focus
@@ -155,8 +140,8 @@ shift + ctrl - 0 : index="$(~/.config/yabai/last-space-same-display)" && \
                    yabai -m window --space "$index" --focus
 
 # Focus windows
-alt - j : yabai -m window --focus "$(~/.config/yabai/visible-window-cycle next)"
-alt - k : yabai -m window --focus "$(~/.config/yabai/visible-window-cycle prev)"
+alt - j : yabaictl window next
+alt - k : yabaictl window previous
 
 # Swap windows
 ctrl + alt - j : yabai -m window --swap next || yabai -m window --swap first
