@@ -1,7 +1,5 @@
 #!/bin/bash
 
-export HOMEBREW_NO_ANALYTICS=1
-
 if [[ "$(uname)" == Darwin ]]; then
 	if [[ -d /opt/homebrew ]]; then
 		HOMEBREW_PREFIX=/opt/homebrew
