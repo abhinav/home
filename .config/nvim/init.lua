@@ -560,6 +560,7 @@ require('lazy').setup({
 			{'<C-H>', ':TmuxNavigateLeft', 'n', noremap = true, silent = true},
 		},
 	},
+	'lambdalisue/vim-manpager',
 	{
 		'ojroques/vim-oscyank', -- {{{3
 		config = function()

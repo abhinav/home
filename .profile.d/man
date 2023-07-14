@@ -1,8 +1,3 @@
 #!/bin/bash
 
-# If we're using a vim-ey editor, use it as the pager for 'man'.
-if [[ "$EDITOR" == *vim ]]; then
-	# "sh -c" so that we can pipe.
-	MANPAGER="/bin/sh -c \"col -b | $EDITOR -c 'set ft=man ts=8 nolist nonu' -MR -\""
-	export MANPAGER
-fi
+export MANPAGER='nvim -c "set ts=8 nolist nonu nornu noru ls=1" -c ASMANPAGER -'
