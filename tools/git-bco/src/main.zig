@@ -33,7 +33,7 @@ pub fn run(alloc: std.mem.Allocator) !void {
     var args = try Args.parse(alloc, &args_iter);
     defer args.deinit();
 
-    const branch = args.branch orelse (selectBranch(alloc) catch |err| {
+    const branch = args.branch orelse (selectBranch(alloc, args.detach) catch |err| {
         switch (err) {
             error.NoLocalBranches => {
                 std.log.err("no local branches", .{});
@@ -52,7 +52,7 @@ pub fn run(alloc: std.mem.Allocator) !void {
 // The selected branch is returned.
 //
 // The caller must free the returned slice.
-fn selectBranch(alloc: std.mem.Allocator) ![]const u8 {
+fn selectBranch(alloc: std.mem.Allocator, detach: bool) ![]const u8 {
     var git_branch = std.ChildProcess.init(&.{ "git", "branch" }, alloc);
     git_branch.stdout_behavior = .Pipe;
     try git_branch.spawn();
@@ -67,6 +67,8 @@ fn selectBranch(alloc: std.mem.Allocator) ![]const u8 {
     // Otherwise, we would end up with an empty fzf window.
     var git_branch_stdout = git_branch.stdout orelse unreachable;
     var local_branches = localBranchIterator(iter.lines(git_branch_stdout.reader(), 256));
+    local_branches.checked_out = detach;
+
     const first_branch = try local_branches.next() orelse {
         // If Git exited with a non-zero status,
         // we can't be sure that there are no local branches.
@@ -144,21 +146,29 @@ fn LocalBranchIterator(comptime Iter: type) type {
         /// Iterator of lines from `git branch`.
         iter: Iter,
 
+        /// Whether to include branches that are currently checked out
+        /// in this or other worktrees.
+        checked_out: bool = false,
+
         /// Returns the next local branch name.
         /// Returns null if there are no more local branches.
         pub fn next(self: *@This()) !?[]const u8 {
             while (true) {
                 var line = try self.iter.next() orelse return null;
-                const name = strip(line);
+                var name = strip(line);
                 if (name.len == 0) continue;
 
                 switch (name[0]) {
-                    // Skip branches checked out in this or other worktrees.
-                    '*', '+' => continue,
-                    else => {},
-                }
+                    '*', '+' => {
+                        if (!self.checked_out) {
+                            // Skip branches checked out in this or other worktrees.
+                            continue;
+                        }
 
-                return name;
+                        return strip(name[1..]);
+                    },
+                    else => return name,
+                }
             }
         }
     };

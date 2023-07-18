@@ -12,6 +12,10 @@ buffer: []const u8,
 /// The branch to check out, if specified.
 branch: ?[]const u8,
 
+// Whether the checkout request is for a detached HEAD.
+// If true, we can list checked-out branches as well.
+detach: bool = false,
+
 /// Options to pass to `git checkout`.
 options: []const []const u8,
 
@@ -27,6 +31,7 @@ pub fn parse(alloc: std.mem.Allocator, args_iter: anytype) error{OutOfMemory}!Se
 
     var branch: ?[]const u8 = null;
     var options = std.ArrayList([]const u8).init(alloc);
+    var detached = false;
     defer options.deinit();
 
     while (args_iter.next()) |arg| {
@@ -35,6 +40,7 @@ pub fn parse(alloc: std.mem.Allocator, args_iter: anytype) error{OutOfMemory}!Se
         const owned_arg = buffer.items[start_idx..];
 
         if (std.mem.startsWith(u8, arg, "-")) {
+            detached = detached or std.mem.eql(u8, arg, "--detach");
             try options.append(owned_arg);
         } else {
             branch = owned_arg;
@@ -45,6 +51,7 @@ pub fn parse(alloc: std.mem.Allocator, args_iter: anytype) error{OutOfMemory}!Se
         .alloc = alloc,
         .buffer = try buffer.toOwnedSlice(),
         .branch = branch,
+        .detach = detached,
         .options = try options.toOwnedSlice(),
     };
 }
