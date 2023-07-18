@@ -175,7 +175,6 @@ require('lazy').setup({
 		end,
 	},
 	{'lervag/wiki.vim', ft = 'markdown'},
-	{'NoahTheDuke/vim-just', ft = 'just'},
 	{
 		'rafaelsq/nvim-goc.lua',
 		ft = 'go',
