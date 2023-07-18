@@ -159,6 +159,7 @@ fn LocalBranchIterator(comptime Iter: type) type {
                 if (name.len == 0) continue;
 
                 switch (name[0]) {
+                    '(' => continue, // "(HEAD detached at ...)".
                     '*', '+' => {
                         if (!self.checked_out) {
                             // Skip branches checked out in this or other worktrees.
