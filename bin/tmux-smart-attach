@@ -12,6 +12,13 @@ if [ -z "$TMUX_EXE" ] || [ ! -x "$TMUX_EXE" ]; then
 	exec "$SHELL"
 fi
 
+# If there's no tmux server running, start that up first.
+# This is necessary so that tmux-resurrect's restored sessions
+# already exist by the time new-session is called.
+if grep -q 'no server running' <(tmux info 2>&1); then
+	tmux start-server
+fi
+
 SESSION_NAME=main
 if [ -n "$1" ]; then
 	SESSION_NAME="$1"
