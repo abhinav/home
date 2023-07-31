@@ -1163,7 +1163,7 @@ vim.keymap.set('n', '<leader>:', telescopes.commands, {
 -- tree-sitter {{{2
 require 'nvim-treesitter.configs'.setup {
 	ensure_installed = {
-		"bash", "c", "cpp", "css", "dot", "diff",
+		"bash", "c", "cpp", "css", "dot",
 		"gitignore", "go", "gomod", "gowork", "graphql",
 		"html", "java", "javascript", "json",
 		"lua", "make", "markdown", "markdown_inline",
@@ -1177,7 +1177,7 @@ require 'nvim-treesitter.configs'.setup {
 	-- verbose mode itself; it expects injections for those.
 	-- However, the query injections defined in tree-sitter-gitcommit
 	-- aren't picked up for some reason.
-	ignore_install = {"gitcommit"},
+	ignore_install = {"gitcommit", "diff"},
 	highlight = {
 		enable = true,
 	},
