@@ -39,8 +39,10 @@
 	dc = diff --cached
 
 	# f	fetch
+	# fa	fetch all
 	# fp	fetch prune
 	f = fetch
+	fa = fetch --all
 	fp = fetch --prune
 
 	# l	log
