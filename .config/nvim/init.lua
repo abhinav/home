@@ -33,6 +33,15 @@ require('lazy').setup({
 	{
 		'zbirenbaum/copilot.lua', -- {{{3
 		command = 'Copilot',
+		enabled = function()
+			local disabled = vim.env.GITHUB_COPILOT_DISABLED
+			if disabled == "1" or disabled == "true" then
+				disabled = true
+			else
+				disabled = false
+			end
+			return not disabled
+		end,
 		config = function()
 			-- Opt-into auto-triggering suggestions
 			-- or opt-out of the whole thing with env vars.
@@ -42,13 +51,6 @@ require('lazy').setup({
 				auto_trigger = true
 			else
 				auto_trigger = false
-			end
-
-			local disabled = vim.env.GITHUB_COPILOT_DISABLED
-			if disabled == "1" or disabled == "true" then
-				disabled = true
-			else
-				disabled = false
 			end
 
 			-- Keymaps
@@ -62,7 +64,7 @@ require('lazy').setup({
 			-- to work with nvim-cmp and snippets.
 			require('copilot').setup {
 				suggestion = {
-					enabled = not disabled,
+					enabled = true,
 					auto_trigger = auto_trigger,
 					keymap = {
 						accept = '<C-e>',
@@ -942,7 +944,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
 -- nvim-cmp {{{2
 local cmp = require 'cmp'
 local cmp_ultisnips_mappings = require 'cmp_nvim_ultisnips.mappings'
-local copilot_suggestion = require 'copilot.suggestion'
+local has_copilot, copilot_suggestion = pcall(require, 'copilot.suggestion')
 
 local handleTab = function(fallback)
 	-- Completion suggestions take precedence over Copilot suggestions.
@@ -953,7 +955,7 @@ local handleTab = function(fallback)
 		else
 			cmp.select_next_item()
 		end
-	elseif copilot_suggestion.is_visible() then
+	elseif has_copilot and copilot_suggestion.is_visible() then
 		copilot_suggestion.accept()
 	elseif vim.fn['UltiSnips#CanJumpForwards']() == 1 then
 		cmp_ultisnips_mappings.jump_forwards(fallback)
@@ -969,7 +971,7 @@ local handleCancel = function(cancelFn)
 			cancelFn()
 			used = true
 		end
-		if copilot_suggestion.is_visible() then
+		if  has_copilot and copilot_suggestion.is_visible() then
 			copilot_suggestion.dismiss()
 			used = true
 		end
