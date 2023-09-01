@@ -4,9 +4,8 @@
 //!
 //!     git bco [options] [branch]
 //!
-//! Where, `branch` is the name of the branch to check out.
-//! If `branch` is not specified,
-//! an fzf-based selector is spawned to select from local branches.
+//! It spawns an fzf-based selector for branches.
+//! If `branch` is specified, it forms the initial query for fzf.
 //!
 //! Options are passed to `git checkout` as-is.
 
@@ -33,7 +32,7 @@ pub fn run(alloc: std.mem.Allocator) !void {
     var args = try Args.parse(alloc, &args_iter);
     defer args.deinit();
 
-    const branch = args.branch orelse (selectBranch(alloc, args.detach) catch |err| {
+    const branch = selectBranch(alloc, args.branch, args.detach) catch |err| {
         switch (err) {
             error.NoLocalBranches => {
                 std.log.err("no local branches", .{});
@@ -41,7 +40,7 @@ pub fn run(alloc: std.mem.Allocator) !void {
             },
             else => return err,
         }
-    });
+    };
     // Need to free only if we used selectBranch.
     defer if (args.branch == null) alloc.free(branch);
 
@@ -52,7 +51,7 @@ pub fn run(alloc: std.mem.Allocator) !void {
 // The selected branch is returned.
 //
 // The caller must free the returned slice.
-fn selectBranch(alloc: std.mem.Allocator, detach: bool) ![]const u8 {
+fn selectBranch(alloc: std.mem.Allocator, init_branch: ?[]const u8, detach: bool) ![]const u8 {
     var git_branch = std.ChildProcess.init(&.{ "git", "branch" }, alloc);
     git_branch.stdout_behavior = .Pipe;
     try git_branch.spawn();
@@ -76,12 +75,18 @@ fn selectBranch(alloc: std.mem.Allocator, detach: bool) ![]const u8 {
         return error.NoLocalBranches;
     };
 
-    var fzf = std.ChildProcess.init(&.{
+    var fzf_args: []const []const u8 = &.{
         "fzf",
         "--height=30%",
         "--prompt=Branch> ",
         "--preview=git log --color --oneline {} ^$(git merge-base HEAD {})",
-    }, alloc);
+    };
+    if (init_branch) |b| {
+        fzf_args = try std.mem.concat(alloc, []const u8, &.{ fzf_args, &.{ "--query", b } });
+    }
+    defer if (init_branch != null) alloc.free(fzf_args);
+
+    var fzf = std.ChildProcess.init(fzf_args, alloc);
     fzf.stdout_behavior = .Pipe;
     fzf.stdin_behavior = .Pipe;
     try fzf.spawn();
