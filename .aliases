@@ -1,8 +1,8 @@
 #!/bin/bash
 
-if command -v exa &>/dev/null; then
-	alias ls=exa
-	alias tree='exa --tree'
+if command -v eza &>/dev/null; then
+	alias ls=eza
+	alias tree='eza --tree'
 fi
 
 alias l="ls"

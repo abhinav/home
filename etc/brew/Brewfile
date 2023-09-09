@@ -7,7 +7,7 @@ tap "koekeishiya/formulae"
 
 brew "bat"        # > cat
 brew "curl"
-brew "exa"        # > ls
+brew "eza"        # > ls
 brew "fzf"        # fuzzy match
 brew "go"
 brew "gopls"
