@@ -33,6 +33,13 @@
 	# co	branch checkout (legacy alias)
 	co = checkout
 
+	# cp	cherry-pick
+	# cpc	cherry-pick continue
+	# cpa	cherry-pick abort
+	cp = cherry-pick
+	cpc = cherry-pick --continue
+	cpa = cherry-pick --abort
+
 	# d	diff
 	# dc	diff cached
 	d = diff
