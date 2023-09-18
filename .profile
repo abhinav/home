@@ -14,7 +14,6 @@ source ~/.profile.d/man
 source ~/.profile.d/dircolors
 source ~/.profile.d/ripgrep
 
-source ~/.profile.d/fasd
 source ~/.profile.d/github
 
 source ~/.profile.d/python

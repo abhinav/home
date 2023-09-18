@@ -35,7 +35,7 @@ brew "koekeishiya/formulae/skhd"
 
 # Shell and friends.
 brew "direnv"
-brew "fasd"  # cd from/to anywhere
+brew "zoxide"  # cd from/to anywhere
 brew "zsh"
 brew "zsh-completions"
 
