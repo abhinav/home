@@ -47,4 +47,4 @@
 
 # Extras
 !/etc
-!/stow
+!/sys
