@@ -38,6 +38,8 @@ brew "direnv"
 brew "zoxide"  # cd from/to anywhere
 brew "zsh"
 brew "zsh-completions"
+brew "gawk" # for fzf-tab-completion
+brew "grep" # for fzf-tab-completion
 
 # Editing.
 tap "neovim/neovim"
