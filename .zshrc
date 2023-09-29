@@ -23,7 +23,6 @@ source ~/.zsh/rc.d/zoxide
 source ~/.zsh/rc.d/fzf-tab
 source ~/.zsh/rc.d/highlighting
 source ~/.zsh/rc.d/autosuggestions
-source ~/.zsh/rc.d/netlify
 
 source ~/.aliases
 

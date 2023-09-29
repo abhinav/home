@@ -1,7 +1,0 @@
-#!/bin/bash
-
-if [[ -d "$HOME/.config/netlify/helper/bin" ]]; then
-	# shellcheck disable=2086
-	PATH=$(IFS=:; prepend "$HOME/.config/netlify/helper/bin" $PATH)
-	export PATH
-fi

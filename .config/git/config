@@ -48,7 +48,6 @@
 	process = git-lfs filter-process
 	required = true
 [include]
-	path = ~/.config/netlify/helper/git-config
 	path = ~/.config/git/config.d/alias
 	path = ~/.config/git/config.d/delta
 	path = ~/.config/git/config.d/go
