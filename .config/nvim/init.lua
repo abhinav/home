@@ -504,7 +504,7 @@ require('lazy').setup({
 	},
 	{
 		'nvim-telescope/telescope.nvim', -- {{{3
-		tag = '0.1.1',
+		version = '*',
 		dependencies = {'nvim-lua/plenary.nvim'},
 	},
 	'nvim-telescope/telescope-ui-select.nvim',
