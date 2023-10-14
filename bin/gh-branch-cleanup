@@ -11,14 +11,34 @@ warn() {
 	echo "WARN:" "$@" >&2
 }
 
+# prompt_Yn $msg
+prompt_Yn() {
+	local msg="$1"
+	local input
+	while true; do
+		read -r -p "${msg} [Y/n]" input
+		case "${input}" in
+			"" | [yY]*)
+				return 0
+				;;
+			[nN]*)
+				return 1
+				;;
+		esac
+	done
+}
+
 while read -r NUMBER TITLE BRANCH OID; do
 	branchAt=$(git rev-parse --verify "refs/heads/${BRANCH}" 2>/dev/null || echo "")
 	if [[ -z "${branchAt}" ]]; then
 		continue
 	elif [[ "${branchAt}" != "${OID}" ]]; then
-		warn "Skipping updated branch: ${BRANCH} (#${NUMBER}: ${TITLE})"
-	else
-		echo "Deleting ${BRANCH} (#${NUMBER}: ${TITLE})"
-		git branch -D "${BRANCH}"
+		if ! prompt_Yn "Branch head ${BRANCH} differs. Delete anyway?"; then
+			warn "Skipping updated branch: ${BRANCH} (#${NUMBER}: ${TITLE})"
+			continue
+		fi
 	fi
+
+	echo "Deleting ${BRANCH} (#${NUMBER}: ${TITLE})"
+	git branch -D "${BRANCH}"
 done < <(list_prs)
