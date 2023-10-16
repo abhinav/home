@@ -5,3 +5,14 @@ if [ -d "$HOMEBREW_PREFIX/opt/python/libexec/bin" ]; then
 	# shellcheck disable=2086
 	PATH=$(IFS=:; prepend "$HOMEBREW_PREFIX/opt/python/libexec/bin" $PATH)
 fi
+
+export PYENV_ROOT="$HOME/.pyenv"
+PYENV_EXE=$(command -v pyenv || echo "")
+if [[ -z "$PYENV_EXE" ]]; then
+	# pyenv may not be on the PATH.
+	if [ -d "$PYENV_ROOT/bin/pyenv" ]; then
+		PYENV_EXE="$PYENV_ROOT/bin/pyenv"
+	fi
+fi
+
+eval "$("$PYENV_EXE" init -)"
