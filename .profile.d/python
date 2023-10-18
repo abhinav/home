@@ -15,4 +15,6 @@ if [[ -z "$PYENV_EXE" ]]; then
 	fi
 fi
 
-eval "$("$PYENV_EXE" init -)"
+if [[ -n "$PYENV_EXE" ]]; then
+	eval "$("$PYENV_EXE" init -)"
+fi
