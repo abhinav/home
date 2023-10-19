@@ -3,7 +3,7 @@ set -euo pipefail
 IFS=$'\n\t'
 
 list_prs() {
-	gh pr list --state merged --author "@me" --json "number,title,headRefName,headRefOid" |
+	gh pr list --state merged --json "number,title,headRefName,headRefOid" |
 		jq -r '.[] | [.number, .title, .headRefName, .headRefOid] | @tsv'
 }
 
@@ -29,6 +29,9 @@ prompt_Yn() {
 }
 
 while read -r NUMBER TITLE BRANCH OID; do
+	if [[ "${BRANCH}" == "main" || "${BRANCH}" == "master" ]]; then
+		continue
+	fi
 	branchAt=$(git rev-parse --verify "refs/heads/${BRANCH}" 2>/dev/null || echo "")
 	if [[ -z "${branchAt}" ]]; then
 		continue
