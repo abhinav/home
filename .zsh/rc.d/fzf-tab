@@ -15,9 +15,10 @@ zstyle ':completion::*:(ls|eza)::*' fzf-completion-opts --preview='
 '
 # For cd, use eza to show previews of directories,
 # and accept them with / to continue chaning directories.
-zstyle ':completion::*:cd::*' fzf-completion-opts \
-	--preview='eval eza -1 --color=always {1}' \
-	--bind=/:accept
+zstyle ':completion::*:cd::*' \
+	fzf-completion-opts --preview='eval eza -1 --color=always {1}'
+zstyle ':completion::*:cd::*' \
+	fzf-completion-keybindings  /:accept:'repeat-fzf-completion'
 
 # Show log previews for git-log.
 zstyle ':completion::*:git::git,log,*' fzf-completion-opts \
