@@ -1,3 +1,17 @@
 #!/bin/zsh
 
 eval "$(zoxide init zsh)"
+
+__zoxide_z_complete() {
+	# Only show completions when the cursor is at the end of the line.
+	[[ "${#words[@]}" -eq "${CURRENT}" ]] || return 0
+
+	local args
+	args=$(zoxide query -l --exclude "$(__zoxide_pwd)" -- "${words[2,-1]}")
+	_arguments "1:profiles:($args)"
+}
+
+zstyle ':completion::*:__zoxide_z::*' \
+	fzf-completion-opts --preview='eval eza -1 --color=always {1}'
+zstyle ':completion::*:__zoxide_z::*' \
+	fzf-completion-keybindings enter:accept:'zle accept-line'
