@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+set -euo pipefail
+IFS=$'\n\t'
+
+SVG=$(mktemp "/tmp/pikchr.XXXX.svg")
+PNG=$(mktemp "/tmp/pikchr.XXXX.png")
+trap 'rm -f "$SVG" "$PNG"' EXIT
+
+# -c to copy to clipboard
+COPY=0
+args=()
+while [[ $# -gt 0 ]]; do
+	case "$1" in
+	-c)
+		COPY=1
+		if [[ "$(uname -s)" != "Darwin" ]]; then
+			echo "ERROR: -c is only supported on macOS" >&2
+			exit 1
+		fi
+		;;
+	*)
+		args+=("$1")
+		;;
+	esac
+	shift
+done
+
+pikchr --svg-only - > "$SVG"
+inkscape "${args[@]}" -o "$PNG" "$SVG"
+
+if [[ $COPY -eq 1 ]]; then
+	osascript -e "set the clipboard to (read (POSIX file \"$PNG\") as {«class PNGf»})"
+else
+	cat "$PNG"
+fi
