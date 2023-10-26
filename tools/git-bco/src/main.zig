@@ -100,6 +100,16 @@ fn selectBranch(alloc: std.mem.Allocator, init_branch: ?[]const u8, detach: bool
     // but only for branches not currently checked out.
     {
         var fzf_stdin = fzf.stdin orelse unreachable;
+        defer {
+            fzf_stdin.close();
+
+            // HACK:
+            // Calling wait() with a closed ChildProcess.stdin
+            // causes a panic.
+            // Replace stdin with null to avoid this.
+            fzf.stdin = null;
+        }
+
         var fzf_write_buffer = std.io.bufferedWriter(fzf_stdin.writer());
         defer fzf_write_buffer.flush() catch |err| {
             std.log.err("error flushing fzf stdin: {}", .{err});
@@ -111,6 +121,8 @@ fn selectBranch(alloc: std.mem.Allocator, init_branch: ?[]const u8, detach: bool
             try fzf_writer.print("{s}\n", .{branch});
         }
 
+        // Wait for git branch to exit before closing fzf stdin.
+        // This means we fed all branches to fzf before before closing it.
         try checkTerm("git branch", try git_branch.wait());
     }
 
