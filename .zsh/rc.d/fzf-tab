@@ -17,7 +17,8 @@ zstyle ':completion::*:(ls|eza)::*' fzf-completion-opts --preview='
 # and accept them with / to continue chaning directories.
 zstyle ':completion::*:cd::*' \
 	fzf-completion-opts --preview='eval eza -1 --color=always {1}'
-zstyle ':completion::*:cd::*' \
+
+zstyle ':completion::*:(cd|ls|eza)::*' \
 	fzf-completion-keybindings  /:accept:'repeat-fzf-completion'
 
 # Show log previews for git-log.
