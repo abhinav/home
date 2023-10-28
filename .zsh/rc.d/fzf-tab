@@ -4,8 +4,12 @@ source ~/.zsh/fzf-tab-completion/zsh/fzf-zsh-completion.sh
 
 export FZF_COMPLETION_OPTS='--bind=tab:down --bind=btab:up'
 
-# completion previews for ls, exa, and cd.
-zstyle ':completion::*:(ls|eza)::*' fzf-completion-opts --preview='
+# For cd, use eza to show previews of directories.
+zstyle ':completion::*:cd::*' \
+	fzf-completion-opts --preview='eval eza -1 --color=always {1}'
+
+# Completion previews for files.
+zstyle ':completion::*:(ls|eza|vim|nvim)::*' fzf-completion-opts --preview='
 	P=$(eval echo {1})
 	if [ -f "$P" ]; then
 		bat --color=always "$P"
@@ -13,12 +17,10 @@ zstyle ':completion::*:(ls|eza)::*' fzf-completion-opts --preview='
 		eza -1 --color=always "$P"
 	fi
 '
-# For cd, use eza to show previews of directories,
-# and accept them with / to continue chaning directories.
-zstyle ':completion::*:cd::*' \
-	fzf-completion-opts --preview='eval eza -1 --color=always {1}'
 
-zstyle ':completion::*:(cd|ls|eza)::*' \
+# When completing file paths, use '/' to accept and continue.
+# Useful for traversing down directories.
+zstyle ':completion::*:(cd|ls|eza|vim|nvim|cat|bat|less)::*' \
 	fzf-completion-keybindings  /:accept:'repeat-fzf-completion'
 
 # Show log previews for git-log.
