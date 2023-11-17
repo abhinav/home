@@ -7,20 +7,14 @@ brew "curl"
 brew "eza"        # > ls
 brew "fzf"        # fuzzy match
 brew "go"
-brew "gopls"
 brew "hyperfine"  # CLI benchmarks
 brew "jq"         # JSON munging
-brew "gron"       # JSON grepping
-brew "jless"      # JSON reading
 brew "node"
 brew "pandoc"
-brew "pv"
 brew "python"
 brew "ripgrep"    # > grep
 brew "rustup"
-brew "shellcheck" # lint .sh
 brew "starship"   # prompt
-brew "shfmt"
 brew "stow"
 brew "tmux"
 brew "abhinav/tap/tmux-fastcopy"
@@ -55,12 +49,9 @@ brew "abhinav/tap/restack"
 cask "1password"
 cask "appcleaner"
 cask "caffeine"      # don't sleep
-cask "firefox"
 cask "flux"
 cask "google-drive"
 cask "iterm2"
-cask "kap"           # screen cap
-cask "licecap"       # ^
 cask "little-snitch" # firewall
 cask "obsidian"      # notes
 cask "spotify"
@@ -68,8 +59,5 @@ cask "spotify"
 cask "alfred"              # command space
 cask "hammerspoon"         # window management
 cask "karabiner-elements"  # keyboard control
-cask "spaceman"            # report current space in menu gar
-cask "scroll-reverser"     # use normal scrolling on mouse
-cask "sensiblesidebuttons" # back/fwd with mouse
 
 # vim:set ft=ruby:
