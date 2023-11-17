@@ -36,7 +36,7 @@ brew "grep" # for fzf-tab-completion
 
 # Editing.
 tap "neovim/neovim"
-brew "neovim", args: ["HEAD"]
+brew "neovim"
 brew "svn"  # needed weirdly for the font
 cask "font-iosevka"
 cask "font-iosevka-nerd-font"
