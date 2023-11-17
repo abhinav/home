@@ -329,10 +329,6 @@ require('lazy').setup({
 		-- The configuration can be a function.
 		opts = {
 			gopls = function()
-				if vim.env.VIM_GOPLS_DISABLED then
-					return nil
-				end
-
 				local init_opts = {
 					gofumpt = not vim.env.VIM_GOPLS_NO_GOFUMPT,
 					staticcheck = true,
@@ -386,6 +382,10 @@ require('lazy').setup({
 		config = function(_, opts)
 			local nvim_lsp = require('lspconfig')
 			local lsp_capabilities = require('cmp_nvim_lsp').default_capabilities()
+
+			if vim.env.VIM_GOPLS_DISABLED then
+				opts['gopls'] = nil
+			end
 
 			ensure_installed = {}
 			for name, cfg in pairs(opts) do
