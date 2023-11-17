@@ -485,7 +485,7 @@ require('lazy').setup({
 		'mhinz/vim-grepper', -- {{{3
 		config = function()
 			vim.g.grepper = {
-				tools        = {'rg', 'ag', 'git'},
+				tools        = {'rg', 'git'},
 				side         = 1,
 				side_cmd     = 'new',
 				prompt_text  = '$t> ',
