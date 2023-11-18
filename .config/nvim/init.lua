@@ -186,7 +186,15 @@ require('lazy').setup({
 	},
 	{'rust-lang/rust.vim', ft = 'rust'},
 	{'vim-pandoc/vim-pandoc-syntax', ft = {'markdown', 'pandoc'}},
-	{'ziglang/zig.vim', ft = {'zig'}},
+	{
+		'ziglang/zig.vim',
+		ft = {'zig'},
+		config = function()
+			if vim.env.VIM_ZLS_DISABLED then
+				vim.g.zig_fmt_autosave = 0
+			end
+		end,
+	},
 
 	-- Git {{{2
 	{
@@ -385,6 +393,9 @@ require('lazy').setup({
 
 			if vim.env.VIM_GOPLS_DISABLED then
 				opts['gopls'] = nil
+			end
+			if vim.env.VIM_ZLS_DISABLED then
+				opts['zls'] = nil
 			end
 
 			ensure_installed = {}
