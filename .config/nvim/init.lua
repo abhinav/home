@@ -330,12 +330,40 @@ require('lazy').setup({
 			'folke/lsp-colors.nvim',
 			'williamboman/mason.nvim',
 			'williamboman/mason-lspconfig.nvim',
+			'creativenull/efmls-configs-nvim',
 		},
 		-- Table of options for each language server.
 		-- Items can be key-value pairs to specify configuration,
 		-- and strings to use default configuration.
 		-- The configuration can be a function.
 		opts = {
+			efm = function()
+				local init_opts = {
+					documentFormatting = true,
+				}
+
+				local shellcheck = require('efmls-configs.linters.shellcheck')
+				local shfmt = require('efmls-configs.formatters.shfmt')
+				local langs = {
+					bash = {shellcheck, shfmt},
+					go   = {require('efmls-configs.linters.golangci_lint')},
+					json = {require('efmls-configs.linters.jq')},
+					sh   = {shellcheck, shfmt},
+					yaml = {require('efmls-configs.linters.actionlint')},
+				}
+
+				if vim.env.VIM_GOPLS_DISABLED then
+					langs['go'] = nil
+				end
+
+				return {
+					init_options = init_opts,
+					settings = {
+						rootMarkers = {".git/"},
+						languages = langs,
+					},
+				}
+			end,
 			gopls = function()
 				local init_opts = {
 					gofumpt = not vim.env.VIM_GOPLS_NO_GOFUMPT,
@@ -442,30 +470,11 @@ require('lazy').setup({
 		end,
 	},
 	{
-		'jose-elias-alvarez/null-ls.nvim', -- {{{3
-		dependencies = {
-			'nvim-lua/plenary.nvim',
-			'williamboman/mason.nvim',
-		},
-		config = function()
-			local null_ls = require('null-ls')
-			null_ls.setup({
-				sources = {
-					null_ls.builtins.code_actions.shellcheck,
-					null_ls.builtins.diagnostics.actionlint,
-					null_ls.builtins.diagnostics.golangci_lint,
-					null_ls.builtins.diagnostics.shellcheck,
-					null_ls.builtins.formatting.jq,
-					null_ls.builtins.formatting.shfmt,
-				},
-			})
-		end,
-	},
-	{
 		'williamboman/mason.nvim',
 		opts = {
 			ensure_installed = {
 				'actionlint',
+				'efm',
 				'shellcheck', 'shfmt',
 				'jq',
 			},
