@@ -911,6 +911,10 @@ local function lsp_on_attach(client, bufnr)
 	end
 
 	vim.bo.omnifunc =  'v:lua.vim.lsp.omnifunc'
+
+	-- Give me my 'gq' back.
+	vim.bo.formatexpr = nil
+
 	local opts = { noremap = true, silent = true }
 
 	-- Keybindings
