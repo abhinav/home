@@ -740,6 +740,33 @@ vim.keymap.set('n', '<leader>qq', ':qa<cr>', {desc = "Quit all"})
 -- Disable ex mode from Q.
 vim.keymap.set('n', 'Q', '<Nop>', {noremap = true})
 
+-- Make 'gf' create the file if it doesn't exist.
+vim.keymap.set('n', 'gf', function()
+	local file = vim.fn.expand('<cfile>')
+
+	-- gf checks for the file in each directory in the 'path' option.
+	-- We have to do the same.
+	local exists = false
+	for dir in vim.o.path:gmatch('[^,]+') do
+		local f = file
+		if vim.fn.isdirectory(dir) ~= 0 then
+			f = dir .. '/' .. file
+		end
+		if vim.fn.filereadable(file) ~= 0 then
+			file = f
+			exists = true
+		end
+	end
+
+	-- If the file didn't exist, create it relative to the open file.
+	if not exists then
+		local dir = vim.fn.expand('%:p:h')
+		file = dir .. '/' .. file
+	end
+
+	vim.cmd('edit ' .. file)
+end, {desc = "Edit file under cursor"})
+
 -- Yank and paste operations preceded by <leader> should use system clipboard.
 vim.keymap.set({'n', 'v'}, '<leader>y', '"+y', {
 	noremap = true,
