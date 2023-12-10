@@ -16,7 +16,7 @@ import (
 func main() {
 	var cmd mainCmd
 	ctx := kong.Parse(&cmd,
-		kong.Name("gh util"),
+		kong.Name("gh u"),
 		kong.UsageOnError(),
 		kong.Writers(os.Stdout, os.Stderr),
 		kong.ConfigureHelp(kong.HelpOptions{
@@ -33,7 +33,7 @@ func main() {
 
 				return &kong.Group{
 					Key:   strings.Join(parts, "-"),
-					Title: "Command flags (" + strings.Join(parts, " ") + "):",
+					Title: "[" + strings.Join(parts, " ") + "] Flags:",
 				}
 			}
 			return nil
@@ -45,6 +45,11 @@ func main() {
 }
 
 type mainCmd struct {
+	Alias struct {
+		Install   aliasInstallCmd   `cmd:"" help:"Install gh CLI aliases."`
+		Uninstall aliasUninstallCmd `cmd:"" help:"Uninstall gh CLI aliases."`
+	} `cmd:"" help:"Manage gh CLI aliases."`
+
 	Branch struct {
 		Cleanup branchCleanupCmd `cmd:"" help:"Delete merged branches." aliases:"c"`
 	} `cmd:"" help:"Manage branches." aliases:"b"`

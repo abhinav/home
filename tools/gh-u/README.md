@@ -3,6 +3,14 @@ These are specific to my needs and are probably not useful to anyone else.
 
 Install by running:
 
-```
+```bash
 make install
+```
+
+Install aliases for common commands after installation with:
+
+```bash
+gh u alias installo
+# or
+gh u alias install --force
 ```

@@ -24,8 +24,9 @@ lint: errtrace-lint
 errtrace-lint: $(ERRTRACE)
 	@OUT=$$($(ERRTRACE) -l *.go); \
 	if [ "$$OUT" != "" ]; then \
-		echo "outdated files:"; \
+		echo "Not instrumented with errtrace:"; \
 		echo "$$OUT"; \
+		echo "Run 'make errtrace' to instrument."; \
 		exit 1; \
 	fi
 
