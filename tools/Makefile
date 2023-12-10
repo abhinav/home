@@ -1,5 +1,5 @@
 # List of subdirectories of tools to call `make install` in.
-TOOLS = git-bco
+TOOLS = git-bco gh-u
 
 SHELL = bash
 
