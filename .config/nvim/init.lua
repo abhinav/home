@@ -449,16 +449,17 @@ require('lazy').setup({
 		},
 		config = function()
 			local null_ls = require('null-ls')
-			null_ls.setup({
-				sources = {
-					null_ls.builtins.code_actions.shellcheck,
-					null_ls.builtins.diagnostics.actionlint,
-					null_ls.builtins.diagnostics.golangci_lint,
-					null_ls.builtins.diagnostics.shellcheck,
-					null_ls.builtins.formatting.jq,
-					null_ls.builtins.formatting.shfmt,
-				},
-			})
+			local sources = {
+				null_ls.builtins.code_actions.shellcheck,
+				null_ls.builtins.diagnostics.actionlint,
+				null_ls.builtins.diagnostics.shellcheck,
+				null_ls.builtins.formatting.jq,
+				null_ls.builtins.formatting.shfmt,
+			}
+			if not vim.env.VIM_GOLANGCI_LINT_DISABLED then
+				sources[#sources + 1] = null_ls.builtins.diagnostics.golangci_lint
+			end
+			null_ls.setup({sources = sources})
 		end,
 	},
 	{
