@@ -66,13 +66,21 @@ func (g *Git) DeleteBranch(branch string) error {
 	return errtrace.Wrap(g.gitExec(slog.LevelDebug, slog.LevelInfo, "branch", "-D", branch))
 }
 
+func (g *Git) BranchExists(branch string) (bool, error) {
+	hash, err := g.Head(branch)
+	if err != nil {
+		return false, errtrace.Wrap(err)
+	}
+	return hash != "", nil
+}
+
 func (g *Git) CurrentBranch() (string, error) {
 	bs, err := g.gitOutput(slog.LevelError, "rev-parse", "--abbrev-ref", "HEAD")
 	return string(bs), errtrace.Wrap(err)
 }
 
 func (g *Git) RemoteHeadBranch(remoteName string) (string, error) {
-	bs, err := g.gitOutput(slog.LevelError, "symbolic-ref", "refs/remotes/"+remoteName+"/HEAD", "--short")
+	bs, err := g.gitOutput(slog.LevelWarn, "symbolic-ref", "refs/remotes/"+remoteName+"/HEAD", "--short")
 	if err != nil {
 		return "", errtrace.Wrap(err)
 	}

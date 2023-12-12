@@ -9,9 +9,9 @@ import (
 )
 
 var _aliases = map[string]string{
-	"bc":   "branch cleanup",
-	"pum":  "pull update-message",
-	"sync": "sync",
+	"bc":  "branch cleanup",
+	"pum": "pull update-message",
+	"res": "repo sync",
 }
 
 type aliasInstallCmd struct {

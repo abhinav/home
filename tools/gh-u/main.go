@@ -83,7 +83,9 @@ type mainCmd struct {
 		UpdateMessage pullUpdateMessageCmd `cmd:"" help:"Update the PR message" aliases:"um"`
 	} `cmd:"" help:"Manage pull requests." aliases:"pr"`
 
-	Sync syncCmd `cmd:"" help:"Sync default branch."`
+	Repo struct {
+		Sync repoSyncCmd `cmd:"" help:"Sync default branch." aliases:"s"`
+	} `cmd:"" help:"Manage repositories." aliases:"r"`
 }
 
 type verboseFlag bool
