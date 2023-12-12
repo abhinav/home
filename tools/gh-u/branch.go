@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"slices"
 	"strings"
 	"time"
 
@@ -42,7 +43,7 @@ func (b *branchCleanupCmd) Run(app *kong.Kong) error {
 	// Find recently merged pull requests.
 	// We'll only consider the first page of results.
 	prs, _, err := client.PullRequests.List(ctx, repo.Owner, repo.Name, &github.PullRequestListOptions{
-		State:     "closed",
+		State:     "all",
 		Sort:      "updated",
 		Direction: "desc",
 	})
@@ -50,23 +51,41 @@ func (b *branchCleanupCmd) Run(app *kong.Kong) error {
 		return errtrace.Wrap(err)
 	}
 
+	// The same branch name can be used for multiple pull requests.
+	// We'll delete only those cases where all PRs for a branch have been merged.
+	prsByHeadRef := make(map[string][]*github.PullRequest) // head ref => PRs
+	var defaultBranch string
 	for _, pr := range prs {
-		if pr.MergedAt == nil {
-			// TODO: should we also consider closed pull requests that were not merged?
+		head := pr.GetHead()
+		ref := head.GetRef()
+		prsByHeadRef[ref] = append(prsByHeadRef[ref], pr)
+		if defaultBranch == "" {
+			defaultBranch = pr.GetBase().GetRepo().GetDefaultBranch()
+		}
+	}
+
+	// Invariant: defaultBranch is non-empty if prs is non-empty.
+	if defaultBranch == "" && len(prs) > 0 {
+		panic(fmt.Sprintf("impossible: defaultBranch is empty but prs is non-empty: %v", prs))
+	}
+
+	for headRef, prs := range prsByHeadRef {
+		hasOpen := slices.ContainsFunc(prs, func(pr *github.PullRequest) bool {
+			return pr.GetState() != "closed" ||
+				pr.MergedAt == nil // TODO: should we consider closed but unmerged?
+		})
+		if hasOpen {
 			continue
 		}
 
-		head := pr.GetHead()
-		ref := head.GetRef()
-		branch := strings.TrimPrefix(ref, "refs/heads/")
+		branch := strings.TrimPrefix(headRef, "refs/heads/")
 
-		// Skip the default branch.
-		defaultBranch := pr.GetBase().GetRepo().GetDefaultBranch()
+		// Don't delete the default branch.
 		if defaultBranch == branch {
 			continue
 		}
 
-		localHead, err := gitHead(ref)
+		localHead, err := gitHead(headRef)
 		if err != nil {
 			return errtrace.Wrap(err)
 		}
@@ -75,7 +94,12 @@ func (b *branchCleanupCmd) Run(app *kong.Kong) error {
 			continue
 		}
 
-		if localHead != head.GetSHA() && !b.Force {
+		// If one of the PRs matches the local head's position,
+		// we don't need to prompt for confirmation.
+		prIdx := slices.IndexFunc(prs, func(pr *github.PullRequest) bool {
+			return pr.GetHead().GetSHA() == localHead
+		})
+		if prIdx < 0 && !b.Force {
 			force, err := b.confirmDelete(app, branch)
 			if err != nil {
 				return errtrace.Wrap(err)
@@ -85,6 +109,7 @@ func (b *branchCleanupCmd) Run(app *kong.Kong) error {
 			}
 		}
 
+		pr := prs[prIdx]
 		app.Printf("Deleting %v (#%v)", branch, pr.GetNumber())
 
 		// Current branch is the same as the branch we're about to delete.
