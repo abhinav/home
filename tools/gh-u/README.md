@@ -10,7 +10,7 @@ make install
 Install aliases for common commands after installation with:
 
 ```bash
-gh u alias installo
+gh u alias install
 # or
 gh u alias install --force
 ```
