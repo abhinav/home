@@ -57,4 +57,6 @@ type mainCmd struct {
 	Pull struct {
 		UpdateMessage pullUpdateMessageCmd `cmd:"" help:"Update the PR message" aliases:"um"`
 	} `cmd:"" help:"Manage pull requests." aliases:"pr"`
+
+	Sync syncCmd `cmd:"" help:"Sync default branch."`
 }

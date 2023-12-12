@@ -23,7 +23,7 @@ func (b *branchCleanupCmd) Run(app *kong.Kong) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	currentBranch, err := gitCurrentBranch(ctx)
+	currentBranch, err := gitCurrentBranch()
 	if err != nil {
 		return errtrace.Wrap(err)
 	}
@@ -66,7 +66,7 @@ func (b *branchCleanupCmd) Run(app *kong.Kong) error {
 			continue
 		}
 
-		localHead, err := gitHead(ctx, ref)
+		localHead, err := gitHead(ref)
 		if err != nil {
 			return errtrace.Wrap(err)
 		}
@@ -91,12 +91,12 @@ func (b *branchCleanupCmd) Run(app *kong.Kong) error {
 		// Switch to the default branch before deleting.
 		if branch == currentBranch {
 			app.Printf("Branch %v is current branch. Switching to %v", branch, defaultBranch)
-			if err := gitCheckout(ctx, defaultBranch); err != nil {
+			if err := gitCheckout(defaultBranch); err != nil {
 				return errtrace.Wrap(err)
 			}
 		}
 
-		if err := gitDeleteBranch(ctx, branch); err != nil {
+		if err := gitDeleteBranch(branch); err != nil {
 			return errtrace.Wrap(err)
 		}
 	}

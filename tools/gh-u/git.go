@@ -1,7 +1,7 @@
 package main
 
 import (
-	"context"
+	"bytes"
 	"os"
 	"os/exec"
 	"strings"
@@ -9,40 +9,48 @@ import (
 	"braces.dev/errtrace"
 )
 
-func gitHead(ctx context.Context, ref string) (string, error) {
-	cmd := exec.CommandContext(ctx, "git", "rev-parse", "--verify", ref)
+func git(args ...string) error {
+	cmd := exec.Command("git", args...)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	return errtrace.Wrap(cmd.Run())
+}
+
+func gitOutput(args ...string) ([]byte, error) {
+	cmd := exec.Command("git", args...)
+	cmd.Stderr = os.Stderr
 	bs, err := cmd.Output()
+	if err != nil {
+		return nil, errtrace.Wrap(err)
+	}
+
+	return bytes.TrimSpace(bs), nil
+}
+
+func gitHead(ref string) (string, error) {
+	bs, err := gitOutput("rev-parse", "--quiet", "--verify", ref)
 	if err != nil {
 		// Branch doesn't exist.
 		return "", nil
 	}
-	return strings.TrimSpace(string(bs)), nil
+	return string(bs), nil
 }
 
-func gitDeleteBranch(ctx context.Context, branch string) error {
-	cmd := exec.CommandContext(ctx, "git", "branch", "-D", branch)
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	return errtrace.Wrap(cmd.Run())
+func gitDeleteBranch(branch string) error {
+	return errtrace.Wrap(git("branch", "-D", branch))
 }
 
-func gitCurrentBranch(ctx context.Context) (string, error) {
-	bs, err := exec.CommandContext(ctx, "git", "rev-parse", "--abbrev-ref", "HEAD").Output()
-	if err != nil {
-		return "", errtrace.Wrap(err)
-	}
-	return strings.TrimSpace(string(bs)), nil
+func gitCurrentBranch() (string, error) {
+	bs, err := gitOutput("rev-parse", "--abbrev-ref", "HEAD")
+	return string(bs), errtrace.Wrap(err)
 }
 
-func gitCheckout(ctx context.Context, branch string) error {
-	cmd := exec.CommandContext(ctx, "git", "checkout", branch)
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	return errtrace.Wrap(cmd.Run())
+func gitCheckout(branch string) error {
+	return errtrace.Wrap(git("checkout", branch))
 }
 
-func gitCommitBody(ctx context.Context, commit string) (subject, body string, err error) {
-	bs, err := exec.CommandContext(ctx, "git", "log", "-1", "--format=%B", commit).Output()
+func gitCommitBody(commit string) (subject, body string, err error) {
+	bs, err := gitOutput("log", "-1", "--format=%B", commit)
 	if err != nil {
 		return "", "", errtrace.Wrap(err)
 	}
