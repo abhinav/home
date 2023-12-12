@@ -2,23 +2,49 @@ package main
 
 import (
 	"bytes"
-	"os"
+	"log/slog"
 	"os/exec"
 	"strings"
 
 	"braces.dev/errtrace"
 )
 
-func git(args ...string) error {
-	cmd := exec.Command("git", args...)
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
+type Git struct {
+	log *slog.Logger
+	exe string
+}
+
+func NewGit(log *slog.Logger) (*Git, error) {
+	exe, err := exec.LookPath("git")
+	if err != nil {
+		return nil, errtrace.Wrap(err)
+	}
+
+	return &Git{
+		log: log.With("cmd", "git"),
+		exe: exe,
+	}, nil
+}
+
+func (g *Git) gitExec(stdout, stderr slog.Level, args ...string) error {
+	stdoutOut, flush := newLogWriter(g.log.With("args", args), stdout)
+	defer flush()
+
+	stderrOut, flush := newLogWriter(g.log.With("args", args), stderr)
+	defer flush()
+
+	cmd := exec.Command(g.exe, args...)
+	cmd.Stdout = stdoutOut
+	cmd.Stderr = stderrOut
 	return errtrace.Wrap(cmd.Run())
 }
 
-func gitOutput(args ...string) ([]byte, error) {
-	cmd := exec.Command("git", args...)
-	cmd.Stderr = os.Stderr
+func (g *Git) gitOutput(stderr slog.Level, args ...string) ([]byte, error) {
+	stderrOut, flush := newLogWriter(g.log.With("args", args), stderr)
+	defer flush()
+
+	cmd := exec.Command(g.exe, args...)
+	cmd.Stderr = stderrOut
 	bs, err := cmd.Output()
 	if err != nil {
 		return nil, errtrace.Wrap(err)
@@ -27,8 +53,8 @@ func gitOutput(args ...string) ([]byte, error) {
 	return bytes.TrimSpace(bs), nil
 }
 
-func gitHead(ref string) (string, error) {
-	bs, err := gitOutput("rev-parse", "--quiet", "--verify", ref)
+func (g *Git) Head(ref string) (string, error) {
+	bs, err := g.gitOutput(slog.LevelDebug, "rev-parse", "--quiet", "--verify", ref)
 	if err != nil {
 		// Branch doesn't exist.
 		return "", nil
@@ -36,21 +62,33 @@ func gitHead(ref string) (string, error) {
 	return string(bs), nil
 }
 
-func gitDeleteBranch(branch string) error {
-	return errtrace.Wrap(git("branch", "-D", branch))
+func (g *Git) DeleteBranch(branch string) error {
+	return errtrace.Wrap(g.gitExec(slog.LevelDebug, slog.LevelInfo, "branch", "-D", branch))
 }
 
-func gitCurrentBranch() (string, error) {
-	bs, err := gitOutput("rev-parse", "--abbrev-ref", "HEAD")
+func (g *Git) CurrentBranch() (string, error) {
+	bs, err := g.gitOutput(slog.LevelError, "rev-parse", "--abbrev-ref", "HEAD")
 	return string(bs), errtrace.Wrap(err)
 }
 
-func gitCheckout(branch string) error {
-	return errtrace.Wrap(git("checkout", branch))
+func (g *Git) RemoteHeadBranch(remoteName string) (string, error) {
+	bs, err := g.gitOutput(slog.LevelError, "symbolic-ref", "refs/remotes/"+remoteName+"/HEAD", "--short")
+	if err != nil {
+		return "", errtrace.Wrap(err)
+	}
+	return strings.TrimPrefix(string(bs), remoteName+"/"), nil
 }
 
-func gitCommitBody(commit string) (subject, body string, err error) {
-	bs, err := gitOutput("log", "-1", "--format=%B", commit)
+func (g *Git) Checkout(branch string) error {
+	return errtrace.Wrap(g.gitExec(slog.LevelDebug, slog.LevelInfo, "checkout", branch))
+}
+
+func (g *Git) PullRebase() error {
+	return errtrace.Wrap(g.gitExec(slog.LevelDebug, slog.LevelInfo, "pull", "--rebase"))
+}
+
+func (g *Git) CommitMessage(commit string) (subject, body string, err error) {
+	bs, err := g.gitOutput(slog.LevelError, "log", "-1", "--format=%B", commit)
 	if err != nil {
 		return "", "", errtrace.Wrap(err)
 	}

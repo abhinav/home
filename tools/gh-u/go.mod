@@ -7,6 +7,7 @@ require (
 	github.com/alecthomas/kong v0.8.1
 	github.com/cli/go-gh/v2 v2.4.0
 	github.com/google/go-github/v57 v57.0.0
+	github.com/lmittmann/tint v1.0.3
 )
 
 require (

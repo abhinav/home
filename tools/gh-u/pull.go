@@ -10,8 +10,8 @@ type pullUpdateMessageCmd struct {
 	Head string `arg:"" help:"Read message from commit. Defaults to HEAD." default:"HEAD"`
 }
 
-func (p *pullUpdateMessageCmd) Run(app *kong.Kong) error {
-	subject, body, err := gitCommitBody(p.Head)
+func (p *pullUpdateMessageCmd) Run(app *kong.Kong, git *Git) error {
+	subject, body, err := git.CommitMessage(p.Head)
 	if err != nil {
 		return errtrace.Wrap(err)
 	}

@@ -20,11 +20,11 @@ type branchCleanupCmd struct {
 	Force bool `short:"f" help:"Delete without prompting if branch heads don't match."`
 }
 
-func (b *branchCleanupCmd) Run(app *kong.Kong) error {
+func (b *branchCleanupCmd) Run(app *kong.Kong, git *Git) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	currentBranch, err := gitCurrentBranch()
+	currentBranch, err := git.CurrentBranch()
 	if err != nil {
 		return errtrace.Wrap(err)
 	}
@@ -85,7 +85,7 @@ func (b *branchCleanupCmd) Run(app *kong.Kong) error {
 			continue
 		}
 
-		localHead, err := gitHead(headRef)
+		localHead, err := git.Head(headRef)
 		if err != nil {
 			return errtrace.Wrap(err)
 		}
@@ -116,12 +116,12 @@ func (b *branchCleanupCmd) Run(app *kong.Kong) error {
 		// Switch to the default branch before deleting.
 		if branch == currentBranch {
 			app.Printf("Branch %v is current branch. Switching to %v", branch, defaultBranch)
-			if err := gitCheckout(defaultBranch); err != nil {
+			if err := git.Checkout(defaultBranch); err != nil {
 				return errtrace.Wrap(err)
 			}
 		}
 
-		if err := gitDeleteBranch(branch); err != nil {
+		if err := git.DeleteBranch(branch); err != nil {
 			return errtrace.Wrap(err)
 		}
 	}
