@@ -456,7 +456,7 @@ require('lazy').setup({
 				null_ls.builtins.formatting.jq,
 				null_ls.builtins.formatting.shfmt,
 			}
-			if not vim.env.VIM_GOLANGCI_LINT_DISABLED then
+			if not (vim.env.VIM_GOLANGCI_LINT_DISABLED or vim.env.VIM_GOPLS_DISABLED) then
 				sources[#sources + 1] = null_ls.builtins.diagnostics.golangci_lint
 			end
 			null_ls.setup({sources = sources})
