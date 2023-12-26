@@ -16,7 +16,7 @@ const iter = @import("iter.zig");
 pub fn main() !void {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     defer arena.deinit();
-    var alloc = arena.allocator();
+    const alloc = arena.allocator();
 
     run(alloc) catch |err| switch (err) {
         error.Explained => std.os.exit(1),
@@ -155,7 +155,7 @@ fn checkout(alloc: std.mem.Allocator, branch: []const u8, options: []const []con
 /// LocalBranchIterator is an iterator that yields local branch names,
 /// reading from the given iterator of lines from `git branch`.
 fn LocalBranchIterator(comptime Iter: type) type {
-    if (!std.meta.trait.hasFn("next")(Iter)) {
+    if (!std.meta.hasFn(Iter, "next")) {
         @compileError("Reader must implement next() !?[]const u8");
     }
 
@@ -171,7 +171,7 @@ fn LocalBranchIterator(comptime Iter: type) type {
         /// Returns null if there are no more local branches.
         pub fn next(self: *@This()) !?[]const u8 {
             while (true) {
-                var line = try self.iter.next() orelse return null;
+                const line = try self.iter.next() orelse return null;
                 var name = strip(line);
                 if (name.len == 0) continue;
 

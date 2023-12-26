@@ -29,8 +29,6 @@ pub fn fromSlice(comptime T: type, slice: []const T) SliceIterator(T) {
     return SliceIterator(T).init(slice);
 }
 
-const hasRead = std.meta.trait.hasFn("readByte");
-
 test "fromSlice" {
     var it = fromSlice(i32, &.{ 1, 2, 3 });
     try std.testing.expect(it.next() == 1);
@@ -47,7 +45,7 @@ test "fromSlice" {
 ///
 /// Lines longer than max_line_len will be skipped.
 pub fn LineIterator(comptime Reader: type, comptime max_line_len: usize) type {
-    std.debug.assert(hasRead(Reader));
+    std.debug.assert(std.meta.hasFn(Reader, "readByte"));
 
     const BufferedReader = std.io.BufferedReader(4096, Reader);
 

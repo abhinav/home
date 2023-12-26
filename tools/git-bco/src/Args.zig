@@ -64,7 +64,7 @@ pub fn deinit(self: *Self) void {
 }
 
 test "parse with branch" {
-    var alloc = std.testing.allocator;
+    const alloc = std.testing.allocator;
 
     var args_iter = iter.fromSlice([]const u8, &.{ "-v", "foo" });
 
@@ -78,7 +78,7 @@ test "parse with branch" {
 }
 
 test "Args.parse no branch" {
-    var alloc = std.testing.allocator;
+    const alloc = std.testing.allocator;
 
     var args_iter = iter.fromSlice([]const u8, &.{ "--depth=1", "--verbose" });
 
