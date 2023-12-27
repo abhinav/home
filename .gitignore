@@ -25,6 +25,7 @@
 !.zsh/
 !.zshenv
 !.zshrc
+!/.p10k.zsh
 /.zsh/rc.d/local
 
 # tig

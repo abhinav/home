@@ -8,3 +8,6 @@ setopt no_hup
 
 # Report background process status immediately.
 setopt notify
+
+# Expand parameters, command substitution, etc. in prompts.
+setopt PROMPT_SUBST

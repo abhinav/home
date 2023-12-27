@@ -16,3 +16,6 @@
 [submodule ".zsh/fzf-tab-completion"]
 	path = .zsh/fzf-tab-completion
 	url = https://github.com/lincheney/fzf-tab-completion
+[submodule ".zsh/powerlevel10k"]
+	path = .zsh/powerlevel10k
+	url = https://github.com/romkatv/powerlevel10k.git
