@@ -160,6 +160,37 @@ require('lazy').setup({
 	'tpope/vim-sleuth',
 	'vim-scripts/visualrepeat',
 	'wsdjeg/vim-fetch',
+	{
+		'willothy/flatten.nvim',
+		opts = function()
+			-- Delete blocking buffers after they're closed.
+			-- This ensures that buferes like git-rebase-todo, COMMIT_MSG, etc.
+			-- don't remain open after the commit is finished,
+			-- allowing another commit to be started.
+			local blocking_buffers = {}
+			return {
+				window = {
+					open = 'split',
+				},
+				block_for = {gitcommit = true, gitrebase = true},
+				callbacks = {
+					post_open = function(bufnr, winnr, ft, is_blocking)
+						if is_blocking then
+							table.insert(blocking_buffers, bufnr)
+						end
+					end,
+					block_end = function()
+						for _, bufnr in ipairs(blocking_buffers) do
+							vim.api.nvim_buf_delete(bufnr, {})
+						end
+						blocking_buffers = {}
+					end,
+				},
+			}
+		end,
+		lazy = false,
+		priority = 1001, -- run first
+	},
 
 	-- Filetype-specific {{{2
 	{'cappyzawa/starlark.vim', ft = 'starlark'},
@@ -551,10 +582,32 @@ require('lazy').setup({
 					f    = "+find",
 				},
 				["<leader>b"] = {name = "+buffer"},
-				["<leader>t"] = {name = "+tabs"},
+				["<leader>t"] = {name = "+terminals"},
+				["<leader>T"] = {name = "+tabs"},
 				["<leader>q"] = {name = "+quit"},
 				["<leader>w"] = {name = "+windows"},
 				["<leader>x"] = {name = "+diagnostics"},
+			})
+		end,
+	},
+	{
+		'nvimtools/hydra.nvim', -- {{{3
+		dependencies = {'mrjones2014/smart-splits.nvim'},
+		config = function()
+			local hydra = require('hydra')
+			local splits = require('smart-splits')
+
+			-- Window resizing submode.
+			hydra({
+				name = "Window",
+				mode = 'n',
+				body = '<C-w>',
+				heads = {
+					{'<C-h>', function() splits.resize_left(10) end, {desc =  "Decrease window width"}},
+					{'<C-l>', function() splits.resize_right(10) end, {desc =  "Increase window width"}},
+					{'<C-j>', function() splits.resize_down(10) end, {desc =  "Increase window height"}},
+					{'<C-k>', function() splits.resize_up(10) end, {desc =  "Decrease window height"}},
+				},
 			})
 		end,
 	},
@@ -595,19 +648,21 @@ require('lazy').setup({
 	},
 	'vim-utils/vim-husk',
 	{
-		'voldikss/vim-floaterm', -- {{{3
-		build = 'pip install --upgrade neovim-remote',
+		'akinsho/toggleterm.nvim', -- {{{3
 		config = function()
-			let_g('floaterm_', {
-				keymap_prev   = '<F4>',
-				keymap_next   = '<F5>',
-				autoclose     = 1,
-				wintype       = 'floating',
-			})
+			require('toggleterm').setup {
+				direction = 'horizontal',
+				on_exit = function(term)
+					-- Delete the terminal when closed.
+					-- Otherwise, it will be re-used and
+					-- the old dir= will persist.
+					term:shutdown()
+				end,
+			}
 		end,
 		keys = {
-			{'<F6>', ':FloatermNew --height=0.4 --width=0.98 --cwd=<buffer> --position=bottom<CR>', 'n', silent = true, noremap = true},
-			{'<F9>', ':FloatermToggle<CR>', 'n', silent = true, noremap = true},
+			{'<F6>', ':ToggleTerm dir=%:p:h name=bufdir<CR>', 'n', silent = true, noremap = true},
+			{'<F9>', ':ToggleTerm name=cwd<CR>', 'n', silent = true, noremap = true},
 		},
 	},
 })
@@ -755,6 +810,11 @@ vim.keymap.set({'n', 'v'}, '<leader>P', '"+P', {
 	desc = "Paste from clipboard (below)",
 })
 
+vim.keymap.set('t', '<M-Esc>', [[<C-\><C-n>]], {
+	noremap = true,
+	desc = "Exit terminal insert mode",
+})
+
 -- Split navigation inside :terminal
 vim.keymap.set('t', '<C-M-J>', [[<C-\><C-n><C-W><C-J>]], {
 	noremap = true,
@@ -787,20 +847,22 @@ vim.keymap.set('n', '<leader>evf', ':e $MYVIMRC<cr>', {
 })
 
 -- Tab shortcuts
-vim.keymap.set('n', '<leader>tt', ':tabnew<CR>', {
-	desc = 'New tab',
-	silent = true,
-})
-vim.keymap.set('n', '<leader>tn', ':tabnext<CR>', {
-	desc = 'Next tab',
-	silent = true,
-})
-vim.keymap.set('n', '<leader>tp', ':tabprev<CR>', {
-	desc = 'Previous tab',
-	silent = true,
-})
-vim.keymap.set('n', '<leader>td', ':tabclose<CR>', {
+vim.keymap.set('n', '<leader>Td', ':tabclose<CR>', {
 	desc = 'Close tab',
+	silent = true,
+})
+
+-- Terminal shortcuts.
+vim.keymap.set('n', '<leader>tt', ':vnew | terminal<CR>A', {
+	desc = "New terminal in a vertical split",
+	silent = true,
+})
+vim.keymap.set('n', '<leader>th', ':new | terminal<CR>A', {
+	desc = "New terminal in a horizontal split",
+	silent = true,
+})
+vim.keymap.set('n', '<leader>tT', ':tabnew | terminal<CR>A', {
+	desc = "New terminal in a new tab",
 	silent = true,
 })
 
@@ -843,6 +905,9 @@ vim.keymap.set('n', '<leader>ws', '<C-W>o', {
 vim.cmd [[
 " Don't show line numbers in terminal.
 autocmd TermOpen * setlocal nonu nornu
+
+" Close on program exit.
+autocmd TermClose * execute 'bdelete!'
 
 " Auto-reload files {{{2
 
