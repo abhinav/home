@@ -946,6 +946,27 @@ augroup AutoReload
 augroup end
 ]]
 
+--Terminal color scheme {{{2
+let_g('terminal_color_', {
+	['0']  = '#000000', -- black
+	['1']  = '#ec392c', -- red
+	['2']  = '#b3e439', -- green
+	['3']  = '#fea525', -- yellow
+	['4']  = '#cfa3ff', -- blue
+	['5']  = '#fd4285', -- magenta
+	['6']  = '#76dff3', -- cyan
+	['7']  = '#f4f4f4', -- white
+
+	['8']  = '#676767', -- bright black
+	['9']  = '#ff4036', -- bright red
+	['10'] = '#c5fa41', -- bright green
+	['11'] = '#ffb450', -- bright yellow
+	['12'] = '#dfc2ff', -- bright blue
+	['13'] = '#ff679f', -- bright magenta
+	['14'] = '#9aefff', -- bright cyan
+	['15'] = '#feffff', -- bright white
+})
+
 -- Neovide {{{2
 if vim.g.neovide then
 	vim.opt.guifont = "Iosevka Term:h10"
