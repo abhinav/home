@@ -973,7 +973,7 @@ if vim.g.neovide then
 	vim.opt.linespace = -1
 	let_g('neovide_', {
 		cursor_animation_length = 0,
-		scroll_animation_length = 0.2,
+		scroll_animation_length = 0.1,
 		-- Treat alt as Meta instead of sending special characters.
 		input_macos_alt_is_meta = true,
 		input_use_logo = true, -- Use Win/MacOS/Super key
@@ -988,23 +988,32 @@ if vim.g.neovide then
 	-- HACK: Setting the scale factor at startup races sometimes.
 	vim.defer_fn(function()
  		vim.g.neovide_scale_factor = scale_factor
-	end, 250)
+	end, 500)
 
-	-- Support adjusting scale factor with Ctrl = and Ctrl -.
+	-- Support adjusting scale factor with Cmd = and Cmd -.
 	local adjust_scale_factor = function(delta)
 		vim.g.neovide_scale_factor = vim.g.neovide_scale_factor * delta
 	end
-	vim.keymap.set('n', '<C-=>', function()
+	vim.keymap.set('n', '<D-=>', function()
 		adjust_scale_factor(1.25)
 	end, {desc = "Increase scale factor"})
-	vim.keymap.set('n', '<C-->', function()
+	vim.keymap.set('n', '<D-->', function()
 		adjust_scale_factor(1/1.25)
 	end, {desc = "Decrease scale factor"})
+	vim.keymap.set('n', '<D-0>', function()
+		vim.g.neovide_scale_factor = 1.0
+	end, {desc = "Reset scale factor"})
 
 	-- Super+C/V for copy-paste.
 	vim.keymap.set({'n', 'v'}, '<D-c>', '"+y')
 	vim.keymap.set({'n', 'v'}, '<D-v>', '"+P')
 	vim.keymap.set({'c', 'i'}, '<D-v>', '<C-R>+') -- cmd and insert mode
+
+	-- Super+T, W, Left, Right for tab navigation.
+	vim.keymap.set('n', '<D-t>', ':tabnew<CR>', {desc = "New tab"})
+	vim.keymap.set('n', '<D-w>', ':tabclose<CR>', {desc = "Close tab"})
+	vim.keymap.set('n', '<D-Left>', ':tabprevious<CR>', {desc = "Previous tab"})
+	vim.keymap.set('n', '<D-Right>', ':tabnext<CR>', {desc = "Next tab"})
 
 	-- HACK: OSC52 is not supported in neovide.
 	if vim.g.oscyank_autocmd_id then
