@@ -523,7 +523,16 @@ require('lazy').setup({
 			vim.g['lens#animate']           = 0
 		end,
 	},
-	'justinmk/vim-dirvish',
+	{
+		'stevearc/oil.nvim', -- {{{3
+		config = function()
+			require('oil').setup()
+
+			vim.keymap.set('n', '-', '<CMD>Oil<CR>', {
+				desc = "Open parent directory",
+			})
+		end,
+	},
 	{
 		'mhinz/vim-grepper', -- {{{3
 		config = function()
