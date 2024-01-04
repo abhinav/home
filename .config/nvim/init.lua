@@ -597,16 +597,35 @@ require('lazy').setup({
 			local hydra = require('hydra')
 			local splits = require('smart-splits')
 
-			-- Window resizing submode.
+			local cmd = require('hydra.keymap-util').cmd
+			local pcmd = require('hydra.keymap-util').pcmd
+
+			-- Window management submode:
 			hydra({
 				name = "Window",
 				mode = 'n',
 				body = '<C-w>',
 				heads = {
-					{'<C-h>', function() splits.resize_left(10) end, {desc =  "Decrease window width"}},
-					{'<C-l>', function() splits.resize_right(10) end, {desc =  "Increase window width"}},
-					{'<C-j>', function() splits.resize_down(10) end, {desc =  "Increase window height"}},
-					{'<C-k>', function() splits.resize_up(10) end, {desc =  "Decrease window height"}},
+					-- Navigate
+					{'h', cmd('wincmd h')},
+					{'j', cmd('wincmd j')},
+					{'k', cmd('wincmd k')},
+					{'l', cmd('wincmd l')},
+
+					-- Resize
+					{'<C-h>', function() splits.resize_left(10) end},
+					{'<C-l>', function() splits.resize_right(10) end},
+					{'<C-j>', function() splits.resize_down(10) end},
+					{'<C-k>', function() splits.resize_up(10) end},
+					{'=', cmd('wincmd ='), {desc = "Equalize splits"}},
+
+					-- Split
+					{'s', cmd('split')},
+					{'v', cmd('vsplit')},
+
+					-- Others
+					{'c', cmd('close')},
+					{'o', cmd('wincmd o')},
 				},
 			})
 		end,
