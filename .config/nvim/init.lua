@@ -844,19 +844,19 @@ vim.keymap.set('t', '<M-Esc>', [[<C-\><C-n>]], {
 })
 
 -- Split navigation inside :terminal
-vim.keymap.set('t', '<C-M-J>', [[<C-\><C-n><C-W><C-J>]], {
+vim.keymap.set('t', '<C-J>', [[<C-\><C-n><C-W><C-J>]], {
 	noremap = true,
 	desc = 'Move to split below',
 })
-vim.keymap.set('t', '<C-M-K>', [[<C-\><C-n><C-W><C-K>]], {
+vim.keymap.set('t', '<C-K>', [[<C-\><C-n><C-W><C-K>]], {
 	noremap = true,
 	desc = 'Move to split above',
 })
-vim.keymap.set('t', '<C-M-L>', [[<C-\><C-n><C-W><C-L>]], {
+vim.keymap.set('t', '<C-L>', [[<C-\><C-n><C-W><C-L>]], {
 	noremap = true,
 	desc = 'Move to split right',
 })
-vim.keymap.set('t', '<C-M-H>', [[<C-\><C-n><C-W><C-H>]], {
+vim.keymap.set('t', '<C-H>', [[<C-\><C-n><C-W><C-H>]], {
 	noremap = true,
 	desc = 'Move to split left',
 })
