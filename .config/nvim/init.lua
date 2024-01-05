@@ -526,7 +526,23 @@ require('lazy').setup({
 	{
 		'stevearc/oil.nvim', -- {{{3
 		config = function()
-			require('oil').setup()
+			require('oil').setup {
+				use_default_keymaps = false,
+				keymaps = {
+					['-'] = 'actions.parent',
+					['<C-p>'] = 'actions.preview',
+					['<C-q>'] = 'actions.add_to_qflist',
+					['<C-s>'] = 'actions.select_split',
+					['<C-t>'] = 'actions.select_tab',
+					['<C-v>'] = 'actions.select_vsplit',
+					['<CR>'] = 'actions.select',
+					['`'] = 'actions.cd',
+					['g?'] = 'actions.show_help',
+				},
+				view_options = {
+					show_hidden = true,
+				},
+			}
 
 			vim.keymap.set('n', '-', '<CMD>Oil<CR>', {
 				desc = "Open parent directory",
