@@ -881,15 +881,15 @@ vim.keymap.set('n', '<leader>Td', ':tabclose<CR>', {
 })
 
 -- Terminal shortcuts.
-vim.keymap.set('n', '<leader>tt', ':vnew | terminal<CR>A', {
+vim.keymap.set('n', '<leader>tt', ':vnew | terminal<CR>', {
 	desc = "New terminal in a vertical split",
 	silent = true,
 })
-vim.keymap.set('n', '<leader>th', ':new | terminal<CR>A', {
+vim.keymap.set('n', '<leader>th', ':new | terminal<CR>', {
 	desc = "New terminal in a horizontal split",
 	silent = true,
 })
-vim.keymap.set('n', '<leader>tT', ':tabnew | terminal<CR>A', {
+vim.keymap.set('n', '<leader>tT', ':tabnew | terminal<CR>', {
 	desc = "New terminal in a new tab",
 	silent = true,
 })
@@ -932,7 +932,7 @@ vim.keymap.set('n', '<leader>ws', '<C-W>o', {
 
 vim.cmd [[
 " Don't show line numbers in terminal.
-autocmd TermOpen * setlocal nonu nornu
+autocmd TermOpen * setlocal nonu nornu | startinsert
 
 " Close on program exit.
 autocmd TermClose * execute 'bdelete!'
