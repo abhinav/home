@@ -97,6 +97,11 @@ require('lazy').setup({
 				-- Leave this free for treesitter.
 				repeat_jump = '',
 			})
+			require('mini.splitjoin').setup({
+				mappings = {
+					toggle = 'gS',
+				},
+			})
 			require('mini.surround').setup()
 			require('mini.trailspace').setup()
 		end,
