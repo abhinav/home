@@ -97,11 +97,6 @@ require('lazy').setup({
 				-- Leave this free for treesitter.
 				repeat_jump = '',
 			})
-			require('mini.splitjoin').setup({
-				mappings = {
-					toggle = 'gS',
-				},
-			})
 			require('mini.surround').setup()
 			require('mini.trailspace').setup()
 		end,
@@ -195,6 +190,19 @@ require('lazy').setup({
 		end,
 		lazy = false,
 		priority = 1001, -- run first
+	},
+	{
+		'Wansmer/treesj', -- {{{3
+		config = function()
+			local tsj = require('treesj')
+			tsj.setup {
+				use_default_keymaps = false,
+			}
+
+			vim.keymap.set('n', '<leader>jj', tsj.toggle, { desc = "Toggle" })
+			vim.keymap.set('n', '<leader>js', tsj.split,  { desc = "Split"  })
+			vim.keymap.set('n', '<leader>jJ', tsj.join,   { desc = "Join"   })
+		end,
 	},
 
 	-- Filetype-specific {{{2
@@ -612,6 +620,7 @@ require('lazy').setup({
 					f    = "+find",
 				},
 				["<leader>b"] = {name = "+buffer"},
+				["<leader>j"] = {name = "+join/split"},
 				["<leader>t"] = {name = "+terminals"},
 				["<leader>T"] = {name = "+tabs"},
 				["<leader>q"] = {name = "+quit"},
