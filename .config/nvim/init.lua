@@ -72,6 +72,10 @@ require('lazy').setup({
 						prev = "<M-,>",
 					},
 				},
+				filetypes = {
+					["*"] = true, -- enable by default
+					help = false,
+				},
 			}
 
 			local copilot_suggestion = require 'copilot.suggestion'
