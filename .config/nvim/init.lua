@@ -587,10 +587,14 @@ require('lazy').setup({
 			{'gs', '<plug>(GrepperOperator)', {'n', 'x'}, desc = "Grepper (operator)"},
 		},
 	},
+	{'nvim-telescope/telescope-fzf-native.nvim', build = 'make'},
 	{
 		'nvim-telescope/telescope.nvim', -- {{{3
 		version = '*',
-		dependencies = {'nvim-lua/plenary.nvim'},
+		dependencies = {
+			'nvim-lua/plenary.nvim',
+			'nvim-telescope/telescope-fzf-native.nvim',
+		},
 	},
 	'nvim-telescope/telescope-ui-select.nvim',
 	'rbgrouleff/bclose.vim',
@@ -1266,6 +1270,12 @@ telescope.setup {
 		},
 	},
 	extensions = {
+		fzf = {
+			fuzzy = true,
+			override_generic_sorter = true,
+			override_file_sorter = true,
+			case_mode = "smart_case",
+		},
 		["ui-select"] = {
 			telethemes.get_dropdown {
 			}
@@ -1274,6 +1284,7 @@ telescope.setup {
 }
 
 telescope.load_extension('ui-select')
+telescope.load_extension('fzf')
 
 -- All keys preceded by <leader>:
 --
