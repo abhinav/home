@@ -484,7 +484,7 @@ require('lazy').setup({
 		end,
 	},
 	{
-		'jose-elias-alvarez/null-ls.nvim', -- {{{3
+		'nvimtools/none-ls.nvim', -- {{{3
 		dependencies = {
 			'nvim-lua/plenary.nvim',
 			'williamboman/mason.nvim',
