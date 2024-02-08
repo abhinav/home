@@ -94,22 +94,30 @@ func (b *branchCleanupCmd) Run(app *kong.Kong, git *Git) error {
 			continue
 		}
 
-		// If one of the PRs matches the local head's position,
-		// we don't need to prompt for confirmation.
 		prIdx := slices.IndexFunc(prs, func(pr *github.PullRequest) bool {
 			return pr.GetHead().GetSHA() == localHead
 		})
-		if prIdx < 0 && !b.Force {
-			force, err := b.confirmDelete(app, branch)
-			if err != nil {
-				return errtrace.Wrap(err)
+
+		var pr *github.PullRequest
+		if prIdx >= 0 {
+			// If one of the PRs matches the local head's position,
+			// we don't need to prompt for confirmation.
+			pr = prs[prIdx]
+		} else {
+			if !b.Force {
+				force, err := b.confirmDelete(app, branch)
+				if err != nil {
+					return errtrace.Wrap(err)
+				}
+				if !force {
+					continue
+				}
 			}
-			if !force {
-				continue
-			}
+
+			// Take the first PR if we're forcing the delete.
+			pr = prs[0]
 		}
 
-		pr := prs[prIdx]
 		app.Printf("Deleting %v (#%v)", branch, pr.GetNumber())
 
 		// Current branch is the same as the branch we're about to delete.
