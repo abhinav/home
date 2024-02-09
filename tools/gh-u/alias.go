@@ -15,7 +15,7 @@ var _aliases = map[string]string{
 }
 
 type aliasInstallCmd struct {
-	Force bool `help:"Overwrite existing aliases." short:"f"`
+	Clobber bool `help:"Overwrite existing aliases." short:"f"`
 }
 
 func (cmd *aliasInstallCmd) Run(app *kong.Kong) error {
@@ -25,7 +25,7 @@ func (cmd *aliasInstallCmd) Run(app *kong.Kong) error {
 	}
 
 	args := []string{"alias", "set"}
-	if cmd.Force {
+	if cmd.Clobber {
 		args = append(args, "--clobber")
 	}
 
