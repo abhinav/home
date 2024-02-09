@@ -1226,6 +1226,7 @@ end
 -- Ctrl-h: open in horizontal split
 -- -: go up (matches keybinding to open explorer)
 -- `: cd to focused directory or parent of file
+-- Ctrl-p: toggle preview
 vim.api.nvim_create_autocmd('User', {
 	pattern = 'MiniFilesBufferCreate',
 	callback = function(args)
@@ -1248,6 +1249,18 @@ vim.api.nvim_create_autocmd('User', {
 			end
 			vim.fn.chdir(curDir)
 		end, { buffer = bufID, desc = 'Change current directory' })
+
+		local show_preview = false
+		vim.keymap.set('n', '<C-p>', function()
+			show_preview = not show_preview
+			MiniFiles.refresh({
+				windows = {
+					preview = show_preview,
+					width_preview = 50,
+				},
+			})
+			MiniFiles.trim_right()
+		end, { buffer = bufID, desc = 'Toggle preview' })
 	end,
 })
 
