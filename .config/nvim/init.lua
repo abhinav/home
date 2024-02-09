@@ -96,21 +96,9 @@ require('lazy').setup({
 		config = function()
 			require('mini.align').setup()
 			require('mini.comment').setup()
-			require('mini.jump').setup({
-				-- Already repeats with 'f' and 't'.
-				-- Leave this free for treesitter.
-				repeat_jump = '',
-			})
+			require('mini.jump').setup()
 			require('mini.surround').setup()
 			require('mini.trailspace').setup()
-		end,
-	},
-	{
-		'nvim-treesitter/nvim-treesitter-textobjects', -- {{{3
-		config = function()
-			local ts_repeat_move = require "nvim-treesitter.textobjects.repeatable_move"
-			vim.keymap.set({ "n", "x", "o" }, ";", ts_repeat_move.repeat_last_move)
-			vim.keymap.set({ "n", "x", "o" }, ",", ts_repeat_move.repeat_last_move_opposite)
 		end,
 	},
 	{
@@ -1373,25 +1361,6 @@ require 'nvim-treesitter.configs'.setup {
 				['if'] = {query = '@function.inner', desc = "in function"},
 				['ab'] = {query = '@block.outer', desc = "a block"},
 				['ib'] = {query = '@block.inner', desc = "in block"},
-			},
-		},
-		move = {
-			enable = true,
-			goto_next_start = {
-				["]a"] = {query = "@parameter.inner", desc = "Next argument start"},
-				["]f"] = {query = "@function.outer", desc = "Next function start"},
-			},
-			goto_next_end = {
-				["]A"] = {query = "@parameter.inner", desc = "Next argument end"},
-				["]F"] = {query = "@function.outer", desc = "Next function end"},
-			},
-			goto_previous_start = {
-				["[a"] = {query = "@parameter.inner", desc = "Previous argument start"},
-				["[f"] = {query = "@function.outer", desc = "Previous function start"},
-			},
-			goto_previous_end = {
-				["[A"] = {query = "@parameter.inner", desc = "Previous argument end"},
-				["[F"] = {query = "@function.outer", desc = "Previous function end"},
 			},
 		},
 	},
