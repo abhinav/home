@@ -96,6 +96,12 @@ require('lazy').setup({
 		config = function()
 			require('mini.align').setup()
 			require('mini.comment').setup()
+
+			require('mini.files').setup()
+			vim.keymap.set('n', '-', function()
+				MiniFiles.open()
+			end, {desc = "Open file explorer"})
+
 			require('mini.jump').setup()
 			require('mini.surround').setup()
 			require('mini.trailspace').setup()
@@ -526,32 +532,6 @@ require('lazy').setup({
 		config = function()
 			vim.g['lens#disabled_buftypes'] = {'quickfix'}
 			vim.g['lens#animate']           = 0
-		end,
-	},
-	{
-		'stevearc/oil.nvim', -- {{{3
-		config = function()
-			require('oil').setup {
-				use_default_keymaps = false,
-				keymaps = {
-					['-'] = 'actions.parent',
-					['<C-p>'] = 'actions.preview',
-					['<C-q>'] = 'actions.add_to_qflist',
-					['<C-s>'] = 'actions.select_split',
-					['<C-t>'] = 'actions.select_tab',
-					['<C-v>'] = 'actions.select_vsplit',
-					['<CR>'] = 'actions.select',
-					['`'] = 'actions.cd',
-					['g?'] = 'actions.show_help',
-				},
-				view_options = {
-					show_hidden = true,
-				},
-			}
-
-			vim.keymap.set('n', '-', '<CMD>Oil<CR>', {
-				desc = "Open parent directory",
-			})
 		end,
 	},
 	{
@@ -1224,6 +1204,51 @@ cmp.setup.filetype('markdown', {
 		{name = 'buffer'},
 		{name = 'tmux'},
 	}),
+})
+
+-- mini.files {{{2
+local mapFilesSplit = function(bufID, key, direction)
+	vim.keymap.set('n', key, function()
+		-- Create a new split and set it as the target.
+		local targetWindow
+		vim.api.nvim_win_call(MiniFiles.get_target_window(), function()
+			vim.cmd(direction .. ' split')
+			targetWindow = vim.api.nvim_get_current_win()
+		end)
+		MiniFiles.set_target_window(targetWindow)
+		MiniFiles.go_in()
+	end, { buffer = bufID, desc = 'Split ' .. direction })
+end
+
+-- Custom keymaps for MiniFiles.
+--
+-- Ctrl-v: open in vertical split
+-- Ctrl-h: open in horizontal split
+-- -: go up (matches keybinding to open explorer)
+-- `: cd to focused directory or parent of file
+vim.api.nvim_create_autocmd('User', {
+	pattern = 'MiniFilesBufferCreate',
+	callback = function(args)
+		local bufID = args.data.buf_id
+		mapFilesSplit(bufID, '<C-v>', 'vertical')
+		mapFilesSplit(bufID, '<C-h>', 'horizontal')
+
+		vim.keymap.set('n', '-', function()
+			MiniFiles.go_out()
+		end, { buffer = bufID, desc = 'Go up' })
+
+		vim.keymap.set('n', '`', function()
+			local curEntry = MiniFiles.get_fs_entry()
+			if curEntry == nil then
+				return
+			end
+			local curDir = curEntry.path
+			if curEntry.fs_type == 'file' then
+				curDir = vim.fs.dirname(curDir)
+			end
+			vim.fn.chdir(curDir)
+		end, { buffer = bufID, desc = 'Change current directory' })
+	end,
 })
 
 -- netrw {{{2
