@@ -92,7 +92,6 @@ require('lazy').setup({
 	},
 	{
 		'echasnovski/mini.nvim',
-		version = false,
 		config = function()
 			require('mini.align').setup()
 			require('mini.comment').setup()
@@ -172,7 +171,7 @@ require('lazy').setup({
 				},
 				block_for = {gitcommit = true, gitrebase = true},
 				callbacks = {
-					post_open = function(bufnr, winnr, ft, is_blocking)
+					post_open = function(bufnr, _, _, is_blocking)
 						if is_blocking then
 							table.insert(blocking_buffers, bufnr)
 						end
@@ -261,7 +260,7 @@ require('lazy').setup({
 							gitsigns.next_hunk()
 						end)
 						return '<Ignore>'
-					end, {desc = "Next hunk", expr = true})
+					end, {desc = "Next hunk", buffer = bufnr, expr = true})
 					vim.keymap.set('n', '[c', function()
 						if vim.wo.diff then
 							return '[c'
@@ -270,11 +269,17 @@ require('lazy').setup({
 							gitsigns.prev_hunk()
 						end)
 						return '<Ignore>'
-					end, {desc = "Previous hunk", expr = true})
+					end, {desc = "Previous hunk", buffer = bufnr, expr = true})
 
 					-- <leader>g{n,p}: next/prev hunk
-					vim.keymap.set('n', '<leader>gn', gitsigns.next_hunk, {desc = "Next hunk"})
-					vim.keymap.set('n', '<leader>gp', gitsigns.prev_hunk, {desc = "Previous hunk"})
+					vim.keymap.set('n', '<leader>gn', gitsigns.next_hunk, {
+						desc = "Next hunk",
+						buffer = bufnr,
+					})
+					vim.keymap.set('n', '<leader>gp', gitsigns.prev_hunk, {
+						desc = "Previous hunk",
+						buffer = bufnr,
+					})
 
 					-- <leader>gm: blame current line
 					vim.keymap.set('n', '<leader>gm', function()
@@ -367,9 +372,17 @@ require('lazy').setup({
 	-- LSP and language features {{{2
 	'folke/trouble.nvim',
 	{
+		'folke/neodev.nvim',
+		config = function()
+			require('neodev').setup {
+			}
+		end,
+	},
+	{
 		'neovim/nvim-lspconfig', -- {{{3
 		dependencies = {
 			'folke/lsp-colors.nvim',
+			'folke/neodev.nvim', -- must init before lspconfig
 			'williamboman/mason.nvim',
 			'williamboman/mason-lspconfig.nvim',
 		},
@@ -408,6 +421,7 @@ require('lazy').setup({
 			end,
 			omnisharp = {optional = true},
 			'pylsp',
+			lua_ls = {optional = true},
 			rust_analyzer = {
 				settings = {
 					['rust-analyzer'] = {
@@ -440,7 +454,7 @@ require('lazy').setup({
 				opts['zls'] = nil
 			end
 
-			ensure_installed = {}
+			local ensure_installed = {}
 			for name, cfg in pairs(opts) do
 				if type(name) == "number" then
 					name = cfg
@@ -572,11 +586,10 @@ require('lazy').setup({
 			spelling = {
 				enabled = true,
 			},
-			-- ignore_missing = false,
 		},
 		config = function(_, opts)
 			local wk = require('which-key')
-			wk.setup()
+			wk.setup(opts)
 
 			wk.register({
 				mode = {'n', 'v'},
@@ -613,7 +626,6 @@ require('lazy').setup({
 			local splits = require('smart-splits')
 
 			local cmd = require('hydra.keymap-util').cmd
-			local pcmd = require('hydra.keymap-util').pcmd
 
 			-- Window management submode:
 			hydra({
@@ -671,7 +683,7 @@ require('lazy').setup({
 			-- Set up a hook to send an OSC52 code if the system register is used.
 			vim.g.oscyank_autocmd_id = vim.api.nvim_create_autocmd("TextYankPost", {
 				pattern = "*",
-				callback = function(args)
+				callback = function(_)
 					local ev = vim.v.event
 					if ev.operator == 'y' and ev.regname == '+' then
 						vim.cmd 'OSCYankRegister +'
@@ -795,7 +807,7 @@ end
 -- let_g(prefix, table)
 --
 -- Sets values on g:*. If prefix is non-empty, it's added to every key.
-function let_g(prefix, opts)
+local function let_g(prefix, opts)
 	if opts == nil then
 		opts, prefix = prefix, ''
 	end
@@ -1031,18 +1043,17 @@ end
 
 -- lspconfig {{{2
 
-local function lsp_on_attach(client, bufnr)
+local function lsp_on_attach(_, bufnr)
 	local function lsp_nmap(key, fn, desc)
 		vim.keymap.set('n', key, fn, {
 			noremap = true,
 			silent = true,
 			desc = desc,
+			buffer = bufnr,
 		})
 	end
 
 	vim.bo.omnifunc =  'v:lua.vim.lsp.omnifunc'
-
-	local opts = { noremap = true, silent = true }
 
 	-- Keybindings
 	--  K            Documentation
@@ -1210,13 +1221,18 @@ cmp.setup.filetype('markdown', {
 local mapFilesSplit = function(bufID, key, direction)
 	vim.keymap.set('n', key, function()
 		-- Create a new split and set it as the target.
+		local currentTarget = MiniFiles.get_target_window()
+		if currentTarget == nil then
+			currentTarget = vim.api.nvim_get_current_win()
+		end
+
 		local targetWindow
-		vim.api.nvim_win_call(MiniFiles.get_target_window(), function()
+		vim.api.nvim_win_call(currentTarget, function()
 			vim.cmd(direction .. ' split')
 			targetWindow = vim.api.nvim_get_current_win()
 		end)
 		MiniFiles.set_target_window(targetWindow)
-		MiniFiles.go_in()
+		MiniFiles.go_in({})
 	end, { buffer = bufID, desc = 'Split ' .. direction })
 end
 
@@ -1371,6 +1387,7 @@ vim.keymap.set('n', '<leader>:', telescopes.commands, {
 
 -- tree-sitter {{{2
 require 'nvim-treesitter.configs'.setup {
+	modules = {},
 	ensure_installed = {
 		"bash", "c", "cpp", "css", "dot",
 		"gitignore", "go", "gomod", "gowork", "graphql",
@@ -1381,6 +1398,7 @@ require 'nvim-treesitter.configs'.setup {
 		"sql", "toml", "typescript",
 		"vim", "yaml", "zig",
 	},
+	sync_install = false,
 	auto_install = true,
 	-- The gitcommit tree-sitter parser does not support highlighting in
 	-- verbose mode itself; it expects injections for those.

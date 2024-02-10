@@ -27,7 +27,7 @@ end
 if not vim.env.VIM_GOPLS_DISABLED then
 	vim.api.nvim_create_autocmd("BufWritePre", {
 		pattern = "*.go",
-		callback = function(args)
+		callback = function(_)
 			goFormatAndImports(3000)
 		end,
 	})
