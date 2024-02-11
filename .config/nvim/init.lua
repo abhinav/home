@@ -98,7 +98,13 @@ require('lazy').setup({
 
 			require('mini.files').setup()
 			vim.keymap.set('n', '-', function()
-				MiniFiles.open(vim.api.nvim_buf_get_name(0))
+				local path = vim.api.nvim_buf_get_name(0)
+				-- MiniFiles will attempt to focus on the file.
+				-- If the file does not exist, give it the directory.
+				if vim.fn.filereadable(path) == 0 then
+					path = vim.fn.fnamemodify(path, ':h')
+				end
+				MiniFiles.open(path)
 			end, {desc = "Open file explorer"})
 
 			require('mini.jump').setup()
