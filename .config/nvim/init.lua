@@ -1248,6 +1248,7 @@ end
 -- Ctrl-h: open in horizontal split
 -- -: go up (matches keybinding to open explorer)
 -- `: cd to focused directory or parent of file
+-- Enter: open file or enter directory
 -- Ctrl-p: toggle preview
 -- Ctrl-c: close
 vim.api.nvim_create_autocmd('User', {
@@ -1260,6 +1261,11 @@ vim.api.nvim_create_autocmd('User', {
 		vim.keymap.set('n', '-', function()
 			MiniFiles.go_out()
 		end, { buffer = bufID, desc = 'Go up' })
+		vim.keymap.set('n', '<CR>', function()
+			MiniFiles.go_in({
+				close_on_file = true,
+			})
+		end, { buffer = bufID, desc = 'Open file or directory' })
 
 		vim.keymap.set('n', '<C-c>', function()
 			MiniFiles.close()
