@@ -1249,6 +1249,7 @@ end
 -- -: go up (matches keybinding to open explorer)
 -- `: cd to focused directory or parent of file
 -- Ctrl-p: toggle preview
+-- Ctrl-c: close
 vim.api.nvim_create_autocmd('User', {
 	pattern = 'MiniFilesBufferCreate',
 	callback = function(args)
@@ -1259,6 +1260,10 @@ vim.api.nvim_create_autocmd('User', {
 		vim.keymap.set('n', '-', function()
 			MiniFiles.go_out()
 		end, { buffer = bufID, desc = 'Go up' })
+
+		vim.keymap.set('n', '<C-c>', function()
+			MiniFiles.close()
+		end, { buffer = bufID, desc = 'Close' })
 
 		vim.keymap.set('n', '`', function()
 			local curEntry = MiniFiles.get_fs_entry()
