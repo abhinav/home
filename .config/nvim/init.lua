@@ -640,17 +640,20 @@ require('lazy').setup({
 				body = '<C-w>',
 				heads = {
 					-- Navigate
-					{'h', cmd('wincmd h')},
-					{'j', cmd('wincmd j')},
-					{'k', cmd('wincmd k')},
-					{'l', cmd('wincmd l')},
+					{'h', cmd('wincmd h'), {exit = true}},
+					{'j', cmd('wincmd j'), {exit = true}},
+					{'k', cmd('wincmd k'), {exit = true}},
+					{'l', cmd('wincmd l'), {exit = true}},
 
 					-- Resize
 					{'<C-h>', function() splits.resize_left(10) end},
 					{'<C-l>', function() splits.resize_right(10) end},
 					{'<C-j>', function() splits.resize_down(10) end},
 					{'<C-k>', function() splits.resize_up(10) end},
-					{'=', cmd('wincmd ='), {desc = "Equalize splits"}},
+					{'=', cmd('wincmd ='), {
+						desc = "Equalize splits",
+						exit = true,
+					}},
 
 					-- Split
 					{'s', cmd('split')},
@@ -658,7 +661,7 @@ require('lazy').setup({
 
 					-- Others
 					{'c', cmd('close')},
-					{'o', cmd('wincmd o')},
+					{'o', cmd('wincmd o'), {exit = true}},
 				},
 			})
 		end,
