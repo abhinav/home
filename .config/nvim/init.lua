@@ -1250,7 +1250,7 @@ end
 -- `: cd to focused directory or parent of file
 -- Enter: open file or enter directory
 -- Ctrl-p: toggle preview
--- Ctrl-c: close
+-- Ctrl-c, Esc: close
 vim.api.nvim_create_autocmd('User', {
 	pattern = 'MiniFilesBufferCreate',
 	callback = function(args)
@@ -1268,6 +1268,9 @@ vim.api.nvim_create_autocmd('User', {
 		end, { buffer = bufID, desc = 'Open file or directory' })
 
 		vim.keymap.set('n', '<C-c>', function()
+			MiniFiles.close()
+		end, { buffer = bufID, desc = 'Close' })
+		vim.keymap.set('n', '<Esc>', function()
 			MiniFiles.close()
 		end, { buffer = bufID, desc = 'Close' })
 
