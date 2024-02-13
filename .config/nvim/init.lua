@@ -743,8 +743,8 @@ local options = {
 	history    = 50, -- history of : commands
 	wildmenu = true, -- show options for : completion
 
-	number         = true, -- show line number of the current line and
-	relativenumber = true, -- relative numbers of all other lines
+	number         = false, -- show line number of the current line and
+	relativenumber = false, -- relative numbers of all other lines
 
 	-- Use 8 tabs for indentation.
 	expandtab   = false,
@@ -792,7 +792,7 @@ local options = {
 	timeoutlen = 500,
 
 	-- Show tabs and trailing spaces.
-	list = true,
+	list = false,
 	listchars = {tab = '» ', trail = '.'},
 
 	-- Patterns to ignore in wildcard expansions.
