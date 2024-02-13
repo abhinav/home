@@ -293,12 +293,12 @@ require('lazy').setup({
 					end, {desc = "Blame current line"})
 
 
-					-- <leader>gh{s,r}: stage and reset hunk
-					vim.keymap.set('n', '<leader>ghs', gitsigns.stage_hunk, {desc = "Stage hunk"})
+					-- <leader>gh{a,r}: stage and reset hunk
+					vim.keymap.set('n', '<leader>gha', gitsigns.stage_hunk, {desc = "Stage hunk"})
 					vim.keymap.set('n', '<leader>ghr', gitsigns.reset_hunk, {desc = "Reset hunk"})
 
 					--
-					vim.keymap.set('v', '<leader>ghs', function()
+					vim.keymap.set('v', '<leader>gha', function()
 						gitsigns.stage_hunk(vim.fn.line('.'), vim.fn.line('v'))
 					end, {desc = "Stage hunk"})
 					vim.keymap.set('v', '<leader>ghr', function()
@@ -309,7 +309,7 @@ require('lazy').setup({
 					vim.keymap.set('n', '<leader>ghp', gitsigns.preview_hunk, {desc = "Preview hunk"})
 
 					-- <leader>gh{S,R}: stage and reset buffer
-					vim.keymap.set('n', '<leader>ghS', gitsigns.stage_buffer, {desc = "Stage buffer"})
+					vim.keymap.set('n', '<leader>ghA', gitsigns.stage_buffer, {desc = "Stage buffer"})
 					vim.keymap.set('n', '<leader>ghR', gitsigns.reset_buffer, {desc = "Reset buffer"})
 
 					-- <leader>gdi: diff index
