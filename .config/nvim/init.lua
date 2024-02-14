@@ -223,7 +223,6 @@ require('lazy').setup({
 			vim.g.mkdp_filetypes = {'markdown'}
 		end,
 	},
-	{'lervag/wiki.vim', ft = 'markdown'},
 	{
 		'rafaelsq/nvim-goc.lua',
 		ft = 'go',
@@ -232,7 +231,6 @@ require('lazy').setup({
 		end,
 	},
 	{'rust-lang/rust.vim', ft = 'rust'},
-	{'vim-pandoc/vim-pandoc-syntax', ft = {'markdown', 'pandoc'}},
 	{
 		'ziglang/zig.vim',
 		ft = {'zig'},
@@ -1508,20 +1506,5 @@ end, {desc = "Previous diagnostic"})
 
 --  File Types {{{1
 
--- markdown {{{2
-vim.g['pandoc#syntax#conceal#use'] = 0
-
 -- rust {{{2
 vim.g.rustfmt_autosave = 1
-
--- wiki.vim {{{2
-let_g('wiki_', {
-	filetypes = {'md'},
-	index_name = 'README',
-	link_extension = '.md',
-	link_target_type = 'md',
-	mappings_use_defaults = 'local',
-	mappings_local = {
-		['<plug>(wiki-link-follow)'] = '<leader><CR>',
-	},
-})
