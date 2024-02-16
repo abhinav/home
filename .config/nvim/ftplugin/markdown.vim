@@ -4,7 +4,6 @@ endif
 let b:did_markdown_custom = 1
 
 setlocal nolist nonumber norelativenumber
-setlocal shiftwidth=4 tabstop=4 expandtab
 setlocal spell
 
 " Wrap long lines and use j/k to move visually rather than on actual lines.
