@@ -120,6 +120,43 @@ require('lazy').setup({
 				},
 			})
 			require('mini.trailspace').setup()
+
+			require('mini.jump2d').setup {
+				allowed_windows = {not_current = false},
+			}
+
+			-- Mappings:
+			-- s: Skip forwards
+			-- S: Skip backwards
+			local mkSkipMapping = function(key, opts, desc)
+				opts = vim.tbl_deep_extend('force', {
+					allowed_lines = {
+						blank = false,
+						fold = false,
+					},
+				}, opts)
+				opts.hooks = opts.hooks or {}
+				opts.hooks.before_start = function()
+					local ch = vim.fn.getcharstr()
+					if ch == nil then
+						opts.spotter = function() return {} end
+					else
+						opts.spotter = MiniJump2d.gen_pattern_spotter(vim.pesc(ch))
+					end
+				end
+
+				-- This makes it dot repeatable in operator pending mode.
+				_G.jump2dSkipOpts = _G.jump2dSkipOpts or {}
+				_G.jump2dSkipOpts[key] = opts
+				local command = string.format('<Cmd>lua MiniJump2d.start(_G.jump2dSkipOpts.%s)<CR>', key)
+
+				vim.keymap.set('n', key, command, {desc = desc})
+				vim.keymap.set('v', key, command, {desc = desc})
+				vim.keymap.set('o', key, command, {desc = desc})
+			end
+
+			mkSkipMapping('s', {allowed_lines = {cursor_before = false}}, "Skip forwards")
+			mkSkipMapping('S', {allowed_lines = {cursor_after = false}}, "Skip backwards")
 		end,
 	},
 	{
