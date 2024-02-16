@@ -399,6 +399,10 @@ require('lazy').setup({
 				local init_opts = {
 					gofumpt = not vim.env.VIM_GOPLS_NO_GOFUMPT,
 					staticcheck = true,
+					hints = {
+						compositeLiteralFields = true,
+						parameterNames = true,
+					},
 					analyses = {
 						-- "x.foo = y" when x is a struct value
 						-- and not propagated or used afterwards.
@@ -1049,7 +1053,7 @@ end
 
 -- lspconfig {{{2
 
-local function lsp_on_attach(_, bufnr)
+local function lsp_on_attach(client, bufnr)
 	local function lsp_nmap(key, fn, desc)
 		vim.keymap.set('n', key, fn, {
 			noremap = true,
@@ -1076,12 +1080,22 @@ local function lsp_on_attach(_, bufnr)
 	-- lfi  Language find implementations
 	-- lfd  Language find symbols (document)
 	-- lfw  Language find symbols (workspace)
+	-- lti  Language: Toggle inlay hints (if supported)
 	lsp_nmap('<leader>lgr', vim.lsp.buf.references, "Go to references")
 	lsp_nmap('<leader>lgi', vim.lsp.buf.implementation, "Go to implementation")
 	lsp_nmap('<leader>lfr', telescopes.lsp_references, "Find references")
 	lsp_nmap('<leader>lfi', telescopes.lsp_implementations, "Find implementations")
 	lsp_nmap('<leader>lfd', telescopes.lsp_document_symbols, "Find symbols (document)")
 	lsp_nmap('<leader>lfw', telescopes.lsp_workspace_symbols, "Find symbols (workspace)")
+
+	if client.server_capabilities.inlayHintProvider then
+		if vim.lsp.inlay_hint ~= nil then
+			vim.lsp.inlay_hint.enable(bufnr, true)
+			lsp_nmap('<leader>lti', function()
+				vim.lsp.inlay_hint.enable(0, not vim.lsp.inlay_hint.is_enabled())
+			end, "Toggle inlay hints")
+		end
+	end
 
 	-- Mneomonics:
 	-- cr   Code rename
