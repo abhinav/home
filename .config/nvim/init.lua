@@ -108,7 +108,17 @@ require('lazy').setup({
 			end, {desc = "Open file explorer"})
 
 			require('mini.jump').setup()
-			require('mini.surround').setup()
+			require('mini.surround').setup({
+				mappings = {
+					add = '<leader>sa',
+					delete = '<leader>sd',
+					replace = '<leader>sr',
+					find = '',
+					find_left = '',
+					highlight = '',
+					update_n_lines = '',
+				},
+			})
 			require('mini.trailspace').setup()
 		end,
 	},
