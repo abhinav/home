@@ -1005,21 +1005,29 @@ vim.keymap.set('n', '<leader>ws', '<C-W>o', {
 	silent = true,
 })
 
-vim.cmd [[
-" Don't show line numbers in terminal.
-autocmd TermOpen * setlocal nonu nornu | startinsert
+-- Auto-reload changed files by triggering :checktime
+-- when changing buffers or coming back to vim.
+vim.api.nvim_create_autocmd({"FocusGained", "BufEnter"}, {
+	pattern = "*",
+	callback = function()
+		vim.cmd.checktime()
+	end,
+})
 
-" Close on program exit.
-autocmd TermClose * execute 'bdelete!'
+-- Terminal: Enter insert mode immediately on enter.
+vim.api.nvim_create_autocmd("TermOpen", {
+	pattern = "*",
+	callback = function()
+		local winid = vim.api.nvim_get_current_win()
+		local bufid = vim.api.nvim_win_get_buf(winid)
 
-" Auto-reload files {{{2
+		-- Ensure line numbers are off.
+		vim.wo[winid][bufid].number = false
+		vim.wo[winid][bufid].relativenumber = false
 
-" Trigger :checktime when changing buffers or coming back to vim.
-augroup AutoReload
-	autocmd!
-	autocmd FocusGained,BufEnter * :checktime
-augroup end
-]]
+		vim.cmd.startinsert()
+	end,
+})
 
 --Terminal color scheme {{{2
 let_g('terminal_color_', {
