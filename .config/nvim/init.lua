@@ -883,15 +883,15 @@ colorscheme molokai
 " Use terminal background for performance.
 highlight Normal ctermbg=NONE guibg=NONE
 
-" Make line numbers in terminal more readable
-highlight LineNr ctermfg=245
-
 " Invisible vertical split
 highlight VertSplit guibg=bg guifg=bg
 
 " Add a line below the treesitter context.
-hi TreesitterContextBottom gui=underline guisp=gray
+highlight TreesitterContextBottom gui=underline guisp=gray
 ]]
+
+-- Change the theme to use Search highlight for IncSearch too.
+vim.api.nvim_set_hl(0, "IncSearch", vim.api.nvim_get_hl(0, {name = "Search"}))
 
 -- Quit
 vim.keymap.set('n', '<leader>qq', ':qa<cr>', {desc = "Quit all"})
