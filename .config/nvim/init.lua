@@ -110,9 +110,9 @@ require('lazy').setup({
 			require('mini.jump').setup()
 			require('mini.surround').setup({
 				mappings = {
-					add = '<leader>sa',
-					delete = '<leader>sd',
-					replace = '<leader>sr',
+					add = 'ys',
+					delete = 'ds',
+					replace = 'cs',
 					find = '',
 					find_left = '',
 					highlight = '',
