@@ -7,7 +7,11 @@ setlocal formatoptions+=r
 
 local goc = require('nvim-goc')
 vim.api.nvim_buf_create_user_command(0, "GoCoverage", function()
+	-- Run in the file directory,
+	-- and restore the previous directory after running.
+	vim.cmd [[silent lcd %:p:h]]
 	goc.Coverage()
+	vim.cmd [[silent lcd -]]
 end, {desc = "Show code coverage in this package"})
 
 -- Highlight groups for :GoCoverage.
