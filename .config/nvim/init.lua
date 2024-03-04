@@ -443,6 +443,7 @@ require('lazy').setup({
 		-- and strings to use default configuration.
 		-- The configuration can be a function.
 		opts = {
+			'bashls',
 			gopls = function()
 				local init_opts = {
 					gofumpt = not vim.env.VIM_GOPLS_NO_GOFUMPT,
@@ -561,10 +562,7 @@ require('lazy').setup({
 		config = function()
 			local null_ls = require('null-ls')
 			local sources = {
-				null_ls.builtins.code_actions.shellcheck,
 				null_ls.builtins.diagnostics.actionlint,
-				null_ls.builtins.diagnostics.shellcheck,
-				null_ls.builtins.formatting.jq,
 				null_ls.builtins.formatting.shfmt,
 			}
 			if not (vim.env.VIM_GOLANGCI_LINT_DISABLED or vim.env.VIM_GOPLS_DISABLED) then
@@ -578,8 +576,8 @@ require('lazy').setup({
 		opts = {
 			ensure_installed = {
 				'actionlint',
-				'shellcheck', 'shfmt',
-				'jq',
+				'shellcheck',
+				'shfmt',
 			},
 		},
 		config = function(_, opts)
