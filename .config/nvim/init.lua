@@ -303,6 +303,27 @@ require('lazy').setup({
 			use_icons = false,
 		},
 	},
+	{
+		"NeogitOrg/neogit",
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			"sindrets/diffview.nvim",
+			"nvim-telescope/telescope.nvim",
+		},
+		config = function()
+			local neogit = require('neogit')
+			neogit.setup {
+				remember_settings = false,
+				graph_style = 'unicode',
+				kind = 'split',
+			}
+
+			vim.keymap.set('n', '<leader>gg', function()
+				neogit.open({ cwd = vim.fn.expand('%:p:h') })
+			end, {desc = "Open neogit"})
+		end,
+	},
+
 
 	-- Look and feel {{{2
 	'edkolev/tmuxline.vim',
