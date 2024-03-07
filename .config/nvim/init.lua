@@ -298,6 +298,55 @@ require('lazy').setup({
 		end,
 	},
 	{
+		'lewis6991/gitsigns.nvim',
+		config = function()
+			local gitsigns = require('gitsigns')
+			gitsigns.setup {
+				on_attach = function(bufnr)
+					-- <leader>g{n,p}: next/prev hunk
+					vim.keymap.set('n', '<leader>gn', gitsigns.next_hunk, {
+						desc = "Next hunk",
+						buffer = bufnr,
+					})
+					vim.keymap.set('n', '<leader>gp', gitsigns.prev_hunk, {
+						desc = "Previous hunk",
+						buffer = bufnr,
+					})
+
+					-- <leader>gm: blame current line
+					vim.keymap.set('n', '<leader>gm', function()
+						gitsigns.blame_line {full = true}
+					end, {desc = "Blame current line"})
+
+					-- <leader>gtb: toggle line blame
+					-- <leader>gtd: toggle deleted
+					-- <leader>gtw: toggle word diff
+					vim.keymap.set('n', '<leader>gtb', gitsigns.toggle_current_line_blame, {desc = "Line blame"})
+					vim.keymap.set('n', '<leader>gtd', gitsigns.toggle_deleted, {desc = "Show deleted"})
+					vim.keymap.set('n', '<leader>gtw', gitsigns.toggle_word_diff, {desc = "Word diff"})
+
+					local function change_base(key, arg, desc)
+						vim.keymap.set('n', '<leader>gb' .. key, function()
+							gitsigns.change_base(arg, true)
+						end, {desc = desc})
+						vim.keymap.set('n', '<leader>gB' .. key, function()
+							gitsigns.change_base(arg)
+						end, {desc = desc .. ' (Buffer)'})
+					end
+
+					-- <leader>gbb: change base to index
+					-- <leader>gbu: change base to upstream
+					-- <leader>gbp: change base to parent commit
+					--
+					-- gB variants change base for this buffer only
+					change_base('b', nil, "Set base to index")
+					change_base('u', '@{upstream}', "Set base to upstream")
+					change_base('p', '~', "Set base to parent commit")
+				end,
+			}
+		end,
+	},
+	{
 		"sindrets/diffview.nvim",
 		opts = {
 			use_icons = false,
