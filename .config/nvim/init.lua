@@ -424,17 +424,9 @@ require('lazy').setup({
 	-- LSP and language features {{{2
 	'folke/trouble.nvim',
 	{
-		'folke/neodev.nvim',
-		config = function()
-			require('neodev').setup {
-			}
-		end,
-	},
-	{
 		'neovim/nvim-lspconfig', -- {{{3
 		dependencies = {
 			'folke/lsp-colors.nvim',
-			'folke/neodev.nvim', -- must init before lspconfig
 			'williamboman/mason.nvim',
 			'williamboman/mason-lspconfig.nvim',
 		},
@@ -477,7 +469,6 @@ require('lazy').setup({
 			end,
 			omnisharp = {optional = true},
 			'pylsp',
-			lua_ls = {optional = true},
 			rust_analyzer = {
 				settings = {
 					['rust-analyzer'] = {
