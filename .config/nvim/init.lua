@@ -778,6 +778,10 @@ highlight VertSplit guibg=bg guifg=bg
 
 " Add a line below the treesitter context.
 highlight TreesitterContextBottom gui=underline guisp=gray
+
+" Make neogit diff highlights more readable.
+highlight NeogitDiffAdd ctermfg=white guifg=white ctermbg=NONE guibg=NONE
+highlight NeogitDiffAddHighlight ctermfg=47 guifg=#2bff2b ctermbg=NONE guibg=NONE
 ]]
 
 -- Change the theme to use Search highlight for IncSearch too.
