@@ -298,105 +298,10 @@ require('lazy').setup({
 		end,
 	},
 	{
-		'lewis6991/gitsigns.nvim',
-		config = function()
-			local gitsigns = require('gitsigns')
-			gitsigns.setup {
-				on_attach = function(bufnr)
-					-- ]c, [c: next/prev hunk
-					vim.keymap.set('n', ']c', function()
-						if vim.wo.diff then
-							return ']c'
-						end
-						vim.schedule(function()
-							gitsigns.next_hunk()
-						end)
-						return '<Ignore>'
-					end, {desc = "Next hunk", buffer = bufnr, expr = true})
-					vim.keymap.set('n', '[c', function()
-						if vim.wo.diff then
-							return '[c'
-						end
-						vim.schedule(function()
-							gitsigns.prev_hunk()
-						end)
-						return '<Ignore>'
-					end, {desc = "Previous hunk", buffer = bufnr, expr = true})
-
-					-- <leader>g{n,p}: next/prev hunk
-					vim.keymap.set('n', '<leader>gn', gitsigns.next_hunk, {
-						desc = "Next hunk",
-						buffer = bufnr,
-					})
-					vim.keymap.set('n', '<leader>gp', gitsigns.prev_hunk, {
-						desc = "Previous hunk",
-						buffer = bufnr,
-					})
-
-					-- <leader>gm: blame current line
-					vim.keymap.set('n', '<leader>gm', function()
-						gitsigns.blame_line {full = true}
-					end, {desc = "Blame current line"})
-
-
-					-- <leader>gh{a,r}: stage and reset hunk
-					vim.keymap.set('n', '<leader>gha', gitsigns.stage_hunk, {desc = "Stage hunk"})
-					vim.keymap.set('n', '<leader>ghr', gitsigns.reset_hunk, {desc = "Reset hunk"})
-
-					--
-					vim.keymap.set('v', '<leader>gha', function()
-						gitsigns.stage_hunk(vim.fn.line('.'), vim.fn.line('v'))
-					end, {desc = "Stage hunk"})
-					vim.keymap.set('v', '<leader>ghr', function()
-						gitsigns.reset_hunk(vim.fn.line('.'), vim.fn.line('v'))
-					end, {desc = "Reset hunk"})
-
-					-- <leader>ghp: preview hunk
-					vim.keymap.set('n', '<leader>ghp', gitsigns.preview_hunk, {desc = "Preview hunk"})
-
-					-- <leader>gh{S,R}: stage and reset buffer
-					vim.keymap.set('n', '<leader>ghA', gitsigns.stage_buffer, {desc = "Stage buffer"})
-					vim.keymap.set('n', '<leader>ghR', gitsigns.reset_buffer, {desc = "Reset buffer"})
-
-					-- <leader>gdi: diff index
-					-- <leader>gdp: diff previous commit
-					vim.keymap.set('n', '<leader>gdi', gitsigns.diffthis, {desc = "Diff (default base)"})
-					vim.keymap.set('n', '<leader>gdp', function()
-						gitsigns.diffthis('~')
-					end, {desc = "Diff (parent)"})
-
-					-- <leader>gtb: toggle line blame
-					-- <leader>gtd: toggle deleted
-					-- <leader>gtw: toggle word diff
-					vim.keymap.set('n', '<leader>gtb', gitsigns.toggle_current_line_blame, {desc = "Line blame"})
-					vim.keymap.set('n', '<leader>gtd', gitsigns.toggle_deleted, {desc = "Show deleted"})
-					vim.keymap.set('n', '<leader>gtw', gitsigns.toggle_word_diff, {desc = "Word diff"})
-
-					-- ih: hunk text object
-					vim.keymap.set({'o', 'x'}, 'ih', ':<C-U>Gitsigns select_hunk<CR>', {
-						desc = "Select hunk",
-					})
-
-					local function change_base(key, arg, desc)
-						vim.keymap.set('n', '<leader>gb' .. key, function()
-							gitsigns.change_base(arg)
-						end, {desc = desc})
-						vim.keymap.set('n', '<leader>gB' .. key, function()
-							gitsigns.change_base(arg, true)
-						end, {desc = desc .. ' (Global)'})
-					end
-
-					-- <leader>gbb: change base to index
-					-- <leader>gbu: change base to upstream
-					-- <leader>gbp: change base to parent commit
-					--
-					-- gB variants change base globally
-					change_base('b', nil, "Set base to index")
-					change_base('u', '@{upstream}', "Set base to upstream")
-					change_base('p', '~', "Set base to parent commit")
-				end,
-			}
-		end,
+		"sindrets/diffview.nvim",
+		opts = {
+			use_icons = false,
+		},
 	},
 
 	-- Look and feel {{{2
@@ -592,27 +497,6 @@ require('lazy').setup({
 			vim.g['lens#animate']           = 0
 		end,
 	},
-	{
-		'mhinz/vim-grepper', -- {{{3
-		config = function()
-			vim.g.grepper = {
-				tools        = {'rg', 'git'},
-				side         = 1,
-				side_cmd     = 'new',
-				prompt_text  = '$t> ',
-				prompt_quote = 2,
-				quickfix     = 1,
-				switch       = 1,
-				jump         = 0,
-				dir          = 'filecwd',
-				prompt_mapping_tool = '<leader>g',
-			}
-		end,
-		keys = {
-			{'<leader>gg', ':Grepper<cr>', 'n', noremap = true, desc = "Grepper (interactive)"},
-			{'gs', '<plug>(GrepperOperator)', {'n', 'x'}, desc = "Grepper (operator)"},
-		},
-	},
 	{'nvim-telescope/telescope-fzf-native.nvim', build = 'make'},
 	{
 		'nvim-telescope/telescope.nvim', -- {{{3
@@ -640,12 +524,6 @@ require('lazy').setup({
 				["<leader>f"] = {name = "+find"},
 				["<leader>g"] = {
 					name = "+git",
-					b    = "+change base",
-					B    = "+change base (global)",
-					h    = "+hunk",
-					d    = "+diff",
-					t    = "+toggle",
-					y    = "Copy link",
 				},
 				["<leader>l"] = {
 					name = "+language",
