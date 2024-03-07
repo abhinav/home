@@ -844,8 +844,20 @@ vim.keymap.set('n', '<leader>evf', ':e $MYVIMRC<cr>', {
 })
 
 -- Tab shortcuts
+vim.keymap.set('n', '<leader>TT', ':tabnew<CR>', {
+	desc = 'New tab',
+	silent = true,
+})
 vim.keymap.set('n', '<leader>Td', ':tabclose<CR>', {
 	desc = 'Close tab',
+	silent = true,
+})
+vim.keymap.set('n', '<leader>Tn', ':tabnext<CR>', {
+	desc = 'Next tab',
+	silent = true,
+})
+vim.keymap.set('n', '<leader>TN', ':tabprevious<CR>', {
+	desc = 'Previous tab',
 	silent = true,
 })
 
