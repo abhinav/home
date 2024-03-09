@@ -325,6 +325,25 @@ require('lazy').setup({
 					vim.keymap.set('n', '<leader>gtd', gitsigns.toggle_deleted, {desc = "Show deleted"})
 					vim.keymap.set('n', '<leader>gtw', gitsigns.toggle_word_diff, {desc = "Word diff"})
 
+					-- <leader>gh{a,r}: stage and reset hunk
+					vim.keymap.set('n', '<leader>gha', gitsigns.stage_hunk, {desc = "Stage hunk"})
+					vim.keymap.set('n', '<leader>ghr', gitsigns.reset_hunk, {desc = "Reset hunk"})
+
+					-- visual mode variants
+					vim.keymap.set('v', '<leader>gha', function()
+						gitsigns.stage_hunk(vim.fn.line('.'), vim.fn.line('v'))
+					end, {desc = "Stage hunk"})
+					vim.keymap.set('v', '<leader>ghr', function()
+						gitsigns.reset_hunk(vim.fn.line('.'), vim.fn.line('v'))
+					end, {desc = "Reset hunk"})
+
+					-- <leader>ghp: preview hunk
+					vim.keymap.set('n', '<leader>ghp', gitsigns.preview_hunk, {desc = "Preview hunk"})
+
+					-- <leader>gh{S,R}: stage and reset buffer
+					vim.keymap.set('n', '<leader>ghA', gitsigns.stage_buffer, {desc = "Stage buffer"})
+					vim.keymap.set('n', '<leader>ghR', gitsigns.reset_buffer, {desc = "Reset buffer"})
+
 					local function change_base(key, arg, desc)
 						vim.keymap.set('n', '<leader>gb' .. key, function()
 							gitsigns.change_base(arg, true)
