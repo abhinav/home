@@ -1033,7 +1033,8 @@ if vim.g.neovide then
 	vim.opt.guifont = "Iosevka Term:h10"
 	vim.opt.linespace = -1
 	let_g('neovide_', {
-		cursor_animation_length = 0,
+		cursor_animation_length = 0.01,
+		cursor_animate_command_line = false,
 		scroll_animation_length = 0.1,
 		-- Treat alt as Meta instead of sending special characters.
 		input_macos_alt_is_meta = true,
