@@ -369,6 +369,7 @@ require('lazy').setup({
 		"sindrets/diffview.nvim",
 		opts = {
 			use_icons = false,
+			enhanced_diff_hl = true,
 		},
 	},
 	{
@@ -622,8 +623,11 @@ require('lazy').setup({
 				["<leader>b"] = {name = "+buffer"},
 				["<leader>j"] = {name = "+join/split"},
 				["<leader>s"] = {name = "+surround"},
-				["<leader>t"] = {name = "+terminals"},
-				["<leader>T"] = {name = "+tabs"},
+				["<leader>T"] = {
+					name = "+terminals",
+					n    = "+new",
+				},
+				["<leader>t"] = {name = "+tabs"},
 				["<leader>q"] = {name = "+quit"},
 				["<leader>w"] = {name = "+windows"},
 				["<leader>x"] = {name = "+diagnostics"},
@@ -912,33 +916,33 @@ vim.keymap.set('n', '<leader>evf', ':e $MYVIMRC<cr>', {
 })
 
 -- Tab shortcuts
-vim.keymap.set('n', '<leader>TT', ':tabnew<CR>', {
+vim.keymap.set('n', '<leader>tt', ':tabnew<CR>', {
 	desc = 'New tab',
 	silent = true,
 })
-vim.keymap.set('n', '<leader>Td', ':tabclose<CR>', {
+vim.keymap.set('n', '<leader>td', ':tabclose<CR>', {
 	desc = 'Close tab',
 	silent = true,
 })
-vim.keymap.set('n', '<leader>Tn', ':tabnext<CR>', {
+vim.keymap.set('n', '<leader>tn', ':tabnext<CR>', {
 	desc = 'Next tab',
 	silent = true,
 })
-vim.keymap.set('n', '<leader>TN', ':tabprevious<CR>', {
+vim.keymap.set('n', '<leader>tN', ':tabprevious<CR>', {
 	desc = 'Previous tab',
 	silent = true,
 })
 
 -- Terminal shortcuts.
-vim.keymap.set('n', '<leader>tt', ':vnew | terminal<CR>', {
+vim.keymap.set('n', '<leader>TT', ':vnew | terminal<CR>', {
 	desc = "New terminal in a vertical split",
 	silent = true,
 })
-vim.keymap.set('n', '<leader>th', ':new | terminal<CR>', {
+vim.keymap.set('n', '<leader>TH', ':new | terminal<CR>', {
 	desc = "New terminal in a horizontal split",
 	silent = true,
 })
-vim.keymap.set('n', '<leader>tT', ':tabnew | terminal<CR>', {
+vim.keymap.set('n', '<leader>Tt', ':tabnew | terminal<CR>', {
 	desc = "New terminal in a new tab",
 	silent = true,
 })
