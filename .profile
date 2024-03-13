@@ -4,10 +4,10 @@
 source ~/.profile.d/hostname
 source ~/.profile.d/locale
 source ~/.profile.d/arrayutil
-source ~/.profile.d/home_path
 source ~/.profile.d/xdg
 source ~/.profile.d/sbin_path
 source ~/.profile.d/homebrew
+source ~/.profile.d/home_path # must be after brew
 source ~/.profile.d/term
 source ~/.profile.d/pager
 source ~/.profile.d/editor

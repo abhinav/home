@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+set -euo pipefail
+IFS=$'\n\t'
+
+# $HOME is a git repository. 'git clean -f -x -d' would nuke everything there.
+# This script wraps the git command to always reject cleaning $HOME.
+
+home_bin=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+
+# Determine real Git by checking $PATH without $HOME/bin.
+new_path=${PATH//$home_bin/}
+real_git=$(PATH="$new_path" command -v git)
+
+if [[ "$real_git" == "" ]]; then
+	echo "Could not find real git in PATH" >&2
+	exit 1
+fi
+
+if [[ "$real_git" == "$HOME/bin/git" ]]; then
+	echo "Real git is $real_git, which is the same as this script. This is a bug." >&2
+	exit 1
+fi
+
+# Not running in $HOME repository.
+if [[ "$("$real_git" rev-parse --show-toplevel)" != "$HOME" ]]; then
+	exec "$real_git" "$@"
+	exit 0
+fi
+
+# Not running a clean command.
+if [[ "$1" != "clean" ]]; then
+	exec "$real_git" "$@"
+	exit 0
+fi
+
+echo >&2 "Refusing to run 'git clean' in $HOME"
+exit 1
