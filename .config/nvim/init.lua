@@ -107,6 +107,19 @@ require('lazy').setup({
 				MiniFiles.open(path)
 			end, {desc = "Open file explorer"})
 
+			-- On deletion of a file,
+			-- delete the buffer for that file.
+			vim.api.nvim_create_autocmd('User', {
+				pattern = 'MiniFilesActionDelete',
+				callback = function(args)
+					local from_path = args.data.from
+					local bufnr = vim.fn.bufnr(from_path)
+					if bufnr ~= -1 then
+						vim.api.nvim_buf_delete(bufnr, {})
+					end
+				end,
+			})
+
 			require('mini.jump').setup()
 			require('mini.surround').setup({
 				mappings = {
