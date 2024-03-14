@@ -17,37 +17,24 @@ IFS=$'\n\t'
 # Inspiration:
 # - https://linuxconfig.org/how-to-create-incremental-backups-using-rsync-on-linux
 # - https://samuelhewitt.com/blog/2018-06-05-time-machine-style-backups-with-rsync
+# - https://github.com/jcorbin/home/blob/5054bfa7521d6e7dd2a6118f2876d942d5572e7c/.local/bin/home-backup
 
-readonly SRCS=(
-	Desktop
-	Documents
-	Downloads
-	src
-)
-readonly EXCLUSIONS=(
-	"node_modules"
-	"zig-cache"
-	"zig-out"
-	".vscode"
-	".DS_Store"
-)
 readonly BACKUP_DIR="/var/data/backups"
 
-TIMESTAMP=$(date '+%Y/%m/%d/%H%M%S')
+TIMESTAMP=$(TZ=UTC date +%Y/%U/%w/%H%M)
 readonly BACKUP_PATH="${BACKUP_DIR}/${TIMESTAMP}"
 readonly LATEST_LINK="${BACKUP_DIR}/latest"
 readonly LOG_FILE="${BACKUP_DIR}/logs/${TIMESTAMP}.log"
 
 ARGS=(
-	--archive --verbose --delete
+	--archive --one-file-system --quiet
 	--link-dest="${LATEST_LINK}"
+	--log-file="${LOG_FILE}"
+	--filter ":- .backup-exclude"
 )
-for X in "${EXCLUSIONS[@]}"; do
-	ARGS+=("--exclude=${X}")
-done
-ARGS+=("${SRCS[@]}" "${BACKUP_PATH}")
+ARGS+=("$HOME/" "${BACKUP_PATH}")
 
 mkdir -p "${BACKUP_PATH}" "$(dirname "${LOG_FILE}")"
-rsync "${ARGS[@]}" > "${LOG_FILE}" 2>&1
+rsync "${ARGS[@]}"
 rm -rf "${LATEST_LINK}"
 ln -s "${BACKUP_PATH}" "${LATEST_LINK}"

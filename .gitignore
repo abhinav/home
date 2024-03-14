@@ -49,3 +49,6 @@
 # Extras
 !/etc
 !/sys
+
+# Don't ignore backup exclusion files.
+!/.backup-exclude

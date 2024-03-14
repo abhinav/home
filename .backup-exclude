@@ -1,0 +1,27 @@
+# Exclude patterns for $HOME backups
+# See FILTER RULES in rsync(1) for details
+
+.Trash
+.DS_Store
+.vscode
+node_modules
+zig-cache
+zig-out
+
+/.bundle/cache
+/.cache
+/.cargo
+/.docker
+/.gimme
+/.npm
+/.orbstack
+/.rbenv
+/.rustup
+/.ssh/id_*
+/.wine
+/go/pkg
+/Library
+
+# Rust builds
+target/debug
+target/release
