@@ -729,7 +729,14 @@ require('lazy').setup({
 		'akinsho/toggleterm.nvim', -- {{{3
 		config = function()
 			require('toggleterm').setup {
-				direction = 'horizontal',
+				direction = 'vertical',
+				size = function(term)
+					if term.direction == 'vertical' then
+						return vim.o.columns * 0.33
+					else
+						return vim.o.lines * 0.25
+					end
+				end,
 				on_exit = function(term)
 					-- Delete the terminal when closed.
 					-- Otherwise, it will be re-used and
