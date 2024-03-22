@@ -1415,6 +1415,46 @@ telescope.setup {
 telescope.load_extension('ui-select')
 telescope.load_extension('fzf')
 
+-- Search operator:
+-- gs<motion>: Search for text matched by motion in all files.
+function telescope_grep_operator(kind)
+	if kind ~= 'char' then
+		print("Can only grep on lines")
+		return
+	end
+
+	-- (0, 0)-indexed row-col positions
+	local start = vim.api.nvim_buf_get_mark(0, '[')
+	local stop = vim.api.nvim_buf_get_mark(0, ']')
+
+	-- nvim_buf_get_mark returns (1, 0)-indexed row-col.
+	start[1] = start[1] - 1
+	stop[1] = stop[1] - 1
+
+	-- If we cross line-wise boundaries, do nothing
+	-- since we can't grep across lines.
+	if start[1] ~= stop[1] then
+		return
+	end
+
+	stop[2] = stop[2] + 1 -- get_text is exclusive
+	local text = vim.api.nvim_buf_get_text(
+		0, start[1], start[2], stop[1], stop[2], {}
+	)
+	if not text then
+		return
+	end
+
+	telescopes.grep_string {
+		search = text[1],
+	}
+end
+
+vim.keymap.set('n', 'gs', function()
+	vim.o.operatorfunc = "v:lua.telescope_grep_operator"
+	return 'g@'
+end, {desc = "Search", expr = true})
+
 -- All keys preceded by <leader>:
 --
 -- Mneomonics:
