@@ -10,9 +10,14 @@ IFS=$'\n\t'
 #   sudo mkdir -p /var/data/backups
 #   sudo chown $USER /var/data/backups
 #
-# Run 'crontab -e', and add:
+# Schedule (Linux):
 #
 #   0 */12 * * * bash ~/tools/rsync-time-machine
+#
+# Schedule (macOS):
+#
+#   launchctl load ~/Library/LaunchAgents/rsync-time-machine.plist
+#   launchctl start rsync-time-machine
 #
 # Inspiration:
 # - https://linuxconfig.org/how-to-create-incremental-backups-using-rsync-on-linux

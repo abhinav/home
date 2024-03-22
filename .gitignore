@@ -8,6 +8,11 @@
 # XDG home
 !/.config
 
+# macOS library
+!/Library
+/Library/*
+!/Library/LaunchAgents
+
 # Always ignore
 .DS_Store
 .*.sw?
