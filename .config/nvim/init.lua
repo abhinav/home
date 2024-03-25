@@ -397,7 +397,6 @@ require('lazy').setup({
 			neogit.setup {
 				remember_settings = false,
 				graph_style = 'unicode',
-				kind = 'split',
 			}
 
 			vim.keymap.set('n', '<leader>gg', function()
