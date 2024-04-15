@@ -626,6 +626,10 @@ require('lazy').setup({
 				["<leader>f"] = {name = "+find"},
 				["<leader>g"] = {
 					name = "+git",
+					b    = "+change base",
+					B    = "+change base (buffer)",
+					h    = "+hunk",
+					t    = "+toggle",
 				},
 				["<leader>l"] = {
 					name = "+language",
