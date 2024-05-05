@@ -173,6 +173,21 @@ require('lazy').setup({
 		end,
 	},
 	{
+		'Bekaboo/deadcolumn.nvim', -- {{{3
+		opts = {
+			modes = function(mode)
+				-- This is the default modes setting
+				-- plus 'n'.
+				return mode:find('^[nictRss\x13]') ~= nil
+			end,
+			extra = {
+				-- Highlight the column after textwidth as we
+				-- approach it.
+				follow_tw = "+1",
+			},
+		},
+	},
+	{
 		'mg979/vim-visual-multi', -- {{{3
 		lazy = false,
 		keys = {
