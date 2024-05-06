@@ -11,6 +11,7 @@ zig-out
 /.bundle/cache
 /.cache
 /.cargo
+/.colima
 /.docker
 /.gimme
 /.npm
