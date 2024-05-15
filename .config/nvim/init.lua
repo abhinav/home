@@ -91,35 +91,19 @@ require('lazy').setup({
 		end,
 	},
 	{
+		'elihunter173/dirbuf.nvim',
+		config = function()
+			require("dirbuf").setup {
+				-- Confirm before making filesystem changes.
+				write_cmd = "DirbufSync -confirm",
+			}
+		end,
+	},
+	{
 		'echasnovski/mini.nvim',
 		config = function()
 			require('mini.align').setup()
 			require('mini.comment').setup()
-
-			require('mini.files').setup()
-			vim.keymap.set('n', '-', function()
-				local path = vim.api.nvim_buf_get_name(0)
-				-- MiniFiles will attempt to focus on the file.
-				-- If the file does not exist, give it the directory.
-				if vim.fn.filereadable(path) == 0 then
-					path = vim.fn.fnamemodify(path, ':h')
-				end
-				MiniFiles.open(path)
-			end, {desc = "Open file explorer"})
-
-			-- On deletion of a file,
-			-- delete the buffer for that file.
-			vim.api.nvim_create_autocmd('User', {
-				pattern = 'MiniFilesActionDelete',
-				callback = function(args)
-					local from_path = args.data.from
-					local bufnr = vim.fn.bufnr(from_path)
-					if bufnr ~= -1 then
-						vim.api.nvim_buf_delete(bufnr, {})
-					end
-				end,
-			})
-
 			require('mini.jump').setup()
 			require('mini.surround').setup({
 				mappings = {
@@ -1306,83 +1290,6 @@ cmp.setup.filetype('markdown', {
 		{name = 'buffer'},
 		{name = 'tmux'},
 	}),
-})
-
--- mini.files {{{2
-local mapFilesSplit = function(bufID, key, direction)
-	vim.keymap.set('n', key, function()
-		-- Create a new split and set it as the target.
-		local currentTarget = MiniFiles.get_target_window()
-		if currentTarget == nil then
-			currentTarget = vim.api.nvim_get_current_win()
-		end
-
-		local targetWindow
-		vim.api.nvim_win_call(currentTarget, function()
-			vim.cmd(direction .. ' split')
-			targetWindow = vim.api.nvim_get_current_win()
-		end)
-		MiniFiles.set_target_window(targetWindow)
-		MiniFiles.go_in({})
-	end, { buffer = bufID, desc = 'Split ' .. direction })
-end
-
--- Custom keymaps for MiniFiles.
---
--- Ctrl-v: open in vertical split
--- Ctrl-h: open in horizontal split
--- -: go up (matches keybinding to open explorer)
--- `: cd to focused directory or parent of file
--- Enter: open file or enter directory
--- Ctrl-p: toggle preview
--- Ctrl-c, Esc: close
-vim.api.nvim_create_autocmd('User', {
-	pattern = 'MiniFilesBufferCreate',
-	callback = function(args)
-		local bufID = args.data.buf_id
-		mapFilesSplit(bufID, '<C-v>', 'vertical')
-		mapFilesSplit(bufID, '<C-h>', 'horizontal')
-
-		vim.keymap.set('n', '-', function()
-			MiniFiles.go_out()
-		end, { buffer = bufID, desc = 'Go up' })
-		vim.keymap.set('n', '<CR>', function()
-			MiniFiles.go_in({
-				close_on_file = true,
-			})
-		end, { buffer = bufID, desc = 'Open file or directory' })
-
-		vim.keymap.set('n', '<C-c>', function()
-			MiniFiles.close()
-		end, { buffer = bufID, desc = 'Close' })
-		vim.keymap.set('n', '<Esc>', function()
-			MiniFiles.close()
-		end, { buffer = bufID, desc = 'Close' })
-
-		vim.keymap.set('n', '`', function()
-			local curEntry = MiniFiles.get_fs_entry()
-			if curEntry == nil then
-				return
-			end
-			local curDir = curEntry.path
-			if curEntry.fs_type == 'file' then
-				curDir = vim.fs.dirname(curDir)
-			end
-			vim.fn.chdir(curDir)
-		end, { buffer = bufID, desc = 'Change current directory' })
-
-		local show_preview = false
-		vim.keymap.set('n', '<C-p>', function()
-			show_preview = not show_preview
-			MiniFiles.refresh({
-				windows = {
-					preview = show_preview,
-					width_preview = 50,
-				},
-			})
-			MiniFiles.trim_right()
-		end, { buffer = bufID, desc = 'Toggle preview' })
-	end,
 })
 
 -- netrw {{{2
