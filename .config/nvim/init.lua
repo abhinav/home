@@ -1121,7 +1121,7 @@ local function lsp_on_attach(client, bufnr)
 	if client.server_capabilities.inlayHintProvider then
 		if vim.lsp.inlay_hint ~= nil then
 			lsp_nmap('<leader>lti', function()
-				vim.lsp.inlay_hint.enable(0, not vim.lsp.inlay_hint.is_enabled())
+				vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
 			end, "Toggle inlay hints")
 		end
 	end
