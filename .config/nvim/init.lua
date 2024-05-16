@@ -1122,11 +1122,9 @@ local function lsp_on_attach(client, bufnr)
 	vim.bo.omnifunc =  'v:lua.vim.lsp.omnifunc'
 
 	-- Keybindings
-	--  K            Documentation
+	--  K            Documentation (default)
 	--  gd           Go to definition
 	--  Alt-Enter    Code action
-
-	lsp_nmap('K', vim.lsp.buf.hover, "Documentation")
 	lsp_nmap('gd', vim.lsp.buf.definition, "Go to definition")
 
 	local telescopes = require('telescope.builtin')
