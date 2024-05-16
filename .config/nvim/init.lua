@@ -184,7 +184,6 @@ require('lazy').setup({
 			{'\\\\f', '<Plug>(VM-Visual-Find)', 'n', desc = "Select all matching '/' register"},
 		},
 	},
-	'machakann/vim-highlightedyank',
 	{
 		'nvim-treesitter/nvim-treesitter', -- {{{3
 		build = ':TSUpdate',
@@ -861,6 +860,17 @@ highlight NeogitDiffAddHighlight ctermfg=47 guifg=#2bff2b ctermbg=NONE guibg=NON
 
 -- Change the theme to use Search highlight for IncSearch too.
 vim.api.nvim_set_hl(0, "IncSearch", vim.api.nvim_get_hl(0, {name = "Search"}))
+
+-- Highlight selections
+vim.api.nvim_create_autocmd("TextYankPost", {
+	pattern = "*",
+	callback = function()
+		vim.highlight.on_yank {
+			higroup = "IncSearch",
+			timeout = 350,
+		}
+	end,
+})
 
 -- Quit
 vim.keymap.set('n', '<leader>qq', ':qa<cr>', {desc = "Quit all"})
