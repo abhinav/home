@@ -707,25 +707,6 @@ require('lazy').setup({
 		},
 	},
 	'lambdalisue/vim-manpager',
-	{
-		'ojroques/vim-oscyank', -- {{{3
-		config = function()
-			-- oscyank {{{2
-			-- https://github.com/ojroques/vim-oscyank/issues/26#issuecomment-1179722561
-			vim.g.oscyank_term = 'default'
-
-			-- Set up a hook to send an OSC52 code if the system register is used.
-			vim.g.oscyank_autocmd_id = vim.api.nvim_create_autocmd("TextYankPost", {
-				pattern = "*",
-				callback = function(_)
-					local ev = vim.v.event
-					if ev.operator == 'y' and ev.regname == '+' then
-						vim.cmd 'OSCYankRegister +'
-					end
-				end,
-			})
-		end,
-	},
 	'vim-utils/vim-husk',
 	{
 		'akinsho/toggleterm.nvim', -- {{{3
@@ -1098,11 +1079,6 @@ if vim.g.neovide then
 	vim.keymap.set('n', '<D-w>', ':tabclose<CR>', {desc = "Close tab"})
 	vim.keymap.set('n', '<D-Left>', ':tabprevious<CR>', {desc = "Previous tab"})
 	vim.keymap.set('n', '<D-Right>', ':tabnext<CR>', {desc = "Next tab"})
-
-	-- HACK: OSC52 is not supported in neovide.
-	if vim.g.oscyank_autocmd_id then
-		vim.api.nvim_del_autocmd(vim.g.oscyank_autocmd_id)
-	end
 end
 
 --  Plugin {{{1
