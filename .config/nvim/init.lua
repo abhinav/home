@@ -94,8 +94,7 @@ require('lazy').setup({
 		'elihunter173/dirbuf.nvim',
 		config = function()
 			require("dirbuf").setup {
-				-- Confirm before making filesystem changes.
-				write_cmd = "DirbufSync -confirm",
+				write_cmd = "DirbufSync",
 			}
 		end,
 	},
