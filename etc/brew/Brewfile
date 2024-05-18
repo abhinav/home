@@ -1,4 +1,3 @@
-tap "homebrew/cask-fonts"
 tap "homebrew/bundle"
 tap "abhinav/tap"
 
@@ -14,7 +13,6 @@ brew "pandoc"
 brew "python"
 brew "ripgrep"    # > grep
 brew "rustup"
-brew "starship"   # prompt
 brew "stow"
 brew "tmux"
 brew "abhinav/tap/tmux-fastcopy"
@@ -31,10 +29,8 @@ brew "grep" # for fzf-tab-completion
 # Editing.
 tap "neovim/neovim"
 brew "neovim"
-brew "svn"  # needed weirdly for the font
 cask "font-iosevka"
 cask "font-iosevka-nerd-font"
-cask "espanso"             # text expansion
 
 # Git and friends.
 brew "git"
@@ -48,7 +44,6 @@ brew "abhinav/tap/restack"
 
 cask "1password"
 cask "appcleaner"
-cask "caffeine"      # don't sleep
 cask "flux"
 cask "google-drive"
 cask "iterm2"
