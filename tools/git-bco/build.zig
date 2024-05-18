@@ -6,15 +6,12 @@ pub fn build(b: *std.Build) void {
 
     const exe = b.addExecutable(.{
         .name = "git-bco",
-        .root_source_file = .{ .path = "src/main.zig" },
+        .root_source_file = b.path("src/main.zig"),
         .target = target,
         .optimize = optimize,
+        // Strip the binary for ReleaseSmall or ReleaseFast.
+        .strip = optimize == .ReleaseSmall or optimize == .ReleaseFast,
     });
-    // Strip the binary for ReleaseSmall or ReleaseFast.
-    switch (optimize) {
-        .ReleaseSmall, .ReleaseFast => exe.strip = true,
-        else => {},
-    }
     b.installArtifact(exe);
 
     const run_cmd = b.addRunArtifact(exe);
@@ -26,7 +23,7 @@ pub fn build(b: *std.Build) void {
     run_step.dependOn(&run_cmd.step);
 
     const unit_tests = b.addTest(.{
-        .root_source_file = .{ .path = "src/main.zig" },
+        .root_source_file = b.path("src/main.zig"),
         .target = target,
         .optimize = optimize,
     });

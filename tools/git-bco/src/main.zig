@@ -19,7 +19,7 @@ pub fn main() !void {
     const alloc = arena.allocator();
 
     run(alloc) catch |err| switch (err) {
-        error.Explained => std.os.exit(1),
+        error.Explained => std.posix.exit(1),
         else => return err,
     };
 }
