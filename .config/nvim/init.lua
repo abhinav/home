@@ -91,11 +91,45 @@ require('lazy').setup({
 		end,
 	},
 	{
-		'elihunter173/dirbuf.nvim',
+		'stevearc/oil.nvim',
 		config = function()
-			require("dirbuf").setup {
-				write_cmd = "DirbufSync",
+			require('oil').setup {
+				skip_confirm_for_simple_edits = true,
+				prompt_save_on_select_new_entry = false,
+				use_default_keymaps = false,
+				keymaps = {
+					["g?"]    = "actions.show_help",
+					["<CR>"]  = "actions.select",
+					["<C-v>"] = "actions.select_vsplit",
+					["<C-s>"] = "actions.select_split",
+					["<C-t>"] = "actions.select_tab",
+					["<C-p>"] = "actions.preview",
+					["<C-c>"] = "actions.close",
+					["<C-r>"] = "actions.refresh",
+					["-"]     = "actions.parent",
+					["`"]     = "actions.cd",
+					["."]     = "actions.toggle_hidden",
+				},
 			}
+
+			vim.keymap.set("n", "-", "<CMD>Oil<CR>", {
+				desc = "Open parent directory",
+			})
+
+			-- https://github.com/stevearc/oil.nvim/issues/234
+			vim.api.nvim_create_autocmd("BufLeave", {
+				pattern  = "oil:///*",
+				callback = function ()
+					vim.cmd("cd .")
+				end
+			})
+
+			-- https://github.com/stevearc/oil.nvim/issues/44
+			vim.cmd.cabbr({ args = {
+				"<expr>",
+				"%",
+				"&filetype == 'oil' ? bufname('%')[6:-2] : '%'",
+			} })
 		end,
 	},
 	{
