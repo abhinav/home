@@ -14,9 +14,6 @@ nnoremap <buffer> k gk
 " For long lines that are part of lists, match indentation of the list item.
 setlocal breakindent
 
-" Let autowrite do its thing.
-setlocal nohidden
-
 " Don't automatically wrap lines while typing.
 setlocal formatoptions+=l
 
