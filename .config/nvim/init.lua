@@ -322,6 +322,7 @@ require('lazy').setup({
 		end,
 	},
 	{'rust-lang/rust.vim', ft = 'rust'},
+	{'Vimjas/vim-python-pep8-indent', ft = 'python'},
 	{
 		'ziglang/zig.vim',
 		ft = {'zig'},
