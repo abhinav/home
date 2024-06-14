@@ -18,7 +18,6 @@ vim.g.mapleader = ' ' -- space is leader
 require('lazy').setup({
 	-- Completion and snippets {{{2
 	'andersevenrud/cmp-tmux',
-	'honza/vim-snippets',
 	'hrsh7th/cmp-buffer',
 	'hrsh7th/cmp-cmdline',
 	'hrsh7th/cmp-nvim-lsp',
@@ -26,8 +25,16 @@ require('lazy').setup({
 	'hrsh7th/cmp-omni',
 	'hrsh7th/cmp-path',
 	'hrsh7th/nvim-cmp',
-	'quangnguyen30192/cmp-nvim-ultisnips',
-	'SirVer/ultisnips',
+	'rafamadriz/friendly-snippets',
+	{
+		'garymjr/nvim-snippets',
+		config = function()
+			require('snippets').setup {
+				create_cmp_source = true,
+				friendly_snippets = true,
+			}
+		end,
+	},
 
 	-- Editing {{{2
 	{
@@ -773,6 +780,11 @@ if vim.env.VIM_PATH then
 	vim.env.PATH = vim.env.VIM_PATH
 end
 
+-- Don't use Python integration.
+-- It just wreacks havoc anytime a virtualenv gets involved.
+vim.g.loaded_python_provider = 0
+vim.g.loaded_python3_provider = 0
+
 local options = {
 	compatible = false, -- no backwards compatibility with vi
 
@@ -1189,7 +1201,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
 -- nvim-cmp {{{2
 local cmp = require 'cmp'
-local cmp_ultisnips_mappings = require 'cmp_nvim_ultisnips.mappings'
 local has_copilot, copilot_suggestion = pcall(require, 'copilot.suggestion')
 
 local handleTab = function(fallback)
@@ -1203,8 +1214,8 @@ local handleTab = function(fallback)
 		end
 	elseif has_copilot and copilot_suggestion.is_visible() then
 		copilot_suggestion.accept()
-	elseif vim.fn['UltiSnips#CanJumpForwards']() == 1 then
-		cmp_ultisnips_mappings.jump_forwards(fallback)
+	elseif vim.snippet.active({direction = 1}) then
+		vim.snippet.jump(1)
 	else
 		fallback()
 	end
@@ -1233,7 +1244,7 @@ cmp.setup {
 	},
 	snippet = {
 		expand = function(args)
-			vim.fn["UltiSnips#Anon"](args.body)
+			vim.snippet.expand(args.body)
 		end,
 	},
 	preselect = cmp.PreselectMode.None,
@@ -1266,8 +1277,8 @@ cmp.setup {
 		['<S-Tab>'] = cmp.mapping(function(fallback)
 			if cmp.visible() then
 				cmp.select_prev_item()
-			elseif vim.fn['UltiSnips#CanJumpBackwards']() == 1 then
-				cmp_ultisnips_mappings.jump_backwards(fallback)
+			elseif vim.snippet.active({direction = -1}) then
+				vim.snippet.jump(-1)
 			else
 				fallback()
 			end
@@ -1288,7 +1299,7 @@ cmp.setup {
 	sources = cmp.config.sources({
 		{name = 'nvim_lsp'},
 		{name = 'nvim_lsp_signature_help'},
-		{name = 'ultisnips'},
+		{name = 'snippets'},
 	}, {
 		{name = 'path'},
 		{name = 'buffer'},
@@ -1304,7 +1315,7 @@ cmp.setup.filetype('markdown', {
 			keyword_length = 0,
 			keyword_pattern = "\\w+",
 		},
-		{name = 'ultisnips'},
+		{name = 'snippets'},
 		{name = 'buffer'},
 		{name = 'tmux'},
 	}),
