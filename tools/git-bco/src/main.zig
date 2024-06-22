@@ -52,7 +52,7 @@ pub fn run(alloc: std.mem.Allocator) !void {
 //
 // The caller must free the returned slice.
 fn selectBranch(alloc: std.mem.Allocator, init_branch: ?[]const u8, detach: bool) ![]const u8 {
-    var git_branch = std.ChildProcess.init(&.{ "git", "branch" }, alloc);
+    var git_branch = std.process.Child.init(&.{ "git", "branch" }, alloc);
     git_branch.stdout_behavior = .Pipe;
     try git_branch.spawn();
     errdefer {
@@ -86,7 +86,7 @@ fn selectBranch(alloc: std.mem.Allocator, init_branch: ?[]const u8, detach: bool
     }
     defer if (init_branch != null) alloc.free(fzf_args);
 
-    var fzf = std.ChildProcess.init(fzf_args, alloc);
+    var fzf = std.process.Child.init(fzf_args, alloc);
     fzf.stdout_behavior = .Pipe;
     fzf.stdin_behavior = .Pipe;
     try fzf.spawn();
@@ -104,7 +104,7 @@ fn selectBranch(alloc: std.mem.Allocator, init_branch: ?[]const u8, detach: bool
             fzf_stdin.close();
 
             // HACK:
-            // Calling wait() with a closed ChildProcess.stdin
+            // Calling wait() with a closed process.Child.stdin
             // causes a panic.
             // Replace stdin with null to avoid this.
             fzf.stdin = null;
@@ -148,7 +148,7 @@ fn checkout(alloc: std.mem.Allocator, branch: []const u8, options: []const []con
     }
     defer if (options.len != 0) alloc.free(args);
 
-    var git_checkout = std.ChildProcess.init(args, alloc);
+    var git_checkout = std.process.Child.init(args, alloc);
     try checkTerm("git checkout", try git_checkout.spawnAndWait());
 }
 
@@ -202,7 +202,7 @@ pub fn localBranchIterator(i: anytype) LocalBranchIterator(@TypeOf(i)) {
 /// checkTerm checks that a child process terminated successfully.
 fn checkTerm(
     comptime name: []const u8,
-    term: std.ChildProcess.Term,
+    term: std.process.Child.Term,
 ) !void {
     switch (term) {
         .Exited => |code| if (code != 0) {
