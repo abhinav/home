@@ -158,7 +158,17 @@ require('lazy').setup({
 		config = function()
 			require('mini.align').setup()
 			require('mini.jump').setup()
-			require('mini.surround').setup()
+			require('mini.surround').setup {
+				mappings = {
+					add = 'ys',
+					delete = 'ds',
+					find = '',
+					find_left = '',
+					highlight = '',
+					replace = 'cs',
+ 					update_n_lines = '',
+ 				},
+			}
 			require('mini.trailspace').setup()
 		end,
 	},
@@ -221,6 +231,16 @@ require('lazy').setup({
 			require('treesitter-context').setup {
 				enable = true,
 			}
+		end,
+	},
+	{
+		'ggandor/leap.nvim',
+		dependencies = {'tpope/vim-repeat'},
+		config = function()
+			local leap = require('leap')
+			leap.create_default_mappings()
+			leap.opts.special_keys.prev_target = '<backspace>'
+			leap.opts.special_keys.prev_group  = '<backspace>'
 		end,
 	},
 	{'tpope/vim-abolish', command = "S"},
