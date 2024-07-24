@@ -160,12 +160,12 @@ require('lazy').setup({
 			require('mini.jump').setup()
 			require('mini.surround').setup {
 				mappings = {
-					add = 'ys',
-					delete = 'ds',
+					add = '<leader>sa',
+					delete = '<leader>sd',
 					find = '',
 					find_left = '',
 					highlight = '',
-					replace = 'cs',
+					replace = '<leader>sr',
  					update_n_lines = '',
  				},
 			}
@@ -238,9 +238,15 @@ require('lazy').setup({
 		dependencies = {'tpope/vim-repeat'},
 		config = function()
 			local leap = require('leap')
-			leap.create_default_mappings()
 			leap.opts.special_keys.prev_target = '<backspace>'
 			leap.opts.special_keys.prev_group  = '<backspace>'
+
+			vim.keymap.set({'n', 'x', 'o'}, 'gl',  '<Plug>(leap-forward)', {
+				desc = "Leap forward",
+			})
+			vim.keymap.set({'n', 'x', 'o'}, 'gL',  '<Plug>(leap-backward)', {
+				desc = "Leap backward",
+			})
 		end,
 	},
 	{'tpope/vim-abolish', command = "S"},
@@ -1356,7 +1362,7 @@ telescope.load_extension('ui-select')
 telescope.load_extension('fzf')
 
 -- Search operator:
--- gs<motion>: Search for text matched by motion in all files.
+-- <leader>fs<motion>: Search for text matched by motion in all files.
 function telescope_grep_operator(kind)
 	if kind ~= 'char' then
 		print("Can only grep on lines")
@@ -1390,11 +1396,6 @@ function telescope_grep_operator(kind)
 	}
 end
 
-vim.keymap.set('n', 'gs', function()
-	vim.o.operatorfunc = "v:lua.telescope_grep_operator"
-	return 'g@'
-end, {desc = "Search", expr = true})
-
 -- All keys preceded by <leader>:
 --
 -- Mneomonics:
@@ -1405,6 +1406,7 @@ end, {desc = "Search", expr = true})
 -- fr  find recent
 -- ft  find treesitter
 -- f?  "I forgot"
+-- fs  find search operator
 --
 -- Others:
 -- /  find in files
@@ -1413,6 +1415,12 @@ end, {desc = "Search", expr = true})
 vim.keymap.set('n', '<leader>f<leader>', telescopes.resume, {
 	desc = "Find (resume)",
 })
+
+vim.keymap.set('n', '<leader>fs', function()
+	vim.o.operatorfunc = "v:lua.telescope_grep_operator"
+	return 'g@'
+end, {desc = "Search", expr = true})
+
 vim.keymap.set('n', '<leader>ff', telescopes.find_files, {desc = "Find files"})
 vim.keymap.set('n', '<leader>fF', function()
 	telescopes.find_files({
