@@ -238,15 +238,16 @@ require('lazy').setup({
 		dependencies = {'tpope/vim-repeat'},
 		config = function()
 			local leap = require('leap')
-			leap.opts.special_keys.prev_target = '<backspace>'
-			leap.opts.special_keys.prev_group  = '<backspace>'
+			local leap_user = require('leap.user')
 
-			vim.keymap.set({'n', 'x', 'o'}, 'gl',  '<Plug>(leap-forward)', {
-				desc = "Leap forward",
-			})
-			vim.keymap.set({'n', 'x', 'o'}, 'gL',  '<Plug>(leap-backward)', {
-				desc = "Leap backward",
-			})
+			leap.opts.special_keys.next_target = '<enter>'
+			leap.opts.special_keys.prev_target = '<backspace>'
+
+			leap.create_default_mappings()
+			leap_user.set_repeat_keys(
+				leap.opts.special_keys.next_target,
+				leap.opts.special_keys.prev_target
+			)
 		end,
 	},
 	{'tpope/vim-abolish', command = "S"},
@@ -951,12 +952,6 @@ vim.keymap.set('t', '<C-L>', [[<C-\><C-n><C-W><C-L>]], {
 vim.keymap.set('t', '<C-H>', [[<C-\><C-n><C-W><C-H>]], {
 	noremap = true,
 	desc = 'Move to split left',
-})
-
--- Clear highlight after search.
-vim.keymap.set('n', '<CR>', ':nohlsearch<CR><CR>', {
-	silent = true,
-	noremap = true,
 })
 
 -- Edit the current vimrc
