@@ -1,0 +1,9 @@
+{
+  "date": {
+    "body": [
+      "${CURRENT_YEAR}-${CURRENT_MONTH}-${CURRENT_DATE}"
+    ],
+    "prefix": "date"
+  }
+}
+
