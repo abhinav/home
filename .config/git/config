@@ -15,8 +15,6 @@
 	verbose = true
 [core]
 	editor = nvim
-[http]
-	cookiefile = /Users/abg/.gitcookies
 [log]
 	abbrevCommit = true
 	date = iso-local
