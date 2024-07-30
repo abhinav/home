@@ -244,10 +244,6 @@ require('lazy').setup({
 			leap.opts.special_keys.prev_target = '<backspace>'
 
 			leap.create_default_mappings()
-			leap_user.set_repeat_keys(
-				leap.opts.special_keys.next_target,
-				leap.opts.special_keys.prev_target
-			)
 		end,
 	},
 	{'tpope/vim-abolish', command = "S"},
@@ -952,6 +948,12 @@ vim.keymap.set('t', '<C-L>', [[<C-\><C-n><C-W><C-L>]], {
 vim.keymap.set('t', '<C-H>', [[<C-\><C-n><C-W><C-H>]], {
 	noremap = true,
 	desc = 'Move to split left',
+})
+
+-- Clear highlight after search.
+vim.keymap.set('n', '<CR>', ':nohlsearch<CR><CR>', {
+	silent = true,
+	noremap = true,
 })
 
 -- Edit the current vimrc
