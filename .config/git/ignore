@@ -1,2 +1,6 @@
 .vscode/
 .DS_Store
+
+# Always intended to be local-only
+.mise.local.toml
+mise.local.toml

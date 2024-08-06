@@ -27,6 +27,7 @@ source ~/.zsh/rc.d/options
 source ~/.zsh/rc.d/history
 source ~/.zsh/rc.d/editor
 source ~/.zsh/rc.d/dir
+source ~/.zsh/rc.d/mise
 source ~/.zsh/rc.d/direnv
 source ~/.zsh/rc.d/fzf
 source ~/.zsh/rc.d/homebrew
