@@ -1545,9 +1545,9 @@ vim.diagnostic.config({
 	virtual_text = true,
 })
 
-vim.keymap.set('n', '<leader>xx', ':TroubleToggle<cr>', {desc = "Diagnostics list"})
-vim.keymap.set('n', '<leader>xl', ':lopen<cr>', {desc = "Location list"})
-vim.keymap.set('n', '<leader>xq', ':copen<cr>', {desc = "Quickfix list"})
+vim.keymap.set('n', '<leader>xx', ':Trouble diagnostics toggle<cr>', {desc = "Diagnostics list"})
+vim.keymap.set('n', '<leader>xl', ':Trouble loclist toggle<cr>', {desc = "Location list"})
+vim.keymap.set('n', '<leader>xq', ':Trouble qflist toggle<cr>', {desc = "Quickfix list"})
 vim.keymap.set('n', '<leader>xn', function()
 	vim.diagnostic.goto_next({float = false, wrap = false})
 end, {desc = "Next diagnostic"})
