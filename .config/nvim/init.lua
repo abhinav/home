@@ -649,32 +649,29 @@ require('lazy').setup({
 			local wk = require('which-key')
 			wk.setup(opts)
 
-			wk.register({
+			wk.add({
 				mode = {'n', 'v'},
-				["<leader>f"] = {name = "+find"},
-				["<leader>g"] = {
-					name = "+git",
-					b    = "+change base",
-					B    = "+change base (buffer)",
-					h    = "+hunk",
-					t    = "+toggle",
-				},
-				["<leader>l"] = {
-					name = "+language",
-					g    = "+goto",
-					f    = "+find",
-				},
-				["<leader>b"] = {name = "+buffer"},
-				["<leader>j"] = {name = "+join/split"},
-				["<leader>s"] = {name = "+surround"},
-				["<leader>T"] = {
-					name = "+terminals",
-					n    = "+new",
-				},
-				["<leader>t"] = {name = "+tabs"},
-				["<leader>q"] = {name = "+quit"},
-				["<leader>w"] = {name = "+windows"},
-				["<leader>x"] = {name = "+diagnostics"},
+				{"<leader>g", group = "git"},
+ 				{"<leader>gb", desc = "+change base"},
+ 				{"<leader>gB", desc = "+change base (buffer)"},
+ 				{"<leader>gh", desc = "+hunk"},
+ 				{"<leader>gt", desc = "+toggle"},
+
+				{"<leader>l", group = "language"},
+				{"<leader>lg", desc = "+goto"},
+				{"<leader>lf", desc = "+find"},
+
+				{"<leader>T", group = "+terminals"},
+				{"<leader>Tn", desc = "+new"},
+
+				{"<leader>b", group = "+buffer"},
+				{"<leader>f", group = "+find"},
+				{"<leader>j", group = "+join/split"},
+				{"<leader>q", group = "+quit"},
+				{"<leader>s", group = "+surround"},
+				{"<leader>t", group = "+tabs"},
+				{"<leader>w", group = "+windows"},
+				{"<leader>x", group = "+diagnostics"},
 			})
 		end,
 	},
