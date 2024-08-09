@@ -1315,7 +1315,7 @@ local telescope = require('telescope')
 local telescopes = require('telescope.builtin')
 local teleactions = require('telescope.actions')
 local telethemes = require('telescope.themes')
-local teletrouble = require('trouble.providers.telescope')
+local teletrouble = require('trouble.sources.telescope')
 
 telescope.setup {
 	defaults = {
@@ -1324,7 +1324,7 @@ telescope.setup {
 				-- Show help.
 				["<C-h>"] = teleactions.which_key,
 				-- Open in trouble.
-				["<M-t>"] = teletrouble.open_with_trouble,
+				["<M-t>"] = teletrouble.open,
 			},
 		},
 	},
