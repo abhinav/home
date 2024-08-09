@@ -1,0 +1,4 @@
+[spice "shorthand"]
+	can = ca -n
+
+# vim:set ft=gitconfig:

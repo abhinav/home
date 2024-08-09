@@ -83,3 +83,5 @@
 	# ss	status short
 	s = status
 	ss = status --short
+
+# vim:set ft=gitconfig:
