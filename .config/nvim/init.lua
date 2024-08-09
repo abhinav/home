@@ -456,6 +456,14 @@ require('lazy').setup({
 			]]
 		end,
 	},
+	{
+		'nvim-tree/nvim-web-devicons',
+		config = function()
+			require('nvim-web-devicons').setup {
+				default = true,
+			}
+		end,
+	},
 
 	-- LSP and language features {{{2
 	'folke/trouble.nvim',
@@ -1493,22 +1501,6 @@ require 'nvim-treesitter.configs'.setup {
 
 
 -- trouble {{{2
-local diagnostic_signs = {
-	Error = '🚫',
-	Warn  = '⚠️',
-	Hint  = '💡',
-	Info  = 'ℹ️',
-}
-
-for type, icon in pairs(diagnostic_signs) do
-	local hl = "DiagnosticSign" .. type
-	vim.fn.sign_define(hl, {
-		text   = icon,
-		texthl = hl,
-		numhl  = hl,
-	})
-end
-
 require('trouble').setup {
 	auto_open = false,
 	auto_close = true,
@@ -1520,20 +1512,9 @@ require('trouble').setup {
 		toggle_preview = "P",
 	},
 
-	-- Non-patched font:
-	fold_open = "▼",
-	fold_closed = "▶",
-	icons = false,
-	padding = false,
-	indent_lines = false,
-	group = true,
-	signs = {
-		error       = diagnostic_signs.Error,
-		warning     = diagnostic_signs.Warn,
-		hint        = diagnostic_signs.Hint,
-		information = diagnostic_signs.Info,
-	},
-	use_lsp_diagnostic_signs = false,
+	-- Don't complain if there are no diagnostics.
+	warn_no_results = false,
+	open_no_results = true,
 }
 
 -- Don't use virtual text to display diagnostics.
