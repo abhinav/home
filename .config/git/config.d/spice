@@ -1,4 +1,6 @@
 [spice "shorthand"]
 	can = ca -n
+	la = ls -a
+	lla = ll -a
 
 # vim:set ft=gitconfig:
