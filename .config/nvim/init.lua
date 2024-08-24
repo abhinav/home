@@ -15,6 +15,23 @@ end
 vim.opt.rtp:prepend(lazypath)
 vim.g.mapleader = ' ' -- space is leader
 
+-- let_g(table)
+-- let_g(prefix, table)
+--
+-- Sets values on g:*. If prefix is non-empty, it's added to every key.
+local function let_g(prefix, opts)
+	if opts == nil then
+		opts, prefix = prefix, ''
+	end
+
+	for key, val in pairs(opts) do
+		if prefix ~= '' then
+			key = prefix .. key
+		end
+		vim.g[key] = val
+	end
+end
+
 require('lazy').setup({
 	-- Completion and snippets {{{2
 	'andersevenrud/cmp-tmux',
@@ -232,6 +249,17 @@ require('lazy').setup({
 				enable = true,
 			}
 		end,
+	},
+	{
+		'andymass/vim-matchup',
+		config = function()
+			let_g('matchup_', {
+				-- Don't highlight the matching pair.
+				-- Makes it non-obvious which one the cursor is
+				-- currently on.
+				matchparen_enabled = 0,
+			})
+		end
 	},
 	{
 		'ggandor/leap.nvim',
@@ -864,23 +892,6 @@ if vim.env.TERM_PROGRAM ~= 'Apple_Terminal' then
 	vim.opt.termguicolors = true
 end
 
--- let_g(table)
--- let_g(prefix, table)
---
--- Sets values on g:*. If prefix is non-empty, it's added to every key.
-local function let_g(prefix, opts)
-	if opts == nil then
-		opts, prefix = prefix, ''
-	end
-
-	for key, val in pairs(opts) do
-		if prefix ~= '' then
-			key = prefix .. key
-		end
-		vim.g[key] = val
-	end
-end
-
 vim.cmd [[
 colorscheme molokai
 
@@ -1496,6 +1507,9 @@ require 'nvim-treesitter.configs'.setup {
 				['ib'] = {query = '@block.inner', desc = "in block"},
 			},
 		},
+	},
+	matchup = {
+		enable = true,
 	},
 }
 
