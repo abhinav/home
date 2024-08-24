@@ -4,6 +4,7 @@
 source ~/.profile.d/hostname
 source ~/.profile.d/locale
 source ~/.profile.d/arrayutil
+source ~/.profile.d/pathutil
 source ~/.profile.d/home_path
 source ~/.profile.d/xdg
 source ~/.profile.d/sbin_path

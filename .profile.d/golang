@@ -14,4 +14,15 @@ export GOPATH
 # shellcheck disable=2086
 PATH=$(IFS=:; prepend "$GOPATH/bin" $PATH)
 
+# cd to the innermost module root directory,
+# going as far as the repository root.
+cdgomod() {
+	gomod=$(locate_up "go.mod" "$(git rev-parse --show-toplevel)" || echo "")
+	if [[ -z "$gomod" ]]; then
+		echo "go.mod not found"
+		return 1
+	fi
+	cd "$(dirname "$gomod")" || return 1
+}
+
 export PATH

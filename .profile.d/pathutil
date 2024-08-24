@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# locate_up name [root]
+#
+# Starting at the current directory, and up to root (or / if not given),
+# look up the directory tree for a file or directory with the given name.
+# If found, echo the full path to it,
+# and return success; otherwise return failure.
+locate_up() {
+	local name root current
+
+	name="$1"; shift
+	root="${1:-/}"
+
+	# root must be absolute
+	root=$(cd "$root" && pwd)
+	current=$(pwd)
+	while [[ ! -e "$current/$name" ]]; do
+		if [ "$current" = "$root" ]; then
+			return 1
+		fi
+
+		current=$(dirname "$current")
+	done
+	echo "$current/$name"
+}
