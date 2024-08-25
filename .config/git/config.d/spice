@@ -3,4 +3,7 @@
 	la = ls -a
 	lla = ll -a
 
+[spice "branchCheckout"]
+	showUntracked = true
+
 # vim:set ft=gitconfig:
