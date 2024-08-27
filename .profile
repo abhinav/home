@@ -19,11 +19,9 @@ source ~/.profile.d/ripgrep
 source ~/.profile.d/github
 
 source ~/.profile.d/python
-source ~/.profile.d/ruby
 source ~/.profile.d/golang
 source ~/.profile.d/rust
 source ~/.profile.d/haskell
-source ~/.profile.d/node
 source ~/.profile.d/zig
 
 # - Each shell profile (e.g., .bash_profile) sources .profile
