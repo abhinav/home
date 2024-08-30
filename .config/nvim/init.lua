@@ -253,11 +253,16 @@ require('lazy').setup({
 	{
 		'andymass/vim-matchup',
 		config = function()
-			let_g('matchup_', {
-				-- Don't highlight the matching pair.
-				-- Makes it non-obvious which one the cursor is
-				-- currently on.
-				matchparen_enabled = 0,
+			-- Adjust highlighting of matching pairs
+			-- to be less intrusive.
+			vim.api.nvim_create_autocmd('ColorScheme', {
+				callback = function()
+					vim.api.nvim_set_hl(0, "MatchParen", {
+						fg = '#ef5939',
+						ctermfg = 203,
+						bold = true,
+					})
+				end,
 			})
 		end
 	},
