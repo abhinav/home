@@ -560,7 +560,7 @@ require('lazy').setup({
 					},
 				},
 			},
-			tsserver = {
+			ts_ls = {
 				init_options = {
 					disableAutomaticTypingAcquisition = true,
 				},
