@@ -669,6 +669,21 @@ require('lazy').setup({
 			vim.g['lens#animate']           = 0
 		end,
 	},
+	{
+		'shortcuts/no-neck-pain.nvim',
+		config = function()
+			require('no-neck-pain').setup {
+				mappings = {
+					enabled = true,
+				},
+				buffers = {
+					wo = {
+						fillchars = 'eob: ',
+					},
+				},
+			}
+		end,
+	},
 	{'nvim-telescope/telescope-fzf-native.nvim', build = 'make'},
 	{
 		'nvim-telescope/telescope.nvim', -- {{{3
