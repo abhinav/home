@@ -663,13 +663,6 @@ require('lazy').setup({
 
 	-- Navigation and window management {{{2
 	{
-		'camspiers/lens.vim', -- {{{3
-		config = function()
-			vim.g['lens#disabled_buftypes'] = {'quickfix'}
-			vim.g['lens#animate']           = 0
-		end,
-	},
-	{
 		'shortcuts/no-neck-pain.nvim',
 		config = function()
 			require('no-neck-pain').setup {
