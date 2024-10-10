@@ -944,6 +944,12 @@ vim.keymap.set('n', '<leader>qq', ':qa<cr>', {desc = "Quit all"})
 -- Disable ex mode from Q.
 vim.keymap.set('n', 'Q', '<Nop>', {noremap = true})
 
+-- Disable horizontal mouse scrolling.
+vim.keymap.set({'i', 'v', 'n'}, '<ScrollWheelLeft>', '<Nop>', {noremap = true})
+vim.keymap.set({'i', 'v', 'n'}, '<ScrollWheelRight>', '<Nop>', {noremap = true})
+vim.keymap.set({'i', 'v', 'n'}, '<S-ScrollWheelLeft>', '<Nop>', {noremap = true})
+vim.keymap.set({'i', 'v', 'n'}, '<S-ScrollWheelRight>', '<Nop>', {noremap = true})
+
 -- Yank and paste operations preceded by <leader> should use system clipboard.
 vim.keymap.set({'n', 'v'}, '<leader>y', '"+y', {
 	noremap = true,
