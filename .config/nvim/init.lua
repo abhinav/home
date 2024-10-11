@@ -242,15 +242,6 @@ require('lazy').setup({
 		end,
 	},
 	{
-		'nvim-treesitter/nvim-treesitter-context',
-		dependencies = {'nvim-treesitter/nvim-treesitter'},
-		config = function()
-			require('treesitter-context').setup {
-				enable = true,
-			}
-		end,
-	},
-	{
 		'andymass/vim-matchup',
 		config = function()
 			-- Adjust highlighting of matching pairs
@@ -664,6 +655,20 @@ require('lazy').setup({
 	},
 
 	-- Navigation and window management {{{2
+	{
+		'Bekaboo/dropbar.nvim',
+		dependencies = {
+			'nvim-telescope/telescope-fzf-native.nvim',
+		},
+		config = function()
+			local dropbar_api = require('dropbar.api')
+
+			vim.ui.select = require('dropbar.utils.menu').select
+			vim.keymap.set('n', '<leader>cc', function()
+				dropbar_api.pick()
+			end, { desc = "Breadcrumbs" })
+		end,
+	},
 	{
 		'shortcuts/no-neck-pain.nvim',
 		config = function()
