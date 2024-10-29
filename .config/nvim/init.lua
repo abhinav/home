@@ -491,6 +491,7 @@ require('lazy').setup({
 
 	-- LSP and language features {{{2
 	'folke/trouble.nvim',
+	'https://git.sr.ht/~whynothugo/lsp_lines.nvim',
 	{
 		'neovim/nvim-lspconfig', -- {{{3
 		dependencies = {
@@ -1557,10 +1558,13 @@ require('trouble').setup {
 	open_no_results = true,
 }
 
--- Don't use virtual text to display diagnostics.
--- Signs in the gutter + trouble is enough.
+require('lsp_lines').setup()
+
 vim.diagnostic.config({
-	virtual_text = true,
+	virtual_text = false,
+
+	-- Show multi-line diagnostics only for the current line.
+	virtual_lines = { only_current_line = true },
 })
 
 vim.keymap.set('n', '<leader>xx', ':Trouble diagnostics toggle<cr>', {desc = "Diagnostics list"})
