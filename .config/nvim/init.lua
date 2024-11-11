@@ -774,6 +774,7 @@ require('lazy').setup({
 			})
 		end,
 	},
+	'moll/vim-bbye',
 
 	-- Terminal integration {{{2
 	{
@@ -1039,7 +1040,7 @@ vim.keymap.set('n', '<leader>Tt', ':tabnew | terminal<CR>', {
 })
 
 -- Buffer shortcuts
-vim.keymap.set('n', '<leader>bd', ':bd<CR>', {
+vim.keymap.set('n', '<leader>bd', ':Bdelete<CR>', {
 	desc = "Delete buffer",
 	silent = true,
 })
