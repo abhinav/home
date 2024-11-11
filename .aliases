@@ -1,10 +1,5 @@
 #!/bin/bash
 
-if command -v eza &>/dev/null; then
-	alias ls=eza
-	alias tree='eza --tree'
-fi
-
 alias l="ls"
 alias ll="ls -l"
 alias la="ls -a"

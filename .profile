@@ -15,6 +15,7 @@ source ~/.profile.d/editor
 source ~/.profile.d/man
 source ~/.profile.d/dircolors
 source ~/.profile.d/ripgrep
+source ~/.profile.d/eza
 
 source ~/.profile.d/github
 

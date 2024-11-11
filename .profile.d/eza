@@ -1,0 +1,7 @@
+#!/bin/bash
+
+if command -v eza &>/dev/null; then
+	export EZA_ICONS_AUTO=true
+	alias ls=eza
+	alias tree='eza --tree'
+fi
