@@ -1,14 +1,11 @@
 -- Terminal customizations
 
 local function newTerminal()
-    if hs.application.find('iTerm') == nil then
-        hs.application.launchOrFocus('iTerm')
+    local ghostty = hs.application.find('Ghostty')
+    if ghostty == nil then
+        hs.application.launchOrFocus('Ghostty')
     else
-        hs.applescript.applescript([[
-            tell application "iTerm"
-                create window with default profile
-            end tell
-        ]])
+        ghostty:selectMenuItem({'File', 'New Window'})
     end
 end
 
