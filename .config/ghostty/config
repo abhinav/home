@@ -1,0 +1,88 @@
+background = #000000
+
+font-family = Pragmasevka Nerd Font
+font-size = 14
+
+window-decoration = true
+macos-option-as-alt = true
+resize-overlay = never
+
+command = ~/bin/tmux-smart-attach
+
+# Clear defaults except a couple.
+keybind = clear
+
+keybind = super+plus=increase_font_size:1
+keybind = super+equal=increase_font_size:1
+keybind = super+zero=reset_font_size
+keybind = super+minus=decrease_font_size:1
+
+keybind = super+enter=toggle_fullscreen
+keybind = super+n=new_window
+keybind = super+q=quit
+keybind = super+shift+comma=reload_config
+keybind = super+alt+shift+w=close_all_windows
+keybind = super+w=close_surface
+keybind = super+shift+w=close_window
+keybind = super+c=copy_to_clipboard
+keybind = super+alt+i=inspector:toggle
+
+keybind = super+home=scroll_to_top
+keybind = super+a=select_all
+keybind = super+page_up=scroll_page_up
+keybind = super+page_down=scroll_page_down
+keybind = super+end=scroll_to_bottom
+keybind = super+v=paste_from_clipboard
+
+# tmux prefix is Ctrl+B (0x02).
+# So text commands are prefixed with 0x02.
+
+# Alt+[Shift]+Tab: switch tabs
+keybind = alt+shift+tab=text:\x02p
+keybind = alt+tab=text:\x02n
+
+# Cmd+Shift+{Left,Right}: switch tabs
+keybind = super+shift+left_bracket=text:\x02p
+keybind = super+shift+right_bracket=text:\x02n
+
+# Cmd+T: new tab
+keybind = super+t=text:\x02c
+# Cmd+D: split vertical
+# Cmd+Shift+D: split horizontal
+keybind = super+d=text:\x02\x1c
+keybind = super+shift+d=text:\x02\x1f
+
+# Cmd+{1-9}: switch tabs
+keybind = super+physical:one=text:\x02\x31
+keybind = super+physical:two=text:\x02\x32
+keybind = super+physical:three=text:\x02\x33
+keybind = super+physical:four=text:\x02\x34
+keybind = super+physical:five=text:\x02\x35
+keybind = super+physical:six=text:\x02\x36
+keybind = super+physical:seven=text:\x02\x37
+keybind = super+physical:eight=text:\x02\x38
+keybind = super+physical:nine=text:\x02\x39
+
+# Adjusted 16 color palette.
+palette =  0=#000000
+palette =  1=#ec392c
+palette =  2=#b3e439
+palette =  3=#fea525
+palette =  4=#cfa3ff
+palette =  5=#fd4285
+palette =  6=#76dff3
+palette =  7=#f4f4f4
+palette =  8=#676767
+palette =  9=#ff4036
+palette = 10=#c5fa41
+palette = 11=#ffb450
+palette = 12=#dfc2ff
+palette = 13=#ff679f
+palette = 14=#9aefff
+palette = 15=#feffff
+
+# bold colors are brighter.
+# necessary to make comments in zsh (black on black) readable.
+bold-is-bright = true
+
+# vim:set ft=conf:
