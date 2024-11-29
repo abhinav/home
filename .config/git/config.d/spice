@@ -1,5 +1,5 @@
 [spice "shorthand"]
-	can = ca -n
+	can = ca --no-edit
 	la = ls -a
 	lla = ll -a
 
