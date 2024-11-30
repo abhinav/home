@@ -5,3 +5,4 @@ go = "1.23"
 
 [settings]
 experimental = true
+go_set_gobin = false
