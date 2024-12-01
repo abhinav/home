@@ -1,5 +1,5 @@
 # List of subdirectories of tools to call `make install` in.
-TOOLS ?= gh-u clip
+TOOLS ?= gh-u clip fzf-extra
 
 SHELL = bash
 
