@@ -710,6 +710,7 @@ require('lazy').setup({
 				{"<leader>f", group = "+find"},
 				{"<leader>j", group = "+join/split"},
 				{"<leader>q", group = "+quit"},
+				{"<leader>o", group = "+options"},
 				{"<leader>s", group = "+surround"},
 				{"<leader>t", group = "+tabs"},
 				{"<leader>w", group = "+windows"},
@@ -826,6 +827,7 @@ local options = {
 	laststatus = 2,    -- always show status line
 	showcmd    = true, -- display incomplete commands
 	hidden     = true, -- allow buffers to be hidden without saving
+	spell      = true, -- enable spell checking
 
 	history    = 50, -- history of : commands
 	wildmenu = true, -- show options for : completion
@@ -915,6 +917,41 @@ highlight TreesitterContextBottom gui=underline guisp=gray
 highlight NeogitDiffAdd ctermfg=white guifg=white ctermbg=NONE guibg=NONE
 highlight NeogitDiffAddHighlight ctermfg=47 guifg=#2bff2b ctermbg=NONE guibg=NONE
 ]]
+
+-- Spell-checking
+local function setlocal_nospell(args)
+	local winid = vim.api.nvim_get_current_win()
+	local bufid = args.buf
+	if not bufid then
+		bufid = vim.api.nvim_get_current_buf()
+	end
+
+	vim.wo[winid][bufid].spell = false
+end
+
+local no_spellcheck_languages = {
+	'help',
+	'man',
+	'qf',
+	'oil',
+	'gitrebase',
+}
+vim.api.nvim_create_autocmd('FileType', {
+	pattern = no_spellcheck_languages,
+	callback = setlocal_nospell,
+	desc = "Opt-out filetypes from spell-checking",
+})
+
+vim.api.nvim_create_autocmd('TermOpen', {
+	pattern = "*",
+	callback = setlocal_nospell,
+	desc = "Opt-out terminals from spell-checking",
+})
+
+vim.keymap.set('n', '<leader>oS', function()
+	vim.opt.spell = not vim.opt.spell:get()
+end, { desc = 'Toggle spell-checking' })
+
 
 -- Change the theme to use Search highlight for IncSearch too.
 vim.api.nvim_set_hl(0, "IncSearch", vim.api.nvim_get_hl(0, {name = "Search"}))
