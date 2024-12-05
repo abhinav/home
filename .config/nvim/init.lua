@@ -670,21 +670,6 @@ require('lazy').setup({
 			end, { desc = "Breadcrumbs" })
 		end,
 	},
-	{
-		'shortcuts/no-neck-pain.nvim',
-		config = function()
-			require('no-neck-pain').setup {
-				mappings = {
-					enabled = true,
-				},
-				buffers = {
-					wo = {
-						fillchars = 'eob: ',
-					},
-				},
-			}
-		end,
-	},
 	{'nvim-telescope/telescope-fzf-native.nvim', build = 'make'},
 	{
 		'nvim-telescope/telescope.nvim', -- {{{3
