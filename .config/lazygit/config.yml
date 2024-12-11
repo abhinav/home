@@ -1,0 +1,14 @@
+gui:
+  nerdFontsVersion: 3
+
+keybinding:
+  # Don't quit with Ctrl-C or Q. Quit with Q only.
+  universal:
+    quit: Q
+    quit-alt1: <disabled>
+    quitWithoutChangingDirectory: <disabled>
+
+git:
+  paging:
+    colorArg: always
+    pager: delta --dark --paging=never
