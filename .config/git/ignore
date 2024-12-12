@@ -4,3 +4,6 @@
 # Always intended to be local-only
 .mise.local.toml
 mise.local.toml
+
+# Coverage data in Go.
+cover.cov

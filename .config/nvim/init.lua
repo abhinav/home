@@ -335,13 +335,6 @@ require('lazy').setup({
 			vim.g.mkdp_filetypes = {'markdown'}
 		end,
 	},
-	{
-		'rafaelsq/nvim-goc.lua',
-		ft = 'go',
-		config = function()
-			require('nvim-goc').setup()
-		end,
-	},
 	{'rust-lang/rust.vim', ft = 'rust'},
 	{'Vimjas/vim-python-pep8-indent', ft = 'python'},
 	{
@@ -653,6 +646,23 @@ require('lazy').setup({
 				end
 			end
 		end,
+	},
+	{
+		'ray-x/go.nvim',
+		dependencies = {
+			'neovim/nvim-lspconfig',
+			'nvim-treesitter/nvim-treesitter',
+		},
+		config = function()
+			require('go').setup {
+				trouble = true,
+				lsp_inlay_hints = {
+					enable = false,
+				},
+			}
+		end,
+		event = {'CmdlineEnter'},
+		ft = {'go', 'gomod'},
 	},
 
 	-- Navigation and window management {{{2
