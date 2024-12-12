@@ -4,8 +4,13 @@ font-family = Pragmasevka Nerd Font
 font-size = 14
 
 window-decoration = true
-macos-option-as-alt = true
 resize-overlay = never
+macos-option-as-alt = true
+macos-titlebar-style = hidden
+
+# add some padding on top to make room for the rounded corners
+# where the title bar normally would be.
+window-padding-y = 7,0
 
 command = ~/bin/tmux-smart-attach
 
