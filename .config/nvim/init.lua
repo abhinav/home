@@ -1197,13 +1197,17 @@ end
 -- lspconfig {{{2
 
 local function lsp_on_attach(client, bufnr)
-	local function lsp_nmap(key, fn, desc)
-		vim.keymap.set('n', key, fn, {
+	local function lsp_map(mode, key, fn, desc)
+		vim.keymap.set(mode, key, fn, {
 			noremap = true,
 			silent = true,
 			desc = desc,
 			buffer = bufnr,
 		})
+	end
+
+	local function lsp_nmap(key, fn, desc)
+		lsp_map('n', key, fn, desc)
 	end
 
 	vim.bo.omnifunc =  'v:lua.vim.lsp.omnifunc'
@@ -1237,11 +1241,11 @@ local function lsp_on_attach(client, bufnr)
 		end
 	end
 
-	-- Mneomonics:
+	-- Mnemonics:
 	-- cr   Code rename
 	-- cf   Code format
 	-- ca   Code action
-	lsp_nmap('<leader>ca', vim.lsp.buf.code_action, "Code action")
+	lsp_map({'n', 'v'}, '<leader>ca', vim.lsp.buf.code_action, "Code action")
 	lsp_nmap('<leader>cf', vim.lsp.buf.format, "Reformat file")
 	lsp_nmap('<leader>cr', vim.lsp.buf.rename, "Rename")
 end
