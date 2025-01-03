@@ -288,7 +288,7 @@ require('lazy').setup({
 					open = 'split',
 				},
 				block_for = {gitcommit = true, gitrebase = true},
-				callbacks = {
+				hooks = {
 					post_open = function(bufnr, _, _, is_blocking)
 						if is_blocking then
 							table.insert(blocking_buffers, bufnr)
