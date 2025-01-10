@@ -1225,8 +1225,12 @@ local function lsp_on_attach(client, bufnr)
 	-- Keybindings
 	--  K            Documentation (default)
 	--  gd           Go to definition
-	--  Alt-Enter    Code action
+	--  gD           Go to definition in a vertical split
 	lsp_nmap('gd', vim.lsp.buf.definition, "Go to definition")
+	lsp_nmap('gD', function()
+		vim.cmd [[vsplit]]
+		vim.lsp.buf.definition()
+	end, "Go to definition (vertical)")
 
 	local telescopes = require('telescope.builtin')
 	-- lgr  Language go-to references
