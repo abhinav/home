@@ -18,6 +18,10 @@ if command -v _fzf_alt_c_command > /dev/null; then
 fi
 export FZF_ALT_C_COMMAND
 
+# Previews for files and directories.
+export FZF_CTRL_T_OPTS="--preview 'bat --color=always {}'"
+export FZF_ALT_C_OPTS="--preview 'eza -1 --color=always {}'"
+
 unset fzf_search_command
 
 if [[ -d "/usr/share/fzf" ]]; then
