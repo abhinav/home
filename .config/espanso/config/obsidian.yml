@@ -1,8 +1,0 @@
-filter_title: Obsidian
-
-# For Obsidian, surround the date in [[ ... ]].
-extra_excludes:
-  - "../match/_date.yml"
-extra_includes:
-  - "../match/_date_wiki.yml"
-  - "../match/_github.yml"
