@@ -1,4 +1,0 @@
-#!/usr/bin/env bash
-set -euo pipefail
-
-yabai -m query --spaces --display | jq 'map(select(."is-native-fullscreen" == false))[-1].index'
