@@ -453,24 +453,19 @@ require('lazy').setup({
 
 
 	-- Look and feel {{{2
-	'edkolev/tmuxline.vim',
 	{
 		'justinmk/molokai', -- {{{3
 		lazy = false,
 		priority = 1000,
 	},
 	{
-		'vim-airline/vim-airline', -- {{{3
-		dependencies = {'vim-airline/vim-airline-themes'},
+		'nvim-lualine/lualine.nvim', -- {{{3
 		config = function()
-			vim.cmd [[
-				let g:airline_theme = "molokai"
-				let g:airline#extensions#branch#displayed_head_limit = 10
-
-				" We want to do this manually with,
-				"   :Tmuxline airline | TmuxlineSnapshot ~/.tmux-molokai.conf
-				let g:airline#extensions#tmuxline#enabled = 0
-			]]
+			require('lualine').setup {
+				options = {
+					theme = 'molokai',
+				},
+			}
 		end,
 	},
 	{
