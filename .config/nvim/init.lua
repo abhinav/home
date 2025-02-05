@@ -461,9 +461,13 @@ require('lazy').setup({
 	{
 		'nvim-lualine/lualine.nvim', -- {{{3
 		config = function()
+			local custom_molokai = require('lualine.themes.molokai')
+			-- Get rid of the loud pink background.
+			custom_molokai.normal.b = {fg = '#808080', bg = '#232526'}
+
 			require('lualine').setup {
 				options = {
-					theme = 'molokai',
+					theme = custom_molokai,
 				},
 			}
 		end,
