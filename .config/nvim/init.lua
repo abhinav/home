@@ -469,6 +469,28 @@ require('lazy').setup({
 				options = {
 					theme = custom_molokai,
 				},
+				sections = {
+					lualine_a = {'mode'},
+					lualine_b = {'branch', 'diff', 'diagnostics'},
+					lualine_c = {
+						{'filename', color=custom_molokai.inactive.c},
+					},
+					lualine_x = {
+						{'encoding', color=custom_molokai.inactive.c},
+						{'fileformat', color=custom_molokai.inactive.c},
+						{'filetype', color=custom_molokai.inactive.c},
+					},
+					lualine_y = {'progress'},
+					lualine_z = {'location'}
+				},
+				inactive_sections = {
+					lualine_a = {},
+					lualine_b = {},
+					lualine_c = {'filename'},
+					lualine_x = {'location'},
+					lualine_y = {},
+					lualine_z = {}
+				},
 			}
 		end,
 	},
