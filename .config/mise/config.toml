@@ -1,6 +1,6 @@
 [tools]
 go = "latest"
-"ubi:golangci/golangci-lint" = "latest"
+"aqua:golangci/golangci-lint" = "latest"
 
 [settings]
 experimental = true
