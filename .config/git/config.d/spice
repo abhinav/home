@@ -6,4 +6,7 @@
 [spice "branchCheckout"]
 	showUntracked = true
 
+[spice "branchPrompt"]
+	sort = committerdate
+
 # vim:set ft=gitconfig:
