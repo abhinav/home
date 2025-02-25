@@ -2,7 +2,6 @@
 	tool = vimdiff
 [merge]
 	tool = vimdiff
-	conflictstyle = diff3
 [mergetool "vimdiff"]
 	; Use nvim as the merge tool and put the "MERGED" file, which names the
 	; file to which we're writing the result to the bottom.

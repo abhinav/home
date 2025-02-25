@@ -22,12 +22,16 @@
 	decorate = true
 [push]
 	default = simple
+	# --set-upstream on push when there's no upstream tracking branch.
+	autoSetupRemote = true
 [rerere]
 	autoupdate = true
 	enabled = true
 [diff]
-	algorithm = patience
+	algorithm = histogram
 	renames = copies
+[merge]
+	conflictStyle = zdiff3
 [column]
 	ui = auto
 [apply]
@@ -46,6 +50,9 @@
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
 	required = true
+[tag]
+	# Sort tags as version numbers instead of alphanumeric.
+	sort = version:refname
 [include]
 	path = ~/.config/git/config.d/alias
 	path = ~/.config/git/config.d/delta
