@@ -59,6 +59,5 @@
 	path = ~/.config/git/config.d/go
 	path = ~/.config/git/config.d/github
 	path = ~/.config/git/config.d/spice
-	path = ~/.config/git/config.d/stg
 	path = ~/.config/git/config.d/local
 	path = ~/.config/git/config.d/mergetool
