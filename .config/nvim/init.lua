@@ -185,6 +185,7 @@ require('lazy').setup({
 					replace = '<leader>sr',
  					update_n_lines = '',
  				},
+ 				n_lines = 100,
 			}
 			require('mini.trailspace').setup()
 		end,
