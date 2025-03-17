@@ -9,4 +9,7 @@
 [spice "branchPrompt"]
 	sort = committerdate
 
+[spice "log"]
+	pushStatusFormat = aheadBehind
+
 # vim:set ft=gitconfig:
