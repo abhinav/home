@@ -1152,13 +1152,6 @@ vim.api.nvim_create_autocmd({"FocusGained", "BufEnter"}, {
 vim.api.nvim_create_autocmd("TermOpen", {
 	pattern = "*",
 	callback = function()
-		local winid = vim.api.nvim_get_current_win()
-		local bufid = vim.api.nvim_win_get_buf(winid)
-
-		-- Ensure line numbers are off.
-		vim.wo[winid][bufid].number = false
-		vim.wo[winid][bufid].relativenumber = false
-
 		vim.cmd.startinsert()
 	end,
 })
