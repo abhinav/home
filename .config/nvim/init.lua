@@ -746,7 +746,6 @@ require('lazy').setup({
  				{"<leader>gh", desc = "+hunk"},
  				{"<leader>gt", desc = "+toggle"},
 
-				{"<leader>l", group = "language"},
 				{"<leader>lg", desc = "+goto"},
 				{"<leader>lf", desc = "+find"},
 
@@ -1257,21 +1256,25 @@ local function lsp_on_attach(client, bufnr)
 		vim.lsp.buf.definition()
 	end, "Go to definition (vertical)")
 
+	-- Remap 0.11 built-in mappings to take advantage of Telescope.
+	--
+	-- grr  Find references
+	-- gri  Find implementations
+	-- gO   Show document outline
+	-- gwo  Show workspace outline
 	local telescopes = require('telescope.builtin')
-	-- lgr  Language go-to references
-	-- lgi  Language go-to implementation
-	-- lfr  Language find references
-	-- lfi  Language find implementations
-	-- lfd  Language find symbols (document)
-	-- lfw  Language find symbols (workspace)
-	-- lti  Language: Toggle inlay hints (if supported)
-	lsp_nmap('<leader>lgr', vim.lsp.buf.references, "Go to references")
-	lsp_nmap('<leader>lgi', vim.lsp.buf.implementation, "Go to implementation")
-	lsp_nmap('<leader>lfr', telescopes.lsp_references, "Find references")
-	lsp_nmap('<leader>lfi', telescopes.lsp_implementations, "Find implementations")
-	lsp_nmap('<leader>lfd', telescopes.lsp_document_symbols, "Find symbols (document)")
-	lsp_nmap('<leader>lfw', telescopes.lsp_workspace_symbols, "Find symbols (workspace)")
+	lsp_nmap('grr', telescopes.lsp_references, "Find references")
+	lsp_nmap('gri', telescopes.lsp_implementations, "Find implementations")
+	lsp_nmap('gO', telescopes.lsp_document_symbols, "Find symbols (document)")
+	lsp_nmap('grS', telescopes.lsp_workspace_symbols, "Find symbols (workspace)")
 
+	-- Other defaults:
+	--
+	-- grn: rename
+	-- gra: code action
+	-- Ctrl-S: signature help
+
+	-- <leader>lti  Language: Toggle inlay hints (if supported)
 	if client.server_capabilities.inlayHintProvider then
 		if vim.lsp.inlay_hint ~= nil then
 			lsp_nmap('<leader>lti', function()
@@ -1281,12 +1284,8 @@ local function lsp_on_attach(client, bufnr)
 	end
 
 	-- Mnemonics:
-	-- cr   Code rename
-	-- cf   Code format
-	-- ca   Code action
-	lsp_map({'n', 'v'}, '<leader>ca', vim.lsp.buf.code_action, "Code action")
-	lsp_nmap('<leader>cf', vim.lsp.buf.format, "Reformat file")
-	lsp_nmap('<leader>cr', vim.lsp.buf.rename, "Rename")
+	-- grf  Code format
+	lsp_nmap('grf', vim.lsp.buf.format, "Reformat file")
 end
 
 vim.api.nvim_create_autocmd("LspAttach", {
