@@ -968,12 +968,7 @@ highlight NeogitDiffAddHighlight ctermfg=47 guifg=#2bff2b ctermbg=NONE guibg=NON
 -- Spell-checking
 local function setlocal_nospell(args)
 	local winid = vim.api.nvim_get_current_win()
-	local bufid = args.buf
-	if not bufid then
-		bufid = vim.api.nvim_get_current_buf()
-	end
-
-	vim.wo[winid][bufid].spell = false
+	vim.wo[winid][0].spell = false
 end
 
 local no_spellcheck_languages = {
