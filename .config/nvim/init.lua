@@ -810,17 +810,18 @@ require('lazy').setup({
 
 	-- Terminal integration {{{2
 	{
-		'christoomey/vim-tmux-navigator', -- {{{3
+		'alexghergh/nvim-tmux-navigation', -- {{{3
 		config = function()
-			-- We'll use our own mappings.
-			vim.g.tmux_navigator_no_mappings = 1
+			require('nvim-tmux-navigation').setup {
+				keybindings = {
+					left = '<C-h>',
+					right = '<C-l>',
+					up = '<C-k>',
+					down = '<C-j>',
+				},
+			}
+
 		end,
-		keys = {
-			{'<C-J>', ':TmuxNavigateDown', 'n', noremap = true, silent = true},
-			{'<C-K>', ':TmuxNavigateUp', 'n', noremap = true, silent = true},
-			{'<C-L>', ':TmuxNavigateRight', 'n', noremap = true, silent = true},
-			{'<C-H>', ':TmuxNavigateLeft', 'n', noremap = true, silent = true},
-		},
 	},
 	'lambdalisue/vim-manpager',
 	'vim-utils/vim-husk',
