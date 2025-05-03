@@ -747,9 +747,6 @@ require('lazy').setup({
  				{"<leader>gh", desc = "+hunk"},
  				{"<leader>gt", desc = "+toggle"},
 
-				{"<leader>lg", desc = "+goto"},
-				{"<leader>lf", desc = "+find"},
-
 				{"<leader>T", group = "+terminals"},
 				{"<leader>Tn", desc = "+new"},
 
@@ -1276,7 +1273,7 @@ local function lsp_on_attach(client, bufnr)
 	-- gra: code action
 	-- Ctrl-S: signature help
 
-	-- <leader>lti  Language: Toggle inlay hints (if supported)
+	-- <leader>lti Language: Toggle inlay hints (if supported)
 	if client.server_capabilities.inlayHintProvider then
 		if vim.lsp.inlay_hint ~= nil then
 			lsp_nmap('<leader>lti', function()
