@@ -325,7 +325,6 @@ require('lazy').setup({
 	},
 
 	-- Filetype-specific {{{2
-	{'cappyzawa/starlark.vim', ft = 'starlark'},
 	'direnv/direnv.vim',
 	{'habamax/vim-asciidoctor', ft = {'asciidoc', 'asciidoctor'}},
 	{
@@ -573,6 +572,7 @@ require('lazy').setup({
 					disableAutomaticTypingAcquisition = true,
 				},
 			},
+			starpls = {optional = true},
 			zls = {optional = true},
 		},
 		config = function(_, opts)
