@@ -687,6 +687,40 @@ require('lazy').setup({
 		event = {'CmdlineEnter'},
 		ft = {'go', 'gomod'},
 	},
+	{
+		'rgroli/other.nvim',
+		config = function()
+			require('other-nvim').setup {
+				mappings = {
+					'golang',
+					'python',
+					'rust',
+				},
+				showMissingFiles = true,
+				style = {
+					newFileIndicator = '(+)',
+				},
+			}
+
+			vim.keymap.set('n', '<leader>aa', '<cmd>:Other<CR>', {
+				desc = "Open alternate file",
+				silent = true,
+			})
+			vim.keymap.set('n', '<leader>av', '<cmd>:OtherVSplit<CR>', {
+				desc = "Open alternate file (vertical split)",
+				silent = true,
+			})
+			vim.keymap.set('n', '<leader>as', '<cmd>:OtherSplit<CR>', {
+				desc = "Open alternate file (split)",
+				silent = true,
+			})
+			vim.keymap.set('n', '<leader>at', '<cmd>:OtherTabNew<CR>', {
+				desc = "Open alternate file (tab)",
+				silent = true,
+			})
+
+		end,
+	},
 
 	-- Navigation and window management {{{2
 	{
