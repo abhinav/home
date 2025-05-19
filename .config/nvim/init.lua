@@ -513,8 +513,8 @@ require('lazy').setup({
 		'neovim/nvim-lspconfig', -- {{{3
 		dependencies = {
 			'folke/lsp-colors.nvim',
-			'williamboman/mason.nvim',
-			'williamboman/mason-lspconfig.nvim',
+			 { "mason-org/mason.nvim", opts = {} },
+			'mason-org/mason-lspconfig.nvim',
 		},
 		-- Table of options for each language server.
 		-- Items can be key-value pairs to specify configuration,
@@ -576,7 +576,6 @@ require('lazy').setup({
 			zls = {optional = true},
 		},
 		config = function(_, opts)
-			local nvim_lsp = require('lspconfig')
 			local lsp_capabilities = require('cmp_nvim_lsp').default_capabilities()
 
 			if vim.env.VIM_GOPLS_DISABLED then
@@ -603,12 +602,13 @@ require('lazy').setup({
 					}
 					opts[name] = cfg
 
-					-- If the LSP is installed globally,
-					-- set it up.
+					-- If the LSP is installed globally, set it up.
+					--
 					-- Otherwise, add it to the list of LSPs to install
 					-- only if it's required.
+					-- Mason will enable them automatically.
 					if vim.fn.executable(name) then
-						nvim_lsp[name].setup(cfg)
+						vim.lsp.config(name, cfg)
 					elseif not cfg.optional then
 						table.insert(ensure_installed, name)
 					end
@@ -618,14 +618,7 @@ require('lazy').setup({
 			local mason_lspconfig = require('mason-lspconfig')
 			mason_lspconfig.setup({
 				ensure_installed = ensure_installed,
-			})
-			mason_lspconfig.setup_handlers({
-				function(name)
-					local cfg = opts[name]
-					if cfg ~= nil then
-						nvim_lsp[name].setup(opts[name])
-					end
-				end
+				automatic_enable = true,
 			})
 		end,
 	},
