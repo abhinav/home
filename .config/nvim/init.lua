@@ -725,9 +725,6 @@ require('lazy').setup({
 			local dropbar_api = require('dropbar.api')
 
 			vim.ui.select = require('dropbar.utils.menu').select
-			vim.keymap.set('n', '<leader>cc', function()
-				dropbar_api.pick()
-			end, { desc = "Breadcrumbs" })
 		end,
 	},
 	{
