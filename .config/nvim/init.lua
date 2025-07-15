@@ -536,7 +536,6 @@ require('lazy').setup({
 			end,
 			omnisharp = {optional = true},
 			'pylsp',
-			'harper-ls',
 			rust_analyzer = {
 				settings = {
 					['rust-analyzer'] = {
