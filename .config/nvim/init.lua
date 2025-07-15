@@ -82,7 +82,8 @@ require('lazy').setup({
 		end,
 		config = function()
 			-- Opt-into auto-triggering suggestions
-			-- or opt-out of the whole thing with env vars.
+			-- or opt-out of the whole thing
+			-- with environment variables.
 
 			local auto_trigger = vim.env.GITHUB_COPILOT_AUTO_TRIGGER
 			if auto_trigger == "1" or auto_trigger == "true" then
@@ -283,7 +284,7 @@ require('lazy').setup({
 		'willothy/flatten.nvim',
 		opts = function()
 			-- Delete blocking buffers after they're closed.
-			-- This ensures that buferes like git-rebase-todo, COMMIT_MSG, etc.
+			-- This ensures that buffers like git-rebase-todo, COMMIT_MSG, etc.
 			-- don't remain open after the commit is finished,
 			-- allowing another commit to be started.
 			local blocking_buffers = {}
@@ -535,6 +536,7 @@ require('lazy').setup({
 			end,
 			omnisharp = {optional = true},
 			'pylsp',
+			'harper-ls',
 			rust_analyzer = {
 				settings = {
 					['rust-analyzer'] = {
