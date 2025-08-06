@@ -418,11 +418,26 @@ require('lazy').setup({
 					-- <leader>gbb: change base to index
 					-- <leader>gbu: change base to upstream
 					-- <leader>gbp: change base to parent commit
+					-- <leader>gbi: change base to argument supplied in a prompt
 					--
 					-- gB variants change base for this buffer only
 					change_base('b', nil, "Set base to index")
 					change_base('u', '@{upstream}', "Set base to upstream")
 					change_base('p', '~', "Set base to parent commit")
+
+					local function change_base_prompt(keys, global, desc)
+						vim.keymap.set('n', '<leader>g' .. keys, function()
+							vim.ui.input({prompt = "Base commit: "}, function(input)
+								if input == nil or input == '' then
+									return
+								end
+								gitsigns.change_base(input, global)
+							end)
+						end, {desc = desc})
+					end
+
+					change_base_prompt('bi', true, "Set base to argument")
+					change_base_prompt('Bi', false, "Set base to argument (buffer)")
 				end,
 			}
 		end,
