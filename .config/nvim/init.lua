@@ -418,7 +418,7 @@ require('lazy').setup({
 					-- <leader>gbb: change base to index
 					-- <leader>gbu: change base to upstream
 					-- <leader>gbp: change base to parent commit
-					-- <leader>gbi: change base to argument supplied in a prompt
+					-- <leader>gba: change base to argument supplied in a prompt
 					--
 					-- gB variants change base for this buffer only
 					change_base('b', nil, "Set base to index")
@@ -436,8 +436,8 @@ require('lazy').setup({
 						end, {desc = desc})
 					end
 
-					change_base_prompt('bi', true, "Set base to argument")
-					change_base_prompt('Bi', false, "Set base to argument (buffer)")
+					change_base_prompt('ba', true, "Set base to argument")
+					change_base_prompt('Ba', false, "Set base to argument (buffer)")
 				end,
 			}
 		end,
