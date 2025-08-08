@@ -3,6 +3,9 @@
 	la = ls -a
 	lla = ll -a
 
+[spice "submit"]
+	navigationCommentSync = downstack
+
 [spice "branchCheckout"]
 	showUntracked = true
 
