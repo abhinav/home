@@ -849,9 +849,9 @@ require('lazy').setup({
 				direction = 'vertical',
 				size = function(term)
 					if term.direction == 'vertical' then
-						return vim.o.columns * 0.33
+						return vim.o.columns * 0.4
 					else
-						return vim.o.lines * 0.25
+						return vim.o.lines * 0.33
 					end
 				end,
 				on_exit = function(term)
@@ -864,7 +864,6 @@ require('lazy').setup({
 		end,
 		keys = {
 			{'<F6>', ':ToggleTerm dir=%:p:h name=bufdir<CR>', 'n', silent = true, noremap = true},
-			{'<F9>', ':ToggleTerm name=cwd<CR>', 'n', silent = true, noremap = true},
 		},
 	},
 })
@@ -1117,6 +1116,19 @@ vim.keymap.set('n', '<leader>TH', ':new | terminal<CR>', {
 })
 vim.keymap.set('n', '<leader>Tt', ':tabnew | terminal<CR>', {
 	desc = "New terminal in a new tab",
+	silent = true,
+})
+
+-- F9: open tmux split in current buffer directory.
+vim.keymap.set('n', '<F9>', function()
+	local buffer_dir = vim.fn.expand('%:p:h')
+	if buffer_dir == '' or buffer_dir == '.' then
+		buffer_dir = vim.fn.getcwd()
+	end
+
+	vim.fn.system({'tmux', 'split-window', '-h', '-c', buffer_dir})
+end, {
+	desc = "Open tmux split in current buffer's directory",
 	silent = true,
 })
 
