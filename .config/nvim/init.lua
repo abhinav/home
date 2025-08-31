@@ -92,7 +92,7 @@ require('lazy').setup({
 				auto_trigger = false
 			end
 
-			-- Keymaps
+			-- Key maps
 			--
 			-- <C-e>/<Tab> - Accept suggestion
 			-- <M-.> - Next suggestion
@@ -325,7 +325,7 @@ require('lazy').setup({
 		end,
 	},
 
-	-- Filetype-specific {{{2
+	-- File-type-specific {{{2
 	'direnv/direnv.vim',
 	{'habamax/vim-asciidoctor', ft = {'asciidoc', 'asciidoctor'}},
 	{
@@ -540,7 +540,7 @@ require('lazy').setup({
 					}
 				end
 				if vim.env.VIM_GOPLS_NILNESS_DISABLED then
-					-- nilness is resource-heavy.
+					-- nilness check is resource-heavy.
 					-- Allow opting out if necessary.
 					init_opts.analyses.nilness = false
 				end
@@ -874,7 +874,7 @@ if vim.env.VIM_PATH then
 end
 
 -- Don't use Python integration.
--- It just wreacks havoc anytime a virtualenv gets involved.
+-- It just wreaks havoc anytime a virtualenv gets involved.
 vim.g.loaded_python_provider = 0
 vim.g.loaded_python3_provider = 0
 
@@ -882,7 +882,7 @@ local options = {
 	compatible = false, -- no backwards compatibility with vi
 
 	backup      = false, -- don't backup edited files
-	writebackup = true, -- but temporarily backup before overwiting
+	writebackup = true, -- but temporarily backup before overwriting
 
 	backspace = {'indent', 'eol', 'start'}, -- sane backspace handling
 
@@ -891,6 +891,18 @@ local options = {
 	showcmd    = true, -- display incomplete commands
 	hidden     = true, -- allow buffers to be hidden without saving
 	spell      = true, -- enable spell checking
+	spelloptions = {
+		'noplainbuffer', -- don't check spelling in plain buffers
+		'camel',         -- check camelCase words
+	},
+
+	-- Add two spell files:
+	--
+	-- 1. Default always in the current directory.
+	-- 2. global per-system file.
+	--
+	-- Default file is ignored with global Git exclude.
+	spellfile  = '.spell.en.utf-8.add,' .. vim.env.HOME .. '/.config/nvim/spell/en.utf-8.add',
 
 	history    = 50, -- history of : commands
 	wildmenu = true, -- show options for : completion
@@ -919,7 +931,7 @@ local options = {
 	-- Don't add two spaces after a punctuation when joining lines with J.
 	joinspaces = false,
 
-	ignorecase = true,        -- ignore caing during search
+	ignorecase = true,        -- ignore casing during search
 	smartcase  = true,        -- except if uppercase characters were used
 	tagcase    = 'followscs', -- and use the same for tag searches
 
@@ -964,6 +976,9 @@ if vim.env.TERM_PROGRAM ~= 'Apple_Terminal' then
 	vim.opt.termguicolors = true
 end
 
+-- Use dictionary for completion suggestions.
+vim.opt.complete:append('kspell')
+
 vim.cmd [[
 colorscheme molokai
 
@@ -979,6 +994,9 @@ highlight TreesitterContextBottom gui=underline guisp=gray
 " Make neogit diff highlights more readable.
 highlight NeogitDiffAdd ctermfg=white guifg=white ctermbg=NONE guibg=NONE
 highlight NeogitDiffAddHighlight ctermfg=47 guifg=#2bff2b ctermbg=NONE guibg=NONE
+
+" highlight typos louder
+highlight SpellBad guibg=#770000
 ]]
 
 -- Spell-checking
@@ -1006,10 +1024,17 @@ vim.api.nvim_create_autocmd('TermOpen', {
 	desc = "Opt-out terminals from spell-checking",
 })
 
-vim.keymap.set('n', '<leader>oS', function()
+vim.keymap.set('n', '<leader>oz', function()
 	vim.opt.spell = not vim.opt.spell:get()
 end, { desc = 'Toggle spell-checking' })
 
+vim.keymap.set('n', '<leader>zg', function()
+	vim.cmd('2spellgood ' .. vim.fn.expand('<cword>'))
+end, { desc = 'Add as good word (global list)' })
+
+vim.keymap.set('n', '<leader>zw', function()
+	vim.cmd('2spellwrong ' .. vim.fn.expand('<cword>'))
+end, { desc = 'Add as bad word (global list)' })
 
 -- Change the theme to use Search highlight for IncSearch too.
 vim.api.nvim_set_hl(0, "IncSearch", vim.api.nvim_get_hl(0, {name = "Search"}))

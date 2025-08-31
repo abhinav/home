@@ -5,5 +5,9 @@
 .mise.local.toml
 mise.local.toml
 
+# local spell files for vim
+.spell.en.utf-8.add
+.spell.en.utf-8.add.spl
+
 # Coverage data in Go.
 cover.cov
