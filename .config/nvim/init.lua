@@ -896,13 +896,9 @@ local options = {
 		'camel',         -- check camelCase words
 	},
 
-	-- Add two spell files:
-	--
-	-- 1. Default always in the current directory.
-	-- 2. global per-system file.
-	--
-	-- Default file is ignored with global Git exclude.
-	spellfile  = '.spell.en.utf-8.add,' .. vim.env.HOME .. '/.config/nvim/spell/en.utf-8.add',
+	-- By default, only add the user-level spellfile.
+	-- Down below, an autocommand will add a project-local files.
+	spellfile  = vim.env.HOME .. '/.config/nvim/spell/en.utf-8.add',
 
 	history    = 50, -- history of : commands
 	wildmenu = true, -- show options for : completion
@@ -1024,16 +1020,55 @@ vim.api.nvim_create_autocmd('TermOpen', {
 	desc = "Opt-out terminals from spell-checking",
 })
 
+-- Upon opening a file, attempt to detect its project root,
+-- and if found, use a spell file in that directory.
+local function setlocal_project_spellfile()
+	local root_dir = vim.fs.root(0, '.git')
+
+	-- If root directory is HOME, don't use a project-local spellfile.
+	if root_dir == vim.env.HOME then
+		return nil
+	end
+
+	-- Otherwise, use .vimspell.en.utf-8.add in the project root,
+	-- or fall back to just one in the current directory.
+	local local_spellfile = '.vimspell.en.utf-8.add'
+	if root_dir ~= nil then
+		local_spellfile = root_dir .. '/' .. local_spellfile
+	end
+
+	if vim.fn.filereadable(local_spellfile) then
+		vim.bo.spellfile = local_spellfile .. ',' .. vim.bo.spellfile
+	end
+end
+vim.api.nvim_create_autocmd('BufReadPost', {
+	pattern = "*",
+	callback = setlocal_project_spellfile,
+	desc = "Set up project-local spell file",
+})
+
+
 vim.keymap.set('n', '<leader>oz', function()
 	vim.opt.spell = not vim.opt.spell:get()
 end, { desc = 'Toggle spell-checking' })
 
 vim.keymap.set('n', '<leader>zg', function()
-	vim.cmd('2spellgood ' .. vim.fn.expand('<cword>'))
+	-- Determine position of last spellfile.
+	local _, idx = string.gsub(vim.bo.spellfile, ',', '')
+	local count = idx + 1
+
+	-- Add the bad word to the end of the list.
+	local badword = vim.fn.spellbadword()[1]
+	if badword ~= '' then
+		vim.cmd(count .. 'spellgood ' .. badword)
+	end
 end, { desc = 'Add as good word (global list)' })
 
 vim.keymap.set('n', '<leader>zw', function()
-	vim.cmd('2spellwrong ' .. vim.fn.expand('<cword>'))
+	local _, idx = string.gsub(vim.bo.spellfile, ',', '')
+	local count = idx + 1
+	local word = vim.fn.expand('<cword>')
+	vim.cmd(count .. 'spellwrong ' .. word)
 end, { desc = 'Add as bad word (global list)' })
 
 -- Change the theme to use Search highlight for IncSearch too.
