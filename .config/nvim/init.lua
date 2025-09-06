@@ -379,7 +379,8 @@ require('lazy').setup({
 			leap.opts.special_keys.next_target = '<enter>'
 			leap.opts.special_keys.prev_target = '<backspace>'
 
-			leap.create_default_mappings()
+			vim.keymap.set({'n'}, 's', '<Plug>(leap-forward)', {desc = "Leap forward"})
+			vim.keymap.set({'n'}, 'S', '<Plug>(leap-backward)', {desc = "Leap backward"})
 		end,
 	},
 	{'tpope/vim-abolish', command = "S"},
