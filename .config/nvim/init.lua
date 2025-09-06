@@ -814,21 +814,6 @@ require('lazy').setup({
 	-- Navigation and window management {{{2
 	'Bekaboo/dropbar.nvim',
 	{
-		'shortcuts/no-neck-pain.nvim',
-		config = function()
-			require('no-neck-pain').setup {
-				mappings = {
-					enabled = true,
-				},
-				buffers = {
-					wo = {
-						fillchars = 'eob: ',
-					},
-				},
-			}
-		end,
-	},
-	{
 		'folke/which-key.nvim', -- {{{3
 		opts = {
 			spelling = {
