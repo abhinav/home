@@ -712,17 +712,7 @@ require('lazy').setup({
 	},
 
 	-- Navigation and window management {{{2
-	{
-		'Bekaboo/dropbar.nvim',
-		dependencies = {
-			'nvim-telescope/telescope-fzf-native.nvim',
-		},
-		config = function()
-			local dropbar_api = require('dropbar.api')
-
-			vim.ui.select = require('dropbar.utils.menu').select
-		end,
-	},
+	'Bekaboo/dropbar.nvim',
 	{
 		'shortcuts/no-neck-pain.nvim',
 		config = function()
