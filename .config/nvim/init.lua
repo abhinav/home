@@ -58,7 +58,7 @@ require('lazy').setup({
 	{
 		"chrisgrieser/nvim-scissors",
 		dependencies = {
-			"nvim-telescope/telescope.nvim",
+			"folke/snacks.nvim",
 			"garymjr/nvim-snippets",
 		},
 		opts = {
@@ -68,6 +68,101 @@ require('lazy').setup({
 	},
 
 	-- Editing {{{2
+	{
+		'folke/snacks.nvim',
+		priority = 1000,
+		lazy = false,
+		opts = {
+			bigfile = {}, -- disable expensive features for big files
+			notifier = {}, -- prettier notifications
+			scratch = {}, -- easily create scratch buffers
+
+			-- Fuzzy finder
+			picker = {
+				win = {
+					input = {
+						keys = {
+							-- Close on ESC.
+							["<Esc>"] = { "close", mode = { "n", "i" } },
+						},
+					},
+				},
+			},
+
+			-- Kitty image protocol support
+			image = {
+				math = { enabled = false },
+			},
+
+			-- Link to current file in Git repo
+			gitbrowse = {
+				enabled = true,
+				notify = false,
+				open = function(url)
+					-- Instead of opening the URL in a browser,
+					-- copy it to the clipboard and notify the user.
+					vim.fn.setreg('+', url)
+					Snacks.notify.info('Coplied to clipboard:\n' .. url, {
+						title = "gitbrowse",
+					})
+				end,
+			},
+		},
+		keys = {
+			-- gitbrowse
+			{'<leader>gy', function()
+				Snacks.gitbrowse()
+			end, mode = {'n', 'v'}, desc = "Git: Copy link to file"},
+
+			-- scratch
+			{'<leader>.', function()
+				Snacks.scratch()
+			end, desc = "Toggle scratch buffer"},
+			{'<leader>f.', function()
+				Snacks.scratch.select()
+			end, desc = "Toggle scratch buffer"},
+
+			-- picker
+			-- All keys preceded by <leader>:
+			--
+			-- Mnemonics:
+			--
+			-- ff  find files
+			-- FF  find local files (buffer directory)
+			-- fb  find buffers
+			-- fh  find help
+			-- fr  find recent
+			-- ft  find treesitter
+			-- fs  find search operator
+			{'<leader>ff', function() Snacks.picker.files() end, desc = 'Find files'},
+			{'<leader>FF', function()
+				Snacks.picker.files({ cwd = vim.fn.expand('%:p:h') })
+			end, desc = 'Find files (buffer directory)' },
+			{'<leader>fb', function() Snacks.picker.buffers({
+				current = false,
+				win = {
+					input = {
+						keys = {
+							['<C-d>'] = {'bufdelete', mode = {'n', 'i'}},
+						},
+					},
+				},
+			}) end, desc = 'Find buffers'},
+			{'<leader>fh', function() Snacks.picker.help() end, desc = 'Find help'},
+			{'<leader>fr', function() Snacks.picker.recent() end, desc = 'Find recent files'},
+			{'<leader>ft', function() Snacks.picker.treesitter() end, desc = 'Find treesitter symbols'},
+
+			-- Others:
+			-- /  find in files
+			-- ?  find in files (buffer directory)
+			-- :  find ":" commands
+			{'<leader>/', function() Snacks.picker.grep() end, desc = 'Find in files'},
+			{'<leader>?', function()
+				Snacks.picker.grep({ dirs = {vim.fn.expand('%:p:h')} })
+			end, desc = 'Find in files (buffer directory)'},
+			{'<leader>:', function() Snacks.picker.commands() end, desc = 'Find ":" commands'},
+		},
+	},
 	{
 		'zbirenbaum/copilot.lua', -- {{{3
 		command = 'Copilot',
@@ -172,6 +267,18 @@ require('lazy').setup({
 				"%",
 				"&filetype == 'oil' ? bufname('%')[6:-2] : '%'",
 			} })
+
+			-- When a file is renamed, inform LSPs of the change.
+			vim.api.nvim_create_autocmd('User', {
+				pattern = 'OilActionsPost',
+				callback = function(event)
+					e = event.data.actions
+					if e.type == "move" then
+						Snacks.rename.on_rename_file(e.src_url, e.dest_url)
+					end
+				end,
+			})
+
 		end,
 	},
 	{
@@ -352,13 +459,6 @@ require('lazy').setup({
 	},
 
 	-- Git {{{2
-	{
-		'ruifm/gitlinker.nvim',
-		dependencies = {'nvim-lua/plenary.nvim'},
-		config = function()
-			require('gitlinker').setup()
-		end,
-	},
 	{
 		'lewis6991/gitsigns.nvim',
 		config = function()
@@ -728,15 +828,6 @@ require('lazy').setup({
 			}
 		end,
 	},
-	{'nvim-telescope/telescope-fzf-native.nvim', build = 'make'},
-	{
-		'nvim-telescope/telescope.nvim', -- {{{3
-		dependencies = {
-			'nvim-lua/plenary.nvim',
-			'nvim-telescope/telescope-fzf-native.nvim',
-		},
-	},
-	'nvim-telescope/telescope-ui-select.nvim',
 	{
 		'folke/which-key.nvim', -- {{{3
 		opts = {
@@ -813,7 +904,6 @@ require('lazy').setup({
 			})
 		end,
 	},
-	'moll/vim-bbye',
 
 	-- Terminal integration {{{2
 	{
@@ -1159,14 +1249,12 @@ end, {
 })
 
 -- Buffer shortcuts
-vim.keymap.set('n', '<leader>bd', ':Bdelete<CR>', {
-	desc = "Delete buffer",
-	silent = true,
-})
-vim.keymap.set('n', '<leader>bD', ':bd!<CR>', {
-	desc = "Delete buffer (force)",
-	silent = true,
-})
+vim.keymap.set('n', '<leader>bd', function()
+	Snacks.bufdelete()
+end, { desc = "Delete buffer", silent = true })
+vim.keymap.set('n', '<leader>bD', function()
+	Snacks.bufdelete({ force = true })
+end, { desc = "Delete buffer (force)", silent = true })
 vim.keymap.set('n', '<leader>bn', ':bn<CR>', {
 	desc = "Next buffer",
 	silent = true,
@@ -1312,17 +1400,14 @@ local function lsp_on_attach(client, bufnr)
 		vim.lsp.buf.definition()
 	end, "Go to definition (vertical)")
 
-	-- Remap 0.11 built-in mappings to take advantage of Telescope.
+	-- Remap 0.11 built-in mappings to take advantage of Snacks picker
 	--
 	-- grr  Find references
 	-- gri  Find implementations
 	-- gO   Show document outline
-	-- gwo  Show workspace outline
-	local telescopes = require('telescope.builtin')
-	lsp_nmap('grr', telescopes.lsp_references, "Find references")
-	lsp_nmap('gri', telescopes.lsp_implementations, "Find implementations")
-	lsp_nmap('gO', telescopes.lsp_document_symbols, "Find symbols (document)")
-	lsp_nmap('grS', telescopes.lsp_workspace_symbols, "Find symbols (workspace)")
+	lsp_nmap('grr', Snacks.picker.lsp_references, "Find references")
+	lsp_nmap('gri', Snacks.picker.lsp_implementations, "Find implementations")
+	lsp_nmap('gO', Snacks.picker.lsp_symbols, "Find symbols (document)")
 
 	-- Other defaults:
 	--
@@ -1477,54 +1562,9 @@ cmp.setup.filetype('markdown', {
 -- netrw {{{2
 vim.g.netrw_liststyle = 3
 
--- telescope {{{2
-local telescope = require('telescope')
-local telescopes = require('telescope.builtin')
-local teleactions = require('telescope.actions')
-local telethemes = require('telescope.themes')
-local teletrouble = require('trouble.sources.telescope')
-
-telescope.setup {
-	defaults = {
-		mappings = {
-			i = {
-				-- Show help.
-				["<C-h>"] = teleactions.which_key,
-				-- Open in trouble.
-				["<M-t>"] = teletrouble.open,
-			},
-		},
-	},
-	pickers = {
-		buffers = {
-			mappings = {
-				i = {
-					-- Ctrl-D in buffers to delete.
-					["<C-d>"] = teleactions.delete_buffer,
-				},
-			},
-		},
-	},
-	extensions = {
-		fzf = {
-			fuzzy = true,
-			override_generic_sorter = true,
-			override_file_sorter = true,
-			case_mode = "smart_case",
-		},
-		["ui-select"] = {
-			telethemes.get_dropdown {
-			}
-		},
-	}
-}
-
-telescope.load_extension('ui-select')
-telescope.load_extension('fzf')
-
 -- Search operator:
--- <leader>fs<motion>: Search for text matched by motion in all files.
-function telescope_grep_operator(kind)
+-- gs<motion>: Search for text matched by motion in all files.
+function grep_operator(kind)
 	if kind ~= 'char' then
 		print("Can only grep on lines")
 		return
@@ -1552,74 +1592,16 @@ function telescope_grep_operator(kind)
 		return
 	end
 
-	telescopes.grep_string {
+	Snacks.picker.grep_word {
 		search = text[1],
 	}
 end
 
--- All keys preceded by <leader>:
---
--- Mneomonics:
--- ff  find files
--- fF  find local files (buffer directory)
--- fb  find buffers
--- fh  find help
--- fr  find recent
--- ft  find treesitter
--- f?  "I forgot"
--- fs  find search operator
---
--- Others:
--- /  find in files
--- ?  find in files (buffer directory)
--- :  find ":" commands
-vim.keymap.set('n', '<leader>f<leader>', telescopes.resume, {
-	desc = "Find (resume)",
-})
-
-vim.keymap.set('n', '<leader>fs', function()
-	vim.o.operatorfunc = "v:lua.telescope_grep_operator"
+vim.keymap.set('n', 'gs', function()
+	vim.o.operatorfunc = "v:lua.grep_operator"
 	return 'g@'
 end, {desc = "Search", expr = true})
 
-vim.keymap.set('n', '<leader>ff', telescopes.find_files, {desc = "Find files"})
-vim.keymap.set('n', '<leader>fF', function()
-	telescopes.find_files({
-		cwd = require('telescope.utils').buffer_dir(),
-	})
-end, {desc = "Find files (bufdir)"})
-
-local function find_buffers()
-	telescopes.buffers {
-		ignore_current_buffer = true,
-	}
-end
-vim.keymap.set('n', '<leader>fb', find_buffers, {desc = "Find buffers"})
-vim.keymap.set('n', '<leader>bf', find_buffers, {desc = "Find buffers"})
-
-vim.keymap.set('n', '<leader>fh', telescopes.help_tags, {
-	desc = "Find help",
-})
-vim.keymap.set('n', '<leader>fr', telescopes.oldfiles, {
-	desc = "Find recent files",
-})
-vim.keymap.set('n', '<leader>ft', telescopes.treesitter, {
-	desc = "Find treesitter",
-})
-vim.keymap.set('n', '<leader>f?', telescopes.builtin, {
-	desc = "Find telescopes",
-})
-vim.keymap.set('n', '<leader>/', telescopes.live_grep, {
-	desc = "Find in files",
-})
-vim.keymap.set('n', '<leader>?', function()
-	telescopes.live_grep({
-		cwd = require('telescope.utils').buffer_dir(),
-	})
-end, {desc = "Find in files (bufdir)"})
-vim.keymap.set('n', '<leader>:', telescopes.commands, {
-	desc = "Find commands",
-})
 
 -- tree-sitter {{{2
 require 'nvim-treesitter.configs'.setup {
