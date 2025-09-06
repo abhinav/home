@@ -842,30 +842,6 @@ require('lazy').setup({
 	},
 	'lambdalisue/vim-manpager',
 	'vim-utils/vim-husk',
-	{
-		'akinsho/toggleterm.nvim', -- {{{3
-		config = function()
-			require('toggleterm').setup {
-				direction = 'vertical',
-				size = function(term)
-					if term.direction == 'vertical' then
-						return vim.o.columns * 0.4
-					else
-						return vim.o.lines * 0.33
-					end
-				end,
-				on_exit = function(term)
-					-- Delete the terminal when closed.
-					-- Otherwise, it will be re-used and
-					-- the old dir= will persist.
-					term:shutdown()
-				end,
-			}
-		end,
-		keys = {
-			{'<F6>', ':ToggleTerm dir=%:p:h name=bufdir<CR>', 'n', silent = true, noremap = true},
-		},
-	},
 })
 
 -- General {{{1
