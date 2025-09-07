@@ -1711,6 +1711,13 @@ vim.keymap.set('n', '<leader>xp', function()
 	vim.diagnostic.goto_prev({float = false, wrap = false})
 end, {desc = "Previous diagnostic"})
 
+-- Snacks {{{1
+
+-- :Notifications to view past notifications.
+vim.api.nvim_create_user_command('Notifications', function()
+	Snacks.notifier.show_history()
+end, {desc = "Show past notifications"})
+
 --  File Types {{{1
 
 -- rust {{{2
