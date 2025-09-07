@@ -317,18 +317,62 @@ require('lazy').setup({
 		},
 	},
 	{
-		'mg979/vim-visual-multi', -- {{{3
-		lazy = false,
-		keys = {
-			{'<M-S-j>', '<Plug>(VM-Add-Cursor-Down)', 'n', desc = "Add cursor (down)"},
-			{'<M-S-k>', '<Plug>(VM-Add-Cursor-Up)', 'n', desc = "Add cursor (up)"},
-			{'<C-n>', '<Plug>(VM-Find-Under)', {'n', 'v'}, desc = "Add cursor (matching)"},
-			{'<S-Right>', '<Plug>(VM-Select-l)', 'n', desc = "Select (right)"},
-			{'<S-Left>', '<Plug>(VM-Select-h)', 'n', desc = "Select (left)"},
-			{'\\\\A', '<Plug>(VM-Visual-All)', 'n', desc = "Select all matching"},
-			{'\\\\/', '<Plug>(VM-Visual-Regex)', 'n', desc = "Select all matching regex"},
-			{'\\\\f', '<Plug>(VM-Visual-Find)', 'n', desc = "Select all matching '/' register"},
-		},
+		'jake-stewart/multicursor.nvim', -- {{{3
+		branch = '1.0',
+		config = function()
+			local mc = require('multicursor-nvim')
+			mc.setup()
+
+			local set = vim.keymap.set
+			set({'n', 'x'}, '<leader>m', mc.toggleCursor, {desc = "Start multi-cursor mode"})
+
+			-- Mouse support:
+			-- Alt-Click: add cursor at mouse position
+			-- Alt-Drag: add cursors for selected lines
+			set('n', '<M-LeftMouse>', mc.handleMouse)
+			set('n', '<M-LeftDrag>', mc.handleMouseDrag)
+			set('n', '<M-LeftRelease>', mc.handleMouseRelease)
+
+			-- Enable multi-cursor mode first.
+			-- Inside multi-cursor mode:
+			--
+			--   <up>, <down>: add cursor above/below
+			--   <S-up>, <S-down>: skip line above/below and add cursor
+			--
+			--   n, N: add next/previous match
+			--   q, Q: skip next/previous match
+			--
+			--   <left>, <right>: move between primary cursors
+			--   <Esc>: exit multi-cursor mode
+			mc.addKeymapLayer(function(layerSet)
+				layerSet({'n', 'x'}, '<up>', function() mc.lineAddCursor(-1) end, {desc = "Add cursor (up)"})
+				layerSet({'n', 'x'}, '<down>', function() mc.lineAddCursor(1) end, {desc = "Add cursor (down)"})
+				layerSet({'n', 'x'}, '<S-up>', function() mc.lineSkipCursor(-1) end, {desc = "Move cursor (up)"})
+				layerSet({'n', 'x'}, '<S-down>', function() mc.lineSkipCursor(1) end, {desc = "Move cursor (down)"})
+
+				layerSet({'n', 'x'}, '<left>', mc.prevCursor, {desc = "Previous cursor"})
+				layerSet({'n', 'x'}, '<right>', mc.nextCursor, {desc = "Next cursor"})
+
+				layerSet({'n', 'x'}, 'n', function() mc.matchAddCursor(1) end, {desc = "Add next match"})
+				layerSet({'n', 'x'}, 'N', function() mc.matchAddCursor(-1) end, {desc = "Add previous match"})
+
+				layerSet({'n', 'x'}, 'q', function() mc.matchSkipCursor(1) end, {desc = "Skip match"})
+				layerSet({'n', 'x'}, 'Q', function() mc.matchSkipCursor(-1) end, {desc = "Skip match (back)"})
+
+				layerSet('n', '<Esc>', function()
+					if not mc.cursorsEnabled() then
+						mc.enableCursors()
+					else
+						mc.clearCursors()
+					end
+				end, {desc = "Exit multi-cursor mode"})
+			end)
+
+			-- Show lines with cursors in the sign column.
+			local hl = vim.api.nvim_set_hl
+			hl(0, "MultiCursorSign", { link = "SignColumn"})
+			hl(0, "MultiCursorDisabledSign", { link = "SignColumn"})
+		end,
 	},
 	{
 		'nvim-treesitter/nvim-treesitter', -- {{{3
