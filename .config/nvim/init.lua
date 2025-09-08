@@ -164,6 +164,18 @@ require('lazy').setup({
 		},
 	},
 	{
+		"folke/todo-comments.nvim",
+		dependencies = {"nvim-lua/plenary.nvim"},
+		keys = {
+			{'<leader>fT', function()
+				Snacks.picker.todo_comments()
+			end, desc = "Find TODO comments"},
+			{']t', function() require('todo-comments').jump_next() end, desc = "Next TODO comment"},
+			{'[t', function() require('todo-comments').jump_prev() end, desc = "Previous TODO comment"},
+		},
+		config = true,
+	},
+	{
 		'zbirenbaum/copilot.lua', -- {{{3
 		command = 'Copilot',
 		enabled = function()
