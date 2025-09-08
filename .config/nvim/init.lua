@@ -1707,7 +1707,7 @@ vim.keymap.set('n', '<leader>xn', function()
 	vim.diagnostic.goto_next({float = false, wrap = false})
 end, {desc = "Next diagnostic"})
 
-vim.keymap.set('n', '<leader>xp', function()
+vim.keymap.set('n', '<leader>xN', function()
 	vim.diagnostic.goto_prev({float = false, wrap = false})
 end, {desc = "Previous diagnostic"})
 
