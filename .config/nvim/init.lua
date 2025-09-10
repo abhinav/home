@@ -84,7 +84,7 @@ require('lazy').setup({
 						keys = {
 							-- Close on ESC.
 							["<Esc>"] = { "close", mode = { "n", "i" } },
-						},
+					},
 					},
 				},
 			},
@@ -426,18 +426,20 @@ require('lazy').setup({
 		end
 	},
 	{
-		'ggandor/leap.nvim',
-		dependencies = {'tpope/vim-repeat'},
-		config = function()
-			local leap = require('leap')
-			local leap_user = require('leap.user')
-
-			leap.opts.special_keys.next_target = '<enter>'
-			leap.opts.special_keys.prev_target = '<backspace>'
-
-			vim.keymap.set({'n'}, 's', '<Plug>(leap-forward)', {desc = "Leap forward"})
-			vim.keymap.set({'n'}, 'S', '<Plug>(leap-backward)', {desc = "Leap backward"})
-		end,
+		"folke/flash.nvim",
+		event = "VeryLazy",
+		opts = {
+			modes = {
+				-- Don't mess with normal f/t motions.
+				char = { enabled = false },
+			},
+		},
+		keys = {
+			-- Jump around with 's{search}'.
+			{ "s", mode = { "n", "x", "o" }, function()
+				require("flash").jump()
+			end, desc = "Flash" },
+		},
 	},
 	{'tpope/vim-abolish', command = "S"},
 	'tpope/vim-repeat',
