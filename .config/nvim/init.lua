@@ -385,13 +385,33 @@ require('lazy').setup({
 			modes = {
 				-- Don't mess with normal f/t motions.
 				char = { enabled = false },
+				-- Enable flash labels for regular search.
+				search = {
+					enabled = true,
+				},
+			},
+			highlight = {
+				matches = false,
 			},
 		},
 		keys = {
 			-- Jump around with 's{search}'.
 			{ "s", mode = { "n", "x", "o" }, function()
 				require("flash").jump()
-			end, desc = "Flash" },
+			end, desc = "Flash jump" },
+			{ "S", mode = { "n", "x", "o" }, function()
+				require("flash").treesitter()
+			end, desc = "Flash treesitter" },
+			-- New motion:
+			-- '{verb}' followed by 'r{search}' to move to a
+			-- different position and run the verb there
+			-- with a new motion.
+			{ "r", mode = "o", function()
+				require("flash").remote()
+			end, desc = "Flash remote operator" },
+			{ "R", mode = { "o", "x" }, function()
+				require("flash").treesitter_search()
+			end, desc = "Treesitter Search" },
 		},
 	},
 	{'tpope/vim-abolish', command = "S"},
