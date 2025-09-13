@@ -173,7 +173,10 @@ require('lazy').setup({
 			{']t', function() require('todo-comments').jump_next() end, desc = "Next TODO comment"},
 			{'[t', function() require('todo-comments').jump_prev() end, desc = "Previous TODO comment"},
 		},
-		config = true,
+		lazy = false,
+		opts = {
+			signs = false, -- don't clutter the gutter
+		},
 	},
 	{
 		'zbirenbaum/copilot.lua', -- {{{3
