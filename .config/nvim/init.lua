@@ -388,10 +388,6 @@ require('lazy').setup({
 			modes = {
 				-- Don't mess with normal f/t motions.
 				char = { enabled = false },
-				-- Enable flash labels for regular search.
-				search = {
-					enabled = true,
-				},
 			},
 			highlight = {
 				matches = false,
