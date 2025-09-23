@@ -1,6 +1,7 @@
 [tools]
 go = "latest"
 "aqua:golangci/golangci-lint" = "latest"
+gofumpt = "latest"
 
 [settings]
 experimental = true
