@@ -14,5 +14,7 @@
 
 [spice "log"]
 	pushStatusFormat = aheadBehind
+[spice "experiment"]
+	commitFixup = true
 
 # vim:set ft=gitconfig:
