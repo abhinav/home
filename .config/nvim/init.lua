@@ -575,12 +575,33 @@ require('lazy').setup({
 	},
 	{
 		"sindrets/diffview.nvim",
-		opts = {
-			use_icons = false,
-			enhanced_diff_hl = true,
-		},
-	},
+		config = function()
+			local diffview = require('diffview')
+			diffview.setup({
+				use_icons = false,
+				enhanced_diff_hl = true,
+			})
 
+			vim.keymap.set('n', '<leader>gdd', function()
+				local base_args = {}
+				local gitsigns_base = require('gitsigns.config').config.base
+				if gitsigns_base ~= nil then
+					base_args = {gitsigns_base}
+				end
+
+				diffview.open(base_args)
+			end, {desc = "Open Diffview"})
+
+			vim.keymap.set('n', '<leader>gda', function()
+				vim.ui.input({prompt = "Base commit: "}, function(input)
+					if input == nil or input == '' then
+						return
+					end
+					diffview.open({input})
+				end)
+			end, {desc = "Open Diffview (argument)"})
+		end,
+	},
 
 	-- Look and feel {{{2
 	{
