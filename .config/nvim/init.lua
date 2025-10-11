@@ -882,19 +882,19 @@ require('lazy').setup({
 				},
 			}
 
-			vim.keymap.set('n', '<leader>aa', '<cmd>:Other<CR>', {
+			vim.keymap.set('n', '<leader>eaa', '<cmd>:Other<CR>', {
 				desc = "Open alternate file",
 				silent = true,
 			})
-			vim.keymap.set('n', '<leader>av', '<cmd>:OtherVSplit<CR>', {
+			vim.keymap.set('n', '<leader>eav', '<cmd>:OtherVSplit<CR>', {
 				desc = "Open alternate file (vertical split)",
 				silent = true,
 			})
-			vim.keymap.set('n', '<leader>as', '<cmd>:OtherSplit<CR>', {
+			vim.keymap.set('n', '<leader>eas', '<cmd>:OtherSplit<CR>', {
 				desc = "Open alternate file (split)",
 				silent = true,
 			})
-			vim.keymap.set('n', '<leader>at', '<cmd>:OtherTabNew<CR>', {
+			vim.keymap.set('n', '<leader>eat', '<cmd>:OtherTabNew<CR>', {
 				desc = "Open alternate file (tab)",
 				silent = true,
 			})
@@ -924,8 +924,9 @@ require('lazy').setup({
  				{"<leader>gh", desc = "+hunk"},
  				{"<leader>gt", desc = "+toggle"},
 
+ 				{"<leader>e", group = "+edit"},
+ 				{"<leader>ea", group = "+alternate"},
 				{"<leader>T", group = "+terminals"},
-				{"<leader>Tn", desc = "+new"},
 
 				{"<leader>b", group = "+buffer"},
 				{"<leader>f", group = "+find"},
