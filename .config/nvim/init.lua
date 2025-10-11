@@ -230,7 +230,7 @@ require('lazy').setup({
 
 			local copilot_suggestion = require 'copilot.suggestion'
 
-			vim.keymap.set('n', '<leader>ct', function()
+			vim.keymap.set('n', '<leader>atg', function()
 				copilot_suggestion.toggle_auto_trigger()
 				if vim.b.copilot_suggestion_auto_trigger then
 					print("Copilot: Auto-trigger enabled")
@@ -926,6 +926,10 @@ require('lazy').setup({
 
  				{"<leader>e", group = "+edit"},
  				{"<leader>ea", group = "+alternate"},
+
+				{"<leader>a", group = "+ai"},
+				{"<leader>at", desc = "+toggle"},
+
 				{"<leader>T", group = "+terminals"},
 
 				{"<leader>b", group = "+buffer"},
