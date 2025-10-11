@@ -494,83 +494,90 @@ require('lazy').setup({
 		'lewis6991/gitsigns.nvim',
 		config = function()
 			local gitsigns = require('gitsigns')
-			gitsigns.setup {
-				on_attach = function(bufnr)
-					-- <leader>g{n,p}: next/prev hunk
-					vim.keymap.set('n', '<leader>gn', gitsigns.next_hunk, {
-						desc = "Next hunk",
-						buffer = bufnr,
-					})
-					vim.keymap.set('n', '<leader>gp', gitsigns.prev_hunk, {
-						desc = "Previous hunk",
-						buffer = bufnr,
-					})
+			gitsigns.setup()
 
-					-- <leader>gm: blame current line
-					vim.keymap.set('n', '<leader>gm', function()
-						gitsigns.blame_line {full = true}
-					end, {desc = "Blame current line"})
+			-- <leader>g{n,p}: next/prev hunk
+			-- Works in both, diff mode and normal mode.
+			vim.keymap.set('n', '<leader>gn', function()
+				local diff_mode = vim.api.nvim_get_option_value('diff', { win = 0 })
+				if diff_mode then
+					vim.cmd('normal ]c')
+				else
+					gitsigns.next_hunk()
+				end
+			end, {desc = "Next hunk"})
+			vim.keymap.set('n', '<leader>gp', function()
+				local diff_mode = vim.api.nvim_get_option_value('diff', { win = 0 })
+				if diff_mode then
+					vim.cmd('normal [c')
+				else
+					gitsigns.prev_hunk()
+				end
+			end, {desc = "Previous hunk"})
 
-					-- <leader>gtb: toggle line blame
-					-- <leader>gtd: toggle deleted
-					-- <leader>gtw: toggle word diff
-					vim.keymap.set('n', '<leader>gtb', gitsigns.toggle_current_line_blame, {desc = "Line blame"})
-					vim.keymap.set('n', '<leader>gtd', gitsigns.toggle_deleted, {desc = "Show deleted"})
-					vim.keymap.set('n', '<leader>gtw', gitsigns.toggle_word_diff, {desc = "Word diff"})
+			-- <leader>gm: blame current line
+			vim.keymap.set('n', '<leader>gm', function()
+				gitsigns.blame_line {full = true}
+			end, {desc = "Blame current line"})
 
-					-- <leader>gh{a,r}: stage and reset hunk
-					vim.keymap.set('n', '<leader>gha', gitsigns.stage_hunk, {desc = "Stage hunk"})
-					vim.keymap.set('n', '<leader>ghr', gitsigns.reset_hunk, {desc = "Reset hunk"})
+			-- <leader>gtb: toggle line blame
+			-- <leader>gtd: toggle deleted
+			-- <leader>gtw: toggle word diff
+			vim.keymap.set('n', '<leader>gtb', gitsigns.toggle_current_line_blame, {desc = "Line blame"})
+			vim.keymap.set('n', '<leader>gtd', gitsigns.toggle_deleted, {desc = "Show deleted"})
+			vim.keymap.set('n', '<leader>gtw', gitsigns.toggle_word_diff, {desc = "Word diff"})
 
-					-- visual mode variants
-					vim.keymap.set('v', '<leader>gha', function()
-						gitsigns.stage_hunk(vim.fn.line('.'), vim.fn.line('v'))
-					end, {desc = "Stage hunk"})
-					vim.keymap.set('v', '<leader>ghr', function()
-						gitsigns.reset_hunk(vim.fn.line('.'), vim.fn.line('v'))
-					end, {desc = "Reset hunk"})
+			-- <leader>gh{a,r}: stage and reset hunk
+			vim.keymap.set('n', '<leader>gha', gitsigns.stage_hunk, {desc = "Stage hunk"})
+			vim.keymap.set('n', '<leader>ghr', gitsigns.reset_hunk, {desc = "Reset hunk"})
 
-					-- <leader>ghp: preview hunk
-					vim.keymap.set('n', '<leader>ghp', gitsigns.preview_hunk, {desc = "Preview hunk"})
+			-- visual mode variants
+			vim.keymap.set('v', '<leader>gha', function()
+				gitsigns.stage_hunk(vim.fn.line('.'), vim.fn.line('v'))
+			end, {desc = "Stage hunk"})
+			vim.keymap.set('v', '<leader>ghr', function()
+				gitsigns.reset_hunk(vim.fn.line('.'), vim.fn.line('v'))
+			end, {desc = "Reset hunk"})
 
-					-- <leader>gh{S,R}: stage and reset buffer
-					vim.keymap.set('n', '<leader>ghA', gitsigns.stage_buffer, {desc = "Stage buffer"})
-					vim.keymap.set('n', '<leader>ghR', gitsigns.reset_buffer, {desc = "Reset buffer"})
+			-- <leader>ghp: preview hunk
+			vim.keymap.set('n', '<leader>ghp', gitsigns.preview_hunk, {desc = "Preview hunk"})
 
-					local function change_base(key, arg, desc)
-						vim.keymap.set('n', '<leader>gb' .. key, function()
-							gitsigns.change_base(arg, true)
-						end, {desc = desc})
-						vim.keymap.set('n', '<leader>gB' .. key, function()
-							gitsigns.change_base(arg)
-						end, {desc = desc .. ' (Buffer)'})
-					end
+			-- <leader>gh{S,R}: stage and reset buffer
+			vim.keymap.set('n', '<leader>ghA', gitsigns.stage_buffer, {desc = "Stage buffer"})
+			vim.keymap.set('n', '<leader>ghR', gitsigns.reset_buffer, {desc = "Reset buffer"})
 
-					-- <leader>gbb: change base to index
-					-- <leader>gbu: change base to upstream
-					-- <leader>gbp: change base to parent commit
-					-- <leader>gba: change base to argument supplied in a prompt
-					--
-					-- gB variants change base for this buffer only
-					change_base('b', nil, "Set base to index")
-					change_base('u', '@{upstream}', "Set base to upstream")
-					change_base('p', '~', "Set base to parent commit")
+			local function change_base(key, arg, desc)
+				vim.keymap.set('n', '<leader>gb' .. key, function()
+					gitsigns.change_base(arg, true)
+				end, {desc = desc})
+				vim.keymap.set('n', '<leader>gB' .. key, function()
+					gitsigns.change_base(arg)
+				end, {desc = desc .. ' (Buffer)'})
+			end
 
-					local function change_base_prompt(keys, global, desc)
-						vim.keymap.set('n', '<leader>g' .. keys, function()
-							vim.ui.input({prompt = "Base commit: "}, function(input)
-								if input == nil or input == '' then
-									return
-								end
-								gitsigns.change_base(input, global)
-							end)
-						end, {desc = desc})
-					end
+			-- <leader>gbb: change base to index
+			-- <leader>gbu: change base to upstream
+			-- <leader>gbp: change base to parent commit
+			-- <leader>gba: change base to argument supplied in a prompt
+			--
+			-- gB variants change base for this buffer only
+			change_base('b', nil, "Set base to index")
+			change_base('u', '@{upstream}', "Set base to upstream")
+			change_base('p', '~', "Set base to parent commit")
 
-					change_base_prompt('ba', true, "Set base to argument")
-					change_base_prompt('Ba', false, "Set base to argument (buffer)")
-				end,
-			}
+			local function change_base_prompt(keys, global, desc)
+				vim.keymap.set('n', '<leader>g' .. keys, function()
+					vim.ui.input({prompt = "Base commit: "}, function(input)
+						if input == nil or input == '' then
+							return
+						end
+						gitsigns.change_base(input, global)
+					end)
+				end, {desc = desc})
+			end
+
+			change_base_prompt('ba', true, "Set base to argument")
+			change_base_prompt('Ba', false, "Set base to argument (buffer)")
 		end,
 	},
 	{
@@ -578,9 +585,15 @@ require('lazy').setup({
 		config = function()
 			local diffview = require('diffview')
 			diffview.setup({
-				use_icons = false,
+				use_icons = true,
 				enhanced_diff_hl = true,
 			})
+
+			-- <leader>gdd: open diffview with default base
+			-- <leader>gda: open diffview with base supplied in a prompt
+			-- <leader>gdu: open diffview with base set to upstream
+			-- <leader>gdp: open diffview with base set to parent commit
+			-- <leader>gdq: close diffview
 
 			vim.keymap.set('n', '<leader>gdd', function()
 				local base_args = {}
@@ -590,7 +603,7 @@ require('lazy').setup({
 				end
 
 				diffview.open(base_args)
-			end, {desc = "Open Diffview"})
+			end, {desc = "Diffview"})
 
 			vim.keymap.set('n', '<leader>gda', function()
 				vim.ui.input({prompt = "Base commit: "}, function(input)
@@ -599,7 +612,28 @@ require('lazy').setup({
 					end
 					diffview.open({input})
 				end)
-			end, {desc = "Open Diffview (argument)"})
+			end, {desc = "Diffview (prompt)"})
+
+			vim.keymap.set('n', '<leader>gdu', function()
+				diffview.open({'@{upstream}'})
+			end, {desc = "Diffview (upstream)"})
+			vim.keymap.set('n', '<leader>gdp', function()
+				diffview.open({'HEAD~'})
+			end, {desc = "Diffview (parent commit)"})
+
+			vim.keymap.set('n', '<leader>gdq', function()
+				diffview.close()
+			end, {desc = "Close Diffview"})
+
+			-- <leader>gdf: open file history for current buffer
+			vim.keymap.set('n', '<leader>gdf', function()
+				local file = vim.fn.expand('%')
+				if file == '' then
+					Snacks.notify.warn("No file", {title = "Diffview"})
+					return
+				end
+				diffview.file_history(nil, {file})
+			end, {desc = "File history"})
 		end,
 	},
 
@@ -879,6 +913,7 @@ require('lazy').setup({
 			wk.add({
 				mode = {'n', 'v'},
 				{"<leader>g", group = "git"},
+				{"<leader>gd", group = "+diff"},
  				{"<leader>gb", desc = "+change base"},
  				{"<leader>gB", desc = "+change base (buffer)"},
  				{"<leader>gh", desc = "+hunk"},
