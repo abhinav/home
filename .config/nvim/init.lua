@@ -625,7 +625,11 @@ require('lazy').setup({
 				diffview.close()
 			end, {desc = "Close Diffview"})
 
+			-- <leader>gdh: open file history
 			-- <leader>gdf: open file history for current buffer
+			vim.keymap.set('n', '<leader>gdh', function()
+				diffview.file_history()
+			end, {desc = "File history"})
 			vim.keymap.set('n', '<leader>gdf', function()
 				local file = vim.fn.expand('%')
 				if file == '' then
@@ -633,7 +637,7 @@ require('lazy').setup({
 					return
 				end
 				diffview.file_history(nil, {file})
-			end, {desc = "File history"})
+			end, {desc = "File history (current buffer)"})
 		end,
 	},
 
