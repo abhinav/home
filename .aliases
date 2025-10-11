@@ -15,3 +15,7 @@ fi
 
 alias g=git
 alias lg=lazygit
+
+if [ -x "$HOME/.claude/local/claude" ]; then
+	alias claude="~/.claude/local/claude"
+fi
