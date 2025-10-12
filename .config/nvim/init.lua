@@ -1107,6 +1107,9 @@ end
 -- Use dictionary for completion suggestions.
 vim.opt.complete:append('kspell')
 
+-- When showing diffs, fill deleted lines with this.
+vim.opt.fillchars:append {diff = '·'}
+
 vim.cmd [[
 colorscheme molokai
 
