@@ -76,6 +76,7 @@ require('lazy').setup({
 			bigfile = {}, -- disable expensive features for big files
 			notifier = {}, -- prettier notifications
 			scratch = {}, -- easily create scratch buffers
+			quickfile = {}, -- render files before loading plugins
 
 			-- Fuzzy finder
 			picker = {
