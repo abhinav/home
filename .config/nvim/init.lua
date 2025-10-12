@@ -641,6 +641,32 @@ require('lazy').setup({
 			end, {desc = "File history (current buffer)"})
 		end,
 	},
+	{
+        	"NeogitOrg/neogit",
+        	branch = 'master',
+        	dependencies = {
+                	"nvim-lua/plenary.nvim",
+                	"sindrets/diffview.nvim",
+                	"folke/snacks.nvim",
+        	},
+        	config = function()
+                	local neogit = require('neogit')
+                	neogit.setup {
+                        	remember_settings = false,
+                        	graph_style = 'kitty', -- also works in Ghostty
+                        	-- Don't auto-enter insert mode when committing.
+                        	disable_insert_on_commit = true,
+                        	integrations = {
+                        		diffview = true,
+                        		snacks = true,
+                        	},
+                	}
+
+                	vim.keymap.set('n', '<leader>gg', function()
+                        	neogit.open({ cwd = vim.fn.expand('%:p:h') })
+                	end, {desc = "Open neogit"})
+        	end,
+	},
 
 	-- Look and feel {{{2
 	{
