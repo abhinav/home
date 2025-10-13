@@ -585,9 +585,18 @@ require('lazy').setup({
 		"sindrets/diffview.nvim",
 		config = function()
 			local diffview = require('diffview')
+			local actions = require('diffview.actions')
 			diffview.setup({
 				use_icons = true,
 				enhanced_diff_hl = true,
+				keymaps = {
+					view = {
+						{'n', 'q', ':DiffviewClose<CR>', {desc = "Close diffview"}},
+					},
+					file_panel = {
+						{'n', 'q', ':DiffviewClose<CR>', {desc = "Close diffview"}}
+					},
+				},
 			})
 
 			-- <leader>gdd: open diffview with default base
