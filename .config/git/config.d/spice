@@ -16,5 +16,6 @@
 	pushStatusFormat = aheadBehind
 [spice "experiment"]
 	commitFixup = true
+	commitPick = true
 
 # vim:set ft=gitconfig:
