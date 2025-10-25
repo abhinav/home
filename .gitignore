@@ -43,6 +43,12 @@
 # [n]vim
 !.vimrc
 
+# CLAUDE
+!/.claude
+/.claude/*
+!/.claude/CLAUDE.md
+!/.claude/skills
+
 # Rust
 !/.cargo
 /.cargo/*

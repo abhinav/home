@@ -11,3 +11,7 @@ mise.local.toml
 
 # Coverage data in Go.
 cover.cov
+
+# Claude
+**/CLAUDE.local.md
+**/.claude/settings.local.json
