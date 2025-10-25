@@ -1,9 +1,6 @@
 ---
 name: committing-changes
-description: >-
-  Use when committing work, amending commits, creating or stacking branches.
-  ALWAYS use this instead of raw git commands
-  when asked to commit changes, create a feature branch, or amend a commit.
+description: Use when committing work, amending commits, creating or stacking branches. ALWAYS use this instead of raw git commands when asked to commit changes, create a feature branch, or amend a commit.
 ---
 
 # Committing changes

@@ -8,6 +8,10 @@ ALWAYS use the writing-comments skill.
 When writing commit messages,
 ALWAYS use the writing-commits skill.
 
+When committing changes to the repository,
+ALWAYS use the committing-changes skill AFTER writing-commits.
+NEVER use `git commit` directly.
+
 Apply semantic line breaks formatting when writing Markdown
 or other multi-line prose.
 

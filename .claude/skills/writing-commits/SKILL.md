@@ -113,3 +113,13 @@ NEVER use single-line commit messages.
 
 **Solution**:
 There MUST ALWAYS be a body to the commit message.
+
+## Important: This skill only writes the message
+
+This skill provides guidance on how to format commit messages.
+After using this skill to craft a commit message,
+you must invoke the `committing-changes` skill
+to actually perform the commit operation.
+
+**NEVER use `git commit` directly.**
+Always use `Skill(committing-changes)` after writing the commit message.
