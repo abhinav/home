@@ -60,8 +60,6 @@ If it still exceeds 72 characters, rethink the `<summary>` to shorten it.
 - End the commit message with the following trailer:
 
   ```
-  🤖 Generated with [Claude Code](https://claude.com/claude-code)
-
   Co-Authored-By: Claude <noreply@anthropic.com>
   ```
 
