@@ -6,6 +6,9 @@
 [spice "submit"]
 	navigationCommentSync = downstack
 
+[spice "branchCreate"]
+	generatedBranchNameLimit = 64
+
 [spice "branchCheckout"]
 	showUntracked = true
 
