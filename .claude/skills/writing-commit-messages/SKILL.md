@@ -1,6 +1,6 @@
 ---
-name: writing-commits
-description: This skill should be used when writing commit messages for Git or GitHub.
+name: writing-commit-messages
+description: Use when writing or improving messages for Git commits, or when asked to generate a commit message or pull request description.
 ---
 
 # Writing commit messages

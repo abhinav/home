@@ -48,6 +48,7 @@
 /.claude/*
 !/.claude/CLAUDE.md
 !/.claude/skills
+!/.claude/commands
 
 # Rust
 !/.cargo
