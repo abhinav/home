@@ -57,11 +57,20 @@ If it still exceeds 72 characters, rethink the `<summary>` to shorten it.
 - Use objective, factual tone:
   - Avoid subjective embellishments like "critical issue", "serious problem"
   - Focus on what the code does and why, not value judgments
-- End the commit message with the following trailer:
+- **Attribution**:
+  If the bot wrote any code that is part of the commit,
+  attribute the bot as a co-author in the commit message.
 
   ```
   Co-Authored-By: Claude <noreply@anthropic.com>
+  // or
+  Co-Authored-By: Amp <amp@ampcode.com>
   ```
+
+  Exception:
+  If the bot *only* wrote the commit message,
+  and was not involved in writing any code,
+  do NOT include a co-authorship trailer.
 
 ## Formatting
 
