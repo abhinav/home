@@ -6,3 +6,4 @@ gofumpt = "latest"
 [settings]
 experimental = true
 go_set_gobin = false
+lockfile = true

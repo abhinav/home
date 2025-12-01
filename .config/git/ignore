@@ -4,6 +4,7 @@
 # Always intended to be local-only
 .mise.local.toml
 mise.local.toml
+mise.local.lock
 
 # local spell files for vim
 .vimspell.en.utf-8.add
