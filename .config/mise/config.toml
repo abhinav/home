@@ -1,6 +1,9 @@
+[alias]
+golangci-lint = "aqua:golangci/golangci-lint"
+
 [tools]
 go = "latest"
-"aqua:golangci/golangci-lint" = "latest"
+golangci-lint = "latest"
 gofumpt = "latest"
 
 [settings]
