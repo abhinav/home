@@ -1,5 +1,8 @@
 # netrw
 .netrwhist
 
+# Local dictionary
+/spell
+
 # Lazy
 /lazy-lock.json
