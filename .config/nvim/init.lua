@@ -772,6 +772,7 @@ require('lazy').setup({
 				end
 
 				return {
+					cmd = {'gopls', '-remote=auto'},
 					init_options = init_opts,
 				}
 			end,
