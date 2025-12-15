@@ -7,8 +7,8 @@ description: Use when committing work, amending commits, creating or stacking br
 
 ## Overview
 
-ALWAYS use git-spice (`gs`) for commits and branches.
-NEVER use raw git commands (git commit, git checkout -b, git branch).
+ALWAYS use git-spice (`gs`) for creating commits and branches, and for amending commits.
+NEVER use raw git commands for these purposes (git commit, git checkout -b, git branch $name).
 
 **Why git-spice:** Maintains branch relationships and auto-rebases dependent branches.
 Using raw git breaks stack tracking.
@@ -33,6 +33,7 @@ Use this skill for ALL commit operations:
 
 | Task | Command |
 |------|---------|
+| Get current branch name | `git branch --show-current` |
 | New branch + commit | `gs branch create <name> -m "<msg>"` |
 | Commit to current branch | `gs commit create -m "<msg>"` |
 | Amend (keep message) | `gs commit amend` |
@@ -46,6 +47,13 @@ Use this skill for ALL commit operations:
 - Use `Skill(writing-commit-messages)` to load and execute it
 
 ## Branching Decision
+
+**If user explicitly states their intent, follow it directly:**
+- "Commit to this branch" or "commit to current branch" → Use `gs commit create`
+- "Create new branch" or "commit to new branch" → Use `gs branch create`
+- No need to check current branch when intent is explicit
+
+**If user intent is ambiguous, determine from context:**
 
 ```mermaid
 flowchart TD
@@ -90,6 +98,25 @@ gs commit create -m "<commit-message>"
 Commits **staged changes** to current branch.
 
 **After committing:** Run `gs ls` to show branch position in stack (NOT git log).
+
+### Get current branch name
+
+```bash
+git branch --show-current
+```
+
+**IMPORTANT:** `gs branch current` does NOT exist.
+git-spice doesn't have a command for showing the current branch.
+Use standard git command: `git branch --show-current`
+
+**Common use cases:**
+- When user asks "what branch am I on?"
+- Debugging branch-related issues
+- When user's commit intent is ambiguous and you need to determine strategy
+
+**NOT needed when:**
+- User explicitly says "commit to this branch" (intent is clear)
+- User explicitly says "create new branch" (intent is clear)
 
 ### Amend last commit
 
@@ -162,16 +189,30 @@ Useful when current branch isn't the desired base.
 
 **Instead:** Use `gs branch create` with commit.
 
+### ❌ NEVER: `gs branch current`
+
+**Why:** Command doesn't exist. git-spice has no equivalent for this.
+
+**Instead:** Use `git branch --show-current`
+
+**Common mistake:** Assuming every git command has a gs equivalent.
+**Reality:** Some operations (like showing current branch) still use standard git.
+
 ## Red Flags - STOP
 
 If you're about to:
 - Use any `git commit` command
 - Use `git checkout -b`
 - Use `git branch` to create a branch
+- Use `gs branch current` (doesn't exist)
 - Skip getting a proper commit message
 - Rationalize "just this once" or "it's faster"
+- Assume a gs command exists because "gs does everything"
 
 **STOP. Use git-spice commands instead.**
+
+**Note:** git-spice does NOT have every git equivalent.
+For getting current branch: use `git branch --show-current`
 
 ## Recovery: User Already Used Raw Git
 
@@ -207,6 +248,7 @@ If you're about to:
 
 | Mistake | Why Bad | Solution |
 |---------|---------|----------|
+| Using `gs branch current` | Command doesn't exist | Use `git branch --show-current` instead |
 | Running `git log` after commit | Doesn't show stack position | Run `gs ls` instead |
 | Using amend -m with only addition | Replaces message, loses original | Include full original + addition |
 | "Just commit quickly" | Skips proper message, may use raw git | Still use gs + Skill(writing-commit-messages) |
@@ -219,10 +261,12 @@ If you're about to:
 
 | Excuse | Reality |
 |--------|---------|
+| "Production down, use `gs branch current` now" | Command doesn't exist. Use `git branch --show-current`. Takes same time. |
 | "Just commit quickly, demo in 10 min" | gs is just as fast as git. Use proper commands. |
 | "I prefer raw git, it's simpler" | Raw git breaks branch tracking. Use gs. |
 | "I already committed with git" | Fix it before pushing. See Recovery section. |
 | "It's a small change, doesn't matter" | Every commit matters. Use proper workflow. |
+| "gs should have everything" | git-spice doesn't replace all git commands. Check the skill. |
 
 **No exceptions for:**
 - Time pressure
@@ -240,11 +284,20 @@ If you're about to:
 **If writing-commit-messages skill unavailable:**
 Ask user for commit message that explains WHY (not what).
 
-**Example workflow:**
+**Example workflows:**
+
+**Explicit: commit to current branch (no branch check needed):**
 ```
-User: "Commit these changes to fix-login branch"
+User: "Commit these changes to current branch"
 You: [Use Skill(writing-commit-messages) → get message]
 You: [Run gs commit create -m "<generated-message>"]
+```
+
+**Explicit: commit to new branch (no branch check needed):**
+```
+User: "Commit these changes to new feature branch"
+You: [Use Skill(writing-commit-messages) → get message]
+You: [Run gs branch create <branch-name> -m "<generated-message>"]
 ```
 
 ## Real-World Impact
