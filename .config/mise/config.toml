@@ -1,4 +1,4 @@
-[alias]
+[tool_alias]
 golangci-lint = "aqua:golangci/golangci-lint"
 
 [tools]
