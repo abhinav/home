@@ -1443,27 +1443,16 @@ let_g('terminal_color_', {
 
 -- Neovide {{{2
 if vim.g.neovide then
-	vim.opt.guifont = "Iosevka Term:h10"
+	vim.opt.guifont = "Pragmasevka Nerd Font:h14"
 	vim.opt.linespace = -1
 	let_g('neovide_', {
-		cursor_animation_length = 0.01,
+		cursor_animation_length = 0.00,
 		cursor_animate_command_line = false,
 		scroll_animation_length = 0.1,
 		-- Treat alt as Meta instead of sending special characters.
-		input_macos_alt_is_meta = true,
+		input_macos_option_key_is_meta = "both",
 		input_use_logo = true, -- Use Win/MacOS/Super key
 	})
-
-	local scale_factor = vim.env.NEOVIDE_SCALE_FACTOR
-	if scale_factor then
-		scale_factor = tonumber(scale_factor)
-	else
-		scale_factor = 1.0
-	end
-	-- HACK: Setting the scale factor at startup races sometimes.
-	vim.defer_fn(function()
- 		vim.g.neovide_scale_factor = scale_factor
-	end, 500)
 
 	-- Support adjusting scale factor with Cmd = and Cmd -.
 	local adjust_scale_factor = function(delta)

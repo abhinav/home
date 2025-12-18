@@ -9,7 +9,6 @@ export HOMEBREW_EDITOR="$EDITOR"
 
 export NEOVIDE_MULTIGRID=1
 if [[ "$(uname)" == "Darwin" ]]; then
-	export NEOVIDE_SCALE_FACTOR=1.3
 	export NEOVIDE_FRAME=transparent
 else
 	export NEOVIDE_FRAME=none
