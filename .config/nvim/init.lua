@@ -939,6 +939,7 @@ require('lazy').setup({
 	},
 
 	-- Navigation and window management {{{2
+	'nanotee/zoxide.vim',
 	'Bekaboo/dropbar.nvim',
 	{
 		'folke/which-key.nvim', -- {{{3
