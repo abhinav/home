@@ -77,6 +77,7 @@ require('lazy').setup({
 			notifier = {}, -- prettier notifications
 			scratch = {}, -- easily create scratch buffers
 			quickfile = {}, -- render files before loading plugins
+			terminal = {},
 
 			-- Fuzzy finder
 			picker = {
@@ -85,7 +86,7 @@ require('lazy').setup({
 						keys = {
 							-- Close on ESC.
 							["<Esc>"] = { "close", mode = { "n", "i" } },
-					},
+						},
 					},
 				},
 			},
@@ -1344,27 +1345,45 @@ vim.keymap.set('n', '<leader>tN', ':tabprevious<CR>', {
 })
 
 -- Terminal shortcuts.
-vim.keymap.set('n', '<leader>TT', ':vnew | terminal<CR>', {
+vim.keymap.set('n', '<leader>TT', function()
+	Snacks.terminal(nil, {
+		win = {position = "right"},
+		stack = true,
+	})
+end, {
 	desc = "New terminal in a vertical split",
 	silent = true,
 })
-vim.keymap.set('n', '<leader>TH', ':new | terminal<CR>', {
+vim.keymap.set('n', '<leader>TH', function()
+	Snacks.terminal(nil, {
+		win = {position = "bottom"},
+		stack = true,
+	})
+end, {
 	desc = "New terminal in a horizontal split",
 	silent = true,
 })
-vim.keymap.set('n', '<leader>Tt', ':tabnew | terminal<CR>', {
-	desc = "New terminal in a new tab",
-	silent = true,
-})
 
--- F9: open tmux split in current buffer directory.
+-- F9:
+--   (in tmux) open tmux split in current buffer directory.
+--   (in vim without tmux) open terminal in current buffer directory.
 vim.keymap.set('n', '<F9>', function()
+	local in_tmux = vim.env.TMUX ~= nil
+
 	local buffer_dir = vim.fn.expand('%:p:h')
 	if buffer_dir == '' or buffer_dir == '.' then
 		buffer_dir = vim.fn.getcwd()
 	end
 
-	vim.fn.system({'tmux', 'split-window', '-h', '-c', buffer_dir})
+	if not in_tmux then
+		Snacks.terminal(nil, {
+			cwd = buffer_dir,
+			win = {position = "right"},
+			stack = true,
+		})
+	else
+		vim.fn.system({'tmux', 'split-window', '-h', '-c', buffer_dir})
+	end
 end, {
 	desc = "Open tmux split in current buffer's directory",
 	silent = true,
