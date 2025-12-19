@@ -1347,8 +1347,8 @@ vim.keymap.set('n', '<leader>tN', ':tabprevious<CR>', {
 -- Terminal shortcuts.
 vim.keymap.set('n', '<leader>TT', function()
 	Snacks.terminal(nil, {
-		win = {position = "right"},
-		stack = true,
+		win = {position = "right", stack = true},
+		interactive = true,
 	})
 end, {
 	desc = "New terminal in a vertical split",
@@ -1356,13 +1356,35 @@ end, {
 })
 vim.keymap.set('n', '<leader>TH', function()
 	Snacks.terminal(nil, {
-		win = {position = "bottom"},
-		stack = true,
+		win = {position = "bottom", stack = true},
+		interactive = true,
 	})
 end, {
 	desc = "New terminal in a horizontal split",
 	silent = true,
 })
+
+-- <leader>fy: copy relative file path
+vim.keymap.set('n', '<leader>fy', function()
+	local filepath = vim.fn.expand('%')
+	if filepath == '' then
+		Snacks.notify.warn("No file path", {title = "Yank buffer path"})
+		return
+	end
+
+	-- Usually, the buffer path is enough.
+	-- But sometimes, the buffer path is absolute,
+	-- in which case make it relative to cwd.
+	if string.sub(filepath, 1, 1) == '/' then
+		local cwd = vim.fn.getcwd() .. '/'
+		if string.sub(filepath, 1, #cwd) == cwd then
+			filepath = string.sub(filepath, #cwd + 1)
+		end
+	end
+
+	vim.fn.setreg('+', filepath)
+	Snacks.notify.info("Copied: " .. filepath, {title = "Yank buffer path"})
+end, {noremap = true, desc = "Copy relative file path to clipboard"})
 
 -- F9:
 --   (in tmux) open tmux split in current buffer directory.
@@ -1378,8 +1400,8 @@ vim.keymap.set('n', '<F9>', function()
 	if not in_tmux then
 		Snacks.terminal(nil, {
 			cwd = buffer_dir,
-			win = {position = "right"},
-			stack = true,
+			win = {position = "right", stack = true},
+			interactive = true,
 		})
 	else
 		vim.fn.system({'tmux', 'split-window', '-h', '-c', buffer_dir})
