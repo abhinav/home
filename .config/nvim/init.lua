@@ -1346,8 +1346,8 @@ vim.keymap.set('n', '<leader>tN', ':tabprevious<CR>', {
 
 -- Terminal shortcuts.
 vim.keymap.set('n', '<leader>TT', function()
-	Snacks.terminal(nil, {
-		win = {position = "right", stack = true},
+	Snacks.terminal.open(nil, {
+		win = {position = "right"},
 		interactive = true,
 	})
 end, {
@@ -1355,8 +1355,8 @@ end, {
 	silent = true,
 })
 vim.keymap.set('n', '<leader>TH', function()
-	Snacks.terminal(nil, {
-		win = {position = "bottom", stack = true},
+	Snacks.terminal.open(nil, {
+		win = {position = "bottom"},
 		interactive = true,
 	})
 end, {
@@ -1398,9 +1398,9 @@ vim.keymap.set('n', '<F9>', function()
 	end
 
 	if not in_tmux then
-		Snacks.terminal(nil, {
+		Snacks.terminal.open(nil, {
 			cwd = buffer_dir,
-			win = {position = "right", stack = true},
+			win = {position = "right"},
 			interactive = true,
 		})
 	else
@@ -1511,9 +1511,10 @@ if vim.g.neovide then
 	end, {desc = "Reset scale factor"})
 
 	-- Super+C/V for copy-paste.
-	vim.keymap.set({'n', 'v'}, '<D-c>', '"+y')
-	vim.keymap.set({'n', 'v'}, '<D-v>', '"+P')
-	vim.keymap.set({'c', 'i'}, '<D-v>', '<C-R>+') -- cmd and insert mode
+	vim.keymap.set({'n', 'v'}, '<D-c>', '"+y', { noremap = true })
+	vim.keymap.set({'n', 'v'}, '<D-v>', '"+p', { noremap = true })
+	vim.keymap.set({'c', 'i'}, '<D-v>', '<ESC>"+p', { noremap = true })
+	vim.keymap.set('t', '<D-v>', [[<C-\><C-n>"+Pi]], { noremap = true })
 
 	-- Super+T, W, Left, Right for tab navigation.
 	vim.keymap.set('n', '<D-t>', ':tabnew<CR>', {desc = "New tab"})
