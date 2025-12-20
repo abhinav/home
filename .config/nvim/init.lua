@@ -1390,7 +1390,7 @@ end, {noremap = true, desc = "Copy relative file path to clipboard"})
 --   (in tmux) open tmux split in current buffer directory.
 --   (in vim without tmux) open terminal in current buffer directory.
 vim.keymap.set('n', '<F9>', function()
-	local in_tmux = vim.env.TMUX ~= nil
+	local in_tmux = vim.env.TMUX ~= nil and not vim.g.neovide
 
 	local buffer_dir = vim.fn.expand('%:p:h')
 	if buffer_dir == '' or buffer_dir == '.' then
