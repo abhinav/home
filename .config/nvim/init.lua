@@ -79,6 +79,7 @@ require('lazy').setup({
 			quickfile = {}, -- render files before loading plugins
 			terminal = {},
 			toggle = {},
+			input = {},
 
 			-- Fuzzy finder
 			picker = {
@@ -165,6 +166,12 @@ require('lazy').setup({
 			end, desc = 'Find in files (buffer directory)'},
 			{'<leader>:', function() Snacks.picker.commands() end, desc = 'Find ":" commands'},
 		},
+		config = function(_, opts)
+			require('snacks').setup(opts)
+
+			-- Never animate
+			vim.g.snacks_animate = false
+		end,
 	},
 	{
 		"folke/todo-comments.nvim",
@@ -1867,6 +1874,8 @@ end, {desc = "Show past notifications"})
 --  x: diagnostics
 --  A: copilot
 --  z: spell checking
+--  d: dim
+--  i: indent
 --
 --  LSP (l):
 --    i: inlay hints
@@ -1878,6 +1887,8 @@ end, {desc = "Show past notifications"})
 Snacks.toggle.option('spell', {name = 'Spell checking'}):map('<leader>uz')
 Snacks.toggle.diagnostics():map('<leader>ux')
 Snacks.toggle.inlay_hints():map('<leader>uli')
+Snacks.toggle.indent():map('<leader>ui')
+Snacks.toggle.dim():map('<leader>ud')
 Snacks.toggle.get('gitsigns_current_line_blame'):map('<leader>ugb')
 Snacks.toggle.get('gitsigns_show_deleted'):map('<leader>ugd')
 Snacks.toggle.get('gitsigns_word_diff'):map('<leader>ugw')
