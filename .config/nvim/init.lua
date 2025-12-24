@@ -78,6 +78,7 @@ require('lazy').setup({
 			scratch = {}, -- easily create scratch buffers
 			quickfile = {}, -- render files before loading plugins
 			terminal = {},
+			toggle = {},
 
 			-- Fuzzy finder
 			picker = {
@@ -182,6 +183,7 @@ require('lazy').setup({
 	},
 	{
 		'zbirenbaum/copilot.lua', -- {{{3
+		dependencies = {"folke/snacks.nvim"},
 		command = 'Copilot',
 		enabled = function()
 			local disabled = vim.env.GITHUB_COPILOT_DISABLED
@@ -203,6 +205,21 @@ require('lazy').setup({
 			else
 				auto_trigger = false
 			end
+
+			Snacks.toggle.new({
+				id = "github_copilot",
+				name = "GitHub CoPilot",
+				get = function()
+					if vim.b.copilot_suggestion_auto_trigger ~= nil then
+						return vim.b.copilot_suggestion_auto_trigger
+					end
+
+					return auto_trigger
+				end,
+				set = function(state)
+					vim.b.copilot_suggestion_auto_trigger = state
+				end,
+			})
 
 			-- Key maps
 			--
@@ -228,17 +245,6 @@ require('lazy').setup({
 					help = false,
 				},
 			}
-
-			local copilot_suggestion = require 'copilot.suggestion'
-
-			vim.keymap.set('n', '<leader>atg', function()
-				copilot_suggestion.toggle_auto_trigger()
-				if vim.b.copilot_suggestion_auto_trigger then
-					print("Copilot: Auto-trigger enabled")
-				else
-					print("Copilot: Auto-trigger disabled")
-				end
-			end, {desc = "Toggle GitHub Copilot"})
 		end,
 	},
 	{
@@ -494,6 +500,7 @@ require('lazy').setup({
 	-- Git {{{2
 	{
 		'lewis6991/gitsigns.nvim',
+		dependencies = {"folke/snacks.nvim"},
 		config = function()
 			local gitsigns = require('gitsigns')
 			gitsigns.setup()
@@ -522,12 +529,37 @@ require('lazy').setup({
 				gitsigns.blame_line {full = true}
 			end, {desc = "Blame current line"})
 
-			-- <leader>gtb: toggle line blame
-			-- <leader>gtd: toggle deleted
-			-- <leader>gtw: toggle word diff
-			vim.keymap.set('n', '<leader>gtb', gitsigns.toggle_current_line_blame, {desc = "Line blame"})
-			vim.keymap.set('n', '<leader>gtd', gitsigns.toggle_deleted, {desc = "Show deleted"})
-			vim.keymap.set('n', '<leader>gtw', gitsigns.toggle_word_diff, {desc = "Word diff"})
+			local gitsigns_config = require('gitsigns.config').config
+			Snacks.toggle.new({
+				id = "gitsigns_current_line_blame",
+				name = "Blame current line",
+				get = function()
+					return gitsigns_config.current_line_blame
+				end,
+				set = function(state)
+					gitsigns.toggle_current_line_blame(state)
+				end,
+			})
+			Snacks.toggle.new({
+				id = "gitsigns_show_deleted",
+				name = "Show deleted hunks",
+				get = function()
+					return gitsigns_config.show_deleted
+				end,
+				set = function(state)
+					gitsigns.toggle_deleted(state)
+				end,
+			})
+			Snacks.toggle.new({
+				id = "gitsigns_word_diff",
+				name = "Word-level diff",
+				get = function()
+					return gitsigns_config.word_diff
+				end,
+				set = function(state)
+					gitsigns.toggle_word_diff(state)
+				end,
+			})
 
 			-- <leader>gh{a,r}: stage and reset hunk
 			vim.keymap.set('n', '<leader>gha', gitsigns.stage_hunk, {desc = "Stage hunk"})
@@ -960,13 +992,9 @@ require('lazy').setup({
  				{"<leader>gb", desc = "+change base"},
  				{"<leader>gB", desc = "+change base (buffer)"},
  				{"<leader>gh", desc = "+hunk"},
- 				{"<leader>gt", desc = "+toggle"},
 
  				{"<leader>e", group = "+edit"},
  				{"<leader>ea", group = "+alternate"},
-
-				{"<leader>a", group = "+ai"},
-				{"<leader>at", desc = "+toggle"},
 
 				{"<leader>T", group = "+terminals"},
 
@@ -974,7 +1002,11 @@ require('lazy').setup({
 				{"<leader>f", group = "+find"},
 				{"<leader>j", group = "+join/split"},
 				{"<leader>q", group = "+quit"},
-				{"<leader>o", group = "+options"},
+
+				{"<leader>u", group = "+toggles"},
+				{'<leader>ul', group = '+lsp'},
+				{'<leader>ug', group = '+git'},
+
 				{"<leader>s", group = "+surround"},
 				{"<leader>t", group = "+tabs"},
 				{"<leader>w", group = "+windows"},
@@ -1226,10 +1258,6 @@ vim.api.nvim_create_autocmd('BufReadPost', {
 	desc = "Set up project-local spell file",
 })
 
-
-vim.keymap.set('n', '<leader>oz', function()
-	vim.opt.spell = not vim.opt.spell:get()
-end, { desc = 'Toggle spell-checking' })
 
 vim.keymap.set('n', '<leader>zg', function()
 	-- Determine position of last spellfile.
@@ -1568,15 +1596,6 @@ local function lsp_on_attach(client, bufnr)
 	-- gra: code action
 	-- Ctrl-S: signature help
 
-	-- <leader>lti Language: Toggle inlay hints (if supported)
-	if client.server_capabilities.inlayHintProvider then
-		if vim.lsp.inlay_hint ~= nil then
-			lsp_nmap('<leader>lti', function()
-				vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
-			end, "Toggle inlay hints")
-		end
-	end
-
 	-- Mnemonics:
 	-- grf  Code format
 	lsp_nmap('grf', vim.lsp.buf.format, "Reformat file")
@@ -1840,6 +1859,34 @@ end, {desc = "Previous diagnostic"})
 vim.api.nvim_create_user_command('Notifications', function()
 	Snacks.notifier.show_history()
 end, {desc = "Show past notifications"})
+
+-- Toggle shortcuts {{{2
+--
+-- All shortcuts preceded by <leader>u.
+--
+--  x: diagnostics
+--  A: copilot
+--  z: spell checking
+--
+--  LSP (l):
+--    i: inlay hints
+--
+--  Git (g):
+--    b: current line blame
+--    d: show deleted
+--    w: word diff
+Snacks.toggle.option('spell', {name = 'Spell checking'}):map('<leader>uz')
+Snacks.toggle.diagnostics():map('<leader>ux')
+Snacks.toggle.inlay_hints():map('<leader>uli')
+Snacks.toggle.get('gitsigns_current_line_blame'):map('<leader>ugb')
+Snacks.toggle.get('gitsigns_show_deleted'):map('<leader>ugd')
+Snacks.toggle.get('gitsigns_word_diff'):map('<leader>ugw')
+
+-- May not be enabled.
+local toggle_copilot = Snacks.toggle.get('github_copilot')
+if toggle_copilot ~= nil then
+	toggle_copilot:map('<leader>uA')
+end
 
 --  File Types {{{1
 
