@@ -79,7 +79,6 @@ require('lazy').setup({
 			quickfile = {}, -- render files before loading plugins
 			terminal = {},
 			toggle = {},
-			input = {},
 
 			-- Fuzzy finder
 			picker = {
