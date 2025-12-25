@@ -53,5 +53,8 @@
     "type": "command",
     "command": "~/tools/claude/statusline.sh"
   },
-  "alwaysThinkingEnabled": false
+  "alwaysThinkingEnabled": false,
+  "enabledPlugins": {
+    "gopls-lsp@claude-plugins-official": true
+  }
 }
