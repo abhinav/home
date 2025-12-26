@@ -771,11 +771,11 @@ require('lazy').setup({
 	'folke/trouble.nvim',
 	'https://git.sr.ht/~whynothugo/lsp_lines.nvim',
 	{
-		'neovim/nvim-lspconfig', -- {{{3
+		'mason-org/mason-lspconfig.nvim', -- {{{3
 		dependencies = {
 			'folke/lsp-colors.nvim',
 			 { "mason-org/mason.nvim", opts = {} },
-			'mason-org/mason-lspconfig.nvim',
+			'neovim/nvim-lspconfig',
 		},
 		-- Table of options for each language server.
 		-- Items can be key-value pairs to specify configuration,
@@ -848,6 +848,7 @@ require('lazy').setup({
 			end
 
 			local ensure_installed = {}
+			local update_options = {}
 			for name, cfg in pairs(opts) do
 				if type(name) == "number" then
 					name = cfg
@@ -862,20 +863,25 @@ require('lazy').setup({
 						-- Don't spam LSP with changes. Wait a second between updates.
 						debounce_text_changes = 1000,
 					}
-					opts[name] = cfg
+					update_options[name] = cfg
 
 					-- If the LSP is installed globally, set it up.
 					--
 					-- Otherwise, add it to the list of LSPs to install
 					-- only if it's required.
 					-- Mason will enable them automatically.
-					if vim.fn.executable(name) then
+					if vim.fn.exepath(name) ~= "" then
 						vim.lsp.config(name, cfg)
 					elseif not cfg.optional then
 						table.insert(ensure_installed, name)
 					end
 				end
 			end
+
+			for name, cfg in pairs(update_options) do
+				opts[name] = cfg
+			end
+
 
 			local mason_lspconfig = require('mason-lspconfig')
 			mason_lspconfig.setup({
