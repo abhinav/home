@@ -277,7 +277,8 @@ require('lazy').setup({
 					},
 				},
 				nes = {
-					debounce = 500,
+					-- causes lag
+					enabled = false,
 				},
 			}
 
