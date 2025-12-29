@@ -42,6 +42,7 @@
 !/.claude
 /.claude/*
 !/.claude/CLAUDE.md
+!/.claude/settings.json
 !/.claude/skills
 !/.claude/commands
 
