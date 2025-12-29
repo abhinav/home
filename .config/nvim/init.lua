@@ -290,100 +290,6 @@ require('lazy').setup({
 		end,
 	},
 	{
-		"folke/sidekick.nvim",
-		lazy = false,
-		enabled = function()
-			local disabled = vim.env.GITHUB_COPILOT_DISABLED
-			if disabled == "1" or disabled == "true" then
-				disabled = true
-			else
-				disabled = false
-			end
-			return not disabled
-		end,
-		opts = function()
-			opts = {
-				cli = {
-					mux = {
-						backend = 'tmux',
-						enabled = true,
-						create = 'split',
-					},
-					tools = {
-					},
-				},
-				nes = {
-					-- causes lag
-					enabled = false,
-				},
-			}
-
-			-- CLI multiplexer:
-			-- Use 'terminal' mode only when inside Neovide
-			if vim.g.neovide then
-				opts.cli.mux.create = 'terminal'
-			end
-
-			-- Claude:
-			-- There may be a system-wide 'claude'
-			-- or the self-managed one at ~/.claude/local/claude.
-			local claude_path = vim.fn.exepath('claude')
-			if claude_path == '' then
-				-- Check if self-managed Claude is installed
-				-- at ~/.claude/local/claude.
-				claude_path = vim.fn.expand('~/.claude/local/claude')
-				if vim.fn.executable(claude_path) == 0 then
-					claude_path = ''
-				end
-			end
-			if claude_path ~= '' then
-				opts.cli.tools['claude'] = {
-					cmd = {claude_path},
-				}
-			end
-
-			return opts
-		end,
-		keys = {
-			{
-				"<tab>", function()
-					if not require("sidekick").nes_jump_or_apply() then
-						return '<tab>'
-					end
-				end,
-				mode = {'n'}, -- insert mode handled as part of cmp.setup
-				expr = true,
-				desc = "Goto/Apply Next Edit Suggestion"
-			},
-			{
-				'<leader>aa',
-				function()
-					require("sidekick.cli").toggle({
-						name = 'claude',
-					})
-				end,
-				mode = { "n", "t", "i", "x" },
-				desc = "Toggle CLI",
-			},
-			{
-				'<leader>ad',
-				function() require("sidekick.cli").close() end,
-				desc = 'Detach a CLI session',
-			},
-			{
-				'<leader>av',
-				function() require("sidekick.cli").send({ msg = "{selection}" }) end,
-				mode = { "x" },
-				desc = "Send selection to CLI",
-			},
-			{
-				'<leader>ap',
-				function() require("sidekick.cli").prompt() end,
-				desc = "Send Sidekick prompt to CLI",
-			},
-		},
-	},
-	{
 		'stevearc/oil.nvim',
 		config = function()
 			require('oil').setup {
@@ -1755,7 +1661,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
 -- nvim-cmp {{{2
 local cmp = require 'cmp'
 local has_copilot, copilot_suggestion = pcall(require, 'copilot.suggestion')
-local has_sidekick, sidekick = pcall(require, 'sidekick')
 
 local handleTab = function(fallback)
 	-- Completion suggestions take precedence over Copilot suggestions.
@@ -1769,8 +1674,6 @@ local handleTab = function(fallback)
 	-- TODO: enable in nvim >= 0.12 with native inline completion
 	-- elseif vim.lsp.inline_completion.get() then
 	-- 	-- neovim handled it.
-	elseif has_sidekick and sidekick.nes_jump_or_apply() then
-		-- sidekick handled the tab.
 	elseif has_copilot and copilot_suggestion.is_visible() then
 		copilot_suggestion.accept()
 	elseif vim.snippet.active({direction = 1}) then
