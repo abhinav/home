@@ -80,6 +80,11 @@ require('lazy').setup({
 			terminal = {},
 			toggle = {},
 
+			-- file explorer sidebar since oil takes over buffer
+			explorer = {
+				replace_netrw = false, -- oil does this
+			},
+
 			-- Fuzzy finder
 			picker = {
 				win = {
@@ -87,6 +92,27 @@ require('lazy').setup({
 						keys = {
 							-- Close on ESC.
 							["<Esc>"] = { "close", mode = { "n", "i" } },
+						},
+					},
+				},
+				sources = {
+					explorer = {
+						-- Better Esc behavior when using picker as explorer:
+						-- In input mode, clear search and focus back to the list.
+						-- In normal mode, do nothing on Esc.
+						win = {
+							input = {keys = {
+								["<Esc>"] = {
+									function()
+										local current = Snacks.picker.get({source = 'explorer'})[1]
+										current.input:set('')
+										current:refresh()
+										Snacks.picker.actions.focus_list(current)
+									end,
+									mode = {"i"},
+								},
+							}},
+							list = {keys = {["<Esc>"] = false}},
 						},
 					},
 				},
@@ -124,6 +150,16 @@ require('lazy').setup({
 			{'<leader>f.', function()
 				Snacks.scratch.select()
 			end, desc = "Toggle scratch buffer"},
+
+			-- explorer
+			 -- <C-/> to open file explorer
+			 --
+			 -- (To map '/', we need to use <C-_> since '/'.
+			 -- Obtain by doing 'Ctrl-V Ctrl-/' in insert mode,
+			 -- which gives us '^_', i.e. <ESC> followed by '_'.)
+			{'<C-_>', function()
+				Snacks.explorer.open()
+			end, mode = {'n', 'i'}, desc = "Show file explorer"},
 
 			-- picker
 			-- All keys preceded by <leader>:
