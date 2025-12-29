@@ -151,16 +151,6 @@ require('lazy').setup({
 				Snacks.scratch.select()
 			end, desc = "Toggle scratch buffer"},
 
-			-- explorer
-			 -- <C-/> to open file explorer
-			 --
-			 -- (To map '/', we need to use <C-_> since '/'.
-			 -- Obtain by doing 'Ctrl-V Ctrl-/' in insert mode,
-			 -- which gives us '^_', i.e. <ESC> followed by '_'.)
-			{'<C-_>', function()
-				Snacks.explorer.open()
-			end, mode = {'n', 'i'}, desc = "Show file explorer"},
-
 			-- picker
 			-- All keys preceded by <leader>:
 			--
@@ -1440,6 +1430,26 @@ end, {
 	desc = "New terminal in a horizontal split",
 	silent = true,
 })
+
+-- Snacks file explorer:
+--
+-- <C-/> to open file explorer
+--
+-- To map '/' in the terminal, we need to use <C-_>
+-- ('/' is special, see :help map-special-keys).
+-- Obtain by doing 'Ctrl-V Ctrl-/' in insert mode,
+-- which gives us '^_', i.e. <ESC> followed by '_'.)
+--
+-- In neovide, use Super+/ because Ctrl+/ seems to beep.
+-- https://github.com/neovide/neovide/issues/2984
+local snacks_explorer_key = '<C-_>'
+if vim.g.neovide then
+	snacks_explorer_key = '<D-/>'
+end
+vim.keymap.set('n', snacks_explorer_key, function()
+	Snacks.explorer.open()
+end, {noremap = true, desc = "Show file explorer"})
+
 
 -- <leader>fy: copy relative file path
 vim.keymap.set('n', '<leader>fy', function()
