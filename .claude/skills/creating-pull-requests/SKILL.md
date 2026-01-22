@@ -18,6 +18,19 @@ ALWAYS use git-spice (`gs`) to create and update pull requests.
 - `gh pr create` - gs handles PR creation
 - `git push --force-with-lease` - gs handles force pushes
 
+## Workflow for New PRs
+
+**BEFORE running `gs branch submit`, you MUST have:**
+1. PR title (from commit message or summarized)
+2. PR body (from template + commit body)
+
+**Then run the COMPLETE command:**
+```bash
+gs branch submit --title "<title>" --body "<body>"
+```
+
+**NEVER run `gs branch submit` without `--title` and `--body` for new PRs.**
+
 ## The One Command
 
 For ALL pull request operations, use `gs branch submit`:
@@ -59,6 +72,24 @@ gs branch submit --reviewer user1 --reviewer user2 --title "<title>" --body "<bo
 
 ## PR Template Handling
 
+### Locating PR Templates
+
+GitHub supports PR templates in these locations (checked in order):
+
+**Single template:**
+- `.github/pull_request_template.md`
+- `docs/pull_request_template.md`
+- `pull_request_template.md` (repository root)
+
+**Multiple templates (subdirectory):**
+- `.github/PULL_REQUEST_TEMPLATE/<name>.md`
+- `docs/PULL_REQUEST_TEMPLATE/<name>.md`
+- `PULL_REQUEST_TEMPLATE/<name>.md` (repository root)
+
+File names are case-insensitive (`PULL_REQUEST_TEMPLATE.md` also works).
+
+### Using PR Templates
+
 If the repository has a PR template:
 
 1. ALWAYS follow the template format
@@ -77,8 +108,10 @@ If you're about to run any of these, STOP:
 - `git push -u origin <branch>`
 - `git push --force-with-lease`
 - `gh pr create`
+- `gs branch submit` without `--title` and `--body` (for new PRs)
+- `gh api user` (not needed—gs handles everything)
 
-All of these are violations. Use `gs branch submit` instead.
+All of these are violations. Use `gs branch submit` with required flags instead.
 
 ## Common Mistakes
 
@@ -88,6 +121,8 @@ All of these are violations. Use `gs branch submit` instead.
 | `git push --force-with-lease` for updates | Bypasses gs workflow | `gs branch submit` handles updates |
 | `gh pr create --fill` | Wrong tool | `gs branch submit` with flags |
 | "JIRA: None" in PR body | Clutters PR | Delete the field entirely |
+| `gs branch submit` without flags | Missing required `--title` and `--body` | Always include both flags for new PRs |
+| `gh api user` to get username | Not needed, gs handles everything | Remove the command entirely |
 
 ## Rationalizations That Don't Apply
 

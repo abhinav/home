@@ -160,9 +160,11 @@ Useful when current branch isn't the desired base.
 **Forbidden:**
 - Slashes: ~~feature/login~~
 - Uppercase: ~~FixLogin~~
-- User prefixes: ~~john/fix~~
+- User prefixes: ~~john/fix~~ or ~~abg-fix~~
 
-**Why no prefixes:** git-spice adds them automatically if configured.
+**Why no prefixes:** git-spice automatically adds user prefixes if configured.
+Adding them manually results in double-prefixing (e.g., `abg-abg-fix-bug`).
+Just use descriptive names: `fix-bug` not `abg-fix-bug`.
 
 ## NEVER Use Raw Git
 
@@ -206,6 +208,7 @@ If you're about to:
 - Use `git branch` to create a branch
 - Use `gs branch current` (doesn't exist)
 - Skip getting a proper commit message
+- Add a prefix like `abg-`, `john/`, or `user-` to branch names
 - Rationalize "just this once" or "it's faster"
 - Assume a gs command exists because "gs does everything"
 
@@ -256,6 +259,7 @@ For getting current branch: use `git branch --show-current`
 | Commit without writing-commit-messages skill | Poor quality messages | Load with Skill(writing-commit-messages) first |
 | Accepting raw git "because user prefers it" | Breaks stack, defeats purpose | Never accept. Explain why gs is required |
 | Asking permission to normalize names | Wastes time | Just normalize and inform |
+| Adding user prefix to branch name | git-spice auto-adds prefixes | Just use descriptive name: `fix-bug` not `abg-fix-bug` |
 
 ## Pressure Resistance
 
