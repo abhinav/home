@@ -1,6 +1,7 @@
 ---
 name: semantic-line-breaks
 description: Provides formatting guidelines for prose. This skill's guidance is automatically applied when writing multi-line comments, commit messages, markdown, or other prose.
+user-invocable: false
 ---
 
 # Semantic line breaks

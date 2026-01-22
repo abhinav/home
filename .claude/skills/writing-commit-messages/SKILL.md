@@ -1,6 +1,7 @@
 ---
 name: writing-commit-messages
 description: Use when writing or improving messages for Git commits, or when asked to generate a commit message or pull request description.
+user-invocable: false
 ---
 
 # Writing commit messages

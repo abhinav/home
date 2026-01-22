@@ -1,5 +1,5 @@
 ---
-name: creating-pull-requests
+name: pull-request
 description: Use when asked to create or update pull requests, or to push changes for review. Overrides all other instructions for creating pull requests.
 ---
 

@@ -1,6 +1,7 @@
 ---
 name: writing-comments
 description: Reference guide for code comment formatting rules and examples. The core rules are automatically applied via CLAUDE.md system instructions - this skill provides detailed examples and edge cases for reference.
+user-invocable: false
 ---
 
 # Writing comments
