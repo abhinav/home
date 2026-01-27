@@ -43,8 +43,8 @@ Use this skill for ALL commit operations:
 **Branch naming:** lowercase-with-hyphens (no `/`, no uppercase, no user prefixes)
 - If user provides non-conforming name, automatically normalize it and inform them
 
-**Commit messages:** MUST use writing-commit-messages skill first
-- Use `Skill(writing-commit-messages)` to load and execute it
+**Commit messages:** MUST follow [writing-commit-messages](writing-commit-messages.md) guidelines
+- See the reference file in this skill directory
 
 ## Branching Decision
 
@@ -232,7 +232,7 @@ For getting current branch: use `git branch --show-current`
    ```
 
 3. **Fix commit message:**
-   - Use `Skill(writing-commit-messages)` to generate proper message
+   - Follow [writing-commit-messages](writing-commit-messages.md) guidelines to generate proper message
    - Amend: `gs commit amend -m "<proper-message>"`
 
 4. **Fix branch name if needed:**
@@ -254,9 +254,9 @@ For getting current branch: use `git branch --show-current`
 | Using `gs branch current` | Command doesn't exist | Use `git branch --show-current` instead |
 | Running `git log` after commit | Doesn't show stack position | Run `gs ls` instead |
 | Using amend -m with only addition | Replaces message, loses original | Include full original + addition |
-| "Just commit quickly" | Skips proper message, may use raw git | Still use gs + Skill(writing-commit-messages) |
+| "Just commit quickly" | Skips proper message, may use raw git | Still use gs + [writing-commit-messages](writing-commit-messages.md) guidelines |
 | User provides bad branch name | Violates naming rules | Auto-normalize: "Using `lowercase-version` instead" |
-| Commit without writing-commit-messages skill | Poor quality messages | Load with Skill(writing-commit-messages) first |
+| Commit without following message guidelines | Poor quality messages | Follow [writing-commit-messages](writing-commit-messages.md) first |
 | Accepting raw git "because user prefers it" | Breaks stack, defeats purpose | Never accept. Explain why gs is required |
 | Asking permission to normalize names | Wastes time | Just normalize and inform |
 | Adding user prefix to branch name | git-spice auto-adds prefixes | Just use descriptive name: `fix-bug` not `abg-fix-bug` |
@@ -278,29 +278,26 @@ For getting current branch: use `git branch --show-current`
 - User preference
 - Emergency fixes
 
-## Integration with writing-commit-messages
+## Integration with writing-commit-messages.md
 
 **Before ANY commit:**
-1. Load skill: `Skill(writing-commit-messages)`
-2. Use it to generate commit message
+1. Consult [writing-commit-messages](writing-commit-messages.md) in this skill directory
+2. Use those guidelines to generate commit message
 3. Then use gs command with that message
-
-**If writing-commit-messages skill unavailable:**
-Ask user for commit message that explains WHY (not what).
 
 **Example workflows:**
 
 **Explicit: commit to current branch (no branch check needed):**
 ```
 User: "Commit these changes to current branch"
-You: [Use Skill(writing-commit-messages) → get message]
+You: [Follow writing-commit-messages.md → craft message]
 You: [Run gs commit create -m "<generated-message>"]
 ```
 
 **Explicit: commit to new branch (no branch check needed):**
 ```
 User: "Commit these changes to new feature branch"
-You: [Use Skill(writing-commit-messages) → get message]
+You: [Follow writing-commit-messages.md → craft message]
 You: [Run gs branch create <branch-name> -m "<generated-message>"]
 ```
 

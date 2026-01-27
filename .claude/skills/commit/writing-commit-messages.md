@@ -1,9 +1,3 @@
----
-name: writing-commit-messages
-description: Use when writing or improving messages for Git commits, or when asked to generate a commit message or pull request description.
-user-invocable: false
----
-
 # Writing commit messages
 
 ## Instructions
@@ -121,13 +115,3 @@ NEVER use single-line commit messages.
 
 **Solution**:
 There MUST ALWAYS be a body to the commit message.
-
-## Important: This skill only writes the message
-
-This skill provides guidance on how to format commit messages.
-After using this skill to craft a commit message,
-you must invoke the `committing` skill
-to actually perform the commit operation.
-
-**NEVER use `git commit` directly.**
-Always use `Skill(committing)` after writing the commit message.
