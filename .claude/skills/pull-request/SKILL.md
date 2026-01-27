@@ -18,6 +18,16 @@ ALWAYS use git-spice (`gs`) to create and update pull requests.
 - `gh pr create` - gs handles PR creation
 - `git push --force-with-lease` - gs handles force pushes
 
+## Detecting Existing PRs
+
+If you need to check whether a branch has an existing PR, use `gs ls`.
+Branches with open PRs show `(#123)` after the branch name:
+
+```
+┣━□ feature-branch (#42069)     ← has PR #42069
+┣━□ another-branch              ← no PR yet
+```
+
 ## Workflow for New PRs
 
 **BEFORE running `gs branch submit`, you MUST have:**
