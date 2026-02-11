@@ -8,7 +8,17 @@ Commit messages MUST follow the following format:
 <subject>
 
 <body>
+
+## LLM Assistance
+
+<llm-assistance>
+
+<trailers>
 ```
+
+The `## LLM Assistance` section and `<trailers>` are conditional.
+See the LLM Assistance and Trailers sections below
+for when to include each.
 
 ### `<subject>`
 
@@ -52,20 +62,61 @@ If it still exceeds 72 characters, rethink the `<summary>` to shorten it.
 - Use objective, factual tone:
   - Avoid subjective embellishments like "critical issue", "serious problem"
   - Focus on what the code does and why, not value judgments
-- **Attribution**:
-  If the bot wrote any code that is part of the commit,
-  attribute the bot as a co-author in the commit message.
 
-  ```
-  Co-Authored-By: Claude <noreply@anthropic.com>
-  // or
-  Co-Authored-By: Amp <amp@ampcode.com>
-  ```
+### LLM Assistance
 
-  Exception:
-  If the bot *only* wrote the commit message,
-  and was not involved in writing any code,
-  do NOT include a co-authorship trailer.
+Include an `## LLM Assistance` section in the commit message
+whenever an LLM contributed to the change itself —
+code generation, refactoring, bug identification,
+test writing, etc.
+
+Omit the section if the LLM only wrote the commit message
+and was not involved in producing the change.
+
+Format the section as:
+
+- An `## LLM Assistance` heading after the body.
+- One to three factual sentences
+  describing how the LLM was involved.
+- Use the LLM's name (e.g., "Claude Code", "Amp").
+- Apply semantic line breaks; 72-character line max.
+
+**Examples:**
+
+```
+## LLM Assistance
+
+Claude Code generated the initial implementation
+and test cases for the new validation logic.
+```
+
+```
+## LLM Assistance
+
+Amp identified the off-by-one error in the loop
+and suggested the fix.
+```
+
+```
+## LLM Assistance
+
+Claude Code refactored the handler functions
+from callback style to async/await.
+```
+
+### Trailers
+
+Include a `Co-Authored-By` trailer
+only when the LLM wrote code in the commit.
+
+```
+Co-Authored-By: Claude <noreply@anthropic.com>
+Co-Authored-By: Amp <amp@ampcode.com>
+```
+
+Do not include a `Co-Authored-By` trailer
+for suggestions, bug identification,
+or commit-message-only involvement.
 
 ## Formatting
 
@@ -115,3 +166,13 @@ NEVER use single-line commit messages.
 
 **Solution**:
 There MUST ALWAYS be a body to the commit message.
+
+### Missing LLM Assistance section
+
+When an LLM helped produce the change,
+the commit message MUST include
+the `## LLM Assistance` section.
+
+**Solution**:
+Add the section describing how the LLM contributed.
+See the LLM Assistance subsection above.

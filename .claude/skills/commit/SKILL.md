@@ -1,6 +1,7 @@
 ---
 name: commit
 description: Use when committing work, amending commits, creating or stacking branches - applies to all commit operations including "quick commits", emergency fixes, and when user already used raw git commands. ALWAYS use git-spice instead of git checkout, git commit, or git branch.
+allowed-tools: Read
 ---
 
 # Committing Changes
