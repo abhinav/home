@@ -1,17 +1,9 @@
----
-name: semantic-line-breaks
-description: Provides formatting guidelines for prose. This skill's guidance is automatically applied when writing multi-line comments, commit messages, markdown, or other prose.
-user-invocable: false
----
-
-# Semantic line breaks
-
-## Instructions
+# Prose formatting
 
 When writing long-form comments, commit messages, Markdown, or other prose:
-ALWAYS use semantic line breaks to improve readability and maintainability.
+ALWAYS use semantic line breaks.
 
-### Semantic line breaks
+## Semantic line breaks
 
 Semantic line breaks require breaking lines at logical points in the text,
 such as after punctuation marks, conjunctions, or prepositions.
@@ -25,7 +17,7 @@ such as after punctuation marks, conjunctions, or prepositions.
     ```
 
 - A semantic line break SHOULD occur after an independent clause
-  as punctuated by a comma (,), semicolon (;), colon (:), or em dash (—).
+  as punctuated by a comma (,), semicolon (;), colon (:), or em dash (---).
 
     ```
     This is an example of a semantic line break,
@@ -43,7 +35,8 @@ such as after punctuation marks, conjunctions, or prepositions.
     ```
 
 - A semantic line break MAY be used after one or more items in a list
-  in order to logically group related items or satisfy line length constraints.
+  in order to logically group related items
+  or satisfy line length constraints.
 
 - A semantic line break SHOULD occur before an enumerated or itemized list.
 
@@ -56,7 +49,7 @@ such as after punctuation marks, conjunctions, or prepositions.
 - A semantic line break MAY occur before and after a hyperlink.
 - A semantic line break MAY occur before inline markup.
 
-### Line length
+## Line length
 
 Complying with semantic line breaks is required,
 but this must not violate line length guidelines.

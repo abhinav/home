@@ -45,6 +45,7 @@
 !/.claude/settings.json
 !/.claude/skills
 !/.claude/commands
+!/.claude/docs
 
 # Rust
 !/.cargo
