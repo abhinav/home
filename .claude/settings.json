@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "permissions": {
     "allow": [
-      "Read(//Users/abhinav/.claude/docs/**)",
+      "Read(~/.claude/docs/**)",
       "Bash(bazel build:*)",
       "Bash(cat:*)",
       "Bash(diff:*)",
