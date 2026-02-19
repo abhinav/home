@@ -3,6 +3,7 @@
   "permissions": {
     "allow": [
       "Read(~/.claude/docs/**)",
+      "Read(~/go/pkg/mod/**)",
       "Bash(bazel build:*)",
       "Bash(cat:*)",
       "Bash(diff:*)",
