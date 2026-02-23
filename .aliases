@@ -14,4 +14,5 @@ if [ "$EDITOR" = "nvim" ]; then
 fi
 
 alias g=git
+alias gs=git-spice
 alias lg=lazygit
