@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# shellcheck disable=2086
+if [[ -d "/Applications/Obsidian.app/Contents/MacOS" ]]; then
+	PATH=$(IFS=:; append "/Applications/Obsidian.app/Contents/MacOS" $PATH)
+	export PATH
+
+	alias ob=Obsidian
+fi
