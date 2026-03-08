@@ -38,6 +38,8 @@
 # [n]vim
 !.vimrc
 
+!/.agents
+
 # CLAUDE
 !/.claude
 /.claude/*
@@ -45,7 +47,11 @@
 !/.claude/settings.json
 !/.claude/skills
 !/.claude/commands
-!/.claude/docs
+
+# Codex
+!/.codex
+/.codex/*
+!/.codex/AGENTS.md
 
 # Rust
 !/.cargo

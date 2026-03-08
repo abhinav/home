@@ -104,20 +104,6 @@ Claude Code refactored the handler functions
 from callback style to async/await.
 ```
 
-### Trailers
-
-Include a `Co-Authored-By` trailer
-only when the LLM wrote code in the commit.
-
-```
-Co-Authored-By: Claude <noreply@anthropic.com>
-Co-Authored-By: Amp <amp@ampcode.com>
-```
-
-Do not include a `Co-Authored-By` trailer
-for suggestions, bug identification,
-or commit-message-only involvement.
-
 ## Formatting
 
 The `<subject>` SHOULD be fewer than 50 characters,
