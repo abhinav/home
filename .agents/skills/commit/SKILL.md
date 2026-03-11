@@ -8,7 +8,7 @@ allowed-tools: Read
 
 ## Overview
 
-ALWAYS use git-spice (`gs`) for creating commits and branches, and for amending commits.
+ALWAYS use git-spice for creating commits and branches, and for amending commits.
 NEVER use raw git commands for these purposes (git commit, git checkout -b, git branch $name).
 
 **Why git-spice:** Maintains branch relationships and auto-rebases dependent branches.
@@ -35,11 +35,11 @@ Use this skill for ALL commit operations:
 | Task | Command |
 |------|---------|
 | Get current branch name | `git branch --show-current` |
-| New branch + commit | `gs branch create <name> -m "<msg>"` |
-| Commit to current branch | `gs commit create -m "<msg>"` |
-| Amend (keep message) | `gs commit amend` |
-| Amend (change message) | `gs commit amend -m "<new-msg>"` |
-| Stack on different branch | `gs branch create --target <base> <name> -m "<msg>"` |
+| New branch + commit | `git-spice branch create <name> -m "<msg>"` |
+| Commit to current branch | `git-spice commit create -m "<msg>"` |
+| Amend (keep message) | `git-spice commit amend --no-edit` |
+| Amend (change message) | `git-spice commit amend -m "<new-msg>"` |
+| Stack on different branch | `git-spice branch create --target <base> <name> -m "<msg>"` |
 
 **Branch naming:** lowercase-with-hyphens (no `/`, no uppercase, no user prefixes)
 - If user provides non-conforming name, automatically normalize it and inform them
@@ -50,8 +50,8 @@ Use this skill for ALL commit operations:
 ## Branching Decision
 
 **If user explicitly states their intent, follow it directly:**
-- "Commit to this branch" or "commit to current branch" → Use `gs commit create`
-- "Create new branch" or "commit to new branch" → Use `gs branch create`
+- "Commit to this branch" or "commit to current branch" → Use `git-spice commit create`
+- "Create new branch" or "commit to new branch" → Use `git-spice branch create`
 - No need to check current branch when intent is explicit
 
 **If user intent is ambiguous, determine from context:**
@@ -71,34 +71,34 @@ flowchart TD
 ### Create branch with commit
 
 ```bash
-gs branch create <branch-name> -m "<commit-message>"
+git-spice branch create <branch-name> -m "<commit-message>"
 ```
 
 - Commits **staged changes** to new branch
 - Switches to new branch
 - If on feature branch, stacks automatically
 
-**After creating branch:** Run `gs ls` to show branch position in stack (NOT git log).
+**After creating branch:** Run `git-spice ls` to show branch position in stack (NOT git log).
 
 **Example:**
 ```bash
 # On main
-gs branch create fix-login-validation -m "Fix email validation in login form"
+git-spice branch create fix-login-validation -m "Fix email validation in login form"
 
 # On feature-auth, creating unrelated change
-gs branch create update-readme -m "Update installation instructions"
+git-spice branch create update-readme -m "Update installation instructions"
 # This stacks update-readme on top of feature-auth
 ```
 
 ### Commit to current branch
 
 ```bash
-gs commit create -m "<commit-message>"
+git-spice commit create -m "<commit-message>"
 ```
 
 Commits **staged changes** to current branch.
 
-**After committing:** Run `gs ls` to show branch position in stack (NOT git log).
+**After committing:** Run `git-spice ls` to show branch position in stack (NOT git log).
 
 ### Get current branch name
 
@@ -106,7 +106,7 @@ Commits **staged changes** to current branch.
 git branch --show-current
 ```
 
-**IMPORTANT:** `gs branch current` does NOT exist.
+**IMPORTANT:** `git-spice branch current` does NOT exist.
 git-spice doesn't have a command for showing the current branch.
 Use standard git command: `git branch --show-current`
 
@@ -123,13 +123,13 @@ Use standard git command: `git branch --show-current`
 
 ```bash
 # Keep existing message
-gs commit amend
+git-spice commit amend --no-edit
 
 # Replace entire message
-gs commit amend -m "<new-complete-message>"
+git-spice commit amend -m "<new-complete-message>"
 ```
 
-**CRITICAL:** `gs commit amend -m` REPLACES the entire commit message.
+**CRITICAL:** `git-spice commit amend -m` REPLACES the entire commit message.
 If user says "add" or "append" to message, you MUST include the original message + addition.
 
 **Example:**
@@ -137,8 +137,8 @@ If user says "add" or "append" to message, you MUST include the original message
 # Original message: "Fix login validation"
 # User: "Add note about regex update"
 
-# ❌ WRONG: gs commit amend -m "Also updates regex pattern"
-# ✅ CORRECT: gs commit amend -m "Fix login validation
+# ❌ WRONG: git-spice commit amend -m "Also updates regex pattern"
+# ✅ CORRECT: git-spice commit amend -m "Fix login validation
 
 Also updates regex pattern"
 ```
@@ -146,7 +146,7 @@ Also updates regex pattern"
 ### Stack on specific branch
 
 ```bash
-gs branch create --target <target-branch> <branch-name> -m "<commit-message>"
+git-spice branch create --target <target-branch> <branch-name> -m "<commit-message>"
 ```
 
 Useful when current branch isn't the desired base.
@@ -176,29 +176,29 @@ Just use descriptive names: `fix-bug` not `abg-fix-bug`.
 **Instead:**
 1. Stage changes: `git add <files>`
 2. Get commit message: Use writing-commit-messages skill
-3. Create branch: `gs branch create <name> -m "<message>"`
+3. Create branch: `git-spice branch create <name> -m "<message>"`
 
 ### ❌ NEVER: `git commit` or `git commit --amend`
 
 **Why:** Bypasses git-spice rebase. Dependent branches become stale.
 
 **Instead:**
-- New commit: `gs commit create -m "<message>"`
-- Amend: `gs commit amend` or `gs commit amend -m "<new-message>"`
+- New commit: `git-spice commit create -m "<message>"`
+- Amend: `git-spice commit amend --no-edit` or `git-spice commit amend -m "<new-message>"`
 
 ### ❌ NEVER: `git branch <name>`
 
 **Why:** Creates untracked branch outside stack.
 
-**Instead:** Use `gs branch create` with commit.
+**Instead:** Use `git-spice branch create` with commit.
 
-### ❌ NEVER: `gs branch current`
+### ❌ NEVER: `git-spice branch current`
 
 **Why:** Command doesn't exist. git-spice has no equivalent for this.
 
 **Instead:** Use `git branch --show-current`
 
-**Common mistake:** Assuming every git command has a gs equivalent.
+**Common mistake:** Assuming every git command has a git-spice equivalent.
 **Reality:** Some operations (like showing current branch) still use standard git.
 
 ## Red Flags - STOP
@@ -207,11 +207,11 @@ If you're about to:
 - Use any `git commit` command
 - Use `git checkout -b`
 - Use `git branch` to create a branch
-- Use `gs branch current` (doesn't exist)
+- Use `git-spice branch current` (doesn't exist)
 - Skip getting a proper commit message
 - Add a prefix like `abg-`, `john/`, or `user-` to branch names
 - Rationalize "just this once" or "it's faster"
-- Assume a gs command exists because "gs does everything"
+- Assume a git-spice command exists because "git-spice does everything"
 
 **STOP. Use git-spice commands instead.**
 
@@ -234,16 +234,16 @@ For getting current branch: use `git branch --show-current`
 
 3. **Fix commit message:**
    - Follow [writing-commit-messages](writing-commit-messages.md) guidelines to generate proper message
-   - Amend: `gs commit amend -m "<proper-message>"`
+   - Amend: `git-spice commit amend -m "<proper-message>"`
 
 4. **Fix branch name if needed:**
    ```bash
-   gs branch rename <proper-name>
+   git-spice branch rename <proper-name>
    ```
 
 5. **Track in git-spice (if not already tracked):**
    ```bash
-   gs branch track
+   git-spice branch track
    ```
 
 **Note:** After recovery, the branch is properly integrated into git-spice.
@@ -252,13 +252,13 @@ For getting current branch: use `git branch --show-current`
 
 | Mistake | Why Bad | Solution |
 |---------|---------|----------|
-| Using `gs branch current` | Command doesn't exist | Use `git branch --show-current` instead |
-| Running `git log` after commit | Doesn't show stack position | Run `gs ls` instead |
+| Using `git-spice branch current` | Command doesn't exist | Use `git branch --show-current` instead |
+| Running `git log` after commit | Doesn't show stack position | Run `git-spice ls` instead |
 | Using amend -m with only addition | Replaces message, loses original | Include full original + addition |
-| "Just commit quickly" | Skips proper message, may use raw git | Still use gs + [writing-commit-messages](writing-commit-messages.md) guidelines |
+| "Just commit quickly" | Skips proper message, may use raw git | Still use git-spice + [writing-commit-messages](writing-commit-messages.md) guidelines |
 | User provides bad branch name | Violates naming rules | Auto-normalize: "Using `lowercase-version` instead" |
 | Commit without following message guidelines | Poor quality messages | Follow [writing-commit-messages](writing-commit-messages.md) first |
-| Accepting raw git "because user prefers it" | Breaks stack, defeats purpose | Never accept. Explain why gs is required |
+| Accepting raw git "because user prefers it" | Breaks stack, defeats purpose | Never accept. Explain why git-spice is required |
 | Asking permission to normalize names | Wastes time | Just normalize and inform |
 | Adding user prefix to branch name | git-spice auto-adds prefixes | Just use descriptive name: `fix-bug` not `abg-fix-bug` |
 
@@ -266,12 +266,12 @@ For getting current branch: use `git branch --show-current`
 
 | Excuse | Reality |
 |--------|---------|
-| "Production down, use `gs branch current` now" | Command doesn't exist. Use `git branch --show-current`. Takes same time. |
-| "Just commit quickly, demo in 10 min" | gs is just as fast as git. Use proper commands. |
-| "I prefer raw git, it's simpler" | Raw git breaks branch tracking. Use gs. |
+| "Production down, use `git-spice branch current` now" | Command doesn't exist. Use `git branch --show-current`. Takes same time. |
+| "Just commit quickly, demo in 10 min" | git-spice is just as fast as git. Use proper commands. |
+| "I prefer raw git, it's simpler" | Raw git breaks branch tracking. Use git-spice. |
 | "I already committed with git" | Fix it before pushing. See Recovery section. |
 | "It's a small change, doesn't matter" | Every commit matters. Use proper workflow. |
-| "gs should have everything" | git-spice doesn't replace all git commands. Check the skill. |
+| "git-spice should have everything" | git-spice doesn't replace all git commands. Check the skill. |
 
 **No exceptions for:**
 - Time pressure
@@ -284,7 +284,7 @@ For getting current branch: use `git branch --show-current`
 **Before ANY commit:**
 1. Consult [writing-commit-messages](writing-commit-messages.md) in this skill directory
 2. Use those guidelines to generate commit message
-3. Then use gs command with that message
+3. Then use git-spice command with that message
 
 **Example workflows:**
 
@@ -292,14 +292,14 @@ For getting current branch: use `git branch --show-current`
 ```
 User: "Commit these changes to current branch"
 You: [Follow writing-commit-messages.md → craft message]
-You: [Run gs commit create -m "<generated-message>"]
+You: [Run git-spice commit create -m "<generated-message>"]
 ```
 
 **Explicit: commit to new branch (no branch check needed):**
 ```
 User: "Commit these changes to new feature branch"
 You: [Follow writing-commit-messages.md → craft message]
-You: [Run gs branch create <branch-name> -m "<generated-message>"]
+You: [Run git-spice branch create <branch-name> -m "<generated-message>"]
 ```
 
 ## Real-World Impact
