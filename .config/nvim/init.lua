@@ -63,7 +63,6 @@ require('lazy').setup({
 		},
 		opts = {
 			snippetDir = vim.fn.stdpath('config') .. '/snippets',
-			jsonFormatter = "jq",
 		},
 	},
 
