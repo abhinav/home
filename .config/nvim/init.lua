@@ -505,17 +505,6 @@ require('lazy').setup({
 	-- File-type-specific {{{2
 	'direnv/direnv.vim',
 	{'habamax/vim-asciidoctor', ft = {'asciidoc', 'asciidoctor'}},
-	{
-		'iamcco/markdown-preview.nvim', -- {{{3
-		ft = 'markdown',
-		build = function()
-			vim.fn['mkdp#util#install']()
-		end,
-		config = function()
-			vim.g.mkdp_auto_close = 0
-			vim.g.mkdp_filetypes = {'markdown'}
-		end,
-	},
 	{'rust-lang/rust.vim', ft = 'rust'},
 	{'Vimjas/vim-python-pep8-indent', ft = 'python'},
 	{

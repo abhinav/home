@@ -52,6 +52,8 @@ If it still exceeds 72 characters, rethink the `<summary>` to shorten it.
 - Use objective, factual tone:
   - Avoid subjective embellishments like "critical issue", "serious problem"
   - Focus on what the code does and why, not value judgments
+- If the commit resolves an issue,
+  add a final line in the body using the form `Resolves #123`.
 
 ## Formatting
 
