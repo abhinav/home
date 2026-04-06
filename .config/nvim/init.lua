@@ -384,22 +384,38 @@ require('lazy').setup({
 	{
 		'nvim-treesitter/nvim-treesitter', -- {{{3
 		build = ':TSUpdate',
-		dependencies = {'nvim-treesitter/nvim-treesitter-textobjects'},
+		branch = 'main',
 		config = function()
-			vim.api.nvim_create_autocmd("BufEnter", {
-				pattern = "*",
+			local treesitter_languages = {
+				"bash", "c", "cpp", "css", "dot", "gitignore",
+				"go", "gomod", "gowork", "graphql",
+				"html", "java", "javascript", "json",
+				"lua", "make", "markdown", "markdown_inline",
+				"perl", "php", "proto", "python",
+				"regex", "rust", "ruby",
+				"sql", "toml", "typescript",
+				"vim", "yaml", "zig",
+			}
+
+			local nvim_treesitter = require('nvim-treesitter')
+			nvim_treesitter.install(treesitter_languages)
+
+			vim.api.nvim_create_autocmd('FileType', {
+				pattern = treesitter_languages,
 				callback = function()
-					local buf = vim.api.nvim_get_current_buf()
-					local highlighter = require("vim.treesitter.highlighter")
-					if highlighter.active[buf] then
-						-- If treesitter is enabled for
-						-- the current buffer,
-						-- use it also for folding.
-						vim.wo.foldmethod = 'expr'
-						vim.wo.foldexpr = 'nvim_treesitter#foldexpr()'
-						vim.wo.foldlevel = 5
-						vim.wo.foldenable = false
-					end
+					-- Enable treesitter-based syntax highlighting.
+					vim.treesitter.start()
+
+					-- If treesitter is enabled,
+					-- use it for folding too.
+					vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+					vim.wo.foldmethod = 'expr'
+					vim.wo.foldlevel = 5
+					vim.wo.foldenable = false
+
+					-- Set up indentation based on treesitter.
+					-- (Experimental as of writing this.)
+					vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
 				end,
 			})
 		end,
@@ -1823,47 +1839,6 @@ vim.keymap.set('n', 'gs', function()
 	vim.o.operatorfunc = "v:lua.grep_operator"
 	return 'g@'
 end, {desc = "Search", expr = true})
-
-
--- tree-sitter {{{2
-require 'nvim-treesitter.configs'.setup {
-	modules = {},
-	ensure_installed = {
-		"bash", "c", "cpp", "css", "dot",
-		"gitignore", "go", "gomod", "gowork", "graphql",
-		"html", "java", "javascript", "json",
-		"lua", "make", "markdown", "markdown_inline",
-		"perl", "php", "proto", "python",
-		"regex", "rust", "ruby",
-		"sql", "toml", "typescript",
-		"vim", "yaml", "zig",
-	},
-	sync_install = false,
-	auto_install = true,
-	-- The gitcommit tree-sitter parser does not support highlighting in
-	-- verbose mode itself; it expects injections for those.
-	-- However, the query injections defined in tree-sitter-gitcommit
-	-- aren't picked up for some reason.
-	ignore_install = {"gitcommit", "diff"},
-	highlight = {
-		enable = true,
-	},
-	textobjects = {
-		select = {
-			enable = true,
-			lookahead = true,
-			keymaps = {
-				['af'] = {query = '@function.outer', desc = "a function"},
-				['if'] = {query = '@function.inner', desc = "in function"},
-				['ab'] = {query = '@block.outer', desc = "a block"},
-				['ib'] = {query = '@block.inner', desc = "in block"},
-			},
-		},
-	},
-	matchup = {
-		enable = true,
-	},
-}
 
 
 -- trouble {{{2
