@@ -36,6 +36,7 @@ Use this skill for ALL commit operations:
 |------|---------|
 | Get current branch name | `git branch --show-current` |
 | New branch + commit | `git-spice branch create <name> -m "<msg>"` |
+| New branch + commit from detached HEAD | `git-spice branch create --target=$base <name> -m "<msg>"` |
 | Commit to current branch | `git-spice commit create -m "<msg>"` |
 | Amend (keep message) | `git-spice commit amend --no-edit` |
 | Amend (change message) | `git-spice commit amend -m "<new-msg>"` |
@@ -53,6 +54,14 @@ Use this skill for ALL commit operations:
 - "Commit to this branch" or "commit to current branch" → Use `git-spice commit create`
 - "Create new branch" or "commit to new branch" → Use `git-spice branch create`
 - No need to check current branch when intent is explicit
+
+**Detached HEAD override for branch creation:**
+- If `git branch --show-current` returns empty output,
+  `HEAD` is detached.
+- In that state,
+  ALWAYS use `git-spice branch create --target=$base <name> -m "<msg>"`.
+- Resolve `$base` to the repo's trunk branch (usually `main` or `master`),
+  or the appropriate base branch if user specifies one.
 
 **If user intent is ambiguous, determine from context:**
 
@@ -77,6 +86,9 @@ git-spice branch create <branch-name> -m "<commit-message>"
 - Commits **staged changes** to new branch
 - Switches to new branch
 - If on feature branch, stacks automatically
+- If `HEAD` is detached,
+  use `git-spice branch create --target=$base <branch-name> -m "<commit-message>"`
+  instead
 
 **After creating branch:** Run `git-spice ls` to show branch position in stack (NOT git log).
 
@@ -88,6 +100,10 @@ git-spice branch create fix-login-validation -m "Fix email validation in login f
 # On feature-auth, creating unrelated change
 git-spice branch create update-readme -m "Update installation instructions"
 # This stacks update-readme on top of feature-auth
+
+# On detached HEAD
+git-spice branch create --target=$base recover-work -m "Recover detached HEAD work"
+# Use base branch, if specified by user, or default to main/master
 ```
 
 ### Commit to current branch
@@ -109,6 +125,8 @@ git branch --show-current
 **IMPORTANT:** `git-spice branch current` does NOT exist.
 git-spice doesn't have a command for showing the current branch.
 Use standard git command: `git branch --show-current`
+If the command prints nothing,
+`HEAD` is detached.
 
 **Common use cases:**
 - When user asks "what branch am I on?"
@@ -201,6 +219,14 @@ Just use descriptive names: `fix-bug` not `abg-fix-bug`.
 **Common mistake:** Assuming every git command has a git-spice equivalent.
 **Reality:** Some operations (like showing current branch) still use standard git.
 
+### ❌ NEVER: `git-spice branch create <name> -m "<message>"` from detached `HEAD`
+
+**Why:** Without a base branch to work from, the command will fail.
+
+**Instead:** Use
+`git-spice branch create --target=$base <name> -m "<message>"`,
+with `$base` set to user-specified base branch or trunk (main/master).
+
 ## Red Flags - STOP
 
 If you're about to:
@@ -261,6 +287,7 @@ For getting current branch: use `git branch --show-current`
 | Accepting raw git "because user prefers it" | Breaks stack, defeats purpose | Never accept. Explain why git-spice is required |
 | Asking permission to normalize names | Wastes time | Just normalize and inform |
 | Adding user prefix to branch name | git-spice auto-adds prefixes | Just use descriptive name: `fix-bug` not `abg-fix-bug` |
+| Using plain `branch create` on detached `HEAD` | Bases work on detached ref | Use `git-spice branch create --target=$trunk ...` |
 
 ## Pressure Resistance
 
@@ -272,6 +299,7 @@ For getting current branch: use `git branch --show-current`
 | "I already committed with git" | Fix it before pushing. See Recovery section. |
 | "It's a small change, doesn't matter" | Every commit matters. Use proper workflow. |
 | "git-spice should have everything" | git-spice doesn't replace all git commands. Check the skill. |
+| "Detached HEAD is fine, just create the branch" | Fine, but branch creation must target `$trunk`. |
 
 **No exceptions for:**
 - Time pressure
