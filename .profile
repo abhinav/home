@@ -27,6 +27,8 @@ source ~/.profile.d/haskell
 source ~/.profile.d/zig
 source ~/.profile.d/obsidian
 
+test -f ~/.profile.d/local && source ~/.profile.d/local
+
 # - Each shell profile (e.g., .bash_profile) sources .profile
 # - Each shell rc (e.g., .bashrc) sources .profile if _PROFILE_LOADED is not
 #   set
