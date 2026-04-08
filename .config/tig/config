@@ -34,3 +34,9 @@ bind generic <Ctrl-h> @tmux select-pane -L
 
 # Ctrl-h is backspace on some systems.
 bind generic <Backspace> @tmux select-pane -L
+
+# Optimizations for large repos
+set commit-order = default
+set log-options =
+set main-options = -n 1000
+set show-changes = no
