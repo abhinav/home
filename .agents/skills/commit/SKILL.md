@@ -11,6 +11,9 @@ allowed-tools: Read
 ALWAYS use git-spice for creating commits and branches, and for amending commits.
 NEVER use raw git commands for these purposes (git commit, git checkout -b, git branch $name).
 
+The user may refer to this tool as `gs` or `git-spice`.
+Always run commands with the full `git-spice` executable name.
+
 **Why git-spice:** Maintains branch relationships and auto-rebases dependent branches.
 Using raw git breaks stack tracking.
 

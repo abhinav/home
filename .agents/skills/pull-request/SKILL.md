@@ -11,6 +11,9 @@ or multi-step PR workflows. Use ONLY the commands in this skill.
 
 ALWAYS use git-spice to create and update pull requests.
 
+The user may refer to this tool as `gs` or `git-spice`.
+Always run commands with the full `git-spice` executable name.
+
 **NEVER use these commands for PR operations:**
 
 - `git push` (any variant) - git-spice handles pushing
