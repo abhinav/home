@@ -38,12 +38,12 @@ Use this skill for ALL commit operations:
 | Task | Command |
 |------|---------|
 | Get current branch name | `git branch --show-current` |
-| New branch + commit | `git-spice branch create <name> -m "<msg>"` |
-| New branch + commit from detached HEAD | `git-spice branch create --target=$base <name> -m "<msg>"` |
-| Commit to current branch | `git-spice commit create -m "<msg>"` |
+| New branch + commit | `git-spice branch create <name> -m '<shell-escaped-msg>'` |
+| New branch + commit from detached HEAD | `git-spice branch create --target <base> <name> -m '<shell-escaped-msg>'` |
+| Commit to current branch | `git-spice commit create -m '<shell-escaped-msg>'` |
 | Amend (keep message) | `git-spice commit amend --no-edit` |
-| Amend (change message) | `git-spice commit amend -m "<new-msg>"` |
-| Stack on different branch | `git-spice branch create --target <base> <name> -m "<msg>"` |
+| Amend (change message) | `git-spice commit amend -m '<shell-escaped-new-msg>'` |
+| Stack on different branch | `git-spice branch create --target <base> <name> -m '<shell-escaped-msg>'` |
 
 **Branch naming:** lowercase-with-hyphens (no `/`, no uppercase, no user prefixes)
 - If user provides non-conforming name, automatically normalize it and inform them
@@ -62,8 +62,9 @@ Use this skill for ALL commit operations:
 - If `git branch --show-current` returns empty output,
   `HEAD` is detached.
 - In that state,
-  ALWAYS use `git-spice branch create --target=$base <name> -m "<msg>"`.
-- Resolve `$base` to the repo's trunk branch (usually `main` or `master`),
+  ALWAYS use
+  `git-spice branch create --target <base> <name> -m '<shell-escaped-msg>'`.
+- Resolve `<base>` to the repo's trunk branch (usually `main` or `master`),
   or the appropriate base branch if user specifies one.
 
 **If user intent is ambiguous, determine from context:**
@@ -83,14 +84,15 @@ flowchart TD
 ### Create branch with commit
 
 ```bash
-git-spice branch create <branch-name> -m "<commit-message>"
+git-spice branch create <branch-name> -m '<shell-escaped-commit-message>'
 ```
 
 - Commits **staged changes** to new branch
 - Switches to new branch
 - If on feature branch, stacks automatically
 - If `HEAD` is detached,
-  use `git-spice branch create --target=$base <branch-name> -m "<commit-message>"`
+  use
+  `git-spice branch create --target <base> <branch-name> -m '<shell-escaped-commit-message>'`
   instead
 
 **After creating branch:** Run `git-spice ls` to show branch position in stack (NOT git log).
@@ -98,21 +100,21 @@ git-spice branch create <branch-name> -m "<commit-message>"
 **Example:**
 ```bash
 # On main
-git-spice branch create fix-login-validation -m "Fix email validation in login form"
+git-spice branch create fix-login-validation -m 'Fix email validation in login form'
 
 # On feature-auth, creating unrelated change
-git-spice branch create update-readme -m "Update installation instructions"
+git-spice branch create update-readme -m 'Update installation instructions'
 # This stacks update-readme on top of feature-auth
 
 # On detached HEAD
-git-spice branch create --target=$base recover-work -m "Recover detached HEAD work"
+git-spice branch create --target main recover-work -m 'Recover detached HEAD work'
 # Use base branch, if specified by user, or default to main/master
 ```
 
 ### Commit to current branch
 
 ```bash
-git-spice commit create -m "<commit-message>"
+git-spice commit create -m '<shell-escaped-commit-message>'
 ```
 
 Commits **staged changes** to current branch.
@@ -147,7 +149,7 @@ If the command prints nothing,
 git-spice commit amend --no-edit
 
 # Replace entire message
-git-spice commit amend -m "<new-complete-message>"
+git-spice commit amend -m '<shell-escaped-new-complete-message>'
 ```
 
 **CRITICAL:** `git-spice commit amend -m` REPLACES the entire commit message.
@@ -159,18 +161,68 @@ If user says "add" or "append" to message, you MUST include the original message
 # User: "Add note about regex update"
 
 # ❌ WRONG: git-spice commit amend -m "Also updates regex pattern"
-# ✅ CORRECT: git-spice commit amend -m "Fix login validation
+# ✅ CORRECT: git-spice commit amend -m 'Fix login validation
 
-Also updates regex pattern"
+Also updates regex pattern'
 ```
 
 ### Stack on specific branch
 
 ```bash
-git-spice branch create --target <target-branch> <branch-name> -m "<commit-message>"
+git-spice branch create --target <target-branch> <branch-name> -m '<shell-escaped-commit-message>'
 ```
 
 Useful when current branch isn't the desired base.
+
+## Shell-Safe Commit Message Quoting
+
+Commit messages are data,
+not shell code.
+When passing a generated commit message to `git-spice -m`,
+wrap the entire message in single quotes.
+
+Single quotes allow commit messages to contain literal Markdown backticks,
+`$(...)`,
+`$variables`,
+double quotes,
+backslashes,
+and multi-line bodies
+without shell evaluation.
+
+If the message contains a literal single quote (`'`),
+escape it by closing the quote,
+inserting an escaped quote,
+and reopening the quote:
+
+```bash
+'\''
+```
+
+For example,
+this commit message:
+
+```text
+Fix user's `$(example)` handling
+
+Keep shell-looking text literal in commit messages.
+```
+
+must be passed as:
+
+```bash
+git-spice commit create -m 'Fix user'\''s `$(example)` handling
+
+Keep shell-looking text literal in commit messages.'
+```
+
+**DO NOT** use double quotes for generated commit messages.
+Double quotes allow shell evaluation of `$(...)`,
+backticks,
+and `$variables`.
+
+**DO NOT** use `$'...'` for generated commit messages.
+It prevents command substitution,
+but it still treats backslashes and escape sequences as shell syntax.
 
 ## Branch Naming Rules
 
@@ -197,15 +249,17 @@ Just use descriptive names: `fix-bug` not `abg-fix-bug`.
 **Instead:**
 1. Stage changes: `git add <files>`
 2. Get commit message: Use writing-commit-messages skill
-3. Create branch: `git-spice branch create <name> -m "<message>"`
+3. Create branch:
+   `git-spice branch create <name> -m '<shell-escaped-message>'`
 
 ### ❌ NEVER: `git commit` or `git commit --amend`
 
 **Why:** Bypasses git-spice rebase. Dependent branches become stale.
 
 **Instead:**
-- New commit: `git-spice commit create -m "<message>"`
-- Amend: `git-spice commit amend --no-edit` or `git-spice commit amend -m "<new-message>"`
+- New commit: `git-spice commit create -m '<shell-escaped-message>'`
+- Amend: `git-spice commit amend --no-edit`
+  or `git-spice commit amend -m '<shell-escaped-new-message>'`
 
 ### ❌ NEVER: `git branch <name>`
 
@@ -222,13 +276,13 @@ Just use descriptive names: `fix-bug` not `abg-fix-bug`.
 **Common mistake:** Assuming every git command has a git-spice equivalent.
 **Reality:** Some operations (like showing current branch) still use standard git.
 
-### ❌ NEVER: `git-spice branch create <name> -m "<message>"` from detached `HEAD`
+### ❌ NEVER: `git-spice branch create <name> -m '<message>'` from detached `HEAD`
 
 **Why:** Without a base branch to work from, the command will fail.
 
 **Instead:** Use
-`git-spice branch create --target=$base <name> -m "<message>"`,
-with `$base` set to user-specified base branch or trunk (main/master).
+`git-spice branch create --target <base> <name> -m '<shell-escaped-message>'`,
+with `<base>` set to user-specified base branch or trunk (main/master).
 
 ## Red Flags - STOP
 
@@ -237,6 +291,7 @@ If you're about to:
 - Use `git checkout -b`
 - Use `git branch` to create a branch
 - Use `git-spice branch current` (doesn't exist)
+- Put a generated commit message in double quotes or `$'...'`
 - Skip getting a proper commit message
 - Add a prefix like `abg-`, `john/`, or `user-` to branch names
 - Rationalize "just this once" or "it's faster"
@@ -263,7 +318,8 @@ For getting current branch: use `git branch --show-current`
 
 3. **Fix commit message:**
    - Follow [writing-commit-messages](writing-commit-messages.md) guidelines to generate proper message
-   - Amend: `git-spice commit amend -m "<proper-message>"`
+   - Amend:
+     `git-spice commit amend -m '<shell-escaped-proper-message>'`
 
 4. **Fix branch name if needed:**
    ```bash
@@ -290,7 +346,8 @@ For getting current branch: use `git branch --show-current`
 | Accepting raw git "because user prefers it" | Breaks stack, defeats purpose | Never accept. Explain why git-spice is required |
 | Asking permission to normalize names | Wastes time | Just normalize and inform |
 | Adding user prefix to branch name | git-spice auto-adds prefixes | Just use descriptive name: `fix-bug` not `abg-fix-bug` |
-| Using plain `branch create` on detached `HEAD` | Bases work on detached ref | Use `git-spice branch create --target=$trunk ...` |
+| Using double quotes or `$'...'` for generated commit messages | Lets shell syntax leak into message handling | Use single quotes and escape embedded `'` as `'\''` |
+| Using plain `branch create` on detached `HEAD` | Bases work on detached ref | Use `git-spice branch create --target <trunk> ...` |
 
 ## Pressure Resistance
 
@@ -323,14 +380,14 @@ For getting current branch: use `git branch --show-current`
 ```
 User: "Commit these changes to current branch"
 You: [Follow writing-commit-messages.md → craft message]
-You: [Run git-spice commit create -m "<generated-message>"]
+You: [Run git-spice commit create -m '<shell-escaped-generated-message>']
 ```
 
 **Explicit: commit to new branch (no branch check needed):**
 ```
 User: "Commit these changes to new feature branch"
 You: [Follow writing-commit-messages.md → craft message]
-You: [Run git-spice branch create <branch-name> -m "<generated-message>"]
+You: [Run git-spice branch create <branch-name> -m '<shell-escaped-generated-message>']
 ```
 
 ## Real-World Impact
