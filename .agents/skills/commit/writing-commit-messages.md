@@ -55,6 +55,32 @@ If it still exceeds 72 characters, rethink the `<summary>` to shorten it.
 - If the commit resolves an issue,
   add a final line in the body using the form `Resolves #123`.
 
+## Explain why the change is necessary
+
+Commit messages should explain the reason for the change,
+not only describe the diff.
+
+This matters most when the code change is small but the reason is not obvious,
+such as allowlist updates, policy exceptions, configuration changes,
+feature flags, migrations, generated files, or dependency updates.
+
+A good commit body should answer the relevant questions:
+
+- What constraint, failure, dependency, or product requirement made this change
+  necessary?
+- Why is this change the right place to address it?
+- What broader workflow or user-visible behavior does this support?
+- If this unblocks other work, what depends on it?
+
+When a change responds to a concrete failure,
+include a short error excerpt or a link to the failed run when that context
+would help reviewers understand the change.
+Keep quoted errors short enough to be useful.
+
+When a change is part of a larger sequence,
+include concise references to related commits, PRs, issues, or rollout steps
+when that helps explain why this commit must exist separately.
+
 ## Formatting
 
 The `<subject>` SHOULD be fewer than 50 characters,
