@@ -45,6 +45,12 @@ Use this skill for ALL commit operations:
 | Amend (change message) | `git-spice commit amend -m '<shell-escaped-new-msg>'` |
 | Stack on different branch | `git-spice branch create --target <base> <name> -m '<shell-escaped-msg>'` |
 
+**Never use `--insert` from the trunk branch.**
+If currently on trunk (`main`/`master`),
+create a normal feature branch from trunk instead.
+Only use `--insert` when already working from a non-trunk stack position
+and deliberately inserting into that stack.
+
 **Branch naming:** lowercase-with-hyphens (no `/`, no uppercase, no user prefixes)
 - If user provides non-conforming name, automatically normalize it and inform them
 
@@ -78,6 +84,8 @@ flowchart TD
 ```
 
 **Stacking:** Creating a new branch while on a feature branch automatically stacks it.
+Never use `--insert` while on trunk (`main`/`master`);
+from trunk, create a normal feature branch instead.
 
 ## Core Commands
 
@@ -284,12 +292,22 @@ Just use descriptive names: `fix-bug` not `abg-fix-bug`.
 `git-spice branch create --target <base> <name> -m '<shell-escaped-message>'`,
 with `<base>` set to user-specified base branch or trunk (main/master).
 
+### ❌ NEVER: `git-spice branch create --insert ...` from trunk
+
+**Why:** `--insert` is for inserting into an existing non-trunk stack.
+Using it from trunk muddies the stack topology and can create confusing branch relationships.
+
+**Instead:** If on trunk (`main`/`master`),
+create a normal feature branch:
+`git-spice branch create <name> -m '<shell-escaped-message>'`.
+
 ## Red Flags - STOP
 
 If you're about to:
 - Use any `git commit` command
 - Use `git checkout -b`
 - Use `git branch` to create a branch
+- Use `git-spice branch create --insert` while on trunk (`main`/`master`)
 - Use `git-spice branch current` (doesn't exist)
 - Put a generated commit message in double quotes or `$'...'`
 - Skip getting a proper commit message
@@ -348,6 +366,7 @@ For getting current branch: use `git branch --show-current`
 | Adding user prefix to branch name | git-spice auto-adds prefixes | Just use descriptive name: `fix-bug` not `abg-fix-bug` |
 | Using double quotes or `$'...'` for generated commit messages | Lets shell syntax leak into message handling | Use single quotes and escape embedded `'` as `'\''` |
 | Using plain `branch create` on detached `HEAD` | Bases work on detached ref | Use `git-spice branch create --target <trunk> ...` |
+| Using `--insert` from trunk | `--insert` is for non-trunk stack insertion | From trunk, use normal `git-spice branch create ...` |
 
 ## Pressure Resistance
 
