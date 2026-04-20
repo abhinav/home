@@ -37,10 +37,38 @@ If it still exceeds 72 characters, rethink the `<summary>` to shorten it.
 
 ### `<body>`
 
-- Add a detailed description of the changes made in the commit.
-- DO NOT use itemized lists just to enumerate changes made in the commit.
-  Anything that is obvious from looking at the diff
-  MUST NOT be included in the commit message.
+- Summarize the review contract:
+  what behavior reviewers should expect after the patch,
+  why that behavior belongs in this commit,
+  and which named external contracts changed.
+- Lead with the operational or product intent before implementation details.
+  Explain the workflow, failure mode,
+  or user need that makes the change necessary.
+- Name the user-facing behavior that changed.
+  Keep implementation details out of the body
+  unless they explain a boundary, migration, compatibility concern,
+  or surprising design choice.
+- Avoid itemized lists that merely mirror the file diff.
+  Prefer itemized lists when they make changed contracts easier to audit.
+  This is especially important when a change adds or updates multiple
+  user-facing interface items.
+  User-facing interface surface includes CLI flags, subcommands, config keys,
+  environment variables, API fields, file formats, protocol fields,
+  visible error text, documented command syntax, and more.
+- For interface-heavy changes, mention the exact public names.
+  If there are multiple flags, keys, fields, or commands,
+  group them by role when grouping improves scanability.
+  Use labels sparingly, such as `New flags:` or `Examples:`;
+  do not force every commit into a template.
+- For code examples, use four-space-indented command blocks.
+  Keep examples short and representative.
+- Mention tests only when they clarify the contract or guarantee reviewers
+  should trust. Do not enumerate test files, fixture types,
+  or every covered mode.
+  Prefer a concise guarantee-oriented sentence,
+  such as "Unit tests cover the new parser contract
+  and the dry-run no-mutation guarantee."
+- Omit test details entirely when they do not add review context.
 - NEVER use an empty body.
   There MUST ALWAYS be a body to the commit message.
 - Commit message body MUST NOT have lines longer than 72 characters.
@@ -81,6 +109,31 @@ When a change is part of a larger sequence,
 include concise references to related commits, PRs, issues, or rollout steps
 when that helps explain why this commit must exist separately.
 
+Commit bodies should describe the work itself,
+not treat an issue ID as the subject of the change.
+
+Write the narrative in terms of the system behavior,
+operational need,
+prior context,
+and the change being made now.
+Use the issue ID only as a reference for traceability,
+not as the thing that requires,
+performs,
+or explains the change.
+
+Use separate paragraphs for distinct ideas,
+such as:
+
+- why the change is being made,
+- what context the reviewer needs,
+- what this commit changes.
+
+If an issue reference is needed,
+put it in a final reference line such as `Refs ABC-123`
+or `Resolves ABC-123`.
+Avoid overusing the issue number in the commit message;
+usually one use is enough.
+
 ## Formatting
 
 The `<subject>` SHOULD be fewer than 50 characters,
@@ -111,17 +164,24 @@ NEVER write commit messages without semantic line breaks.
 **Solution**:
 Apply semantic line breaks formatting to commit messages.
 
-### Using itemized lists of changes in the commit
+### Using itemized lists as diff inventories
 
-DO NOT just enumerate the changes in the commit message.
+DO NOT use itemized lists merely to enumerate files,
+helpers,
+or implementation details from the diff.
 
 **Why**:
 Any information that is obvious from looking at the `git diff`
 does not need to be present in the commit message.
+However,
+lists are useful when they make changed external contracts easier to audit,
+such as multiple CLI flags, config keys, API fields, or documented forms.
 
 **Solution**:
-Focus on *why* the changes were made,
-not *what* changes were made.
+Focus on the review contract:
+why the change exists,
+what user-facing behavior changes,
+and which named external contracts reviewers need to see.
 
 ### Using single-line commit messages
 
