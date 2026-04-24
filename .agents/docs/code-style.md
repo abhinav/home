@@ -103,6 +103,23 @@ GOOD
 func StartDispatcher() { ... }
 ```
 
+When documenting struct fields,
+separate each documented field from the previous field
+with an empty line.
+This keeps multi-field structs scannable
+and makes each field's comment visually attach
+to only that field.
+
+```go
+type Report struct {
+    // Name identifies the report.
+    Name string
+
+    // Format selects the report renderer.
+    Format ReportFormat
+}
+```
+
 ### Avoiding unnecessary comments
 
 Do not add comments that do not add value.
