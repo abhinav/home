@@ -45,6 +45,24 @@ Use this skill for ALL commit operations:
 | Amend (change message) | `git-spice commit amend -m '<shell-escaped-new-msg>'` |
 | Stack on different branch | `git-spice branch create --target <base> <name> -m '<shell-escaped-msg>'` |
 
+## Sandbox Escalation
+
+When running mutating `git-spice` commands,
+request escalated filesystem privileges up front.
+
+Use `sandbox_permissions: "require_escalated"` for:
+- `git-spice branch create ...`
+- `git-spice branch rename ...`
+- `git-spice branch track ...`
+- `git-spice commit create ...`
+- `git-spice commit amend ...`
+
+Use a short justification such as:
+"Do you want to allow git-spice to update Git refs and stack metadata?"
+
+Read-only commands like `git-spice ls` may run normally
+unless they fail under sandboxing.
+
 **Never use `--insert` from the trunk branch.**
 If currently on trunk (`main`/`master`),
 create a normal feature branch from trunk instead.

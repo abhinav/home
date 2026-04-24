@@ -28,6 +28,21 @@ Always run commands with the full `git-spice` executable name.
 - `gh pr create` - git-spice handles PR creation
 - `git push --force-with-lease` - git-spice handles force pushes
 
+## Sandbox Escalation
+
+When running mutating pull request commands,
+request escalated filesystem privileges up front.
+
+Use `sandbox_permissions: "require_escalated"` for:
+- `git-spice branch submit ...`
+- `gh pr edit ...`
+
+Use a short justification such as:
+"Do you want to allow git-spice to push the branch and update pull request state?"
+
+Read-only commands like `git-spice ls` may run normally
+unless they fail under sandboxing.
+
 ## Detecting Existing PRs
 
 If you need to check whether a branch has an existing PR, use `git-spice ls`.
