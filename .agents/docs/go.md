@@ -7,6 +7,7 @@
   - [Formatting variable values](#formatting-variable-values)
   - [Wrapping errors](#wrapping-errors)
 - [Interface compliance checks](#interface-compliance-checks)
+- [Symbol ordering](#symbol-ordering)
 - [Parameter and result objects](#parameter-and-result-objects)
 - [Accept interfaces, return structs](#accept-interfaces-return-structs)
 - [Map-shaped APIs](#map-shaped-apis)
@@ -172,6 +173,68 @@ type Handler struct{}
 
 func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {}
 ```
+
+## Symbol ordering
+
+Order Go symbols by narrative dependency,
+not by declaration kind.
+
+A reader should encounter a symbol close to the code
+that first makes it useful.
+Avoid collecting all constants,
+variables,
+types,
+interfaces,
+or helper functions at the top of the file
+unless they are genuinely file-wide concepts.
+
+Use this order of preference:
+
+1. Package-wide constants and variables
+   that configure the whole file
+   may appear near the top.
+2. Type blocks should stay intact:
+   declaration,
+   constructors,
+   then methods.
+   A type block may move close to the behavior it supports,
+   but do not split the declaration from its constructors or methods.
+3. Types,
+   interfaces,
+   and helper constants used by one function
+   should be placed near that function.
+   If the type is a request,
+   result,
+   or other function-boundary concept,
+   place the type block immediately before the function.
+   If the type is helper machinery used inside the function,
+   place the type block immediately after the function.
+4. Types,
+   interfaces,
+   and helper constants used by a cohesive group of functions
+   should be placed near that group.
+   Put boundary concepts before the first function in the group.
+   Put helper machinery after the last function in the group.
+5. Helper functions should usually appear after the function that calls them,
+   unless moving them earlier substantially improves readability.
+6. In tests,
+   helper functions and helper types should appear after the test
+   that uses them.
+   If a helper is shared by multiple tests,
+   place it after the last test that uses it.
+7. Exported package concepts should appear before the exported functions
+   that introduce or operate on them,
+   but they still do not need to be grouped at the top by kind.
+
+Do not split a function's request/result structs,
+small enums,
+private interfaces,
+or helper types into a top-of-file type block
+unless they are used throughout the file.
+Keep each type block intact.
+Move the whole block to the narrowest useful location:
+boundary types before the function or group they describe,
+helper types after the function or group they support.
 
 ## Parameter and result objects
 
