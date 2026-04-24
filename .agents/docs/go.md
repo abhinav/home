@@ -7,6 +7,11 @@
   - [Formatting variable values](#formatting-variable-values)
   - [Wrapping errors](#wrapping-errors)
 - [Interface compliance checks](#interface-compliance-checks)
+- [Parameter and result objects](#parameter-and-result-objects)
+- [Accept interfaces, return structs](#accept-interfaces-return-structs)
+- [Map-shaped APIs](#map-shaped-apis)
+- [Parse, don't repeatedly validate](#parse-dont-repeatedly-validate)
+- [Avoid boolean API knobs](#avoid-boolean-api-knobs)
 - [Testing](#testing)
   - [Context](#context)
   - [Assertions](#assertions)
@@ -167,6 +172,177 @@ type Handler struct{}
 
 func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {}
 ```
+
+## Parameter and result objects
+
+Use parameter objects when a Go function has several inputs
+or when optional inputs are likely to grow.
+Use result objects when a function has several outputs
+or when optional outputs are likely to grow.
+
+Do not count `context.Context` when deciding
+whether a function has too many parameters.
+Do not count `error` when deciding
+whether a function has too many return values.
+
+```go
+type ExportRequest struct {
+    Path   string
+    Format ExportFormat
+}
+
+type ExportResult struct {
+    BytesWritten int64
+    Warnings     []string
+}
+
+func Export(ctx context.Context, req ExportRequest) (ExportResult, error) {
+    ...
+}
+```
+
+When adding fields to an existing parameter or result object,
+make new fields optional whenever possible.
+Choose field types so the zero value preserves existing behavior
+or maps to a clear default.
+
+## Accept interfaces, return structs
+
+Prefer accepting interfaces
+and returning concrete structs.
+
+When a function consumes a dependency,
+accept the smallest interface that describes what it needs.
+This lets callers provide real implementations,
+test doubles,
+or wrappers without forcing a specific concrete type.
+
+```go
+func Parse(r io.Reader) (*Document, error) { ... }
+```
+
+When a package produces an abstraction,
+return a concrete exported type by default.
+Callers can define their own interfaces
+at the point of use if they need one.
+
+```go
+type Client struct {
+    ...
+}
+
+func NewClient(cfg ClientConfig) *Client {
+    return &Client{...}
+}
+```
+
+Avoid returning an interface
+just to hide an implementation.
+Adding methods to that interface later
+will break callers with their own implementations,
+including tests and wrappers.
+
+Producer-defined interfaces are still useful
+when the package has multiple implementations,
+when the interface represents a single operation,
+or when callers commonly wrap the abstraction.
+
+## Map-shaped APIs
+
+Avoid using maps in Go API boundaries
+when the map represents named domain data.
+Types like `map[string]string`,
+`map[string][]string`,
+and nested maps make call sites hard to read
+because the signature does not explain what each key or value means.
+
+Prefer a named struct
+and accept or return a slice of those structs.
+Use a map inside the function
+when you need fast lookup, grouping, or uniqueness checks.
+
+```go
+// BAD: the two strings have no visible meaning at the call boundary.
+func SyncEndpoints(endpoints map[string]string) error { ... }
+
+// GOOD: the boundary names the data being passed.
+type EndpointSync struct {
+    Source string
+    Target string
+}
+
+func SyncEndpoints(endpoints []EndpointSync) error { ... }
+```
+
+Nested maps deserve extra scrutiny.
+They often indicate that a small domain type
+would make the code easier to understand and safer to change.
+
+## Parse, don't repeatedly validate
+
+When a string or number represents structured data,
+convert it to the structured Go type once
+and pass that value around.
+
+Prefer standard library types when they exist:
+use `*url.URL` for URLs,
+`time.Time` or `time.Duration` for time values,
+and parsed templates or syntax trees
+instead of repeated string replacement.
+
+For domain-specific values,
+define a small type with a parser:
+
+```go
+type JobID struct {
+    value string
+}
+
+func ParseJobID(raw string) (JobID, error) { ... }
+```
+
+Code that receives a `JobID`
+should not need to re-check
+whether it is shaped like a valid job ID.
+The type boundary should carry that guarantee.
+
+## Avoid boolean API knobs
+
+Avoid boolean parameters in exported Go APIs
+when the value changes behavior at the call site.
+
+```go
+// BAD: the meaning of true is hidden at the call site.
+renderPage(page, true)
+```
+
+Prefer a named option,
+or a small enum when the behavior is one choice among several:
+
+```go
+type RenderMode int
+
+const (
+    RenderModeDefault RenderMode = iota
+    RenderModeCompact
+    RenderModeExpanded
+)
+
+type RenderOptions struct {
+    Mode RenderMode
+}
+```
+
+Choose the zero value to preserve default behavior.
+Validate unsupported modes or conflicting options
+at construction or at the API boundary.
+
+Boolean values are fine when they represent
+a stable binary domain fact,
+or when they stay inside local control flow.
+They deserve more scrutiny
+when they become exported parameters,
+configuration fields, or interface methods.
 
 ## Testing
 
