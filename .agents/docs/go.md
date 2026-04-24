@@ -86,27 +86,56 @@ return fmt.Errorf("open config %q: %w", name, err)
 
 Add context with `fmt.Errorf` and `%w`
 instead of bare `return err`.
-Context should describe the action being performed
+Context should describe the immediate sub-operation being performed
 without "failed to" or "error doing" prefixes.
-Each return site adds only its own local context,
-not the overall function's operation.
+Do not repeat the surrounding function's responsibility.
+Each caller may add its own context,
+so repeating outer context creates noisy error chains.
 
 ```go
-func ParseFile(path string) error {
+func LoadSettings(path string) (*Settings, error) {
 	data, err := os.ReadFile(path)
 	if err != nil {
-		// BAD: duplicates the function's operation.
-		return fmt.Errorf("parse file %q: read file: %w", path, err)
-
-		// GOOD: describes only this call site's action.
-		return fmt.Errorf("read file %q: %w", path, err)
+		// GOOD: this return site failed while reading.
+		return nil, fmt.Errorf("read %q: %w", path, err)
 	}
 
-	if err := json.Unmarshal(data, &cfg); err != nil {
-		return fmt.Errorf("unmarshal config: %w", err)
+	var settings Settings
+	if err := yaml.Unmarshal(data, &settings); err != nil {
+		// GOOD: this return site failed while decoding YAML.
+		return nil, fmt.Errorf("unmarshal YAML: %w", err)
 	}
 
-	return nil
+	if settings.Name == "" {
+		// GOOD: this return site failed while validating one field.
+		return nil, errors.New("name is required")
+	}
+
+	return &settings, nil
+}
+```
+
+Avoid wrapping with the current function's name
+or broad operation:
+
+```go
+// BAD: duplicates LoadSettings' responsibility.
+return nil, fmt.Errorf("load settings %q: read: %w", path, err)
+
+// BAD: duplicates LoadSettings' responsibility.
+return nil, fmt.Errorf("load settings %q: unmarshal YAML: %w", path, err)
+```
+
+For loops,
+describe the item-specific child operation,
+not the whole loop:
+
+```go
+for _, target := range targets {
+	if err := build(target); err != nil {
+		// GOOD: the failed sub-operation is building this target.
+		return fmt.Errorf("build %q: %w", target.Label, err)
+	}
 }
 ```
 
