@@ -68,6 +68,11 @@ If it still exceeds 72 characters, rethink the `<summary>` to shorten it.
   Prefer a concise guarantee-oriented sentence,
   such as "Unit tests cover the new parser contract
   and the dry-run no-mutation guarantee."
+- For manual testing, state what was verified and how.
+  When commands help, place short four-space-indented command blocks
+  directly below the relevant claim.
+  This should give reviewers evidence of the work performed,
+  not just a loose list of commands.
 - Omit test details entirely when they do not add review context.
 - NEVER use an empty body.
   There MUST ALWAYS be a body to the commit message.
