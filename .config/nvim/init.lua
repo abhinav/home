@@ -262,6 +262,11 @@ require('lazy').setup({
 			-- Tab integration is implemented separately below
 			-- to work with nvim-cmp and snippets.
 			require('copilot').setup {
+				server_opts_overrides = {
+					settings = {
+						telemetry = { telemetryLevel = "off" },
+					},
+				},
 				suggestion = {
 					enabled = true,
 					auto_trigger = auto_trigger,
