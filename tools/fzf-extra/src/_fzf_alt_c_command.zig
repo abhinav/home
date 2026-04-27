@@ -7,43 +7,35 @@
 const std = @import("std");
 const assert = std.debug.assert;
 
-pub fn main() !void {
-    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
-    defer {
-        _ = gpa.deinit();
-    }
-
-    var arena = std.heap.ArenaAllocator.init(gpa.allocator());
-    defer arena.deinit();
-
-    return run(arena.allocator());
+pub fn main(init: std.process.Init) !void {
+    return run(init.io);
 }
 
-pub fn run(alloc: std.mem.Allocator) !void {
-    var stdout_buffer = std.io.bufferedWriter(std.io.getStdOut().writer());
-    defer stdout_buffer.flush() catch {};
+pub fn run(io: std.Io) !void {
+    var stdout_buffer: [4096]u8 = undefined;
+    var stdout_writer = std.Io.File.stdout().writer(io, &stdout_buffer);
+    defer stdout_writer.interface.flush() catch {};
 
-    const git_dir_count = try listGitDirectories(alloc, stdout_buffer.writer());
+    const git_dir_count = try listGitDirectories(io, &stdout_writer.interface);
     if (git_dir_count == 0) {
-        try listFindDirectories(alloc, stdout_buffer.writer());
+        try listFindDirectories(io, &stdout_writer.interface);
     }
 }
 
 /// listGitDirectories lists the subdirectories in a Git repository to the given writer,
 /// and returns the total number of directories listed.
-pub fn listGitDirectories(alloc: std.mem.Allocator, writer: anytype) !usize {
-    var child = ChildProcess.initWithChild(std.process.Child.init(
-        &.{ "git", "ls-tree", "-d", "-r", "--name-only", "HEAD" },
-        alloc,
-    ));
+pub fn listGitDirectories(io: std.Io, writer: anytype) !usize {
+    var child = ChildProcess.initWithChild(io, try std.process.spawn(io, .{
+        .argv = &.{ "git", "ls-tree", "-d", "-r", "--name-only", "HEAD" },
+        .stdout = .pipe,
+        .stderr = .ignore,
+    }));
     defer child.deinit();
 
     var stdout_pipe = child.stdoutPipe();
-
-    try child.spawn();
-
-    var stdout_buffer = std.io.bufferedReader(stdout_pipe.reader());
-    var line_iter = lineIterator(4096, stdout_buffer.reader());
+    var stdout_buffer: [4096]u8 = undefined;
+    var stdout_reader = stdout_pipe.reader(io, &stdout_buffer);
+    var line_iter = lineIterator(4096, &stdout_reader.interface);
     var count: usize = 0;
     while (try line_iter.next()) |line| {
         if (std.mem.startsWith(u8, line, "../")) continue;
@@ -58,9 +50,9 @@ pub fn listGitDirectories(alloc: std.mem.Allocator, writer: anytype) !usize {
 }
 
 /// listFindDirectories lists the subdirectories in the current directory using 'find'.
-pub fn listFindDirectories(alloc: std.mem.Allocator, writer: anytype) !void {
-    var child = ChildProcess.initWithChild(std.process.Child.init(
-        &.{
+pub fn listFindDirectories(io: std.Io, writer: anytype) !void {
+    var child = ChildProcess.initWithChild(io, try std.process.spawn(io, .{
+        .argv = &.{
             "find", "-L", ".",
             "(", "-path", "*/.*", // ignore hidden
             "-o", "-fstype", "dev", // ignore devices
@@ -68,16 +60,15 @@ pub fn listFindDirectories(alloc: std.mem.Allocator, writer: anytype) !void {
             ")",     "-prune",  "-o",
             "-type", "d",       "-print",
         },
-        alloc,
-    ));
+        .stdout = .pipe,
+        .stderr = .ignore,
+    }));
     defer child.deinit();
 
     var stdout_pipe = child.stdoutPipe();
-
-    try child.spawn();
-
-    var stdout_buffer = std.io.bufferedReader(stdout_pipe.reader());
-    var line_iter = lineIterator(4096, stdout_buffer.reader());
+    var stdout_buffer: [4096]u8 = undefined;
+    var stdout_reader = stdout_pipe.reader(io, &stdout_buffer);
+    var line_iter = lineIterator(4096, &stdout_reader.interface);
 
     _ = try line_iter.next(); // skip the first line (".")
     while (try line_iter.next()) |find_line| {
@@ -98,6 +89,7 @@ pub fn listFindDirectories(alloc: std.mem.Allocator, writer: anytype) !void {
 ///
 /// Use the wait method to wait for the process to exit cleanly.
 const ChildProcess = struct {
+    io: std.Io,
     child: std.process.Child,
     closed: bool = false,
 
@@ -109,33 +101,23 @@ const ChildProcess = struct {
 
     /// initWithChild takes ownership of a Child process and wraps it in a ChildProcess.
     /// Caller must still call deinit.
-    pub fn initWithChild(child: std.process.Child) ChildProcess {
-        return .{ .child = child };
+    pub fn initWithChild(io: std.Io, child: std.process.Child) ChildProcess {
+        return .{ .io = io, .child = child };
     }
 
     /// deinit ensures that the child process has been cleaned up.
     pub fn deinit(self: *ChildProcess) void {
         if (self.closed) return;
 
-        _ = self.child.kill() catch {};
+        self.child.kill(self.io);
     }
 
     /// stdoutPipe sets up a pipe to the child process's stdout.
     /// The returned pipe may be used once the process has been started.
     pub fn stdoutPipe(self: *ChildProcess) *Output.Pipe {
-        return self.stdout.toPipe();
-    }
-
-    /// spawn starts the child process.
-    /// Call waitOk to wait for the process to exit cleanly.
-    pub fn spawn(self: *ChildProcess) !void {
-        self.stdout.setStdIoBehavior(&self.child.stdout_behavior);
-        self.stderr.setStdIoBehavior(&self.child.stderr_behavior);
-
-        try self.child.spawn();
-
+        const pipe = self.stdout.toPipe();
         self.stdout.takeFile(&self.child.stdout);
-        self.stderr.takeFile(&self.child.stderr);
+        return pipe;
     }
 
     /// waitOk waits for the child process to exit cleanly,
@@ -145,9 +127,9 @@ const ChildProcess = struct {
             self.closed = true;
         }
 
-        const term = try self.child.wait();
+        const term = try self.child.wait(self.io);
         switch (term) {
-            .Exited => |code| if (code != 0) {
+            .exited => |code| if (code != 0) {
                 return error.NonZeroStatus;
             },
             else => return error.UnexpectedTermination,
@@ -173,15 +155,7 @@ const ChildProcess = struct {
             return &self.pipe;
         }
 
-        fn setStdIoBehavior(self: *Output, std_stream: *std.process.Child.StdIo) void {
-            switch (self.*) {
-                .pipe => std_stream.* = .Pipe,
-                .ignore => std_stream.* = .Ignore,
-                .inherit => std_stream.* = .Inherit,
-            }
-        }
-
-        fn takeFile(self: *Output, f: *?std.fs.File) void {
+        fn takeFile(self: *Output, f: *?std.Io.File) void {
             switch (self.*) {
                 .pipe => |*pipe| {
                     pipe.file = f.* orelse unreachable;
@@ -197,10 +171,10 @@ const ChildProcess = struct {
         pub const Pipe = struct {
             /// File is the file descriptor for the output of the child process.
             /// This is null until the child process is started.
-            file: ?std.fs.File = null,
+            file: ?std.Io.File = null,
 
-            pub fn reader(self: *Pipe) std.fs.File.Reader {
-                return self.file.?.reader();
+            pub fn reader(self: *Pipe, io: std.Io, buffer: []u8) std.Io.File.Reader {
+                return self.file.?.reader(io, buffer);
             }
         };
     };
@@ -209,41 +183,44 @@ const ChildProcess = struct {
 /// LineIterator iterates over the lines in a Reader,
 /// allowing them to be up to `max_len` bytes long.
 /// Lines longer than `max_len` are skipped.
-fn LineIterator(comptime max_len: usize, Reader: type) type {
+fn LineIterator(comptime max_len: usize) type {
     return struct {
-        pub const Error = Reader.Error;
+        pub const Error = std.Io.Reader.Error;
 
-        buffer: [max_len]u8 = undefined,
-        reader: Reader,
+        reader: *std.Io.Reader,
 
         const Self = @This();
 
         /// next returns the next line in the reader,
         /// or null if the reader is exhausted.
-        /// The returned line points to an internal buffer,
+        /// The returned line points into the reader's buffer,
         /// and is owned by the iterator.
         pub fn next(self: *Self) Error!?[]const u8 {
             while (true) {
-                var buffer_stream = std.io.fixedBufferStream(&self.buffer);
-                self.reader.streamUntilDelimiter(buffer_stream.writer(), '\n', null) catch |err| {
+                const line = self.reader.takeDelimiter('\n') catch |err| {
                     switch (err) {
-                        error.StreamTooLong, error.NoSpaceLeft => {
-                            // skip long lines
-                            try self.reader.skipUntilDelimiterOrEof('\n');
+                        error.StreamTooLong => {
+                            _ = self.reader.discardDelimiterInclusive('\n') catch |discard_err| {
+                                switch (discard_err) {
+                                    error.EndOfStream => return null,
+                                    error.ReadFailed => return error.ReadFailed,
+                                }
+                            };
                             continue;
                         },
-                        error.EndOfStream => if (buffer_stream.getWritten().len == 0) return null,
-                        else => return @as(Error, @errorCast(err)),
+                        error.ReadFailed => return error.ReadFailed,
                     }
                 };
-                return buffer_stream.getWritten();
+                if (line == null) return null;
+                if (line.?.len > max_len) continue;
+                return line;
             }
         }
     };
 }
 
 /// lineIterator builds a LineIterator over the given Reader value.
-pub fn lineIterator(comptime max_len: usize, reader: anytype) LineIterator(max_len, @TypeOf(reader)) {
+pub fn lineIterator(comptime max_len: usize, reader: *std.Io.Reader) LineIterator(max_len) {
     return .{ .reader = reader };
 }
 
@@ -265,14 +242,14 @@ test "LineIterator" {
     for (tests) |tt| {
         const alloc = std.testing.allocator;
 
-        var got = std.ArrayList([]const u8).init(alloc);
+        var got = std.array_list.Managed([]const u8).init(alloc);
         defer {
             for (got.items) |item| alloc.free(item);
             got.deinit();
         }
 
-        var stream = std.io.fixedBufferStream(tt.give);
-        var iter = lineIterator(10, stream.reader());
+        var stream: std.Io.Reader = .fixed(tt.give);
+        var iter = lineIterator(10, &stream);
         while (try iter.next()) |line| {
             try got.append(try alloc.dupe(u8, line));
         }
@@ -284,14 +261,14 @@ test "LineIterator" {
 test "LineIterator long line" {
     const alloc = std.testing.allocator;
 
-    var got = std.ArrayList([]const u8).init(alloc);
+    var got = std.array_list.Managed([]const u8).init(alloc);
     defer {
         for (got.items) |item| alloc.free(item);
         got.deinit();
     }
 
-    var stream = std.io.fixedBufferStream("a\nbc\nd\ne");
-    var iter = lineIterator(1, stream.reader());
+    var stream: std.Io.Reader = .fixed("a\nbc\nd\ne");
+    var iter = lineIterator(1, &stream);
     while (try iter.next()) |line| {
         try got.append(try alloc.dupe(u8, line));
     }
