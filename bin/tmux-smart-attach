@@ -12,6 +12,10 @@ if [ -z "$TMUX_EXE" ] || [ ! -x "$TMUX_EXE" ]; then
 	exec "$SHELL"
 fi
 
+if [[ -x "$HOME/.local/bin/tmux-smart-attach" ]]; then
+	exec "$HOME/.local/bin/tmux-smart-attach" "$@"
+fi
+
 # If there's no tmux server running, start that up first.
 # This is necessary so that tmux-resurrect's restored sessions
 # already exist by the time new-session is called.
