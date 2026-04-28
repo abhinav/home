@@ -16,6 +16,7 @@ This is in one of the following formats:
 
 ```
 <summary>
+<kind>: <summary>
 <scope>: <summary>
 <kind>(<scope>): <summary>
 ```
@@ -34,6 +35,34 @@ Where:
 If the subject would exceed 72 characters, omit the `<kind>`.
 If it still exceeds 72 characters, omit the `<scope>`.
 If it still exceeds 72 characters, rethink the `<summary>` to shorten it.
+
+#### Choosing scope
+
+Use scope as a reviewer routing signal.
+
+In large repositories,
+a scoped subject is usually preferred when the changed files belong to
+an identifiable project, sub-project, package, service, component,
+or user-facing area.
+The scope should help reviewers quickly decide whether the commit is
+relevant to them.
+
+A scope MUST name something that already exists before the commit.
+When adding a new module, feature, package, or command,
+scope the subject to the existing system receiving it,
+and name the new thing in the summary.
+
+For example,
+use `foo: Add bar module`,
+not `foo/bar: Add new module`,
+when `bar` is introduced by the commit.
+
+Omit scope when it would not improve reviewer routing,
+such as repository-wide changes,
+purely mechanical updates,
+or root documentation/configuration changes where no owning subsystem
+is clearer than the change kind.
+Do not invent a scope only to make the subject look structured.
 
 ### `<body>`
 
