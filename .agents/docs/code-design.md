@@ -9,6 +9,7 @@ Apply these principles when designing new code or refactoring.
 - [Plan function expansion with objects](#plan-function-expansion-with-objects)
 - [Place values by scope](#place-values-by-scope)
 - [Prefer narrow, deep business packages](#prefer-narrow-deep-business-packages)
+- [Keep domain boundaries clean](#keep-domain-boundaries-clean)
 - [Keep maps inside abstraction boundaries](#keep-maps-inside-abstraction-boundaries)
 - [Parse at abstraction boundaries](#parse-at-abstraction-boundaries)
 - [Model choices as concepts, not booleans](#model-choices-as-concepts-not-booleans)
@@ -344,6 +345,61 @@ that force callers to orchestrate the package's internal workflow.
 
 ---
 
+## Keep domain boundaries clean
+
+Business packages should depend on business concepts,
+not transport, persistence, framework, or vendor abstractions.
+
+Translate external shapes at the adapter boundary.
+HTTP handlers, CLI commands, database repositories,
+queue consumers, and SDK clients should convert their inputs
+into domain request and result types before calling domain logic.
+
+**Why**: When infrastructure types leak into business logic,
+the domain becomes coupled to incidental delivery mechanisms.
+Policy changes then require plumbing through HTTP structs,
+database rows, generated clients, or framework lifecycles.
+Keeping the boundary clean makes domain behavior easier to test,
+reuse, and change.
+
+### Bad: Infrastructure leaks into the domain
+
+```go
+func (s *BillingService) CreateInvoice(
+    ctx context.Context,
+    req *http.Request,
+    row *InvoiceRow,
+) error {
+    customerID := req.URL.Query().Get("customer_id")
+    ...
+}
+```
+
+### Good: Adapter translates into domain concepts
+
+```go
+type CreateInvoiceRequest struct {
+    CustomerID CustomerID
+    Lines      []InvoiceLine
+}
+
+func (s *BillingService) CreateInvoice(
+    ctx context.Context,
+    req CreateInvoiceRequest,
+) error {
+    ...
+}
+```
+
+Adapters may know about both sides of the boundary.
+Domain abstractions should not.
+
+Avoid passing through generic bags like `map[string]any`,
+transport DTOs, database rows, or generated API structs
+unless they are the actual domain model.
+
+---
+
 ## Keep maps inside abstraction boundaries
 
 Avoid accepting or returning maps across package, service,
@@ -409,73 +465,106 @@ but a slice of named records is usually clearer at the boundary.
 
 ## Parse at abstraction boundaries
 
-Do not repeatedly inspect strings, integers,
-or other primitive values
-when they represent structured domain data.
+Parse less-structured input into precise data shapes
+as close to the boundary as practical.
 
-Parse unstructured input once,
-as close to the boundary as practical,
-and pass the parsed representation through the rest of the system.
+Do not validate a value,
+discard the knowledge gained,
+and keep passing the original string,
+integer, slice, map, or external DTO through the system.
+Return a representation that carries the invariant forward.
 
 **Why**: Validation that leaves data in its original primitive form
-forces every caller to rediscover the same structure.
-That duplicates parsing logic,
-creates inconsistent edge-case handling,
-and makes invalid states easier to reintroduce.
+forces the rest of the program to trust that a prior check happened.
+That creates repeated checks,
+`impossible` branches,
+and fragile coupling between callers and callees.
+Parsing preserves what was learned
+by turning raw input into a type the rest of the system can rely on.
 
 Prefer types that make valid structure explicit:
 URLs should become parsed URL values,
 timestamps should become time values,
 identifiers should become identifier types,
+non-empty inputs should become non-empty shapes,
+deduplicated data should become a structure that enforces uniqueness,
 and templates or expressions should become parsed syntax trees.
 
-### Bad: Repeated primitive inspection
+### Bad: Validate, then keep raw data
 
 ```go
-func supportsRemote(ref string) bool {
-    return strings.HasPrefix(ref, "git://") ||
-        strings.HasPrefix(ref, "ssh://")
-}
+func validateRoutes(routes []RouteInput) error {
+    seen := map[string]struct{}{}
 
-func fetch(ref string) error {
-    if supportsRemote(ref) {
-        return fetchRemote(ref)
+    for _, route := range routes {
+        if route.Service == "" {
+            return errors.New("service is required")
+        }
+        if _, ok := seen[route.Service]; ok {
+            return fmt.Errorf("duplicate service %q", route.Service)
+        }
+        seen[route.Service] = struct{}{}
     }
-    return fetchLocal(ref)
-}
-```
 
-### Good: Parse once, operate on structure
-
-```go
-type SourceRef struct {
-    Scheme string
-    Path   string
+    return nil
 }
 
-func ParseSourceRef(raw string) (SourceRef, error) { ... }
-
-func fetch(raw string) error {
-    ref, err := ParseSourceRef(raw)
-    if err != nil {
+func ConfigureAlerts(routes []RouteInput) error {
+    if err := validateRoutes(routes); err != nil {
         return err
     }
 
-    switch ref.Scheme {
-    case "git", "ssh":
-        return fetchRemote(ref)
-    case "file":
-        return fetchLocal(ref)
-    default:
-        return fmt.Errorf("unsupported source scheme %q", ref.Scheme)
+    return applyRoutes(routes)
+}
+```
+
+The validation result carries no information.
+A later caller can skip it,
+or a later callee can accidentally reintroduce the invalid case.
+
+### Good: Parse into the shape the domain needs
+
+```go
+type AlertRoutes struct {
+    byService map[string]AlertRoute
+}
+
+func ParseAlertRoutes(inputs []RouteInput) (AlertRoutes, error) {
+    routes := AlertRoutes{byService: map[string]AlertRoute{}}
+
+    for _, input := range inputs {
+        route, err := ParseAlertRoute(input)
+        if err != nil {
+            return AlertRoutes{}, err
+        }
+        if _, ok := routes.byService[route.Service]; ok {
+            return AlertRoutes{}, fmt.Errorf(
+                "duplicate service %q",
+                route.Service,
+            )
+        }
+        routes.byService[route.Service] = route
     }
+
+    return routes, nil
+}
+
+func ConfigureAlerts(routes AlertRoutes) error {
+    return applyRoutes(routes)
 }
 ```
 
 After parsing,
-avoid consulting the original raw value
-unless it is needed for diagnostics or output.
-The parsed type should become the system of record.
+the parsed type should become the system of record.
+Keep the original raw value only when needed for diagnostics,
+audit output,
+or round-tripping.
+
+Push the burden of proof upward as far as useful,
+but no farther.
+If only one selected branch needs a stronger representation,
+parse into that representation when the branch is selected,
+before acting on the data.
 
 ---
 
