@@ -1,6 +1,3 @@
-gui:
-  nerdFontsVersion: 3
-
 keybinding:
   # Don't quit with Ctrl-C or Q. Quit with Q only.
   universal:
@@ -8,7 +5,46 @@ keybinding:
     quit-alt1: <disabled>
     quitWithoutChangingDirectory: <disabled>
 
+customCommands:
+  - key: N
+    context: commits
+    prompts:
+      - type: input
+        key: BranchName
+        title: "Branch name:"
+    command: 'git branch -f "{{.Form.BranchName}}" "{{.SelectedLocalCommit.Hash}}"'
+    description: "Upsert a branch to the selected commit"
+
 git:
-  paging:
-    colorArg: always
-    pager: delta --dark --paging=never
+  fetchAll: false
+  autoFetch: false   # don't git fetch in the background
+  autoRefresh: false # don't refresh file list in the background
+  overrideGpg: true
+
+  # Don't truncate copied hashes.
+  truncateCopiedCommitHashesTo: 40
+
+  ignoreWhitespaceInDiffView: true
+  disableForcePushing: true
+
+  pagers:
+    - colorArg: always
+      pager: delta --dark --paging=never
+
+os:
+  editPreset: nvim
+
+gui:
+  tabWidth: 8
+  sidePanelWidth: 0.2
+  nerdFontsVersion: 3
+  border: single
+  animateExplosion: false
+  filterMode: fuzzy
+
+  skipAmendWarning: true       # I know what I'm doing
+  expandFocusedSidePanel: true # accordion mode
+  switchTabsWithPanelJumpKeys: true
+
+disableStartupPopups: true
+promptToReturnFromSubprocess: false
