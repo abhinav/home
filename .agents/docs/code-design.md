@@ -6,6 +6,7 @@ Apply these principles when designing new code or refactoring.
 - [Avoid super-configs](#avoid-super-configs)
 - [Group cohesive operations](#group-cohesive-operations)
 - [Evaluate static conditions early](#evaluate-static-conditions-early)
+- [Converge shared control flow](#converge-shared-control-flow)
 - [Plan function expansion with objects](#plan-function-expansion-with-objects)
 - [Place values by scope](#place-values-by-scope)
 - [Prefer narrow, deep business packages](#prefer-narrow-deep-business-packages)
@@ -192,6 +193,63 @@ func NewNotifier(channel string) Notifier {
     panic("unknown channel")
 }
 ```
+
+---
+
+## Converge shared control flow
+
+When conditional branches choose an input, mode, representation,
+or intermediate value for the same later operation,
+make the branches produce or refine a common value,
+then run the shared operation once after the conditional.
+
+Use early returns for failures, invalid states,
+or outcomes where the function should not continue.
+
+**Why**: Duplicating the same downstream operation across branches
+makes the function harder to scan
+and creates room for the branches to drift apart.
+Converging after the decision keeps branches focused on selection
+and keeps shared work in one place.
+
+### Bad: Shared operation duplicated across branches
+
+```go
+value := defaultValue
+
+loaded, err := load()
+if err != nil {
+    if errors.Is(err, os.ErrNotExist) {
+        return use(value)
+    }
+    return fmt.Errorf("load: %w", err)
+}
+
+value = loaded
+return use(value)
+```
+
+### Good: Branches decide, then converge
+
+```go
+value := defaultValue
+
+loaded, err := load()
+if err != nil {
+    if !errors.Is(err, os.ErrNotExist) {
+        return fmt.Errorf("load: %w", err)
+    }
+} else {
+    value = loaded
+}
+
+return use(value)
+```
+
+Early returns are still preferred
+when the function cannot continue.
+The convergence point is for work
+that all successful paths share.
 
 ---
 
