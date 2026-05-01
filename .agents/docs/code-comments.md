@@ -1,8 +1,6 @@
-# Code style
+# Code comments
 
-## Code comments
-
-### Core rules
+## Core Rules
 
 - Standalone comments MUST be full sentences,
   starting with a capital letter and ending with a period.
@@ -14,7 +12,7 @@
 - Explain "why", not "what".
 - DELETE comments that do not add value.
 
-### Standalone vs inline comments
+## Standalone vs Inline Comments
 
 Standalone comments are full sentences:
 
@@ -51,7 +49,7 @@ GOOD
 eventChan chan *Event
 ```
 
-### Multi-line comment style
+## Multi-Line Comment Style
 
 Multi-line comments MUST use `//`, not `/* ... */`.
 
@@ -67,7 +65,7 @@ GOOD
 // It uses line comment syntax.
 ```
 
-### Explain "why", not "what"
+## Explain "Why", Not "What"
 
 When available, explain the "why" behind non-obvious code,
 not just the "what".
@@ -87,7 +85,7 @@ for i := 0; i < numWorkers; i++ {
 }
 ```
 
-### Go: GoDoc style
+## Go: GoDoc Style
 
 When writing comments for exported functions, types, or variables in Go,
 ALWAYS use the GoDoc style,
@@ -120,7 +118,77 @@ type Report struct {
 }
 ```
 
-### Avoiding unnecessary comments
+## Document Named Concepts
+
+When introducing a new type, struct, enum, record, state object,
+or domain-specific alias,
+assume it needs a concept comment
+unless it is purely mechanical
+and obvious from an immediately adjacent function.
+
+For structs,
+also assume each field needs a comment
+unless the field's meaning, units, source,
+and valid values are obvious from its name and type.
+
+This is required even for private types
+when the type translates from another representation,
+carries invariants,
+or exists to keep the rest of the code
+from depending on a lower-level shape.
+
+**Why**: A named type is a claim that a concept exists.
+If the concept is not documented,
+readers must reverse-engineer the model from fields and call sites.
+That makes refactors fragile
+and hides important invariants at the boundary
+where the code was supposed to become clearer.
+
+
+```
+BAD
+
+type deliveryPlan struct {
+    id       string
+    lanes    []string
+    priority int
+    active   bool
+}
+```
+
+The type hides what a delivery plan is,
+where the data came from,
+what the lanes represent,
+and what active controls.
+
+```
+GOOD
+
+// deliveryPlan is the scheduler's normalized view of one delivery request.
+//
+// It is built at the API boundary so scheduling code does not depend on the
+// wire-format request shape.
+type deliveryPlan struct {
+    // id identifies the delivery request in scheduler logs.
+    id string
+
+    // lanes lists the allowed transport lanes in preference order.
+    //
+    // For example, []string{"ground", "rail"} means the scheduler should try
+    // ground transport before rail.
+    lanes []string
+
+    // priority controls scheduling order.
+    //
+    // Lower values are scheduled first.
+    priority int
+
+    // active is false when the request should be retained but not scheduled.
+    active bool
+}
+```
+
+## Avoiding Unnecessary Comments
 
 Do not add comments that do not add value.
 Consider:

@@ -38,11 +38,13 @@ NEVER use `git commit` directly.
 The following docs contain detailed guidelines.
 Read them when the task at hand requires that guidance.
 
-- **Code style** (`~/.agents/docs/code-style.md`):
-  Rules for writing code comments ---
-  standalone vs inline, multi-line style, GoDoc conventions,
-  and when to delete unnecessary comments.
-  Read this when writing or reviewing code comments.
+- **Code comments** (`~/.agents/docs/code-comments.md`):
+  Rules for when comments are required,
+  how comments should be written,
+  and when comments should be deleted.
+  Read this before writing, reviewing, or revising code comments.
+  When writing code that introduces new named types or domain concepts,
+  you MUST read and apply this file before finalizing the code.
 
 - **Code design** (`~/.agents/docs/code-design.md`):
   Principles for structuring code ---
