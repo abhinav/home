@@ -33,24 +33,52 @@ When committing changes to the repository,
 ALWAYS use the commit skill.
 NEVER use `git commit` directly.
 
+# Code comments
+
+When writing or reviewing comments:
+
+- Comments should explain why the code exists,
+  what invariant it protects,
+  what boundary it represents,
+  or what non-obvious behavior readers must preserve.
+- Delete comments that merely narrate the code.
+- New named types, records, state objects, and domain concepts usually need
+  concept comments,
+  even when private.
+- Struct fields need comments unless meaning, units, source,
+  and valid values are obvious from name and type.
+
+# Code design
+
+When designing or refactoring code:
+
+- Keep external configuration and infrastructure details
+  at system boundaries.
+- Put values where their lifetime matches the abstraction.
+- Prefer named domain concepts and cohesive operations
+  over loose helpers,
+  primitive bags,
+  maps,
+  or boolean switches.
+
 # Reference docs
 
 The following docs contain detailed guidelines.
 Read them when the task at hand requires that guidance.
 
 - **Code comments** (`~/.agents/docs/code-comments.md`):
-  Rules for when comments are required,
-  how comments should be written,
-  and when comments should be deleted.
+  Detailed rules and examples for deciding when comments are required,
+  when comments should be deleted,
+  and how comments should be written.
   Read this before writing, reviewing, or revising code comments.
   When writing code that introduces new named types or domain concepts,
   you MUST read and apply this file before finalizing the code.
 
 - **Code design** (`~/.agents/docs/code-design.md`):
-  Principles for structuring code ---
-  centralizing configuration, avoiding super-configs,
-  grouping cohesive operations,
-  and evaluating static conditions early.
+  Detailed principles and examples for structuring code,
+  choosing abstraction boundaries,
+  modeling data,
+  and organizing control flow.
   Read this when designing new code or refactoring.
 
 - **Prose formatting** (`~/.agents/docs/prose-formatting.md`):

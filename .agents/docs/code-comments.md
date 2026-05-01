@@ -1,73 +1,41 @@
 # Code comments
 
-## Core Rules
+Use this guide when writing, reviewing, or revising code comments.
 
-- Standalone comments MUST be full sentences,
-  starting with a capital letter and ending with a period.
-- Inline comments SHOULD be lowercase fragments.
-- If inline comments become multi-line,
-  convert to standalone comments.
-- Multi-line comments MUST use `//`, never `/* ... */`.
-- Apply semantic line breaks to long comments.
-- Explain "why", not "what".
-- DELETE comments that do not add value.
+## Decision checklist
 
-## Standalone vs Inline Comments
+Before adding or keeping a comment, ask:
 
-Standalone comments are full sentences:
+- Does this comment explain why the code exists,
+  what invariant it protects,
+  what boundary it represents,
+  or what non-obvious behavior readers must preserve?
+- Does this comment document a named concept
+  that would otherwise need to be reverse-engineered from fields,
+  call sites,
+  or lower-level representations?
+- Does this comment help readers understand a large block's intent
+  without narrating each line?
 
-```
-BAD
-// Start dispatcher
+If the answer is no,
+delete the comment or improve the code instead.
 
-GOOD
-// Start the dispatcher.
-```
+## When to add comments
 
-Inline comments (appearing at the end of a line of code)
-are fragments starting with a lowercase letter:
+Comments are there to provide additional context
+that is not obvious from the code itself.
 
-```
-BAD
-eventChan chan *Event // Channel for events
+Use comments to explain:
 
-GOOD
-eventChan chan *Event // channel for events
-```
+- why a non-obvious decision was made
+- which invariant must be preserved
+- which representation or system boundary is being crossed
+- what a named domain concept means
+- why a large block is organized the way it is
+- what surprising behavior future readers must not simplify away
 
-If an inline comment has to become multi-line,
-it MUST be converted to a standalone comment
-and become a full sentence.
-
-```
-BAD
-eventChan chan *Event // channel for events
-                      // received from the network
-
-GOOD
-// Channel for events received from the network.
-eventChan chan *Event
-```
-
-## Multi-Line Comment Style
-
-Multi-line comments MUST use `//`, not `/* ... */`.
-
-```
-BAD
-/*
- This is a multi-line comment.
- It uses block comment syntax.
-*/
-
-GOOD
-// This is a multi-line comment.
-// It uses line comment syntax.
-```
-
-## Explain "Why", Not "What"
-
-When available, explain the "why" behind non-obvious code,
+When available,
+explain the "why" behind non-obvious code,
 not just the "what".
 
 ```
@@ -85,40 +53,42 @@ for i := 0; i < numWorkers; i++ {
 }
 ```
 
-## Go: GoDoc Style
+## When to delete comments
 
-When writing comments for exported functions, types, or variables in Go,
-ALWAYS use the GoDoc style,
-starting with the name of the item being documented.
+Do not add or keep comments that do not add value.
+
+Delete comments when:
+
+- the code is self-explanatory
+- the comment merely restates what the code does
+- the comment is out of date or incorrect
+- the comment narrates a single obvious operation
+
+Examples of comments to delete:
 
 ```
-BAD
-// This function starts the dispatcher.
-func StartDispatcher() { ... }
+// Close the channel.
+close(ch)
 
-GOOD
-// StartDispatcher starts the dispatcher.
-func StartDispatcher() { ... }
+// Start the worker.
+go worker()
+
+// Increment counter.
+count++
 ```
 
-When documenting struct fields,
-separate each documented field from the previous field
-with an empty line.
-This keeps multi-field structs scannable
-and makes each field's comment visually attach
-to only that field.
+Examples of comments to keep:
 
-```go
-type Report struct {
-    // Name identifies the report.
-    Name string
+```
+// Workers must be spawned before sending the first event
+// or there will be a deadlock.
+for i := 0; i < numWorkers; i++ { go worker() }
 
-    // Format selects the report renderer.
-    Format ReportFormat
-}
+// Use a nil channel to disable this select case when buffer is empty.
+processChan = nil
 ```
 
-## Document Named Concepts
+## Document named concepts
 
 When introducing a new type, struct, enum, record, state object,
 or domain-specific alias,
@@ -143,7 +113,6 @@ readers must reverse-engineer the model from fields and call sites.
 That makes refactors fragile
 and hides important invariants at the boundary
 where the code was supposed to become clearer.
-
 
 ```
 BAD
@@ -188,48 +157,94 @@ type deliveryPlan struct {
 }
 ```
 
-## Avoiding Unnecessary Comments
+## Standalone vs inline comments
 
-Do not add comments that do not add value.
-Consider:
-
-- Is the code self-explanatory?
-  If yes, DELETE the comment.
-- Does the comment just restate what the code does?
-  If yes, DELETE the comment.
-- Is the comment out of date or incorrect?
-  If yes, UPDATE or DELETE the comment.
-
-Examples of comments to DELETE:
+Standalone comments are full sentences
+that start with a capital letter
+and end with a period.
 
 ```
-// Close the channel
-close(ch)
+BAD
+// Start dispatcher
 
-// Start the worker
-go worker()
-
-// Increment counter
-count++
+GOOD
+// Start the dispatcher.
 ```
 
-Examples of comments to KEEP:
+Inline comments appear at the end of a line of code.
+They are fragments starting with a lowercase letter.
 
 ```
-// Workers must be spawned before sending the first event
-// or there will be a deadlock.
-for i := 0; i < numWorkers; i++ { go worker() }
+BAD
+eventChan chan *Event // Channel for events
 
-// Use a nil channel to disable this select case when buffer is empty.
-processChan = nil
+GOOD
+eventChan chan *Event // channel for events
 ```
 
-The key insight is:
+If an inline comment has to become multi-line,
+convert it to a standalone comment
+and make it a full sentence.
 
-- Comments are NOT there to narrate the code.
-- Comments are there to:
-  - provide additional context and explanation
-    that is not obvious from the code itself
-  - for large code blocks,
-    allow readers to quickly grasp the intent
-    without reading every line of code.
+```
+BAD
+eventChan chan *Event // channel for events
+                      // received from the network
+
+GOOD
+// Channel for events received from the network.
+eventChan chan *Event
+```
+
+## Multi-line comment style
+
+In languages that support it,
+multi-line comments must use `//`,
+not `/* ... */`.
+
+Apply semantic line breaks to long comments.
+
+```
+BAD
+/*
+ This is a multi-line comment.
+ It uses block comment syntax.
+*/
+
+GOOD
+// This is a multi-line comment.
+// It uses line comment syntax.
+```
+
+## Go: GoDoc and struct fields
+
+When writing comments for exported functions, types, or variables in Go,
+always use the GoDoc style,
+starting with the name of the item being documented.
+
+```
+BAD
+// This function starts the dispatcher.
+func StartDispatcher() { ... }
+
+GOOD
+// StartDispatcher starts the dispatcher.
+func StartDispatcher() { ... }
+```
+
+When documenting struct fields,
+separate each documented field from the previous field
+with an empty line.
+This keeps multi-field structs scannable
+and makes each field's comment visually attach
+to only that field.
+
+```go
+type Report struct {
+    // Name identifies the report.
+    Name string
+
+    // Format selects the report renderer.
+    Format ReportFormat
+}
+```
