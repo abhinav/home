@@ -40,8 +40,8 @@
 	stat = true
 	instructionFormat = %s%d
 	autoSquash = true
-[sequence]
-	editor = ~/.restack/edit.sh
+	# Update refs affected by a rebase by default.
+	updateRefs = true
 [pager]
 	branch = false
 	tag = false
