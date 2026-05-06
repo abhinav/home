@@ -25,7 +25,6 @@ git:
   truncateCopiedCommitHashesTo: 40
 
   ignoreWhitespaceInDiffView: true
-  disableForcePushing: true
 
   pagers:
     - colorArg: always
