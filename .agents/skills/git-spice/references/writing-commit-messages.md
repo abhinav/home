@@ -108,12 +108,12 @@ Do not invent a scope only to make the subject look structured.
 - Commit message body MUST NOT have lines longer than 72 characters.
 - Apply semantic line breaks formatting.
 - Treat commit messages as Markdown documents:
-  - Use backticks for inline code (function names, variables, file paths)
-  - Use other Markdown formatting (bold, lists, etc.) judiciously
-  - Maintain semantic line breaks
-- Use objective, factual tone:
-  - Avoid subjective embellishments like "critical issue", "serious problem"
-  - Focus on what the code does and why, not value judgments
+  use backticks for inline code,
+  use other Markdown formatting judiciously,
+  and maintain semantic line breaks.
+- Use objective, factual tone.
+  Avoid subjective embellishments like "critical issue" or "serious problem".
+  Focus on what the code does and why, not value judgments.
 - If the commit resolves an issue,
   add a final line in the body using the form `Resolves #123`.
 
@@ -128,19 +128,20 @@ feature flags, migrations, generated files, or dependency updates.
 
 A good commit body should answer the relevant questions:
 
-- What constraint, failure, dependency, or product requirement made this change
-  necessary?
+- What constraint, failure, dependency,
+  or product requirement made this change necessary?
 - Why is this change the right place to address it?
 - What broader workflow or user-visible behavior does this support?
 - If this unblocks other work, what depends on it?
 
 When a change responds to a concrete failure,
-include a short error excerpt or a link to the failed run when that context
-would help reviewers understand the change.
+include a short error excerpt or a link to the failed run
+when that context would help reviewers understand the change.
 Keep quoted errors short enough to be useful.
 
 When a change is part of a larger sequence,
-include concise references to related commits, PRs, issues, or rollout steps
+include concise references to related commits,
+pull requests, issues, or rollout steps
 when that helps explain why this commit must exist separately.
 
 Commit bodies should describe the work itself,
@@ -181,13 +182,12 @@ Commit messages MUST ALWAYS be formatted with semantic line breaks.
 
 When reviewing or providing feedback on commit messages:
 
-- Organize feedback using Markdown headings (##, ###)
-  when there are multiple distinct issues or sections
-- Use fenced code blocks (```) when:
-  - Providing examples of problematic code
-  - Showing diffs or comparisons
-  - Demonstrating technical examples
-- Apply the same factual tone guidelines as commit messages themselves
+- Organize feedback using Markdown headings
+  when there are multiple distinct issues or sections.
+- Use fenced code blocks when providing examples,
+  showing diffs,
+  or demonstrating technical examples.
+- Apply the same factual tone guidelines as commit messages themselves.
 
 ## Common mistakes
 
@@ -195,8 +195,8 @@ When reviewing or providing feedback on commit messages:
 
 NEVER write commit messages without semantic line breaks.
 
-**Solution**:
-Apply semantic line breaks formatting to commit messages.
+Solution:
+apply semantic line breaks formatting to commit messages.
 
 ### Using itemized lists as diff inventories
 
@@ -204,22 +204,24 @@ DO NOT use itemized lists merely to enumerate files,
 helpers,
 or implementation details from the diff.
 
-**Why**:
-Any information that is obvious from looking at the `git diff`
+Why:
+any information that is obvious from looking at the `git diff`
 does not need to be present in the commit message.
 However,
 lists are useful when they make changed external contracts easier to audit,
 such as multiple CLI flags, config keys, API fields, or documented forms.
 
-**Solution**:
-Focus on the review contract:
+Solution:
+focus on the review contract:
 why the change exists,
 what user-facing behavior changes,
 and which named external contracts reviewers need to see.
 
 ### Using single-line commit messages
 
-NEVER use single-line commit messages.
+NEVER use a single-line commit message.
 
-**Solution**:
-There MUST ALWAYS be a body to the commit message.
+Solution:
+write a subject and a non-empty body.
+The body should explain why the change exists
+and what contract reviewers should expect.
