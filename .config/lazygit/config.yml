@@ -27,8 +27,17 @@ git:
   ignoreWhitespaceInDiffView: true
 
   pagers:
-    - pager: delta --dark --paging=never --hyperlinks --hyperlinks-file-link-format="lazygit-edit://{path}:{line}"
+    # delta: inline and side by side
+    - pager: >-
+        delta --dark --paging=never
+        --hyperlinks --hyperlinks-file-link-format="lazygit-edit://{path}:{line}"
+    - pager: >-
+        delta --dark --paging=never --side-by-side
+        --hyperlinks --hyperlinks-file-link-format="lazygit-edit://{path}:{line}"
+
+    # difft: inline and side by side
     - externalDiffCommand: difft --color=always --display=inline
+    - externalDiffCommand: difft --color=always
 
 os:
   editPreset: nvim
