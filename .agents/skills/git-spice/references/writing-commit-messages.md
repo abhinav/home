@@ -178,15 +178,28 @@ The `<body>` MUST NOT have lines longer than 72 characters.
 
 Commit messages MUST ALWAYS be formatted with semantic line breaks.
 
-## Providing feedback on commit messages
+## Explaining or reviewing commit-message choices
 
-When reviewing or providing feedback on commit messages:
+When reviewing,
+rewriting,
+or explaining commit messages:
 
-- Organize feedback using Markdown headings
-  when there are multiple distinct issues or sections.
-- Use fenced code blocks when providing examples,
-  showing diffs,
-  or demonstrating technical examples.
+- Use Markdown headings
+  when the answer covers multiple independent aspects,
+  such as the subject, body, replacement text, examples, or rationale.
+  Keep headings short, and skip them for genuinely one-part answers.
+- Use short fenced code blocks when showing rewritten commit messages,
+  before-and-after examples, representative message shapes,
+  or compact syntax examples.
+  Prefer a small concrete example over a prose-only description
+  when the example will make the rule easier to understand.
+- Use compact visualizations only when they clarify structure
+  that would be harder to follow as prose alone,
+  such as a decision path, timeline, comparison, state transition,
+  or other compact relationship between ideas.
+  Prefer a plain text diagram when the idea fits comfortably in text.
+  Do not add a visualization for simple linear explanations.
+- Keep structure proportional to the answer. Clarity is the goal, not ceremony.
 - Apply the same factual tone guidelines as commit messages themselves.
 
 ## Common mistakes

@@ -42,6 +42,8 @@ Use git-spice for:
   tracking,
   splitting,
   or moving branches
+- Updating repository trunk state before stack movement or rebasing
+- Continuing a git-spice rebase after conflict resolution
 - Creating,
   amending,
   or fixing up commits
@@ -84,6 +86,11 @@ Load these references before doing the matching work:
   `~/.agents/skills/git-spice/references/pull-requests.md`
 - Non-interactive commit splitting and other raw history surgery:
   `~/.agents/skills/git-spice/references/history-surgery.md`
+- Branch topology surgery,
+  such as `git-spice branch onto`,
+  `git-spice upstack onto`,
+  or `git-spice branch split`:
+  `~/.agents/skills/git-spice/references/history-surgery.md`
 - Recovery from raw Git usage or stale stack metadata:
   `~/.agents/skills/git-spice/references/recovery.md`
 
@@ -96,11 +103,15 @@ not only to network or remote operations.
 
 Use `sandbox_permissions: "require_escalated"` for commands such as:
 
+- `git-spice repo sync`
 - `git-spice branch create ...`
 - `git-spice branch rename ...`
 - `git-spice branch track ...`
 - `git-spice branch onto ...`
 - `git-spice branch split ...`
+- `git-spice rebase continue --no-edit`
+- `git-spice branch restack ...`
+- `git-spice stack restack ...`
 - `git-spice upstack onto ...`
 - `git-spice upstack restack ...`
 - `git-spice commit create ...`
@@ -138,6 +149,38 @@ Use git-spice for stack inspection:
 ```bash
 git-spice ls
 ```
+
+Use git-spice for repository trunk synchronization:
+
+```bash
+git-spice repo sync
+```
+
+When the task is to update `main`,
+`master`,
+or the repository trunk before rebasing,
+restacking,
+creating a branch,
+or moving a stack,
+run `git-spice repo sync` first.
+Do not replace it with `git fetch`,
+`git fetch origin master`,
+`git fetch origin master:refs/remotes/origin/master`,
+`git fetch origin master:master`,
+or a fetch of only `origin/master`.
+
+After syncing,
+use the local trunk branch that git-spice recognizes as the stack target.
+Do not pass remote-tracking refs such as `origin/master` or `origin/main`
+to `git-spice branch onto` or `git-spice upstack onto`.
+These commands accept local branch names only.
+
+If `git-spice repo sync` fails because another worktree has trunk checked out,
+because auth is unavailable,
+or because the shared repository metadata needs permissions,
+stop and handle that failure directly.
+Do not improvise a narrower raw-Git fetch as a substitute for the repo-level
+sync.
 
 `git-spice branch current` does not exist.
 Use `git branch --show-current` to detect the current branch.
@@ -180,25 +223,17 @@ decide where the diff belongs in the stack.
 - Prerequisite work below the current branch:
   create a below-current branch with `--below --no-commit`,
   then edit and commit there.
-- Existing work needs a different base:
-  use `git-spice branch onto` or `git-spice upstack onto`.
-- Existing branch needs to be split apart:
-  use `git-spice branch split` when it matches the desired split;
-  use `git-spice commit split` for interactive commit hunk splitting;
-  use raw Git only for non-interactive commit-level history surgery
-  that git-spice does not expose.
+- Existing stack topology should stay the same:
+  use a restack command to replay branches on their recorded bases.
+- Existing work needs a different base,
+  or an existing branch needs to be split apart:
+  load `~/.agents/skills/git-spice/references/history-surgery.md`.
 
 Use `git-spice branch create --insert`
 when adding a new branch to an existing stack,
 with or without staged changes.
 Never use `--insert` from trunk;
 ordinary branches from `main` or `master` use normal branch creation.
-
-Use `git-spice branch split --at <commit>:<new-branch-name>`
-when taking a branch that already has commits
-and splitting it into multiple branches.
-Do not use `git-spice branch create --insert`
-to peel existing commits out of the current branch.
 
 ## Branch Workflows
 
@@ -350,57 +385,70 @@ Inspect the stack before topology changes:
 git-spice ls
 ```
 
-Split a branch:
+Load `~/.agents/skills/git-spice/references/history-surgery.md`
+before stack surgery,
+including `git-spice branch onto`,
+`git-spice upstack onto`,
+or `git-spice branch split`.
+Those commands change stack topology.
+Do not use them for ordinary restacking.
+
+After resolving rebase conflicts,
+continue through git-spice without opening an editor:
 
 ```bash
-# mutating: request escalated filesystem privileges first
-git-spice branch split --at <commit>:<new-branch-name>
+git-spice rebase continue --no-edit
 git-spice ls
 ```
 
-Agents always pass exact split points and branch names with `--at`.
-Do not rely on the interactive split prompt.
-Use one `--at <commit>:<new-branch-name>` value for each new branch.
-The branch name after the colon is the exact final branch name,
-including any required user prefix.
-To split at multiple commits,
-pass multiple `--at` values:
+Do not use raw `git rebase --continue` after a git-spice rebase conflict.
+Git-spice still owns the stack metadata for the operation.
+Always pass `--no-edit`;
+without it,
+`git-spice rebase continue` can invoke the editor
+and leave the session waiting at an invisible prompt.
+
+Restack preserves the recorded stack topology.
+Use restack commands when the current task requires branches to be replayed on
+their recorded bases,
+for example before work that depends on the up-to-date stack shape.
+If `git-spice ls` reports `(needs restack)`,
+that is informational.
+Do not restack solely because the marker is present,
+especially when trunk is moving quickly
+and the current task does not require replaying the branch.
+
+Restack the current branch:
 
 ```bash
-# mutating: request escalated filesystem privileges first
-git-spice branch split \
-  --at <lower-commit>:<final-lower-branch-name> \
-  --at <higher-commit>:<final-higher-branch-name>
+git-spice branch restack
 git-spice ls
 ```
 
-For example,
-to split the previous commit into a prerequisite branch:
-
-```bash
-# mutating: request escalated filesystem privileges first
-git-spice branch split --at HEAD^:abhinav/prerequisite-topic
-git-spice ls
-```
-
-Move the current branch onto another base:
-
-```bash
-git-spice branch onto <target>
-git-spice ls
-```
-
-Move upstack branches onto another base:
-
-```bash
-git-spice upstack onto <target>
-git-spice ls
-```
-
-Restack the current branch and its upstack after history repair:
+Restack the current branch and its upstack:
 
 ```bash
 git-spice upstack restack
+git-spice ls
+```
+
+Restack every branch in the current stack:
+
+```bash
+git-spice stack restack
+git-spice ls
+```
+
+Choose the smallest restack scope that matches the stale part of the stack.
+Do not use `git-spice branch onto <target>` merely because a branch needs
+restacking.
+`branch onto` changes the recorded base;
+restack commands preserve the existing topology.
+
+After any restack,
+inspect the stack again:
+
+```bash
 git-spice ls
 ```
 
@@ -430,7 +478,8 @@ you MUST read:
 ~/.agents/skills/git-spice/references/recovery.md
 ```
 
-If the task requires non-interactive commit splitting
+If the task requires branch topology surgery,
+non-interactive commit splitting,
 or other low-level history surgery,
 you MUST read:
 
@@ -463,6 +512,20 @@ git-spice owns:
   for a message-only amend while unrelated changes are staged
 - `git-spice commit amend --only`,
   which is not a supported git-spice message-only bypass
+- `git fetch origin master`,
+  `git fetch origin master:refs/remotes/origin/master`,
+  `git fetch origin master:master`,
+  or fetching only `origin/master` as a substitute for
+  `git-spice repo sync`
+- `git-spice branch onto origin/master` or
+  `git-spice upstack onto origin/master` after bypassing repo sync
+- `git-spice branch onto <target>` for ordinary restacking,
+  because `branch onto` changes stack topology and restack commands preserve
+  the existing topology
+- Raw `git rebase --continue` after git-spice starts a rebase,
+  which bypasses git-spice-owned stack metadata
+- `git-spice rebase continue` without `--no-edit`,
+  which can invoke the editor after conflict resolution
 - `git-spice branch create --insert` from trunk
 - `git-spice branch create --insert` to split existing commits
   out of the current branch
@@ -491,6 +554,28 @@ or perform an operation git-spice does not expose.
 - "Escalation is only needed before pushing."
   Local `git-spice` mutations update refs and stack metadata.
   Request escalation up front.
+- "I only need a current base ref,
+  so `git fetch origin master` is narrower and safer."
+  Updating trunk for stack movement is a git-spice-owned repository operation.
+  Run `git-spice repo sync` and address any checked-out-worktree,
+  auth,
+  or metadata-permission failure directly.
+- "Another worktree has `master` checked out,
+  so avoid disturbing it with raw fetches."
+  That is a `git-spice repo sync` failure mode to handle explicitly,
+  not a reason to bypass the repo-level sync contract.
+- "`origin/master` is current enough for `branch onto`."
+  Git-spice stack movement expects branch targets it recognizes.
+  Sync first,
+  then use the local trunk branch.
+- "Git-spice handed control to Git's rebase machinery."
+  Git-spice still owns the stack operation.
+  Continue with `git-spice rebase continue --no-edit`,
+  not raw `git rebase --continue`.
+- "The conflicts are resolved,
+  so plain `git-spice rebase continue` is fine."
+  The continuation can still invoke an editor.
+  Use `--no-edit` in non-interactive agent sessions.
 - "The workspace branch prefix is `abhinav/`,
   so include it in every git-spice branch command."
   Git-spice may add prefixes automatically.
@@ -516,6 +601,9 @@ Current branch:
 Stack state:
   git-spice ls
 
+Sync repository trunk:
+  git-spice repo sync
+
 New branch plus commit:
   git-spice branch create <name> -m '<message>'
 
@@ -540,17 +628,20 @@ Fresh change below current branch:
   git-spice commit create -m '<message>'
   git-spice ls
 
-Split branch:
-  git-spice branch split --at <commit>:<new-branch-name>
+Split or move existing branches:
+  load ~/.agents/skills/git-spice/references/history-surgery.md
 
-Move current branch:
-  git-spice branch onto <target>
+Continue after rebase conflicts:
+  git-spice rebase continue --no-edit
 
-Move upstack branches:
-  git-spice upstack onto <target>
+Restack current branch:
+  git-spice branch restack
 
 Restack current branch and upstack:
   git-spice upstack restack
+
+Restack whole stack:
+  git-spice stack restack
 
 Create pull request:
   git-spice branch submit --title '...' --body '...'
