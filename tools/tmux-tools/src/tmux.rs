@@ -1,7 +1,13 @@
 use std::ffi::OsString;
-use std::io::{self, BufRead, BufReader};
+use std::io::{self, BufRead, BufReader, Lines};
 use std::os::unix::process::CommandExt;
-use std::process::{Command, ExitStatus, Stdio};
+use std::process::{Child, ChildStdout, Command, ExitStatus, Stdio};
+
+const SIGTERM: i32 = 15;
+
+extern "C" {
+    fn kill(pid: i32, sig: i32) -> i32;
+}
 
 /// Maximum tmux session-name length accepted by these tools.
 ///
@@ -156,7 +162,7 @@ impl Tmux {
     }
 
     /// Lists currently running tmux sessions.
-    pub fn list_sessions(&self) -> Result<Vec<Session>> {
+    pub fn list_sessions(&self) -> Result<impl Iterator<Item = Result<Session>> + 'static> {
         let mut child = self
             .command(["list-sessions", "-F", "#S #{session_attached}"])
             .stdin(Stdio::null())
@@ -168,20 +174,11 @@ impl Tmux {
             io::Error::new(io::ErrorKind::BrokenPipe, "tmux stdout pipe was not opened")
         })?;
 
-        let mut sessions = Vec::new();
-        for line in BufReader::new(stdout).lines() {
-            sessions.push(Session::parse(&line?)?);
-        }
-
-        let status = child.wait()?;
-        if !status.success() {
-            return Err(Error::TmuxCommandFailed {
-                args: self.args(["list-sessions", "-F", "#S #{session_attached}"]),
-                status,
-            });
-        }
-
-        Ok(sessions)
+        Ok(SessionIter {
+            child: Some(child),
+            lines: Some(BufReader::new(stdout).lines()),
+            args: self.args(["list-sessions", "-F", "#S #{session_attached}"]),
+        })
     }
 
     /// Attaches to the given tmux session, replacing the current process.
@@ -223,6 +220,73 @@ impl Default for Tmux {
     }
 }
 
+/// Streaming view of a `tmux list-sessions` subprocess.
+///
+/// The iterator owns the child process so callers can consume session records
+/// without materializing the full inventory.
+///
+/// `SessionIter` has three states:
+/// streaming records with both `child` and `lines` present;
+/// waiting for tmux exit status with `child` present and `lines` cleared;
+/// and finished with both fields cleared.
+struct SessionIter {
+    /// Child process whose exit status validates the completed stream.
+    ///
+    /// This is `None` after the iterator has waited for the child,
+    /// either at normal EOF or during early-drop cleanup.
+    child: Option<Child>,
+
+    /// Stdout reader for session records.
+    ///
+    /// This is cleared before waiting so early drops close the pipe first.
+    lines: Option<Lines<BufReader<ChildStdout>>>,
+
+    /// Command line reported if tmux exits unsuccessfully after EOF.
+    args: Vec<OsString>,
+}
+
+impl Iterator for SessionIter {
+    type Item = Result<Session>;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if let Some(lines) = self.lines.as_mut() {
+            match lines.next() {
+                Some(Ok(line)) => return Some(Session::parse(&line)),
+                Some(Err(err)) => return Some(Err(Error::Io(err))),
+                None => {
+                    self.lines = None;
+                }
+            }
+        }
+
+        let mut child = self.child.take()?;
+        match child.wait() {
+            Ok(status) if status.success() => None,
+            Ok(status) => Some(Err(Error::TmuxCommandFailed {
+                args: self.args.clone(),
+                status,
+            })),
+            Err(err) => Some(Err(Error::Io(err))),
+        }
+    }
+}
+
+impl Drop for SessionIter {
+    fn drop(&mut self) {
+        self.lines = None;
+        if let Some(mut child) = self.child.take() {
+            terminate_child(&child);
+            _ = child.wait();
+        }
+    }
+}
+
+fn terminate_child(child: &Child) {
+    // Drop has no error channel,
+    // so cleanup asks tmux to stop and ignores races with natural process exit.
+    _ = unsafe { kill(child.id() as i32, SIGTERM) };
+}
+
 /// Final process handoff chosen from the requested session and tmux inventory.
 #[derive(Debug, Clone, Copy, Eq, PartialEq)]
 pub enum Action {
@@ -238,11 +302,25 @@ pub enum Action {
 
 impl Action {
     /// Chooses the tmux transfer after scanning the full session inventory.
-    pub fn choose(sessions: &[Session], wanted_name: &str) -> Self {
-        match sessions.iter().find(|session| session.name == wanted_name) {
-            Some(session) if session.attached => Self::NewUnnamed,
-            Some(_) => Self::Attach,
-            None => Self::NewNamed,
+    pub fn choose<I>(sessions: I, wanted_name: &str) -> Result<Self>
+    where
+        I: IntoIterator<Item = Result<Session>>,
+    {
+        let found = 'scan: {
+            for session in sessions {
+                let session = session?;
+                if session.name == wanted_name {
+                    break 'scan Some(session);
+                }
+            }
+
+            None
+        };
+
+        match found {
+            Some(session) if session.attached => Ok(Self::NewUnnamed),
+            Some(_) => Ok(Self::Attach),
+            None => Ok(Self::NewNamed),
         }
     }
 }
@@ -299,31 +377,66 @@ mod tests {
 
     #[test]
     fn action_attaches_to_existing_detached_session() {
-        let sessions = vec![Session {
+        let sessions = vec![Ok(Session {
             name: "main".to_owned(),
             attached: false,
-        }];
+        })];
 
-        assert_eq!(Action::choose(&sessions, "main"), Action::Attach);
+        assert!(matches!(
+            Action::choose(sessions, "main"),
+            Ok(Action::Attach)
+        ));
     }
 
     #[test]
     fn action_creates_unnamed_session_when_existing_session_is_attached() {
-        let sessions = vec![Session {
+        let sessions = vec![Ok(Session {
             name: "main".to_owned(),
             attached: true,
-        }];
+        })];
 
-        assert_eq!(Action::choose(&sessions, "main"), Action::NewUnnamed);
+        assert!(matches!(
+            Action::choose(sessions, "main"),
+            Ok(Action::NewUnnamed)
+        ));
     }
 
     #[test]
     fn action_creates_named_session_when_requested_session_is_missing() {
-        let sessions = vec![Session {
+        let sessions = vec![Ok(Session {
             name: "other".to_owned(),
             attached: false,
-        }];
+        })];
 
-        assert_eq!(Action::choose(&sessions, "main"), Action::NewNamed);
+        assert!(matches!(
+            Action::choose(sessions, "main"),
+            Ok(Action::NewNamed)
+        ));
+    }
+
+    #[test]
+    fn action_reports_session_stream_errors() {
+        let sessions = vec![Err(Error::InvalidSessionLine("bad".to_owned()))];
+
+        assert!(matches!(
+            Action::choose(sessions, "main"),
+            Err(Error::InvalidSessionLine(_))
+        ));
+    }
+
+    #[test]
+    fn action_ignores_later_stream_errors_after_finding_session() {
+        let sessions = vec![
+            Ok(Session {
+                name: "main".to_owned(),
+                attached: false,
+            }),
+            Err(Error::InvalidSessionLine("bad".to_owned())),
+        ];
+
+        assert!(matches!(
+            Action::choose(sessions, "main"),
+            Ok(Action::Attach)
+        ));
     }
 }

@@ -62,8 +62,8 @@ fn run() -> Result<ExitCode, Error> {
         tmux.start_server()?;
     }
 
-    let sessions = tmux.list_sessions()?;
-    let exec_error = match Action::choose(&sessions, &cli.session_name) {
+    let action = Action::choose(tmux.list_sessions()?, &cli.session_name)?;
+    let exec_error = match action {
         Action::Attach => tmux.exec_attach_session(&cli.session_name),
         Action::NewNamed => tmux.exec_new_session(Some(&cli.session_name), &cli.command_args),
         Action::NewUnnamed => tmux.exec_new_session(None, &cli.command_args),
