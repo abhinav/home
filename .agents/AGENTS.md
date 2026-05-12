@@ -33,6 +33,31 @@ When committing changes to the repository,
 ALWAYS use the commit skill.
 NEVER use `git commit` directly.
 
+# Repository state
+
+Do not treat incidental repository state as part of your task.
+A dirty worktree, staged changes, untracked files,
+or mixed staged/unstaged paths may be intentional user state
+even when it looks untidy or risky.
+
+Your job is to complete the requested operation,
+not to make the whole repository look clean
+for a hypothetical later command.
+If the operation is implementation, debugging, review, or explanation,
+inspect only what you need
+and report relevant state in your handoff.
+
+If the operation is commit, branch, checkout, rebase, merge, stash,
+or explicit staging,
+you may change Git state as needed for that operation
+while keeping the change scoped
+and avoiding unrelated user state.
+
+When unsure who owns a staged hunk, untracked file, stash entry,
+or ref movement,
+preserve it and ask or report it.
+Never rearrange it solely because it would make your final status simpler.
+
 # Code comments
 
 When writing or reviewing comments:
