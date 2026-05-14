@@ -753,7 +753,7 @@ require('lazy').setup({
 
 	-- Look and feel {{{2
 	{
-		'justinmk/molokai', -- {{{3
+		'tomasr/molokai', -- {{{3
 		lazy = false,
 		priority = 1000,
 	},
