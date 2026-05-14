@@ -864,11 +864,6 @@ require('lazy').setup({
 					},
 				},
 			},
-			ts_ls = {
-				init_options = {
-					disableAutomaticTypingAcquisition = true,
-				},
-			},
 			starpls = {optional = true},
 			zls = {optional = true},
 		},
