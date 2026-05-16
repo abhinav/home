@@ -1,6 +1,7 @@
 use std::ffi::OsString;
 use std::io::{self, BufRead, BufReader, Lines};
 use std::os::unix::process::CommandExt;
+use std::path::Path;
 use std::process::{Child, ChildStdout, Command, ExitStatus, Stdio};
 
 const SIGTERM: i32 = 15;
@@ -184,6 +185,82 @@ impl Tmux {
     /// Attaches to the given tmux session, replacing the current process.
     pub fn exec_attach_session(&self, session_name: &str) -> io::Error {
         self.command(["attach-session", "-t", session_name]).exec()
+    }
+
+    /// Reports the current session from tmux's client context.
+    pub fn current_session_name(&self) -> Result<String> {
+        let output = self
+            .command(["display-message", "-p", "#S"])
+            .stdin(Stdio::null())
+            .stderr(Stdio::null())
+            .output()?;
+
+        if !output.status.success() {
+            return Err(Error::TmuxCommandFailed {
+                args: self.args(["display-message", "-p", "#S"]),
+                status: output.status,
+            });
+        }
+
+        let name = String::from_utf8_lossy(&output.stdout)
+            .trim_end_matches(['\r', '\n'])
+            .to_owned();
+        if name.is_empty() {
+            return Err(Error::InvalidSessionLine(name));
+        }
+
+        Ok(name)
+    }
+
+    /// Opens a new window in `session_name` using `start_directory` as cwd.
+    pub fn new_window(&self, session_name: &str, start_directory: &Path) -> Result<()> {
+        let status = Command::new(&self.program)
+            .args(["new-window", "-t", session_name, "-c"])
+            .arg(start_directory)
+            .stdin(Stdio::null())
+            .status()?;
+
+        if status.success() {
+            Ok(())
+        } else {
+            let args = [
+                OsString::from("new-window"),
+                OsString::from("-t"),
+                OsString::from(session_name),
+                OsString::from("-c"),
+                start_directory.as_os_str().to_owned(),
+            ];
+            Err(Error::TmuxCommandFailed {
+                args: std::iter::once(self.program.clone()).chain(args).collect(),
+                status,
+            })
+        }
+    }
+
+    /// Creates a detached session using `start_directory` as its initial cwd.
+    pub fn new_detached_session(&self, session_name: &str, start_directory: &Path) -> Result<()> {
+        let status = Command::new(&self.program)
+            .args(["new-session", "-d", "-s", session_name, "-c"])
+            .arg(start_directory)
+            .stdin(Stdio::null())
+            .status()?;
+
+        if status.success() {
+            Ok(())
+        } else {
+            let args = [
+                OsString::from("new-session"),
+                OsString::from("-d"),
+                OsString::from("-s"),
+                OsString::from(session_name),
+                OsString::from("-c"),
+                start_directory.as_os_str().to_owned(),
+            ];
+            Err(Error::TmuxCommandFailed {
+                args: std::iter::once(self.program.clone()).chain(args).collect(),
+                status,
+            })
+        }
     }
 
     /// Starts a new tmux session, replacing the current process.
