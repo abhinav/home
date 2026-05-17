@@ -152,8 +152,30 @@ fn run() -> Result<(), Error> {
         tmux.new_detached_session(&session_name, &cli.directory)?;
     }
     tmux.new_window(&session_name, &cli.directory)?;
+    focus_ghostty();
 
     Ok(())
+}
+
+fn focus_ghostty() {
+    #[cfg(target_os = "macos")]
+    {
+        let [program, flag, script] = ghostty_activation_command();
+        _ = std::process::Command::new(program)
+            .args([flag, script])
+            .stdin(std::process::Stdio::null())
+            .stdout(std::process::Stdio::null())
+            .stderr(std::process::Stdio::null())
+            .status();
+    }
+}
+
+fn ghostty_activation_command() -> [&'static str; 3] {
+    [
+        "osascript",
+        "-e",
+        "tell application \"Ghostty\" to activate",
+    ]
 }
 
 #[cfg(test)]
