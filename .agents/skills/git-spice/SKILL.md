@@ -35,6 +35,31 @@ Git-spice owns the stack contract.
 Raw Git may service the machinery below deck,
 but it must not bypass the stack contract for operations git-spice owns.
 
+## Non-Interactive Mutation Contract
+
+Every mutating `git-spice` command must be shaped so it can finish
+without opening an editor or waiting on an invisible prompt.
+
+Before invoking a mutating command,
+identify whether git-spice would otherwise need interactive authoring input.
+If so,
+choose the explicit non-interactive form before you run it:
+
+| Operation shape | Required non-interactive form |
+|-----------------|-------------------------------|
+| Create a branch and commit staged changes | `git-spice branch create <branch-name> -m '<message>'` or `git-spice branch create <branch-name> -F <message-file>` |
+| Create a branch below current, before the diff exists | `git-spice branch create --below --no-commit <branch-name>` |
+| Commit staged changes on the current branch | `git-spice commit create -m '<message>'` or `git-spice commit create -F <message-file>` |
+| Continue a git-spice rebase after conflicts are resolved | `git-spice rebase continue --no-edit` |
+| Amend the previous commit while keeping its message | `git-spice commit amend --no-edit` |
+| Amend the previous commit with a new message | `git-spice commit amend -m '<full-new-message>'` |
+
+Treat explicit message supply through `-m` or `-F`,
+`--no-commit`, and `--no-edit` as parts of the command contract,
+not optional cleanup flags to remember later.
+If you cannot choose the correct non-interactive form yet,
+stop and resolve that uncertainty before invoking git-spice.
+
 Use git-spice for:
 
 - Creating,
@@ -237,12 +262,17 @@ ordinary branches from `main` or `master` use normal branch creation.
 
 ## Branch Workflows
 
+Apply the Non-Interactive Mutation Contract before creating a branch.
+
 Create a new branch with a commit from staged changes:
 
 ```bash
 git-spice branch create <branch-name> -m '<message>'
 git-spice ls
 ```
+
+Use `-F <message-file>` instead of `-m`
+when the branch-creation commit message is safer to provide from a file.
 
 If `HEAD` is detached,
 create the branch with an explicit base:
@@ -284,6 +314,8 @@ git-spice ls
 
 ## Insert New Work Below the Current Branch
 
+Apply the Non-Interactive Mutation Contract here as well.
+
 Use `--below --no-commit` when the correct stack shape requires a new branch
 under the current branch,
 but the new work does not exist yet.
@@ -310,12 +342,17 @@ you MUST read and apply:
 ~/.agents/skills/git-spice/references/writing-commit-messages.md
 ```
 
+Apply the Non-Interactive Mutation Contract before invoking commit creation.
+
 Commit staged changes to the current branch:
 
 ```bash
 git-spice commit create -m '<message>'
 git-spice ls
 ```
+
+Use `-F <message-file>` instead of `-m`
+when the commit message is safer to provide from a file.
 
 Amend the previous commit while keeping its message:
 
@@ -508,6 +545,11 @@ git-spice owns:
   which does not exist
 - `git-spice branch submit` without `--title` and `--body`
   for a new pull request
+- `git-spice branch create <branch-name>` without either
+  `-m '<message>'` or `-F <message-file>` for staged work
+  or an explicit non-committing form such as `--below --no-commit`
+- `git-spice commit create` without
+  `-m '<message>'` or `-F <message-file>`
 - `git-spice commit amend -m` or `git-spice commit amend -F`
   for a message-only amend while unrelated changes are staged
 - `git-spice commit amend --only`,
@@ -576,6 +618,13 @@ or perform an operation git-spice does not expose.
   so plain `git-spice rebase continue` is fine."
   The continuation can still invoke an editor.
   Use `--no-edit` in non-interactive agent sessions.
+- "I will let git-spice ask for the message interactively."
+  Mutating commands must be fully shaped before launch.
+  Supply the message or choose the explicit non-committing path instead.
+- "I can create the branch shell first and decide the commit later."
+  If the branch is only a future stack position,
+  use the explicit non-committing form.
+  Do not invoke branch creation in a mode that expects an editor.
 - "The workspace branch prefix is `abhinav/`,
   so include it in every git-spice branch command."
   Git-spice may add prefixes automatically.
