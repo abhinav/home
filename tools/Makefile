@@ -1,5 +1,8 @@
 # List of subdirectories of tools to call `make install` in.
-TOOLS ?= clip fzf-extra tmux-tools
+TOOLS ?= \
+	clip \
+	fzf-extra \
+	tmux-tools
 
 SHELL = bash
 
