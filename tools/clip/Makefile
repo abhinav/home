@@ -2,12 +2,12 @@ PREFIX ?= $(shell pwd)
 
 .PHONY: build
 build:
-	cargo build
+	mise exec -- cargo build
 
 .PHONY: test
 test:
-	cargo test
+	mise exec -- cargo test
 
 .PHONY: install
 install:
-	cargo install --path . --root $(PREFIX)
+	mise exec -- cargo install --path . --root $(PREFIX)
