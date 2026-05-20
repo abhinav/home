@@ -10,6 +10,7 @@ source ~/.profile.d/home_path
 source ~/.profile.d/xdg
 source ~/.profile.d/sbin_path
 source ~/.profile.d/homebrew
+source ~/.profile.d/mise
 source ~/.profile.d/term
 source ~/.profile.d/pager
 source ~/.profile.d/editor
