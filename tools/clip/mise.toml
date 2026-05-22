@@ -1,2 +1,11 @@
 [tools]
 rust = "latest"
+
+[tasks.build]
+run = "cargo build"
+
+[tasks.test]
+run = "cargo test"
+
+[tasks.install]
+run = 'cargo install --path . --root "${PREFIX:-{{config_root}}}"'

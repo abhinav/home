@@ -1,2 +1,5 @@
 [tools]
 zig = "0.16.0"
+
+[tasks.install]
+run = 'zig build --prefix "${PREFIX:-{{config_root}}/zig-out}" -Doptimize=ReleaseSafe'

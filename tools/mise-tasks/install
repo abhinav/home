@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+#MISE description="Install tools"
+#USAGE flag "--prefix <prefix>" help="Install prefix" env="PREFIX"
+#USAGE flag "--tool <tool>" help="Tool to install; repeat for multiple tools" var=#true
+
+set -euo pipefail
+
+prefix="${usage_prefix:-${PREFIX:-$HOME/.local}}"
+
+if [[ -n "${usage_tool:-}" ]]; then
+	eval "tools=(${usage_tool})"
+else
+	tools=()
+	for tool_config in */mise.toml; do
+		[[ -e "$tool_config" ]] || continue
+		tools+=("${tool_config%/mise.toml}")
+	done
+fi
+
+for tool in "${tools[@]}"; do
+	if [[ ! -f "$tool/mise.toml" ]]; then
+		echo "not a tool directory: $tool" >&2
+		exit 2
+	fi
+
+	echo "installing $tool to $prefix"
+	PREFIX="$prefix" mise -C "$tool" run install
+done
