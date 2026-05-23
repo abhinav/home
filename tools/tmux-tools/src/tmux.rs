@@ -219,8 +219,11 @@ impl Tmux {
         start_directory: &Path,
         window_name: Option<&str>,
     ) -> Result<()> {
+        // The trailing colon keeps tmux from resolving a same-named window
+        // and reusing that window's index.
+        let target_session = format!("{session_name}:");
         let mut command = Command::new(&self.program);
-        command.args(["new-window", "-t", session_name]);
+        command.args(["new-window", "-t", &target_session]);
         if let Some(window_name) = window_name {
             command.args(["-n", window_name]);
         }
@@ -236,7 +239,7 @@ impl Tmux {
             let mut args = vec![
                 OsString::from("new-window"),
                 OsString::from("-t"),
-                OsString::from(session_name),
+                OsString::from(target_session),
             ];
             if let Some(window_name) = window_name {
                 args.extend([OsString::from("-n"), OsString::from(window_name)]);
