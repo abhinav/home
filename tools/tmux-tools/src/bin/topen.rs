@@ -1,5 +1,6 @@
 use std::env;
 use std::ffi::OsString;
+use std::path::Path;
 use std::path::PathBuf;
 use std::process::ExitCode;
 
@@ -10,6 +11,9 @@ use tmux_tools::tmux::{Error as TmuxError, Session, Tmux, MAX_SESSION_NAME_LEN};
 struct Cli {
     /// Explicit tmux session target supplied with `-s`.
     session_name: Option<String>,
+
+    /// Explicit tmux window name supplied with `-n`.
+    window_name: Option<String>,
 
     /// Directory that tmux should use as the new window's working directory.
     directory: PathBuf,
@@ -56,7 +60,9 @@ impl WindowTarget {
 impl std::fmt::Display for Error {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            Self::Usage(reason) => write!(f, "{reason}\nusage: topen [-s session] <dir>"),
+            Self::Usage(reason) => {
+                write!(f, "{reason}\nusage: topen [-s session] [-n name] <dir>")
+            }
             Self::NotDirectory(path) => write!(f, "{} is not a directory", path.display()),
             Self::Tmux(err) => write!(f, "{err}"),
         }
@@ -87,6 +93,7 @@ impl Cli {
         _ = args.next();
 
         let mut session_name = None;
+        let mut window_name = None;
         let mut directory = None;
 
         while let Some(arg) = args.next() {
@@ -107,6 +114,20 @@ impl Cli {
                 continue;
             }
 
+            if arg == "-n" {
+                let Some(name) = args.next() else {
+                    return Err(Error::Usage("missing window name after -n"));
+                };
+
+                let name = name.to_string_lossy().into_owned();
+                if name.is_empty() {
+                    return Err(Error::Usage("window name cannot be empty"));
+                }
+
+                window_name = Some(name);
+                continue;
+            }
+
             if directory.replace(PathBuf::from(arg)).is_some() {
                 return Err(Error::Usage("expected exactly one directory"));
             }
@@ -118,6 +139,7 @@ impl Cli {
 
         Ok(Self {
             session_name,
+            window_name,
             directory,
         })
     }
@@ -151,10 +173,25 @@ fn run() -> Result<(), Error> {
     {
         tmux.new_detached_session(&session_name, &cli.directory)?;
     }
-    tmux.new_window(&session_name, &cli.directory)?;
+    let default_window_name = default_window_name(&cli.directory);
+    let window_name = cli
+        .window_name
+        .as_deref()
+        .or(default_window_name.as_deref());
+    tmux.new_window(&session_name, &cli.directory, window_name)?;
     focus_ghostty();
 
     Ok(())
+}
+
+fn default_window_name(directory: &Path) -> Option<String> {
+    let directory = directory.canonicalize().ok()?;
+    let name = directory.file_name()?.to_string_lossy();
+    if name.is_empty() {
+        None
+    } else {
+        Some(name.into_owned())
+    }
 }
 
 fn focus_ghostty() {
@@ -194,6 +231,7 @@ mod tests {
             cli,
             Cli {
                 session_name: None,
+                window_name: None,
                 directory: PathBuf::from("/tmp")
             }
         );
@@ -207,6 +245,21 @@ mod tests {
             cli,
             Cli {
                 session_name: Some("work".to_owned()),
+                window_name: None,
+                directory: PathBuf::from("/tmp")
+            }
+        );
+    }
+
+    #[test]
+    fn parse_accepts_explicit_window_name() {
+        let cli = Cli::parse(args(&["topen", "-n", "editor", "/tmp"])).unwrap();
+
+        assert_eq!(
+            cli,
+            Cli {
+                session_name: None,
+                window_name: Some("editor".to_owned()),
                 directory: PathBuf::from("/tmp")
             }
         );
@@ -225,6 +278,22 @@ mod tests {
         assert!(matches!(
             Cli::parse(args(&["topen", "-s"])),
             Err(Error::Usage("missing session name after -s"))
+        ));
+    }
+
+    #[test]
+    fn parse_rejects_missing_window_name() {
+        assert!(matches!(
+            Cli::parse(args(&["topen", "-n"])),
+            Err(Error::Usage("missing window name after -n"))
+        ));
+    }
+
+    #[test]
+    fn parse_rejects_empty_window_name() {
+        assert!(matches!(
+            Cli::parse(args(&["topen", "-n", "", "/tmp"])),
+            Err(Error::Usage("window name cannot be empty"))
         ));
     }
 

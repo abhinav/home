@@ -212,10 +212,20 @@ impl Tmux {
         Ok(name)
     }
 
-    /// Opens a new window in `session_name` using `start_directory` as cwd.
-    pub fn new_window(&self, session_name: &str, start_directory: &Path) -> Result<()> {
-        let status = Command::new(&self.program)
-            .args(["new-window", "-t", session_name, "-c"])
+    /// Opens a window in `session_name` using `start_directory` as cwd.
+    pub fn new_window(
+        &self,
+        session_name: &str,
+        start_directory: &Path,
+        window_name: Option<&str>,
+    ) -> Result<()> {
+        let mut command = Command::new(&self.program);
+        command.args(["new-window", "-t", session_name]);
+        if let Some(window_name) = window_name {
+            command.args(["-n", window_name]);
+        }
+        let status = command
+            .arg("-c")
             .arg(start_directory)
             .stdin(Stdio::null())
             .status()?;
@@ -223,13 +233,15 @@ impl Tmux {
         if status.success() {
             Ok(())
         } else {
-            let args = [
+            let mut args = vec![
                 OsString::from("new-window"),
                 OsString::from("-t"),
                 OsString::from(session_name),
-                OsString::from("-c"),
-                start_directory.as_os_str().to_owned(),
             ];
+            if let Some(window_name) = window_name {
+                args.extend([OsString::from("-n"), OsString::from(window_name)]);
+            }
+            args.extend([OsString::from("-c"), start_directory.as_os_str().to_owned()]);
             Err(Error::TmuxCommandFailed {
                 args: std::iter::once(self.program.clone()).chain(args).collect(),
                 status,
