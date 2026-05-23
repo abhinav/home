@@ -753,7 +753,7 @@ require('lazy').setup({
 
 	-- Look and feel {{{2
 	{
-		'tomasr/molokai', -- {{{3
+		'pR0Ps/molokai-dark', -- {{{3
 		lazy = false,
 		priority = 1000,
 	},
@@ -1230,7 +1230,7 @@ vim.opt.complete:append('kspell')
 vim.opt.fillchars:append {diff = '·'}
 
 vim.cmd [[
-colorscheme molokai
+colorscheme molokai-dark
 
 " Use terminal background for performance.
 highlight Normal ctermbg=NONE guibg=NONE
