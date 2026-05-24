@@ -1,10 +1,12 @@
 [tool_alias]
 golangci-lint = "aqua:golangci/golangci-lint"
+tuicr = "github:agavra/tuicr"
 
 [tools]
 go = "latest"
-golangci-lint = "latest"
 gofumpt = "latest"
+golangci-lint = "latest"
+tuicr= "latest"
 
 [settings]
 experimental = true

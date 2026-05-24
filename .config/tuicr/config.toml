@@ -1,0 +1,13 @@
+leader = ","
+wrap = true
+transparent_background = true
+scroll_offset = 3
+no_update_check = true
+comment_types = [
+  { id = "comment", color = "yellow", definition = "change or suggestion" },
+  { id = "optional", color = "blue", definition = "optional change or suggestion" },
+  { id = "blocker", color = "red", definition = "must be fixed before merging" },
+]
+
+[forge]
+comment_type_prefix = false
