@@ -656,80 +656,49 @@ require('lazy').setup({
 		end,
 	},
 	{
-		"sindrets/diffview.nvim",
-		config = function()
-			local diffview = require('diffview')
-			local actions = require('diffview.actions')
-			diffview.setup({
-				use_icons = true,
-				enhanced_diff_hl = true,
-				keymaps = {
-					view = {
-						{'n', 'q', ':DiffviewClose<CR>', {desc = "Close diffview"}},
-					},
-					file_panel = {
-						{'n', 'q', ':DiffviewClose<CR>', {desc = "Close diffview"}}
-					},
-				},
-			})
+		"esmuellert/codediff.nvim",
+		cmd = "CodeDiff",
+		opts = {
+			highlights= {
+				line_insert = "#1d3042",
+				line_delete = "#351d2b",
+				char_brightness = 1.7,
 
-			-- <leader>gdd: open diffview with default base
-			-- <leader>gda: open diffview with base supplied in a prompt
-			-- <leader>gdu: open diffview with base set to upstream
-			-- <leader>gdp: open diffview with base set to parent commit
-			-- <leader>gdq: close diffview
-
-			vim.keymap.set('n', '<leader>gdd', function()
-				local base_args = {}
-				local gitsigns_base = require('gitsigns.config').config.base
-				if gitsigns_base ~= nil then
-					base_args = {gitsigns_base}
-				end
-
-				diffview.open(base_args)
-			end, {desc = "Diffview"})
-
-			vim.keymap.set('n', '<leader>gda', function()
+			},
+			explorer = {
+				view_mode = "tree",
+			},
+		},
+		keys = {
+			{'<leader>gdd', ':CodeDiff<CR>', desc = "Open diff with default base"},
+			{'<leader>gda', function()
 				vim.ui.input({prompt = "Base commit: "}, function(input)
 					if input == nil or input == '' then
 						return
 					end
-					diffview.open({input})
+
+					vim.cmd('CodeDiff ' .. input)
 				end)
-			end, {desc = "Diffview (prompt)"})
-
-			vim.keymap.set('n', '<leader>gdu', function()
-				diffview.open({'@{upstream}'})
-			end, {desc = "Diffview (upstream)"})
-			vim.keymap.set('n', '<leader>gdp', function()
-				diffview.open({'HEAD~'})
-			end, {desc = "Diffview (parent commit)"})
-
-			vim.keymap.set('n', '<leader>gdq', function()
-				diffview.close()
-			end, {desc = "Close Diffview"})
-
-			-- <leader>gdh: open file history
-			-- <leader>gdf: open file history for current buffer
-			vim.keymap.set('n', '<leader>gdh', function()
-				diffview.file_history()
-			end, {desc = "File history"})
-			vim.keymap.set('n', '<leader>gdf', function()
+			end, desc = "Open diff with prompt"},
+			{'<leader>gdu', ':CodeDiff @{upstream}<CR>', desc = "Open diff with upstream"},
+			{'<leader>gdp', ':CodeDiff HEAD~<CR>', desc = "Open diff with parent commit"},
+			{'<leader>gdh', ':CodeDiff history<CR>', desc = "File history"},
+			{'<leader>gdf', function()
 				local file = vim.fn.expand('%')
 				if file == '' then
-					Snacks.notify.warn("No file", {title = "Diffview"})
+					Snacks.notify.warn("No file", {title = "File history"})
 					return
 				end
-				diffview.file_history(nil, {file})
-			end, {desc = "File history (current buffer)"})
-		end,
+				vim.cmd('CodeDiff history ' .. file)
+			end, desc = "File history (current buffer)"},
+		},
 	},
 	{
         	"NeogitOrg/neogit",
         	branch = 'master',
         	dependencies = {
                 	"nvim-lua/plenary.nvim",
-                	"sindrets/diffview.nvim",
+                	"esmuellert/codediff.nvim",
                 	"folke/snacks.nvim",
         	},
         	config = function()
@@ -740,7 +709,7 @@ require('lazy').setup({
                         	-- Don't auto-enter insert mode when committing.
                         	disable_insert_on_commit = true,
                         	integrations = {
-                        		diffview = true,
+                        		codediff = true,
                         		snacks = true,
                         	},
                 	}
