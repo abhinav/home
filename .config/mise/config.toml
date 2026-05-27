@@ -1,13 +1,22 @@
 [tool_alias]
-golangci-lint = "aqua:golangci/golangci-lint"
 tuicr = "github:agavra/tuicr"
 
 [tools]
+bat = "latest"
+delta = "latest"
+difftastic = "latest"
+eza = "latest"
+fzf = "latest"
 go = "latest"
 gofumpt = "latest"
 golangci-lint = "latest"
 lazygit = "latest"
+ripgrep = "latest"
+rust = "latest"
 tuicr = "latest"
+tree-sitter = "latest"
+zig = "latest"
+zoxide = "latest"
 
 [settings]
 experimental = true
