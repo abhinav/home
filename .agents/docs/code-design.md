@@ -10,6 +10,7 @@ Apply these principles when designing new code or refactoring.
   - [Converge shared control flow](#converge-shared-control-flow)
 - [Abstraction shape](#abstraction-shape)
   - [Group cohesive operations](#group-cohesive-operations)
+  - [Extract helper functions only when they earn a boundary](#extract-helper-functions-only-when-they-earn-a-boundary)
   - [Prefer narrow, deep business packages](#prefer-narrow-deep-business-packages)
   - [Plan function expansion with objects](#plan-function-expansion-with-objects)
   - [Model choices as concepts, not booleans](#model-choices-as-concepts-not-booleans)
@@ -315,6 +316,76 @@ func (m *SessionManager) Refresh(sessionID string) error { ... }
 func (m *SessionManager) Invalidate(sessionID string) error { ... }
 func (m *SessionManager) CleanupExpired(maxAge time.Duration) (int, error) {
     ...
+}
+```
+
+### Extract helper functions only when they earn a boundary
+
+Do not extract a helper function only to make a small block of code shorter.
+A helper function should name a real operation,
+centralize true reuse,
+protect an invariant,
+or belong to the package or type that owns the behavior.
+
+Inline simple,
+single-use logic when the call site is clearer than a new function name.
+If the logic is non-obvious,
+prefer a short comment explaining the invariant or decision
+over hiding the logic behind a shallow helper function.
+
+**Why**: Shallow helper functions can make control flow harder to inspect,
+split policy away from the operation it belongs to,
+and create fake abstraction layers that future changes must route through.
+
+The warning sign is a helper function that exists only because code was
+extracted,
+not because the program gained a named operation.
+
+#### Bad: Single-use helper hides simple policy
+
+```go
+func shouldIgnoreWhitespace(mode DiffMode) bool {
+    return mode.IgnoresAll()
+}
+
+func BuildDiffOptions(mode DiffMode) DiffOptions {
+    var opts DiffOptions
+    opts.IgnoreWhitespace = shouldIgnoreWhitespace(mode)
+    return opts
+}
+```
+
+#### Good: Keep direct policy at the operation
+
+```go
+func BuildDiffOptions(mode DiffMode) DiffOptions {
+    var opts DiffOptions
+    opts.IgnoreWhitespace = mode.IgnoresAll()
+    return opts
+}
+```
+
+#### Bad: Helper function hides the reason for a small transformation
+
+```go
+func sessionTarget(session string) string {
+    return session + ":"
+}
+
+func NewWindow(session string) error {
+    return runTmux("new-window", "-t", sessionTarget(session))
+}
+```
+
+#### Good: Inline the transformation and explain the invariant
+
+```go
+func NewWindow(session string) error {
+    // The trailing colon forces tmux to resolve the target as a session,
+    // not as a same-named window.
+    targetSession := session + ":"
+
+    return runTmux("new-window", "-t", targetSession)
 }
 ```
 
