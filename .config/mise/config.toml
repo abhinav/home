@@ -6,7 +6,8 @@ tuicr = "github:agavra/tuicr"
 go = "latest"
 gofumpt = "latest"
 golangci-lint = "latest"
-tuicr= "latest"
+lazygit = "latest"
+tuicr = "latest"
 
 [settings]
 experimental = true

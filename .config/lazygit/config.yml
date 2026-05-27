@@ -5,9 +5,8 @@ keybinding:
     quit-alt1: <disabled>
     quitWithoutChangingDirectory: <disabled>
   commits:
-    # Conflicts with c-j/k to move between tmux splits.
-    moveUpCommit: <disabled>
-    moveDownCommit: <disabled>
+    moveUpCommit: <alt+k>
+    moveDownCommit: <alt+j>
 
 customCommands:
   - key: N
