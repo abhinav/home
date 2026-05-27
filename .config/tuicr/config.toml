@@ -3,6 +3,7 @@ wrap = true
 transparent_background = true
 scroll_offset = 3
 no_update_check = true
+ignore_whitespace = true
 comment_types = [
   { id = "comment", color = "yellow", definition = "change or suggestion" },
   { id = "optional", color = "blue", definition = "optional change or suggestion" },
