@@ -1,3 +1,4 @@
+appearance = "dark"  # dark mode detection doesn't always work
 leader = ","
 wrap = true
 transparent_background = true
