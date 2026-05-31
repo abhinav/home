@@ -2,6 +2,7 @@
 
 - [Viewing dependency source](#viewing-dependency-source)
 - [Context usage](#context-usage)
+- [Import aliases](#import-aliases)
 - [Program exits](#program-exits)
 - [Error handling](#error-handling)
   - [Formatting variable values](#formatting-variable-values)
@@ -42,6 +43,42 @@ client.Do(nil, req)
 // GOOD: explicit background context.
 client.Do(context.Background(), req)
 ```
+
+## Import aliases
+
+Avoid import aliases unless Go requires them
+or the local project already uses an alias for that package.
+Do not invent an alias merely to describe the package's directory,
+layer,
+transport,
+owner,
+or relationship to the current package.
+
+```go
+// BAD: the alias only labels a package whose natural selector is usable.
+import remoteconfig "example.com/project/config"
+
+// GOOD: the imported package name is still usable as the selector.
+import "example.com/project/config"
+```
+
+The current file's package name is also not a conflict
+with an imported package selector.
+
+```go
+package ledger
+
+// BAD: this file's package name does not require an alias.
+import ledgerdb "example.com/project/storage/ledger"
+
+// GOOD: the imported package selector is still usable.
+import "example.com/project/storage/ledger"
+```
+
+Use an alias only for a real naming constraint:
+two imported packages with the same package name in one file,
+an imported package whose declared name differs from its path,
+or an established local convention such as generated protobuf packages.
 
 ## Program exits
 
