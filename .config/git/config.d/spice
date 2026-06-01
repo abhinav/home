@@ -20,5 +20,6 @@
 [spice "experiment"]
 	commitFixup = true
 	commitPick = true
+	merge = true
 
 # vim:set ft=gitconfig:
