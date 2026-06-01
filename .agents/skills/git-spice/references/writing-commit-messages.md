@@ -73,6 +73,19 @@ Do not invent a scope only to make the subject look structured.
 - Lead with the operational or product intent before implementation details.
   Explain the workflow, failure mode,
   or user need that makes the change necessary.
+- When a concrete failing command,
+  error excerpt,
+  or before/after invocation is the shortest way to understand the value of
+  the patch,
+  put that evidence near the start of the body before broader explanation.
+  Use a short command block and explain immediately below it why it failed
+  and how the patch changes that behavior.
+- For bug fixes where the ordering of events matters,
+  explain the failure sequence before the implementation.
+  Prefer a short numbered list or timeline when the reader would otherwise
+  have to reconstruct several state transitions from prose.
+  The restriction on diff-inventory lists does not apply to ordered failure
+  narratives.
 - Name the user-facing behavior that changed.
   Keep implementation details out of the body
   unless they explain a boundary, migration, compatibility concern,
@@ -89,19 +102,60 @@ Do not invent a scope only to make the subject look structured.
   group them by role when grouping improves scanability.
   Use labels sparingly, such as `New flags:` or `Examples:`;
   do not force every commit into a template.
+- Use short Markdown headings or simple labels when a body has multiple
+  independent parts that reviewers need to scan separately,
+  such as public interface,
+  compatibility rationale,
+  migration behavior,
+  examples,
+  and verification.
+  Do not add headings to simple one-part changes.
 - For code examples, use four-space-indented command blocks.
   Keep examples short and representative.
+  When the exact command,
+  flag combination,
+  config stanza,
+  or request shape is meant to be copied later,
+  preserve it exactly in a block instead of paraphrasing it in prose.
+  Do this even when the command feels visually bulky;
+  inline flag lists are not a substitute for a copyable invocation when the
+  invocation is the operational contract.
 - Mention tests only when they clarify the contract or guarantee reviewers
   should trust. Do not enumerate test files, fixture types,
   or every covered mode.
   Prefer a concise guarantee-oriented sentence,
   such as "Unit tests cover the new parser contract
   and the dry-run no-mutation guarantee."
+  When a regression test is used as evidence for a bug fix,
+  make clear what failed before the patch and what passes after it.
+  If the proof comes from strengthening an existing test,
+  say what old failure shape the changed test reproduces.
 - For manual testing, state what was verified and how.
   When commands help, place short four-space-indented command blocks
   directly below the relevant claim.
   This should give reviewers evidence of the work performed,
   not just a loose list of commands.
+- Filter verification to evidence that helps reviewers understand or trust
+  the change,
+  even when a prompt,
+  reviewer,
+  or prior draft asks for all verification.
+  Focused reproducers,
+  before/after output,
+  migration probes,
+  compatibility checks,
+  and end-to-end workflow checks are usually useful.
+  Routine hygiene belongs in the handoff unless it is the contract being
+  changed.
+  NEVER write a `Verified with` sentence or block that lists `git diff --check`,
+  formatter commands,
+  lint commands,
+  or broad default test commands as generic proof.
+  Do not mention those routine checks under equivalent wording or any generic
+  "commands/checks run" sentence.
+  If a focused test is worth mentioning,
+  state the behavior guarantee it provides instead of pairing it with routine
+  checks.
 - Omit test details entirely when they do not add review context.
 - NEVER use an empty body.
   There MUST ALWAYS be a body to the commit message.
@@ -111,9 +165,22 @@ Do not invent a scope only to make the subject look structured.
   use backticks for inline code,
   use other Markdown formatting judiciously,
   and maintain semantic line breaks.
+  Backticks are for code, commands, flags, paths, API fields, config keys,
+  and other literal technical syntax.
+  Do not wrap PR numbers, issue numbers, ticket IDs,
+  or commit hashes in backticks when they are references in prose.
+  Prefer plain text such as PR #123, ABC-456, or abc1234
+  unless the value appears inside a command, code block, or quoted tool output.
 - Use objective, factual tone.
   Avoid subjective embellishments like "critical issue" or "serious problem".
   Focus on what the code does and why, not value judgments.
+- Preserve uncertainty when the change is tentative,
+  exploratory,
+  or changes behavior that was previously intentional.
+  State the known prior contract,
+  the reason for the current patch,
+  and any explicit TODO or follow-up question instead of presenting the change
+  as a settled product decision.
 - If the commit resolves an issue,
   add a final line in the body using the form `Resolves #123`.
 
@@ -229,6 +296,28 @@ focus on the review contract:
 why the change exists,
 what user-facing behavior changes,
 and which named external contracts reviewers need to see.
+
+### Dumping the verification transcript
+
+NEVER turn the commit body into a transcript of every command that ran.
+
+Why:
+routine whitespace checks,
+formatter checks,
+lint commands,
+and broad default test commands are handoff details unless they are the
+contract being changed.
+Listing them makes the important proof harder to find.
+
+Solution:
+include only the verification that explains or proves the change,
+such as a focused reproducer,
+before/after output,
+a migration probe,
+or an end-to-end workflow check.
+If a focused test is worth mentioning,
+state the behavior it proves.
+Do not pair it with routine hygiene commands.
 
 ### Using single-line commit messages
 

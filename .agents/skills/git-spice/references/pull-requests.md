@@ -46,6 +46,21 @@ For multiple commits,
 summarize the overall change.
 Keep the title at or below 72 characters.
 
+When deriving a pull request body from a commit body,
+carry over a well-structured single-commit body directly when there is no
+repository template.
+Otherwise,
+adapt without losing high-value structure such as headings,
+command blocks,
+before/after evidence,
+compatibility notes,
+or verification sections.
+Do not shorten the pull request body merely because the commit message already
+has the details,
+and do not preserve only verification while summarizing away the failure or
+fixed behavior.
+Reshape only as needed to fit a repository template.
+
 For a new pull request:
 
 ```bash
