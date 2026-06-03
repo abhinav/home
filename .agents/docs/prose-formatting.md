@@ -34,9 +34,16 @@ such as after punctuation marks, conjunctions, or prepositions.
     and keep lines within recommended length limits.
     ```
 
-- A semantic line break MAY be used after one or more items in a list
+- A semantic line break MAY be used between groups of items in a list
   in order to logically group related items
   or satisfy line length constraints.
+  Prefer preserving compact inline lists,
+  paired examples,
+  and tightly related code elements on the same line
+  until the line would otherwise exceed the relevant line length limit.
+  For longer inline lists,
+  wrap items in readable groups
+  rather than splitting every item onto its own line.
 
 - A semantic line break SHOULD occur before an enumerated or itemized list.
 
@@ -126,6 +133,28 @@ The following items are important:
 (a) First item;
 (b) Second item; and
 (c) Third item.
+```
+
+**Inline lists and code elements**
+
+```
+# BAD: compact inline lists split into one item per line
+The cache key includes tenant,
+region,
+and checksum,
+then stores those fields as
+`tenant_id`,
+`region_id`,
+and `digest`.
+
+# GOOD: compact inline lists preserved while lines stay short
+The cache key includes tenant, region, and checksum,
+then stores those fields as `tenant_id`, `region_id`, and `digest`.
+
+# ALSO GOOD: long inline lists wrapped in readable groups
+The parser accepts alpha, beta, gamma, delta, epsilon, and zeta modes,
+then normalizes them to `A`, `B`, `G`, `D`, `E`, and `Z`
+before dispatch.
 ```
 
 ## Common mistakes
