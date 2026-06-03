@@ -97,11 +97,43 @@ For each update:
    and the part of the skill the agent likely relied on.
 2. Preserve guidance that still works.
    Skill edits should close the gap without changing unrelated behavior.
-3. Patch the smallest section that can prevent the same failure.
+3. Generalize the failure before drafting the patch.
+   For behavior-shaping repairs,
+   name the boundary the failure exposed before writing normative text:
+
+   ```markdown
+   Invariant:
+   <general boundary future agents must preserve>
+
+   Observed symptom:
+   <concrete failure that revealed the boundary>
+
+   Adjacent valid case:
+   <nearby case the repair must still permit>
+   ```
+
+   Only the invariant belongs in the primary rule.
+   Use observed symptoms and adjacent valid cases in examples,
+   red flags,
+   or retest scenarios instead.
+4. Patch the smallest section that can prevent the same failure.
    Prefer precise wording,
    reordered emphasis,
    or a short table over a new framework.
-4. Retest the same scenario.
+   Write the primary repair as positive criteria:
+   what future agents should optimize for,
+   include,
+   preserve,
+   or verify.
+   Avoid making the primary repair a negative rule about the observed symptom.
+   Use negative wording only for details that are always invalid
+   across the skill's intended use cases.
+   When quoting patch text,
+   quote the recommended invariant-based wording only.
+   Do not add fallback patch text that reintroduces symptom-shaped wording.
+   If placement depends on the target skill's structure,
+   describe where the same invariant wording should go.
+5. Retest the same scenario.
    A prose-only change still needs behavioral validation
    when the skill is meant to shape agent behavior.
 
@@ -115,6 +147,7 @@ Common repairs:
 | Agent follows a shortcut | Name the shortcut as a red flag and state the correct action. |
 | Agent misses a detail | Move rare detail to a reference and link it at the decision point. |
 | Agent treats testing as optional | Require a subagent or scenario check before deployment. |
+| Agent overfits a repair to one observed example | Replace the symptom-specific rule with positive criteria for the underlying decision boundary, then test an adjacent valid case. |
 
 ## Test With Subagents
 

@@ -215,13 +215,29 @@ when the repair depends on the excuse's shape.
 For each new rationalization,
 repair the skill concretely:
 
-- Add an explicit rule or negation for the workaround.
+- For behavior-shaping repairs,
+  identify the invariant,
+  the observed symptom,
+  and an adjacent valid case before drafting normative text.
+- Add positive criteria for the boundary the workaround violates.
+- Use a direct negation only when the workaround is always invalid
+  across the skill's intended use cases.
 - Add the excuse to a rationalization table when the skill has one.
 - Add a red flag for wording that signals the agent is about to violate.
 - Update the description if the rationalization is a trigger symptom.
 - Rerun the scenario that exposed the loophole.
 
-Use the smallest repair that blocks the observed loophole.
+Audit overfitting before treating a repair as ready:
+
+- Search the draft repair for terms copied from the observed failure.
+- Keep copied terms in normative guidance only when they name the stable
+  boundary across intended use cases.
+- Move symptom details into examples,
+  red flags,
+  or retest scenarios when they are only the case that exposed the boundary.
+- Test an adjacent valid case so the repair does not outlaw valid behavior.
+
+Use the smallest repair that preserves the boundary exposed by the loophole.
 Then retest in this order:
 
 1. Rerun the exact failing scenario.
