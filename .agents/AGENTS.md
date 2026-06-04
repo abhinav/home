@@ -33,6 +33,52 @@ including commit messages, pull request titles or descriptions,
 Slack messages, documentation, changelogs, issues, release notes,
 code comments, generated files, or any other output artifacts.
 
+# Theory of mind
+
+When writing external artifacts including
+code comments, documentation, design documents,
+commit messages, and pull request descriptions,
+apply a theory of mind approach to the intended reader:
+
+- Assume an intelligent reader,
+  but do not assume the reader knows unstated context.
+  Before writing,
+  identify what the intended reader already knows
+  and what the reader needs to understand the text.
+- Choose the level of detail required for the reader's task.
+  Use precise names for included details, but do not include details
+  that do not help the reader understand or evaluate the result.
+- Do not assume the reader has access to the conversation,
+  tool calls, prior work, or discoveries that informed the text.
+  Restate the context required to understand the result.
+- In design documents and reports after long-running work,
+  define environment-specific terms
+  and identify the relevant system, problem, and decision.
+  When citing files, logs, data, root causes, or other evidence,
+  explain what each source establishes and why it matters.
+- Preserve the distinction between observed facts,
+  supported inferences, and recommendations.
+  Match status and recovery claims to the signal actually verified.
+  Label inferences and recommendations as such.
+  When the available context does not establish an owner,
+  required next action, or requested fact,
+  state that it is unspecified or omit it;
+  do not invent content to complete a requested section.
+- Remove or define terms that would be ambiguous to the intended reader.
+  If the writer cannot identify the specific referent,
+  replace the term with a precise statement or omit it.
+- Make commit messages, pull request descriptions,
+  and other external artifacts understandable on their own.
+- For application copy,
+  identify the intended user, the task the user is completing,
+  and the information or action the user needs next.
+
+# Reference-first writing
+
+- Repeat an entity's exact name when referring to it again.
+  Do not replace the name with a synonym, metaphor,
+  or alternate noun phrase merely to avoid repetition.
+
 # Commits
 
 When writing commit messages,
@@ -88,6 +134,14 @@ When writing or reviewing comments:
 Code comments are external artifacts.
 Deactivate Starfleet Protocol for these.
 
+Read `~/.agents/docs/code-comments.md` before
+writing, reviewing, or revising code comments.
+It provides rules and examples for deciding when comments are required,
+when comments should be deleted,
+and how comments should be written.
+When writing code that introduces new named types or domain concepts,
+you MUST read and apply this file before finalizing the code.
+
 # Code design
 
 When designing or refactoring code:
@@ -96,30 +150,16 @@ When designing or refactoring code:
   at system boundaries.
 - Put values where their lifetime matches the abstraction.
 - Prefer named domain concepts and cohesive operations
-  over loose helpers,
-  primitive bags,
-  maps,
-  or boolean switches.
+  over loose helpers, primitive bags, maps, or boolean switches.
+
+Read `~/.agents/docs/code-design.md` when designing new code or refactoring.
+It provides principles and examples for structuring code,
+choosing abstraction boundaries, modeling data, and organizing control flow.
 
 # Reference docs
 
-The following docs contain detailed guidelines.
+The following docs contain additional reference material.
 Read them when the task at hand requires that guidance.
-
-- **Code comments** (`~/.agents/docs/code-comments.md`):
-  Detailed rules and examples for deciding when comments are required,
-  when comments should be deleted,
-  and how comments should be written.
-  Read this before writing, reviewing, or revising code comments.
-  When writing code that introduces new named types or domain concepts,
-  you MUST read and apply this file before finalizing the code.
-
-- **Code design** (`~/.agents/docs/code-design.md`):
-  Detailed principles and examples for structuring code,
-  choosing abstraction boundaries,
-  modeling data,
-  and organizing control flow.
-  Read this when designing new code or refactoring.
 
 - **Prose formatting** (`~/.agents/docs/prose-formatting.md`):
   Semantic line break rules for Markdown,
