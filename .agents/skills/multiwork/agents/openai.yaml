@@ -1,0 +1,7 @@
+interface:
+  display_name: "Multiwork"
+  short_description: "Coordinate independent workstreams autonomously"
+  default_prompt: >-
+    Use $multiwork for a substantial effort with independently ownable
+    workstreams, for standing recurring workstreams within such an effort,
+    or when the user explicitly requests Multiwork.
