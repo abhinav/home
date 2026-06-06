@@ -18,6 +18,11 @@ such as after punctuation marks, conjunctions, or prepositions.
 
 - A semantic line break SHOULD occur after an independent clause
   as punctuated by a comma (,), semicolon (;), colon (:), or em dash (---).
+  The punctuation is a signal for a grammatical boundary,
+  not a command to break after every comma.
+  A comma inside a compact phrase or series
+  may be less useful as a break point
+  than the boundary around that phrase or series.
 
     ```
     This is an example of a semantic line break,
