@@ -15,7 +15,14 @@ Before adding or keeping a comment, ask:
   call sites,
   or lower-level representations?
 - Does this comment help readers understand a large block's intent
+  or expensive setup
   without narrating each line?
+- Does this comment reduce the work needed
+  to understand code that is locally readable
+  but depends on hidden state,
+  external systems,
+  ordering constraints,
+  or setup whose purpose is not obvious from the operations alone?
 
 If the answer is no,
 delete the comment or improve the code instead.
@@ -24,6 +31,16 @@ delete the comment or improve the code instead.
 
 Comments are there to provide additional context
 that is not obvious from the code itself.
+Good comments compact the code for the reader:
+they let a reader skip reverse-engineering
+the reason a block is shaped a certain way.
+Write comments for maintainers trying to understand,
+navigate,
+or safely change the code.
+Assume they can read the statements in front of them,
+but do not assume they know which state matters,
+which behavior is being isolated,
+or which simplification would break the code's purpose.
 
 Use comments to explain:
 
@@ -32,6 +49,8 @@ Use comments to explain:
 - which representation or system boundary is being crossed
 - what a named domain concept means
 - why a large block is organized the way it is
+- what state or setup the surrounding code is trying to create
+- what behavior the surrounding code is trying to isolate or protect
 - what surprising behavior future readers must not simplify away
 
 When available,
@@ -63,6 +82,11 @@ Delete comments when:
 - the comment merely restates what the code does
 - the comment is out of date or incorrect
 - the comment narrates a single obvious operation
+
+Keep or add a comment when it prevents a maintainer
+from having to reconstruct hidden state,
+non-obvious setup,
+or the boundary that makes the code meaningful.
 
 Examples of comments to delete:
 
