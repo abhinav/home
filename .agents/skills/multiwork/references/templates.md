@@ -213,12 +213,30 @@ Do not copy the plan's full implementation narrative.
 ## Log Format
 
 <Define the workstream-specific sections and fields used below.
+Every section should explain how it supports interpretation,
+auditability, recovery, or reconstruction of the current plan state.
 This file must be understood without reading `plan.md`.>
 
 ## <Plan-Defined Supporting Section>
 
 <Record useful evidence, observations, sources, measurements, decisions,
 artifacts, validation history, reviewer findings, or recovery detail.
+Organize entries around the durable fact they establish,
+the conclusion or uncertainty,
+and the resulting plan update or next action.
+Include command, output, source, or artifact detail when it is needed to
+reconstruct, verify, audit, or resume that durable state.
+Summarize process steps that do not change interpretation or recovery.
+If a step only found the relevant path, symbol, line, artifact, or owner,
+record the located reference and its significance,
+not the search or inspection step.
+Omit sections that only show non-material process history.
+Each section must contribute to interpreting evidence,
+reconstructing recovery, auditing a material interaction, or updating the plan.
+When a section would only show effort, routine exploration,
+or provenance for steps that produced no durable fact,
+replace it with the located reference, observation,
+or conclusion that supports the plan.
 Use headings, tables, chronology, or indexes that fit the work.>
 
 ## Delegated Attempts

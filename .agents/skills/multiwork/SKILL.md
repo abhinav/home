@@ -39,11 +39,13 @@ The root agent remains responsible for sequencing, integration, and completion.
    that does not benefit from independent ownership,
    use the standalone plan layout described below.
    Otherwise create the root `plan.md`
-   and a directory for each known workstream.
+   and a `workstreams/` directory that contains the lifecycle state
+   directories for known workstreams.
 5. Use `NNN-slug` IDs by default.
    The root assigns numbers monotonically and never renumbers or reuses them.
    A plan may instead choose `YYYY-MM-DD-slug` and record that convention once.
-6. Organize workstreams under state directories as states become needed.
+6. Organize workstreams under `workstreams/<state>/<id>/`
+   as states become needed.
    Suggested states are `backlog/`, `active/`, `completed/`, and `archived/`.
    A root plan may define another clear lifecycle.
    Do not create empty state directories in advance.
@@ -113,11 +115,13 @@ completion evidence, and any optional worktree pool.
 Add a root `log.md` when root-owned evidence, decisions, or coordination history
 would make `plan.md` hard to skim.
 Also create it before delegating
-a root-level integration or combined-review attempt.
+a review, synthesis, or integration-support attempt whose result informs root
+reconciliation.
 
 ## Workstream Files
 
-Each workstream has exactly two durable files by default:
+Each workstream has exactly two durable files by default,
+stored together in one workstream directory under `workstreams/<state>/<id>/`:
 
 - `plan.md` is the complete mission and continuation guide.
   It defines the useful supporting record for this workstream.
@@ -129,6 +133,11 @@ Write each workstream `plan.md`
 for an agent that receives only that file and the current tree.
 The plan must contain every task-specific fact, assumption, decision, and
 instruction needed to continue without the root conversation or agent memory.
+It is operational guidance for doing the work,
+not just a request to inspect files or decide the work later.
+Because the plan is a living document,
+update it when discoveries, decisions, evidence, or changed constraints alter
+the executable path.
 
 A self-contained plan must:
 
@@ -139,6 +148,8 @@ A self-contained plan must:
 - name relevant artifacts and terms;
 - explain how those parts fit together;
 - summarize required facts from other sources instead of merely linking to them;
+- record known requirements, decisions, constraints, contracts, and acceptance
+  details at the level needed to act without re-deciding the mission;
 - name the mutable surface, important exclusions, environmental assumptions,
   prerequisites, and governing repository instructions;
 - describe dependencies by stable workstream ID;
@@ -173,6 +184,8 @@ If a mutable value differs between the files,
 the plan is authoritative.
 
 Choose a log structure suited to the workstream.
+Every log section should earn its place by improving interpretation,
+auditability, recovery, or plan reconstruction.
 Useful contents may include:
 
 - sources, queries, measurements, observations, and claim-to-evidence links;
@@ -185,6 +198,27 @@ Useful contents may include:
 This list is illustrative, not a required schema.
 Record material that matters for audit, interpretation, or resumption.
 Do not turn the log into a chat transcript or indiscriminate command history.
+Organize log detail around durable facts needed to reconstruct plan state:
+what evidence was obtained,
+what conclusion or uncertainty it established,
+what changed in the operative plan,
+and what next action follows.
+Preserve command, output, source, or artifact detail when it establishes one
+of those facts or would be needed to rerun, verify, audit, or resume safely.
+Collapse process steps that only show how the agent found the fact into the
+resulting observation or conclusion.
+When an investigation step only locates
+the relevant path, symbol, line, artifact, or owner,
+record that located reference and why it matters;
+do not preserve the locator step itself as supporting evidence.
+A section whose only purpose is to show non-material process history
+should be omitted or replaced by the durable facts the process established.
+Each section must contribute to interpreting evidence,
+reconstructing recovery, auditing a material interaction, or updating the plan.
+If a section would only show effort, routine exploration,
+or provenance for steps that produced no durable fact,
+replace it with the located reference, observation,
+or conclusion that supports the plan.
 Distinguish observations from inferences and decisions.
 Append corrections and superseding facts instead of silently rewriting history.
 
@@ -218,6 +252,12 @@ or delegated attempt is using the old path.
 Checkpoint durable state and move the directory.
 Update the board and live references.
 Give the worker the new absolute paths and resume only after acknowledgement.
+
+Move a workstream by moving the whole `workstreams/<old-state>/<id>/`
+directory to `workstreams/<new-state>/<id>/`.
+Do not create an empty target directory and move only `plan.md` and `log.md`,
+because that leaves stale empty workstream directories behind
+and can make the same stable ID appear in multiple lifecycle states.
 
 ## Evidence And Validation
 
@@ -262,8 +302,11 @@ Record each ownership handoff in the log.
 
 Every delegation needs an owning log.
 Use a workstream log for workstream attempts.
-For a delegated root-level integration or combined review,
+For delegated review, synthesis, or integration-support attempts
+that produce an independently useful artifact for root,
 create and use the root `log.md` first.
+The root still owns reconciliation, integration decisions,
+and final acceptance evidence.
 
 If an attempt already started without preregistration, preserve valid work and
 reconcile it immediately.

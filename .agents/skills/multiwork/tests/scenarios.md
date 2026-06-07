@@ -106,7 +106,10 @@ Explain what must change.
 
 ### Expectations
 
-- Move the directory.
+- Use the normal layout path `workstreams/<state>/<id>/`.
+- Move the whole `workstreams/active/003-schema/` directory to
+  `workstreams/completed/003-schema/`.
+- Do not create an empty target workstream directory and move only files.
 - Update the root board and any live reference using the old path.
 - If a worker is live, quiesce it.
 - Confirm that no write, command, assessment, server, watcher,
@@ -114,6 +117,23 @@ Explain what must change.
 - Resume only after the worker acknowledges the new paths.
 - Do not edit other workstreams' plans or logs merely because the path moved.
 - Use the stable ID and required outcome for cross-workstream dependencies.
+
+### Pressure Variant
+
+The root plan has `workstreams/active/003-schema/plan.md`
+and `workstreams/active/003-schema/log.md`.
+A teammate already created an empty
+`workstreams/completed/003-schema/` directory.
+The review window closes in 10 minutes,
+and the teammate says to move only the two Markdown files
+because the state will be fixed in the board anyway.
+
+- Move the whole workstream directory into
+  `workstreams/completed/003-schema/`.
+- Remove the stale empty `workstreams/completed/003-schema/`
+  workstream directory before completing the move.
+- Do not leave the same stable ID represented in multiple lifecycle states.
+- Update board paths to the repaired layout.
 
 ## 06 Self-Contained Dependency References
 
@@ -283,7 +303,43 @@ execute one safe plan step, and hand control back to the root.
 - A reviewer does not edit the worker's log concurrently;
   it returns findings for the root to append.
 
-## 14 Self-Contained Supporting Log
+## 14 Execution Plan Self-Containment
+
+### Prompt
+
+A workstream plan owns a payment retry migration.
+The original task is to move failed card retries from a cron job
+to a queue worker.
+During execution,
+the worker discovers that idempotency is enforced by
+`payments.retry_attempts.idempotency_key`,
+that the queue worker must preserve the existing 24-hour retry window,
+and that the cron job must remain enabled until the worker proves parity
+in staging metrics.
+
+Write the current plan sections needed for a fresh worker
+who receives only this plan and the current tree.
+Assume the plan already exists and must be updated with the discovery.
+
+### Expectations
+
+- Restate the owned outcome and completion criteria
+  in terms of the cron-to-queue migration.
+- Explain the relevant repository orientation,
+  including the cron job, queue worker, retry table,
+  and staging metrics surfaces.
+- Record the discovered idempotency key,
+  the 24-hour retry-window constraint,
+  and the staging parity gate as operative plan facts.
+- Update the execution path to preserve the cron job
+  until the staging parity evidence is available.
+- Define evidence and assessment for idempotency, retry timing,
+  and staging parity.
+- End with one concrete next action.
+- Do not merely instruct the next worker to inspect the payment code
+  and rediscover these facts.
+
+## 15 Self-Contained Supporting Log
 
 ### Prompt
 
@@ -311,7 +367,7 @@ Preregister one delegated attempt.
 - Do not duplicate the plan's full implementation narrative
   or turn the log into a transcript of every command and message.
 
-## 15 Supporting Material By Work Type
+## 16 Supporting Material By Work Type
 
 ### Prompt
 
@@ -365,7 +421,7 @@ against at least one generated workstream log.
 - It does not treat the checkpoint as guaranteed current beyond its timestamp
   or attempt to execute the mission from the log alone.
 
-## 16 Variable Active Set
+## 17 Variable Active Set
 
 ### Prompt
 
@@ -401,7 +457,7 @@ until its next valid external wake tomorrow.
 - Keep the blocker, next wake, wake mechanism,
   and concrete next root action durable.
 
-## 17 Standing Recurring Workstream
+## 18 Standing Recurring Workstream
 
 ### Prompt
 
@@ -475,7 +531,7 @@ The user selected that mechanism.
 - On wake,
   reconcile actual state before preregistering and dispatching the due cycle.
 
-## 18 Commit Defaults
+## 19 Commit Defaults
 
 ### Shared-Tree Prompt
 
@@ -513,7 +569,7 @@ or a clear established user preference requires it.
 - Follow the explicit instruction or clear preference
   instead of the location-based default.
 
-## 19 Standalone Root Execution
+## 20 Standalone Root Execution
 
 ### Prompt
 
@@ -576,3 +632,229 @@ No workstream is backlogged, completed, or archived.
 - Create `workstreams/active/` for the current workstreams.
 - Do not create empty `backlog/`, `completed/`, or `archived/` directories.
 - Create a state directory when the first workstream enters that state.
+
+## 21 Log Evidence Versus Locator Process
+
+### Prompt
+
+Workstream `005-diagnose-config-test-failure`
+must determine why the current branch cannot pass validation
+and give root enough information to schedule the next workstream.
+The workstream is complete when the failing validation boundary is identified
+well enough for root to decide whether this is a product bug,
+a fixture problem,
+or an environment issue.
+
+The worker ran:
+
+```text
+go test ./...
+```
+
+It failed with:
+
+```text
+--- FAIL: TestDefaultModePreservesExplicitRetry (0.00s)
+    config_test.go:87: expected retry=5, got retry=3
+FAIL
+FAIL example.com/project/internal/config 0.122s
+ok   example.com/project/internal/sync 0.041s
+FAIL
+```
+
+The worker also used routine inspection commands while investigating:
+
+```text
+rg -n "DefaultMode|Retry" internal
+sed -n '1,180p' internal/sync/sync_test.go
+nl -ba internal/config/config_test.go
+```
+
+Those inspection commands only located these relevant references:
+
+- `internal/config/config_test.go:87`
+  asserts that explicit retry remains `5`.
+- `internal/config/config.go:42`
+  applies the default retry after parsing explicit retry.
+
+The worker concludes that validation is blocked by a product bug
+in config default application order.
+Root should schedule implementation work to preserve explicit retry values
+before applying defaults,
+then rerun `go test ./...`.
+
+Write the terminal log entry or supporting-record entry for this workstream.
+
+### Expectations
+
+- Preserve the deterministic validation command and relevant output
+  because they establish the routing decision.
+- Preserve the located references and what each reference establishes.
+- Separate observation, supported inference, conclusion,
+  and root scheduling recommendation.
+- State that no project files were modified if that is part of the checkpoint.
+- Do not create a command-history, process-history,
+  or supporting-inspection section for `rg`, `sed`, or `nl -ba`.
+- Do not treat locator commands as evidence beyond the references they found.
+
+## 22 Validation Order Is Material Evidence
+
+### Prompt
+
+Workstream `006-identify-validation-order`
+must determine the exact validation sequence root should use
+before scheduling remediation.
+The workstream is complete when root knows which command order establishes
+the failure and what the failing output means.
+
+The worker ran:
+
+```text
+mise run lint
+```
+
+It passed:
+
+```text
+lint: ok
+```
+
+Then the worker ran:
+
+```text
+mise run generate
+```
+
+It completed:
+
+```text
+generated docs/api.md
+generated internal/schema.json
+```
+
+Then the worker ran:
+
+```text
+mise run lint
+```
+
+It failed:
+
+```text
+docs/api.md:42: trailing whitespace introduced by generator
+lint: failed
+```
+
+Routine searches and file inspections only located the generated file
+and confirmed line 42 is in `docs/api.md`.
+
+The worker concludes that `mise run lint` alone is insufficient evidence.
+The durable validation fact is that lint passes before generation
+and fails after generation because generated `docs/api.md:42`
+contains trailing whitespace.
+Root should schedule generator remediation
+and use `mise run generate` followed by `mise run lint`
+as the verification sequence.
+
+Write the terminal log entry or supporting-record entry for this workstream.
+
+### Expectations
+
+- Preserve the command sequence and observed outputs
+  because order is material evidence.
+- Explain that the failing condition appears only after generation.
+- Identify `docs/api.md:42` as the located artifact and failure coordinate.
+- Recommend generator remediation and the verification sequence.
+- Collapse routine locator work into the path, line,
+  and significance it established.
+- Do not omit useful commands merely because routine locator commands
+  are not preserved.
+
+## 23 Decompose Independent Implementation Surfaces
+
+### Prompt
+
+Use Multiwork to coordinate this feature.
+Do not modify project files;
+produce the root plan shape and initial workstream breakdown.
+
+The project is a command-line deployment tool with these fixture facts:
+
+- `src/deploy/manifest.rs`
+  defines `DeploymentManifest`.
+- `src/deploy/target.rs`
+  defines trait `DeploymentTarget`
+  with method `fn deploy(&self, manifest: &DeploymentManifest)`.
+- `src/deploy/kubernetes.rs`,
+  `src/deploy/docker.rs`,
+  `src/deploy/serverless.rs`,
+  and `src/deploy/static_site.rs`
+  implement `DeploymentTarget`.
+- `src/cli/deploy.rs`
+  parses deployment flags and creates a `DeploymentManifest`.
+- `docs/deploy.md`
+  documents deployment behavior.
+- Each implementation has its own focused integration test:
+  `tests/kubernetes_deploy.rs`,
+  `tests/docker_deploy.rs`,
+  `tests/serverless_deploy.rs`,
+  and `tests/static_site_deploy.rs`.
+- Shared interface tests live in `tests/deployment_manifest.rs`.
+
+The requested feature is a new `rollback_policy` deployment option.
+The work requires:
+
+- design the `rollback_policy` field,
+  allowed values,
+  and how it is represented in `DeploymentManifest`;
+- update the CLI to parse the option into the manifest;
+- update each of the four `DeploymentTarget` implementations
+  to honor the option in its own provider-specific way;
+- update docs after the implementation shape is known;
+- validate with focused tests for changed surfaces
+  and root-owned integrated evidence.
+
+The four provider implementations are independently owned by different teams.
+Provider behavior can be implemented and tested independently
+after the manifest and CLI contract are ready.
+Documentation depends on the accepted contract
+and should incorporate provider-specific behavior after those workstreams
+report their outcomes.
+
+Choose the initial Multiwork breakdown.
+For each workstream,
+state the owned outcome,
+dependencies,
+mutable surface,
+evidence strategy,
+and enough self-contained context for a worker to start from the plan.
+
+### Expectations
+
+- Use a normal Multiwork root plan,
+  not a standalone plan.
+- Split the shared contract work from provider-specific implementation work.
+- Create separate provider implementation workstreams for Kubernetes,
+  Docker,
+  serverless,
+  and static site because they have independent owners,
+  mutable surfaces,
+  and focused tests.
+- Make provider workstreams depend on the shared manifest/CLI contract
+  or on exact copied contract facts once available.
+- Create a documentation workstream that depends on the accepted contract
+  and provider behavior facts.
+- Keep root-owned integration and final completion evidence in the root plan
+  instead of creating a placeholder verification-only workstream.
+- Give every scheduled workstream a concrete owned outcome,
+  mutable surface,
+  evidence strategy,
+  and first executable next action.
+- Do not assign one worker a single broad task to design the option,
+  update the CLI,
+  implement all four providers,
+  test everything,
+  and document everything.
+- Do not create tiny workstreams for root bookkeeping,
+  dependency decisions,
+  or reporting.

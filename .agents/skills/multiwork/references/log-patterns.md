@@ -20,6 +20,11 @@ Useful sections may include:
 - reviewer findings and their disposition;
 - delegated attempts and handoffs.
 
+A validation ledger should connect each check to the fact,
+conclusion, or recovery decision it establishes.
+Group or summarize related checks when that makes the established state
+clearer.
+
 ## Research
 
 Useful sections may include:
