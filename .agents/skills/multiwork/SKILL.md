@@ -31,6 +31,9 @@ The root agent remains responsible for sequencing, integration, and completion.
    Otherwise use `./work/<plan-slug>/`.
    When repository-local files are unsuitable,
    fall back to `~/.multiwork/<project-name>/<plan-slug>/`.
+   In durable repository-local plans and logs,
+   write project paths relative to the repository root
+   and coordination-file paths relative to the plan directory.
 3. Search for an existing multiwork plan with the same scope and extend it.
 4. Identify the substantial independently ownable outcomes
    before choosing a layout.
@@ -107,6 +110,9 @@ For each workstream,
 the Workstream Board must identify its stable ID, outcome, and state.
 It also records the current owner, dependencies, current plan and log paths,
 branch or worktree when applicable, and concrete next action.
+Store repository-local plan and log paths as relocatable paths
+from the plan directory,
+such as `workstreams/active/001-example/plan.md`.
 For a standing workstream,
 also record its execution condition and next wake condition.
 
@@ -251,7 +257,8 @@ Confirm that no write, command, assessment, server, watcher,
 or delegated attempt is using the old path.
 Checkpoint durable state and move the directory.
 Update the board and live references.
-Give the worker the new absolute paths and resume only after acknowledgement.
+Give the worker the new runtime handoff paths
+and resume only after acknowledgement.
 
 Move a workstream by moving the whole `workstreams/<old-state>/<id>/`
 directory to `workstreams/<new-state>/<id>/`.
@@ -323,6 +330,8 @@ ensure the workstream files are sufficient for empty-context execution.
 The prompt may name the absolute plan and log paths, project or worktree path,
 and governing repository instructions.
 Execution-critical task context must live in `plan.md`, not only in the prompt.
+Those absolute paths are handoff coordinates;
+the worker should keep durable repository-local references relocatable.
 
 ## Worker Lifecycle
 

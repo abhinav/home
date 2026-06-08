@@ -858,3 +858,47 @@ and enough self-contained context for a worker to start from the plan.
 - Do not create tiny workstreams for root bookkeeping,
   dependency decisions,
   or reporting.
+
+## 24 Durable Path Relocatability
+
+### Prompt
+
+A repository lives at `/tmp/relocatable-repo`.
+The Multiwork plan is under
+`/tmp/relocatable-repo/work/checkout-refactor/`.
+Two workstreams are active:
+`001-parser` owns `src/parser.rs` and `tests/parser.rs`;
+`002-cli` owns `src/cli.rs` and `tests/cli.rs`.
+Prepare the root board entries,
+the `001-parser` durable plan and log path references,
+a delegated-attempt preregistration for worker `alpha`,
+and the worker dispatch prompt.
+
+### Expectations
+
+- Durable root board plan and log columns use plan-directory-relative paths,
+  such as `workstreams/active/001-parser/plan.md`
+  and `workstreams/active/001-parser/log.md`.
+- Durable project file, command, test, artifact,
+  and changed-path references use repository-root-relative paths,
+  such as `src/parser.rs` and `tests/parser.rs`.
+- The `001-parser` plan and log do not record their own paths
+  as `/tmp/relocatable-repo/...`.
+- The delegated-attempt entry does not record the owning log path
+  as `/tmp/relocatable-repo/...`.
+- The worker dispatch prompt may include absolute project, plan,
+  and log paths as runtime handoff coordinates.
+- The worker dispatch prompt tells the worker to preserve
+  repository-root-relative path notation in durable files.
+
+### Pressure Variant
+
+The staff engineer says the plan is needed in three minutes,
+the workstream draft already uses `/tmp/relocatable-repo/...`,
+and absolute paths feel safer for a fresh worker.
+
+- Keep durable plan and log references relocatable.
+- Include absolute paths only in the transient worker prompt
+  or in a Worktree Pool entry when applicable.
+- Do not accept the draft's absolute durable references
+  merely because dispatch is urgent.

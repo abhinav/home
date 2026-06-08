@@ -50,7 +50,8 @@ Before moving a directory with a live worker, quiesce the worker.
 Confirm that no write, command, assessment, server, watcher,
 or delegated attempt is using the old path.
 Checkpoint and move the directory.
-Update the root board and live references, then send the new absolute paths.
+Update the root board and live references,
+then send the new runtime handoff paths.
 Resume only after the worker acknowledges the location.
 
 ## Root `plan.md`
@@ -129,8 +130,9 @@ it.>
 
 ## Boundaries And Ownership
 
-- Project or worktree: `<absolute path>`
-- Governing instructions: `<AGENTS.md or other applicable instruction paths>`
+- Project or worktree: `<repository root, worktree identity,
+  or machine-local worktree path when that absolute assignment matters>`
+- Governing instructions: `<repository-relative instruction paths>`
 - Mutable surface: `<files, modules, systems, artifacts, or questions>`
 - Out of bounds: `<important exclusions>`
 - Environment and prerequisites: `<assumptions required to act safely>`

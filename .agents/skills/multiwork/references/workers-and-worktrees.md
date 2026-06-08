@@ -10,9 +10,15 @@ Provide every worker or reviewer with:
 
 - the stable workstream ID;
 - the absolute project or worktree path;
-- the absolute `plan.md` and `log.md` paths;
+- the `plan.md` and `log.md` paths;
 - applicable repository instruction paths;
 - a concise instruction to execute or review the plan.
+
+The absolute paths are runtime handoff coordinates.
+When the worker updates repository-local durable files,
+it should continue using repository-root-relative paths for project files
+and plan-directory-relative paths for files inside the Multiwork
+coordination tree.
 
 Give a worker temporary ownership of the log for its assignment.
 Require the worker to maintain the plan-defined supporting record,
@@ -63,6 +69,9 @@ Before assigning or reassigning a pooled worktree, inspect:
 
 Record the result in the root plan's Worktree Pool.
 Do not erase unexplained state.
+The Worktree Pool may record absolute paths because it describes
+machine-local checkout assignments.
+Other repository-local plan and log references should remain relocatable.
 
 When a workstream finishes in a worktree,
 default to a committed handoff on the worktree's branch.
