@@ -91,33 +91,40 @@ Raw Git is allowed for:
 - Current branch detection,
   using `git branch --show-current`
 - Conflict resolution and file-level merge repair
+- Fetching and materializing existing remote branches locally
+  while following
+  `references/import-github-stacks.md`
 - Low-level history surgery when git-spice does not expose the operation
 
 History surgery is the only exception that permits raw Git to create
 replacement commits.
 Before any non-interactive commit splitting or other low-level history surgery,
 you MUST load and follow
-`~/.agents/skills/git-spice/references/history-surgery.md`.
+`references/history-surgery.md`.
 
 ## References
 
 Load these references before doing the matching work:
 
 - Commit messages:
-  `~/.agents/skills/git-spice/references/writing-commit-messages.md`
+  `references/writing-commit-messages.md`
 - Pull requests,
   PR templates,
   and metadata edits:
-  `~/.agents/skills/git-spice/references/pull-requests.md`
+  `references/pull-requests.md`
 - Non-interactive commit splitting and other raw history surgery:
-  `~/.agents/skills/git-spice/references/history-surgery.md`
+  `references/history-surgery.md`
 - Branch topology surgery,
   such as `git-spice branch onto`,
   `git-spice upstack onto`,
   or `git-spice branch split`:
-  `~/.agents/skills/git-spice/references/history-surgery.md`
+  `references/history-surgery.md`
 - Recovery from raw Git usage or stale stack metadata:
-  `~/.agents/skills/git-spice/references/recovery.md`
+  `references/recovery.md`
+- Importing existing GitHub pull request branches or stacks locally:
+  `references/import-github-stacks.md`
+- Inspecting git-spice internal metadata for diagnostics:
+  `references/internals.md`
 
 ## Sandbox Escalation
 
@@ -132,6 +139,7 @@ Use `sandbox_permissions: "require_escalated"` for commands such as:
 - `git-spice branch create ...`
 - `git-spice branch rename ...`
 - `git-spice branch track ...`
+- `git-spice downstack track ...`
 - `git-spice branch onto ...`
 - `git-spice branch split ...`
 - `git-spice rebase continue --no-edit`
@@ -143,6 +151,7 @@ Use `sandbox_permissions: "require_escalated"` for commands such as:
 - `git-spice commit amend ...`
 - `git-spice commit fixup ...`
 - `git-spice branch submit ...`
+- `git-spice stack submit ...`
 
 Use a short justification such as:
 "Do you want to allow git-spice to update Git refs and stack metadata?"
@@ -252,7 +261,7 @@ decide where the diff belongs in the stack.
   use a restack command to replay branches on their recorded bases.
 - Existing work needs a different base,
   or an existing branch needs to be split apart:
-  load `~/.agents/skills/git-spice/references/history-surgery.md`.
+  load `references/history-surgery.md`.
 
 Use `git-spice branch create --insert`
 when adding a new branch to an existing stack,
@@ -312,6 +321,15 @@ git-spice branch track
 git-spice ls
 ```
 
+If the branch exists on GitHub but is not present locally,
+or if the user asks to import a pull request branch or stack,
+load
+`references/import-github-stacks.md`.
+That workflow fetches the GitHub branch heads,
+materializes local branches,
+tracks stack topology with `git-spice downstack track`,
+and loads existing pull request metadata with a dry-run submit.
+
 ## Insert New Work Below the Current Branch
 
 Apply the Non-Interactive Mutation Contract here as well.
@@ -339,7 +357,7 @@ Before any commit,
 you MUST read and apply:
 
 ```text
-~/.agents/skills/git-spice/references/writing-commit-messages.md
+references/writing-commit-messages.md
 ```
 
 Apply the Non-Interactive Mutation Contract before invoking commit creation.
@@ -422,7 +440,7 @@ Inspect the stack before topology changes:
 git-spice ls
 ```
 
-Load `~/.agents/skills/git-spice/references/history-surgery.md`
+Load `references/history-surgery.md`
 before stack surgery,
 including `git-spice branch onto`,
 `git-spice upstack onto`,
@@ -503,7 +521,7 @@ For pull request details,
 you MUST read and apply:
 
 ```text
-~/.agents/skills/git-spice/references/pull-requests.md
+references/pull-requests.md
 ```
 
 ## Recovery And History Surgery
@@ -512,7 +530,7 @@ If raw Git was used for an operation git-spice owns,
 you MUST read:
 
 ```text
-~/.agents/skills/git-spice/references/recovery.md
+references/recovery.md
 ```
 
 If the task requires branch topology surgery,
@@ -521,7 +539,7 @@ or other low-level history surgery,
 you MUST read:
 
 ```text
-~/.agents/skills/git-spice/references/history-surgery.md
+references/history-surgery.md
 ```
 
 ## Red Alerts
@@ -533,6 +551,8 @@ git-spice owns:
 - `git commit --amend` instead of `git-spice commit amend`
 - `git checkout -b` or `git branch <name>` instead of
   `git-spice branch create`
+  unless following the GitHub stack import reference to materialize
+  an existing remote branch locally
 - Passing branch names like `abhinav/topic`,
   `user/topic`,
   or `Feature/Topic` to git-spice branch creation
@@ -573,6 +593,11 @@ git-spice owns:
   out of the current branch
 - `git-spice branch split` without explicit `--at <commit>:<name>`
   values
+- Importing a GitHub pull request branch or stack without loading
+  `references/import-github-stacks.md`
+- Using topology-changing or history-changing commands to repair guessed
+  import topology before trying explicit
+  `git-spice branch track --base <base> <branch>`
 - Generated commit messages in double quotes or `$'...'`
 - Generated commit messages assembled with shell command substitution
 - Generated pull request titles or bodies in double quotes or `$'...'`
@@ -678,7 +703,7 @@ Fresh change below current branch:
   git-spice ls
 
 Split or move existing branches:
-  load ~/.agents/skills/git-spice/references/history-surgery.md
+  load references/history-surgery.md
 
 Continue after rebase conflicts:
   git-spice rebase continue --no-edit
