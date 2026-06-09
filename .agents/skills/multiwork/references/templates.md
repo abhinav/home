@@ -28,6 +28,10 @@ convert the mission to the default layout before dispatch.
 
 ## Default Layout
 
+Use the selected plan directory as the root of the layout.
+By default,
+that directory is a per-undertaking directory:
+
 ```text
 <base>/<plan-slug>/
   plan.md
@@ -37,6 +41,24 @@ convert the mission to the default layout before dispatch.
         plan.md
         log.md
 ```
+
+A repository convention or explicit user request may instead make the selected
+plan directory a long-lived project base:
+
+```text
+<base>/
+  plan.md
+  log.md
+  workstreams/
+    active/
+      001-example/
+        plan.md
+        log.md
+```
+
+In either shape,
+store board paths relative to the selected plan directory,
+such as `workstreams/active/001-example/plan.md`.
 
 Create each state directory only when a workstream first enters that state.
 For example,

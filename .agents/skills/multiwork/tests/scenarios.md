@@ -624,6 +624,29 @@ A matching long-lived Multiwork root plan already exists.
 - Extend the matching plan instead of creating a standalone plan.
 - Follow the existing plan's layout and lifecycle.
 
+### Long-Lived Project Layout Variant
+
+The user explicitly asks for one long-lived project-level plan at `work/`
+instead of a new `work/<plan-slug>/` directory per major undertaking.
+The requested layout is:
+
+```text
+work/plan.md
+work/log.md
+work/workstreams/<state>/<id>/plan.md
+work/workstreams/<state>/<id>/log.md
+```
+
+Two independently ownable workstreams are known.
+
+- Use `work/` as the selected plan directory.
+- Search for and extend `work/plan.md` when it matches the project scope.
+- Do not create a competing `work/<plan-slug>/` layout.
+- Create the normal root plan and Workstream Board
+  because multiple independently ownable workstreams exist.
+- Store board paths relative to `work/`,
+  such as `workstreams/active/001-example/plan.md`.
+
 ### State-Directory Variant
 
 A normal plan begins with two active workstreams.

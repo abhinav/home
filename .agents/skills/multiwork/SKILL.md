@@ -31,6 +31,12 @@ The root agent remains responsible for sequencing, integration, and completion.
    Otherwise use `./work/<plan-slug>/`.
    When repository-local files are unsuitable,
    fall back to `~/.multiwork/<project-name>/<plan-slug>/`.
+   A repository-local convention or explicit user request may choose a
+   long-lived project base directly,
+   such as `./work/` with `plan.md`, `log.md`, and `workstreams/`
+   at that level,
+   instead of a per-undertaking `./work/<plan-slug>/` directory.
+   Treat that base as the plan directory for relative coordination paths.
    In durable repository-local plans and logs,
    write project paths relative to the repository root
    and coordination-file paths relative to the plan directory.
