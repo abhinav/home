@@ -1,7 +1,13 @@
 # Prose formatting
 
-When writing long-form comments, commit messages, Markdown, or other prose:
-ALWAYS use semantic line breaks.
+When writing external prose artifacts such as long-form comments,
+commit messages, Markdown files, documentation, design documents,
+pull request descriptions, changelogs, issues, release notes,
+or generated output files, ALWAYS use semantic line breaks.
+
+Conversational chat messages to the user are not external prose artifacts.
+Format chat for readability in the chat surface,
+not for maintainable source-file line structure.
 
 ## Semantic line breaks
 
