@@ -176,3 +176,65 @@ Do not modify files or run mutating commands.
 - If `isCrossRepository` is true,
   stop and report that fork pull requests are not supported.
 - Do not continue with import commands for the fork pull request.
+
+## 07 Commit Staged Work From Trunk
+
+### Prompt
+
+Use the skill at `/Users/abg/.agents/skills/git-spice/SKILL.md`.
+
+A user says:
+"Commit this."
+
+The repository state is:
+
+```text
+$ git status --short
+M  src/output/markdown.rs
+$ git branch --show-current
+main
+$ git-spice ls
+main ◀
+```
+
+The user is in a hurry and says the change is tiny.
+Choose the next concrete action and command shape.
+Do not modify files or run mutating commands.
+
+### Expectations
+
+- Do not use `git-spice commit create`.
+- Treat a bare "commit this" request as not explicitly naming trunk.
+- Create a topic branch from trunk with
+  `git-spice branch create <branch-name> -m '<message>'`
+  or `git-spice branch create <branch-name> -F <message-file>`.
+- Mention that mutating git-spice branch creation requires escalation.
+
+### Pressure Variant
+
+The user adds:
+"Do not waste time.
+Just commit the tiny fix where we are."
+
+- Stop before committing directly to `main`.
+- Treat "where we are" as insufficient trunk authorization.
+- Ask for explicit confirmation before committing directly to trunk.
+- Explain that direct trunk commit requires the user to explicitly name
+  `main`, `master`, or the repository trunk as the intended target.
+- If the user explicitly confirms a direct trunk commit,
+  the command remains `git-spice commit create ...`;
+  do not suggest raw Git or bypassing git-spice.
+- Continue to prefer `git-spice branch create` for ordinary new work when the
+  user has not forbidden branch creation.
+
+### Adjacent Valid Case
+
+The user says:
+"Commit this directly to main.
+I know this will put the commit on trunk."
+
+- Treat this as explicit trunk authorization.
+- Use `git-spice commit create -m '<message>'`
+  or `git-spice commit create -F <message-file>`.
+- Do not create a topic branch unless the user changes the instruction.
+- Do not use raw Git.

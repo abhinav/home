@@ -44,12 +44,17 @@ Before invoking a mutating command,
 identify whether git-spice would otherwise need interactive authoring input.
 If so,
 choose the explicit non-interactive form before you run it:
+The rows below are not fallbacks.
+Choose the row that matches the repository state and intended stack position.
+If a user instruction forbids that row's required operation,
+stop instead of selecting a different mutating command.
 
 | Operation shape | Required non-interactive form |
 |-----------------|-------------------------------|
 | Create a branch and commit staged changes | `git-spice branch create <branch-name> -m '<message>'` or `git-spice branch create <branch-name> -F <message-file>` |
 | Create a branch below current, before the diff exists | `git-spice branch create --below --no-commit <branch-name>` |
-| Commit staged changes on the current branch | `git-spice commit create -m '<message>'` or `git-spice commit create -F <message-file>` |
+| Current branch is trunk and the user did not name `main`, `master`, or trunk as the target | `git-spice branch create <branch-name> -m '<message>'` or `git-spice branch create <branch-name> -F <message-file>` in one command; stop if the user forbids branch creation |
+| Commit staged changes to a non-trunk branch or explicitly named trunk | `git-spice commit create -m '<message>'` or `git-spice commit create -F <message-file>` |
 | Continue a git-spice rebase after conflicts are resolved | `git-spice rebase continue --no-edit` |
 | Amend the previous commit while keeping its message | `git-spice commit amend --no-edit` |
 | Amend the previous commit with a new message | `git-spice commit amend -m '<full-new-message>'` |
@@ -249,11 +254,23 @@ normalize it automatically and inform them.
 
 Before creating or moving a branch,
 decide where the diff belongs in the stack.
+Do this before choosing between `git-spice branch create`
+and `git-spice commit create`.
+An explicit target means the branch name appears in the user's request.
+Do not derive an explicit target from the current branch readout.
 
 - Independent work from trunk:
   create a normal branch from trunk.
 - Follow-on work above the current branch:
   create a normal branch while on the current branch.
+- Direct work on trunk:
+  commit to trunk only when the user explicitly names `main`, `master`,
+  or the repository trunk as the intended target.
+  Instructions about method,
+  such as avoiding branch creation or committing "where we are",
+  do not name the target.
+  If method instructions conflict with the required topic branch from trunk,
+  stop and ask for an explicit target.
 - Prerequisite work below the current branch:
   create a below-current branch with `--below --no-commit`,
   then edit and commit there.
@@ -282,6 +299,9 @@ git-spice ls
 
 Use `-F <message-file>` instead of `-m`
 when the branch-creation commit message is safer to provide from a file.
+When changes are already staged,
+this branch-creation command is also the commit command.
+Do not create a bare branch first and commit later.
 
 If `HEAD` is detached,
 create the branch with an explicit base:
@@ -362,7 +382,16 @@ references/writing-commit-messages.md
 
 Apply the Non-Interactive Mutation Contract before invoking commit creation.
 
-Commit staged changes to the current branch:
+Commit staged changes to the current branch
+only after stack position is settled.
+If the current branch is `main`, `master`, or trunk,
+the user must explicitly name trunk as the intended target.
+Requests such as "commit this", "do not make a branch",
+or "commit where we are" do not settle that question.
+Do not resolve those phrases by substituting the branch detected by
+`git branch --show-current`.
+
+Commit staged changes to the chosen current branch:
 
 ```bash
 git-spice commit create -m '<message>'
@@ -570,6 +599,8 @@ git-spice owns:
   or an explicit non-committing form such as `--below --no-commit`
 - `git-spice commit create` without
   `-m '<message>'` or `-F <message-file>`
+- `git-spice commit create` before deciding that the current branch is the
+  intended stack position
 - `git-spice commit amend -m` or `git-spice commit amend -F`
   for a message-only amend while unrelated changes are staged
 - `git-spice commit amend --only`,
@@ -659,6 +690,14 @@ or perform an operation git-spice does not expose.
 - "Create an inserted branch,
   then move the existing commit onto it."
   Existing commits are split with `git-spice branch split --at`.
+- "The user said to commit where we are,
+  so the current branch must be the target."
+  Current branch is a location,
+  not a stack-position decision.
+  If the current branch is trunk,
+  require explicit trunk intent;
+  if trunk is explicitly intended,
+  still use `git-spice commit create`.
 
 ## Command Examples
 
