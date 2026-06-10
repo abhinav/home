@@ -48,13 +48,18 @@ such as after punctuation marks, conjunctions, or prepositions.
 - A semantic line break MAY be used between groups of items in a list
   in order to logically group related items
   or satisfy line length constraints.
-  Prefer preserving compact inline lists,
-  paired examples,
+  Prefer preserving compact inline lists, paired examples,
   and tightly related code elements on the same line
   until the line would otherwise exceed the relevant line length limit.
   For longer inline lists,
-  wrap items in readable groups
-  rather than splitting every item onto its own line.
+  wrap items in balanced readable groups that preserve the list's structure
+  rather than giving each comma, short item,
+  or final conjunction item its own line.
+  Do not add, remove, or move conjunctions
+  to make the groups look balanced.
+  When a list is followed by another clause,
+  prefer a break at the clause boundary
+  over attaching the next clause to the final list item.
 
 - A semantic line break SHOULD occur before an enumerated or itemized list.
 
