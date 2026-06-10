@@ -90,6 +90,27 @@ Do not invent a scope only to make the subject look structured.
   Keep implementation details out of the body
   unless they explain a boundary, migration, compatibility concern,
   or surprising design choice.
+- Every commit-body sentence should add reviewer value that is not already
+  available from the diff, repository policy, or routine process.
+  Useful sentences explain changed behavior, changed external contracts,
+  compatibility or migration context, non-obvious design rationale,
+  risk boundaries, or focused verification evidence.
+  Remove sentences whose only purpose is to say that a file exists,
+  a generated artifact changed, a required repository convention was followed,
+  a routine command ran, or the diff contains an expected support file.
+  Treat sentences shaped like "`X` is included so...",
+  "`X` is included as required...",
+  or "`X` was updated to keep artifacts aligned" as red flags:
+  they usually describe commit packaging,
+  not the review contract.
+  Do not turn those facts into commit-message content merely because a user,
+  reviewer, or repository convention asked that the supporting files be
+  included.
+  Including a file in the commit and explaining the file in the message are
+  separate decisions.
+  Mention a support artifact only when the commit changes that artifact's
+  reviewed contract, such as user-facing wording, format, migration guidance,
+  compatibility notice, or documentation behavior.
 - Avoid itemized lists that merely mirror the file diff.
   Prefer itemized lists when they make changed contracts easier to audit.
   This is especially important when a change adds or updates multiple
@@ -318,6 +339,33 @@ or an end-to-end workflow check.
 If a focused test is worth mentioning,
 state the behavior it proves.
 Do not pair it with routine hygiene commands.
+
+### Repeating non-review signals
+
+DO NOT use the commit body to repeat information that reviewers can already
+get from the diff, repository policy, or routine process.
+
+Why:
+those details do not tell reviewers what behavior changed,
+why the commit exists,
+or which contract they need to evaluate.
+Repository process compliance belongs in the handoff,
+even when the user asks to mention it,
+unless the commit changes the reviewed contract of that process artifact.
+
+Solution:
+describe the behavior, workflow, compatibility contract,
+or operational reason that made the change necessary.
+Mention support files, generated output, changelog entries,
+release-note fragments, formatter runs, and similar details only when their
+reviewed contract is what reviewers need to evaluate.
+Do not justify routine support artifacts as aligned with the real change;
+that still repeats the file inventory instead of explaining the review
+contract.
+If the user asks to mention a routine support artifact,
+keep that explanation in the handoff.
+The commit message should still describe the behavior, contract,
+or rationale that reviewers need.
 
 ### Using single-line commit messages
 
