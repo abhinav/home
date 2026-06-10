@@ -31,7 +31,7 @@ Follow this loop for new skills and for edits to existing skills:
    test the current skill before the proposed change.
 3. Write the smallest useful skill or update
    that addresses the observed failure.
-4. Pressure test with fresh subagents.
+4. Pressure test with fresh subagents that have empty context windows.
    First rerun the baseline scenario with the guidance,
    then add pressure that tempts the agent to misbehave.
 5. Close loopholes by converting observed rationalizations
@@ -39,11 +39,21 @@ Follow this loop for new skills and for edits to existing skills:
    trigger-description changes,
    red flags,
    or better section order.
-6. Validate the folder mechanically and behaviorally before deployment.
+6. Persist reusable behavioral tests
+   when the scenario should protect future changes to the skill.
+   Before adding or planning these artifacts,
+   read `references/test-artifact-templates.md`.
+7. Validate the folder mechanically and behaviorally before deployment.
 
 Read `references/subagent-testing.md` before designing subagent validation,
 running pressure tests,
 or repairing a loophole found during testing.
+
+Choose the validation shape from the skill's behavioral purpose.
+Discipline skills need pressure scenarios.
+Technique and pattern skills need application, variation, and counter-example scenarios.
+Reference skills need retrieval, gap, and written-application checks.
+Use `references/subagent-testing.md` for the detailed test shapes.
 
 ## Write Effective Skills
 
@@ -74,6 +84,14 @@ Keep `SKILL.md` focused on the operating procedure:
 - Match specificity to risk.
   Fragile workflows need exact commands;
   judgment-heavy work needs principles and checks.
+- Keep frequently used skills especially compact.
+  Move bulky examples, rare cases, command references,
+  and repeated workflow details into referenced files or existing tools.
+- Prefer one strong example over several similar examples.
+  Add more examples only when each one protects a distinct decision boundary.
+- Check size when a skill starts to sprawl.
+  If a skill is hard to scan,
+  split reference material out before adding more primary guidance.
 - Put rare,
   bulky,
   or optional details in one-level reference files.
@@ -157,7 +175,8 @@ not whether another agent can infer your intended answer.
 
 When testing:
 
-- Use fresh subagents for independent passes.
+- Use fresh subagents with empty context windows
+  for independent passes.
 - Pass the skill path and task-local artifacts,
   not your diagnosis,
   expected answer,
@@ -186,6 +205,55 @@ Do not rely only on academic questions such as
 `What does this skill say?`
 Good skill tests make the agent respond under realistic constraints,
 not recite the skill.
+
+## Persist Reusable Tests
+
+When a skill update exposes a durable behavioral boundary,
+leave behind reusable test artifacts for future maintainers.
+Use a `tests/` directory when the target skill does not already define
+another test location.
+Any plan to add or update persisted tests is incomplete
+until it reads `references/test-artifact-templates.md`
+and uses that file for the test README,
+scenario template,
+and skill footer.
+
+The lightweight default layout is:
+
+```text
+tests/
+  README.md
+  scenarios.md
+```
+
+`tests/README.md` explains how to run the reusable scenarios.
+It should say to use fresh subagents with empty context windows,
+hide expectations from the tested subagent,
+keep tests read-only or confined to task-local temporary directories,
+and compare the raw response with expectations afterward.
+
+`tests/scenarios.md` records the reusable gamut.
+Store prompts, expectations, pressure variants,
+adjacent valid cases,
+and any special harness steps needed to reproduce the behavioral check.
+
+Do not use a real failure as persisted scenario text verbatim.
+Real failures are diagnostic evidence,
+not reusable test fixtures.
+Persisted scenarios must be invented analogues
+that preserve the same behavioral boundary,
+temptation,
+and expected decision
+without copying the real prompt, private context, names, paths, data,
+or exact incident shape.
+
+When a real failure produced useful rationalization wording,
+capture the exact wording in the repair record.
+For persisted tests,
+translate that wording into expectations,
+red flags,
+or an invented pressure variant
+unless the quoted text is already generic and safe to reuse.
 
 ## Pressure Tests And Loopholes
 
@@ -235,6 +303,8 @@ Before considering a skill ready:
 - Confirm frontmatter is valid and trigger-focused.
 - Follow the sufficient testing checklist
   in `references/subagent-testing.md`.
+- Update or create persisted tests
+  when the repair protects a reusable behavioral boundary.
 - For updates,
   rerun the scenario that exposed the original misbehavior.
 - Report the behavioral evidence,
@@ -244,3 +314,11 @@ If testing reveals a new loophole,
 revise the skill and repeat the relevant scenario.
 Do not treat the first passing run as enough
 when the skill enforces discipline under pressure.
+
+## Tests
+
+When changing this skill,
+read [tests/README.md](tests/README.md).
+Run the relevant scenarios with fresh subagents that have empty context windows.
+Read [references/test-artifact-templates.md](references/test-artifact-templates.md)
+when adding or updating persisted test artifacts.
