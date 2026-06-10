@@ -116,6 +116,8 @@ For each workstream,
 the Workstream Board must identify its stable ID, outcome, and state.
 It also records the current owner, dependencies, current plan and log paths,
 branch or worktree when applicable, and concrete next action.
+For ordinary workstreams, the lifecycle state in the board
+and the `workstreams/<state>/<id>/` directory must agree.
 Store repository-local plan and log paths as relocatable paths
 from the plan directory,
 such as `workstreams/active/001-example/plan.md`.
@@ -258,19 +260,36 @@ It must not refer to another workstream's `plan.md` or `log.md` path.
 Moving a workstream between state directories therefore does not require edits
 to other workstreams.
 
-Before moving a workstream with a live worker, quiesce the worker.
-Confirm that no write, command, assessment, server, watcher,
-or delegated attempt is using the old path.
-Checkpoint durable state and move the directory.
-Update the board and live references.
-Give the worker the new runtime handoff paths
-and resume only after acknowledgement.
+You must use the following transition procedure
+when changing a workstream's lifecycle state.
+This includes moving a workstream between state directories,
+marking it completed, promoting it from backlog, pausing it, or archiving it.
 
-Move a workstream by moving the whole `workstreams/<old-state>/<id>/`
-directory to `workstreams/<new-state>/<id>/`.
-Do not create an empty target directory and move only `plan.md` and `log.md`,
-because that leaves stale empty workstream directories behind
-and can make the same stable ID appear in multiple lifecycle states.
+1. Quiesce any live worker for the workstream first.
+   Confirm that no write, command, assessment, server, watcher,
+   or delegated attempt is using the old path.
+2. Checkpoint the workstream plan, log, and any root-owned coordination record
+   that explains the transition.
+3. Move the whole `workstreams/<old-state>/<id>/` directory to
+   `workstreams/<new-state>/<id>/`.
+   Do not create an empty target directory and move only `plan.md` and `log.md`,
+   because that leaves stale empty workstream directories behind
+   and can make the same stable ID appear in multiple lifecycle states.
+4. Update the root Workstream Board row for the same stable ID.
+   Set the lifecycle state, owner, plan path, log path,
+   and next action or wake so they describe the new state.
+5. Update live handoff references and give any continuing worker
+   the new runtime handoff paths. Resume only after acknowledgement.
+
+Rationalizations to reject during lifecycle transitions:
+
+- "Board cleanup can happen later."
+  Update the root Workstream Board as part of the transition.
+- "Only path updates are needed to prevent broken links."
+  Update paths and lifecycle fields together.
+- "Do not disturb the board status because another dashboard scrapes it."
+  Keep the board truthful;
+  stale status is not a safe compatibility layer.
 
 ## Evidence And Validation
 

@@ -67,14 +67,8 @@ while every known workstream is active.
 
 The root moves workstream directories between lifecycle states.
 Stable workstream IDs do not change.
-
-Before moving a directory with a live worker, quiesce the worker.
-Confirm that no write, command, assessment, server, watcher,
-or delegated attempt is using the old path.
-Checkpoint and move the directory.
-Update the root board and live references,
-then send the new runtime handoff paths.
-Resume only after the worker acknowledges the location.
+The root board should describe the workstream's current lifecycle state
+and current plan and log paths.
 
 ## Root `plan.md`
 
@@ -104,6 +98,8 @@ surfaces that affect coordination.>
 Use `condition` for standing workstreams.
 For ordinary workstreams,
 omit it or use a value already meaningful to the plan.
+When a workstream moves between lifecycle states,
+update this field and the `Plan` and `Log` paths in the same board edit.
 
 ## Integration
 
