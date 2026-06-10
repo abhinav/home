@@ -118,29 +118,20 @@ Never rearrange it solely because it would make your final status simpler.
 
 # Code comments
 
-When writing or reviewing comments:
+Use the `writing-comments` skill when writing, reviewing,
+or revising in-code documentation or implementation comments.
+This applies while writing code, during review,
+and before finalizing changes that introduce or reshape named concepts.
 
-- Comments should explain why the code exists,
-  what invariant it protects,
-  what boundary it represents,
-  or what non-obvious behavior readers must preserve.
-- Delete comments that merely narrate the code.
-- New named types, records, state objects,
-  and domain concepts usually need concept comments,
-  even when private.
-- Struct fields need comments unless meaning, units, source,
-  and valid values are obvious from name and type.
+Use the skill for both sides of the reader boundary:
+in-code documentation is for users of symbols, modules, packages,
+and public APIs;
+implementation comments are for maintainers reading or changing the code.
 
-Code comments are external artifacts.
-Deactivate Starfleet Protocol for these.
-
-Read `~/.agents/docs/code-comments.md` before
-writing, reviewing, or revising code comments.
-It provides rules and examples for deciding when comments are required,
-when comments should be deleted,
-and how comments should be written.
-When writing code that introduces new named types or domain concepts,
-you MUST read and apply this file before finalizing the code.
+When code introduces a new named type, record, state object, interface,
+field set, or domain concept,
+you MUST use and apply the `writing-comments` skill
+before finalizing the code.
 
 # Code design
 
