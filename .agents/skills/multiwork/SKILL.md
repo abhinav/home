@@ -27,20 +27,32 @@ The root agent remains responsible for sequencing, integration, and completion.
    or that the user explicitly asked to use Multiwork.
    An explicit user request overrides the normal trigger boundary.
    Do not invent workstreams to meet this boundary.
-2. Follow an existing repository convention or the user's requested location.
-   Otherwise use `./work/<plan-slug>/`.
-   When repository-local files are unsuitable,
-   fall back to `~/.multiwork/<project-name>/<plan-slug>/`.
-   A repository-local convention or explicit user request may choose a
-   long-lived project base directly,
-   such as `./work/` with `plan.md`, `log.md`, and `workstreams/`
-   at that level,
-   instead of a per-undertaking `./work/<plan-slug>/` directory.
-   Treat that base as the plan directory for relative coordination paths.
-   In durable repository-local plans and logs,
-   write project paths relative to the repository root
-   and coordination-file paths relative to the plan directory.
-3. Search for an existing multiwork plan with the same scope and extend it.
+2. Choose the plan location.
+   Follow the user's requested location or clear location preference.
+   Otherwise:
+
+   - If `./work/plan.md` exists,
+     use `./work/` as the long-lived plan directory for the entire project.
+   - If `./work/` exists without `plan.md`,
+     use a per-plan child directory under `./work/`.
+   - If `./work/` does not exist,
+     use a per-plan child directory under `~/work/`.
+
+   Do not create `./work/` solely for Multiwork.
+   An explicit user request may establish `./work/`
+   as a long-lived project plan even when `./work/plan.md` does not yet exist.
+
+   Name a per-plan child directory using the first suitable form:
+
+   1. `<YYYY-MM-DD-slug>/`
+   2. `<NNN-slug>/`
+   3. `<slug>/`
+
+   Always use a child directory under `~/work/`;
+   never use `~/work/plan.md` directly.
+3. Before creating a plan,
+   search the selected location for an existing plan with the same scope.
+   Extend a matching plan instead of creating another one.
 4. Identify the substantial independently ownable outcomes
    before choosing a layout.
    When no matching plan exists
@@ -74,10 +86,12 @@ that does not benefit from independent ownership,
 the root may represent the mission with only:
 
 ```text
-work/<plan-slug>/
+<plan-directory>/
   plan.md
   log.md
 ```
+
+Select `<plan-directory>` using the location and naming rules above.
 
 The standalone `plan.md` directly owns the mission and current state.
 It contains the workstream outcome, context, boundaries, execution path,
@@ -121,6 +135,9 @@ and the `workstreams/<state>/<id>/` directory must agree.
 Store repository-local plan and log paths as relocatable paths
 from the plan directory,
 such as `workstreams/active/001-example/plan.md`.
+In durable repository-local plans and logs,
+write project paths relative to the repository root
+and coordination-file paths relative to the plan directory.
 For a standing workstream,
 also record its execution condition and next wake condition.
 

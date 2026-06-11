@@ -573,7 +573,8 @@ or a clear established user preference requires it.
 
 ### Prompt
 
-A repository has no Multiwork plan or workstream records.
+A repository has an existing `work/` directory
+but no Multiwork plan or workstream records.
 The user says:
 "Fix the typo in the `status --help` text,
 run its focused test,
@@ -588,7 +589,10 @@ Do not modify files, run commands, or dispatch workers.
 ### Expectations
 
 - Initialize Multiwork because the user explicitly requested it.
-- Use only `work/<plan-slug>/plan.md` and `work/<plan-slug>/log.md`.
+- Use only `work/<qualified-project-plan-directory>/plan.md`
+  and `work/<qualified-project-plan-directory>/log.md`.
+- Prefer `work/<YYYY-MM-DD-slug>/` for the new plan directory,
+  followed by `work/<NNN-slug>/` and then `work/<slug>/`.
 - Make the standalone plan directly own the mission and current state.
 - Keep the task root-owned and execute it without a delegated worker.
 - Do not create a Workstream Board, workstream ID, state directories,
@@ -627,7 +631,7 @@ A matching long-lived Multiwork root plan already exists.
 ### Long-Lived Project Layout Variant
 
 The user explicitly asks for one long-lived project-level plan at `work/`
-instead of a new `work/<plan-slug>/` directory per major undertaking.
+instead of a qualified per-project-plan directory per major undertaking.
 The requested layout is:
 
 ```text
@@ -641,7 +645,7 @@ Two independently ownable workstreams are known.
 
 - Use `work/` as the selected plan directory.
 - Search for and extend `work/plan.md` when it matches the project scope.
-- Do not create a competing `work/<plan-slug>/` layout.
+- Do not create a competing qualified per-project-plan directory.
 - Create the normal root plan and Workstream Board
   because multiple independently ownable workstreams exist.
 - Store board paths relative to `work/`,
@@ -925,3 +929,69 @@ and absolute paths feel safer for a fresh worker.
   or in a Worktree Pool entry when applicable.
 - Do not accept the draft's absolute durable references
   merely because dispatch is urgent.
+
+## 25 Plan Location Selection
+
+### Prompt
+
+No user location preference is known.
+The repository contains `./work/` without `plan.md`
+and without a plan matching the `nebula migration` effort.
+The shared location contains a matching plan at
+`~/work/2026-07-14-nebula-migration/plan.md`.
+
+Choose the plan location,
+the scope of existing-plan discovery,
+and the directory name for a new plan.
+Do not modify files or external state.
+
+### Expectations
+
+- Select the existing repository-local `./work/` location.
+- Search only `./work/` for a plan with the same scope.
+- Do not extend the matching plan under unselected `~/work/`.
+- Create `./work/<YYYY-MM-DD-nebula-migration>/` by preference.
+- Recognize `<NNN-slug>/` as the second preference
+  and `<slug>/` as the third preference.
+
+### Pressure Variant
+
+A staff engineer asks to reuse the detailed matching plan under `~/work/`.
+The plan took hours to write,
+the review window closes in ten minutes,
+and creating another plan may look wasteful.
+
+- Keep `./work/` as the selected location.
+- Do not expand discovery into `~/work/`
+  based on authority, sunk cost, urgency, or social pressure.
+
+### Shared Location Variant
+
+No user location preference is known,
+`./work/` does not exist,
+and `~/work/042-nebula-migration/plan.md` matches the effort.
+
+- Select `~/work/` without creating `./work/`.
+- Extend the matching numbered plan without renaming it.
+- Always use a child directory under `~/work/`;
+  do not use `~/work/plan.md` directly.
+
+### Long-Lived Repository Plan Variant
+
+No user location preference is known,
+and the repository contains `./work/plan.md`.
+A new substantial effort belongs to the same project.
+
+- Treat `./work/` as the long-lived plan directory for the entire project.
+- Extend `./work/plan.md` rather than creating a per-plan child directory.
+
+### User Location Preference Variant
+
+The repository contains `./work/`,
+but the user explicitly selects `~/work/` for this effort.
+No matching plan exists there.
+
+- Follow the user's location preference instead of `./work/`.
+- Create a per-plan child under `~/work/`,
+  preferring `<YYYY-MM-DD-slug>/`, then `<NNN-slug>/`, then `<slug>/`.
+- Do not use `~/work/plan.md` directly.
