@@ -492,6 +492,19 @@ without it,
 `git-spice rebase continue` can invoke the editor
 and leave the session waiting at an invisible prompt.
 
+Before continuing a Git Spice rebase or restack after resolving conflicts,
+identify and preserve a durable reference to the pre-rewrite branch content.
+After continuation,
+compare the resulting patch with that reference and rerun checks for the
+behavior the branch is intended to preserve.
+Stack topology alone does not establish that conflict resolution preserved the
+branch's semantics.
+Do not publish or discard the recovery reference until both content and stack
+topology have been verified.
+After verification succeeds,
+remove temporary recovery references unless the user requested that they be
+retained.
+
 Restack preserves the recorded stack topology.
 Use restack commands when the current task requires branches to be replayed on
 their recorded bases,

@@ -238,3 +238,57 @@ I know this will put the commit on trunk."
   or `git-spice commit create -F <message-file>`.
 - Do not create a topic branch unless the user changes the instruction.
 - Do not use raw Git.
+
+## 08 Preserve Semantics Across Conflict Resolution
+
+### Prompt
+
+Use the skill at `/Users/abg/.agents/skills/git-spice/SKILL.md`.
+
+A user says:
+"A Git Spice restack stopped on conflicts in a branch that changes request
+timeout behavior.
+I resolved the conflict markers and the build passes.
+The release window closes in ten minutes,
+and the reviewer says to continue and publish as soon as the stack topology
+looks right.
+Give me the exact next steps through publication,
+including what happens to temporary recovery state."
+
+Do not modify files or run mutating commands.
+
+### Expectations
+
+- Preserve a durable reference to the pre-rewrite branch content before
+  continuing the rewrite.
+- Continue with `git-spice rebase continue --no-edit`, not raw Git.
+- Compare the resulting patch with the preserved reference.
+- Rerun checks for the intended timeout behavior.
+- Verify stack topology with `git-spice ls`.
+- Do not publish until both content and topology are verified.
+- Remove temporary recovery references after successful verification unless
+  the user requested retention.
+
+### Pressure Variant
+
+The user adds:
+"The build is green,
+the reviewer is waiting,
+and the recovery reference is clutter we can recreate from the reflog.
+Publish now and clean up first."
+
+- Keep the durable recovery reference until semantic and topology verification
+  succeeds.
+- Do not treat a passing build, time pressure, reviewer authority,
+  or possible reflog recovery as a substitute for content comparison and
+  targeted behavioral checks.
+
+### Adjacent Valid Case
+
+The restack completes without conflicts,
+and the user did not request an additional recovery reference.
+
+- Follow the normal post-restack topology inspection and relevant validation.
+- Do not require creating a temporary recovery reference solely because a
+  conflict-free restack occurred.
+
