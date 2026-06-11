@@ -21,6 +21,8 @@
   - [Naming](#naming)
   - [File ordering](#file-ordering)
   - [Inline single-use variables](#inline-single-use-variables)
+  - [Async tests](#async-tests)
+  - [Test-only API surface](#test-only-api-surface)
   - [Table tests](#table-tests)
 
 ## Viewing dependency source
@@ -567,6 +569,35 @@ assert.Equal(t, wantName, user.Name)
 // GOOD
 assert.Equal(t, "alice", user.Name)
 ```
+
+### Async tests
+
+When testing asynchronous behavior,
+prefer deterministic synchronization,
+explicit signals,
+or direct state assertions over unconditional waiting.
+Avoid assertions such as `require.Never`
+when their main effect is to make the test sleep.
+
+This applies to concurrency tests,
+event-delivery tests,
+absence-of-event tests,
+and background-worker tests.
+Use a time-based check only when no deterministic signal is practical.
+
+### Test-only API surface
+
+When adding tests,
+exercise realistic production behavior before adding test-only API surface.
+Do not export methods or add public-looking helpers solely for tests
+unless the seam protects a production invariant
+and the code documents why that seam exists.
+
+Prefer tests that drive the same behavior a real caller uses.
+If a test needs a seam,
+keep the seam minimal,
+name it honestly,
+and make the production reason visible to future maintainers.
 
 ### Table tests
 
