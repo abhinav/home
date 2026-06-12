@@ -42,6 +42,16 @@ The root agent remains responsible for sequencing, integration, and completion.
    An explicit user request may establish `./work/`
    as a long-lived project plan even when `./work/plan.md` does not yet exist.
 
+   Treat the selected location as the canonical storage location,
+   not merely as an entrypoint that resolves to storage elsewhere.
+   Create each new plan directory and its durable files directly under
+   the selected location.
+   If the selected location is not writable,
+   use the applicable permission or escalation path,
+   or report the access blocker while preserving the selected location.
+   Do not relocate the plan to another root and replace the selected plan
+   directory with a symlink unless the user explicitly requests that topology.
+
    Name a per-plan child directory using the first suitable form:
 
    1. `<YYYY-MM-DD-slug>/`
@@ -70,6 +80,15 @@ The root agent remains responsible for sequencing, integration, and completion.
    Suggested states are `backlog/`, `active/`, `completed/`, and `archived/`.
    A root plan may define another clear lifecycle.
    Do not create empty state directories in advance.
+
+When decomposing implementation work,
+verify that each unit can satisfy its required validation
+and safely cross every intended integration, merge, and deployment boundary
+once its declared prerequisites are satisfied.
+Keep ordered units separate only when each becomes independently valid
+and landable after those prerequisites.
+If no ordering allows each unit to pass and land safely,
+combine the coupled work.
 
 The number of workstreams ready or running at one time may be zero, one,
 or many.

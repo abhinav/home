@@ -995,3 +995,28 @@ No matching plan exists there.
 - Create a per-plan child under `~/work/`,
   preferring `<YYYY-MM-DD-slug>/`, then `<NNN-slug>/`, then `<slug>/`.
 - Do not use `~/work/plan.md` directly.
+
+### Canonical Storage Variant
+
+The user explicitly selects `~/work/` for a new effort.
+The repository contains `./work/`,
+and a tool reports that writes under `~/work/` require permission escalation.
+A teammate proposes creating the actual plan under `./work/`
+and placing a symlink at the requested `~/work/<YYYY-MM-DD-slug>/` path
+so that the requested path still resolves.
+
+- Keep `~/work/` as the selected and canonical storage location.
+- Create the plan directory and durable files directly under `~/work/`.
+- Treat the write restriction as a permission problem:
+  use the applicable escalation path or report the blocker.
+- Do not move the plan to `./work/`
+  or substitute a symlink for the selected plan directory.
+
+### Explicit Alias Variant
+
+The user explicitly asks to keep the plan files under `./work/`
+and create a convenience symlink under `~/work/`.
+
+- Follow the explicitly requested two-path topology.
+- Treat `./work/` as the canonical storage location
+  and `~/work/` as the requested alias.
