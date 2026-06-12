@@ -73,6 +73,16 @@ apply a theory of mind approach to the intended reader:
   identify the intended user, the task the user is completing,
   and the information or action the user needs next.
 
+# Evidence and external behavior
+
+Treat tests, validators, implementation source text, and mocked substitutes as
+evidence about external behavior,
+not automatically as its contract.
+When they would drive an external behavior change,
+establish the intended behavior using evidence proportionate to risk,
+such as a focused real-boundary probe, an authoritative specification,
+or repository and operational history.
+
 # Reference-first writing
 
 - Repeat an entity's exact name when referring to it again.
