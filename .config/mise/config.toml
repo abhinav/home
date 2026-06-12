@@ -17,6 +17,7 @@ tuicr = "latest"
 tree-sitter = "latest"
 zig = "latest"
 zoxide = "latest"
+glow = "latest"
 
 [settings]
 experimental = true

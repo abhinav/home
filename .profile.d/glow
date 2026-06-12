@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# If glow is available, default to running it with `-w $COLUMNS-3`.
+if command -v glow &> /dev/null; then
+	glow() {
+		# Add argument only if -w is not already present.
+		args=("$@")
+		has_width=false
+		for arg in "${args[@]}"; do
+			case "$arg" in
+				-w|--width)
+					has_width=true
+					break
+					;;
+			esac
+		done
+
+		if [[ "$has_width" == false ]]; then
+			args+=("-w" "$((COLUMNS - 3))")
+		fi
+
+		command glow "${args[@]}"
+	}
+fi

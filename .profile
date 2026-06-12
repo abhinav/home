@@ -27,6 +27,7 @@ source ~/.profile.d/rust
 source ~/.profile.d/haskell
 source ~/.profile.d/zig
 source ~/.profile.d/obsidian
+source ~/.profile.d/glow
 
 test -f ~/.profile.d/local && source ~/.profile.d/local
 
