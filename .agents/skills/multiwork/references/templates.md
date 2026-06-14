@@ -57,8 +57,11 @@ plan directory a long-lived project base:
 ```
 
 In either shape,
-store board paths relative to the selected plan directory,
-such as `workstreams/active/001-example/plan.md`.
+ordinary workstream plan and log paths derive from lifecycle state
+and stable ID relative to the selected plan directory.
+For example,
+`001-example` in `active` has plan path
+`workstreams/active/001-example/plan.md`.
 
 Create each state directory only when a workstream first enters that state.
 For example,
@@ -68,7 +71,11 @@ while every known workstream is active.
 The root moves workstream directories between lifecycle states.
 Stable workstream IDs do not change.
 The root board should describe the workstream's current lifecycle state
-and current plan and log paths.
+and root-owned coordination state.
+For ordinary workstreams,
+derive the plan and log paths from lifecycle state and stable ID:
+`workstreams/<state>/<id>/plan.md`
+and `workstreams/<state>/<id>/log.md`.
 
 ## Root `plan.md`
 
@@ -91,15 +98,21 @@ surfaces that affect coordination.>
 
 ## Workstream Board
 
-| Workstream | Outcome | State / condition | Owner | Dependencies | Plan | Log | Branch / worktree | Next action / wake |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `001-example` | <Owned result.> | active / running | `<agent-id>` | None | `workstreams/active/001-example/plan.md` | `workstreams/active/001-example/log.md` | `<branch>` / `<path>` | <Concrete action.> |
+| ID | State / condition | Owner | Depends on | Runtime | Root next action / wake |
+| --- | --- | --- | --- | --- | --- |
+| `001-example` | active / running | `<agent-id>` | None | `<branch>` / `<path>` | <Concrete root action.> |
 
 Use `condition` for standing workstreams.
 For ordinary workstreams,
 omit it or use a value already meaningful to the plan.
 When a workstream moves between lifecycle states,
-update this field and the `Plan` and `Log` paths in the same board edit.
+update this field in the board and move the workstream directory
+so derived plan and log paths remain true.
+Use the board for root-owned coordination state.
+A plan may add a short label when stable IDs are not enough
+to distinguish workstreams at a glance.
+Use explicit path fields only for documented nonstandard layouts
+or migration states where path derivation is unavailable.
 
 ## Integration
 
@@ -190,7 +203,11 @@ Define success, failure, and any acceptable inconclusive result.>
 why that material helps interpretation or resumption,
 how it is organized, and when it is updated.
 Keep the current mission, operative decisions, current state,
-and next action authoritative in this plan.>
+ownership, blockers, and next action authoritative in this plan.
+Treat `log.md` as the append-only replay log:
+append material evidence, decisions, superseding facts,
+attempt outcomes, and recovery checkpoints there,
+then promote any changed current state back into this plan.>
 
 ## Recovery
 
@@ -201,6 +218,7 @@ State how to recover from partial or risky steps.>
 
 <Record completed and remaining work, discoveries, blockers, and decisions.
 Record artifacts, branch or worktree state, uncommitted changes,
+current owner or active attempt,
 and evidence already collected.
 End with one concrete next action that can begin immediately.>
 ```
@@ -215,6 +233,10 @@ Use plan-defined sections for supporting evidence and history.
 Delegated attempts are one required entry type,
 not the entire purpose of the log.
 Do not copy the plan's full implementation narrative.
+Treat the log as append-only replay.
+When information changes,
+append the superseding evidence or decision instead of rewriting older entries.
+The plan remains the current-state surface.
 
 ```markdown
 # 001-example Log
@@ -263,6 +285,12 @@ Use headings, tables, chronology, or indexes that fit the work.>
 
 Append one subsection per delegated attempt.
 Preregister each attempt before dispatch.
+During an assigned worker attempt,
+the worker appends material evidence, decisions, validation results,
+superseding facts, blockers, recovery checkpoints,
+and attempt outcomes here until handoff.
+The worker also keeps `plan.md` synchronized with the current state
+that those entries establish.
 
 ### Attempt <number>: <short objective>
 

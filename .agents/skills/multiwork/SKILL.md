@@ -146,14 +146,23 @@ The root `plan.md` is the authoritative coordination snapshot.
 Only the root agent edits its Workstream Board.
 
 For each workstream,
-the Workstream Board must identify its stable ID, outcome, and state.
-It also records the current owner, dependencies, current plan and log paths,
-branch or worktree when applicable, and concrete next action.
+the Workstream Board must identify its stable ID and lifecycle state.
+It also records the current owner,
+dependencies by stable ID,
+runtime assignment when applicable,
+and the root's concrete next coordination action.
+The board is an operational index,
+focused on root-owned coordination state.
+A plan may add a short label when stable IDs are not enough
+to distinguish workstreams at a glance.
 For ordinary workstreams, the lifecycle state in the board
 and the `workstreams/<state>/<id>/` directory must agree.
-Store repository-local plan and log paths as relocatable paths
-from the plan directory,
-such as `workstreams/active/001-example/plan.md`.
+For ordinary workstreams,
+derive the plan and log paths from the board state and stable ID:
+`workstreams/<state>/<id>/plan.md`
+and `workstreams/<state>/<id>/log.md`.
+Use explicit plan or log path fields for documented nonstandard layouts
+or migration states where derivation is unavailable.
 In durable repository-local plans and logs,
 write project paths relative to the repository root
 and coordination-file paths relative to the plan directory.
@@ -168,6 +177,34 @@ Also create it before delegating
 a review, synthesis, or integration-support attempt whose result informs root
 reconciliation.
 
+## File Ownership
+
+Each durable coordination file has exactly one permitted writer at a time.
+The permitted writer is responsible for keeping that file current
+under its contract.
+
+| File | Permitted writer |
+| --- | --- |
+| Root `plan.md` | Root agent only. |
+| Root `log.md` | Root agent only. |
+| Workstream `plan.md` before dispatch | Root agent. |
+| Workstream `log.md` before dispatch | Root agent. |
+| Workstream `plan.md` during an active worker attempt | Assigned worker. |
+| Workstream `log.md` during an active worker attempt | Assigned worker. |
+| Workstream files after handoff | Root agent until reassignment. |
+| Reviewer pass | Reviewer reports to root; reviewer does not edit durable files. |
+
+Root-owned files are never edited by workers or reviewers.
+Workstream files are written by the assigned worker only while that worker
+is actively working on the workstream.
+At handoff,
+write authority returns to root after the worker checkpoints the workstream plan,
+appends the required log entries,
+and reports the current state.
+If the root needs a live worker's workstream plan or log updated,
+the root instructs that worker to checkpoint the files instead of editing them
+concurrently.
+
 ## Workstream Files
 
 Each workstream has exactly two durable files by default,
@@ -178,6 +215,9 @@ stored together in one workstream directory under `workstreams/<state>/<id>/`:
 - `log.md` is that self-contained supporting record.
   It includes write-ahead entries for delegated attempts,
   but it is not merely an attempt ledger.
+  It is the append-only replay log for the workstream:
+  add new entries for new evidence, decisions, attempts, superseding facts,
+  corrections, and recovery checkpoints instead of rewriting history.
 
 Write each workstream `plan.md`
 for an agent that receives only that file and the current tree.
@@ -185,9 +225,13 @@ The plan must contain every task-specific fact, assumption, decision, and
 instruction needed to continue without the root conversation or agent memory.
 It is operational guidance for doing the work,
 not just a request to inspect files or decide the work later.
-Because the plan is a living document,
-update it when discoveries, decisions, evidence, or changed constraints alter
-the executable path.
+Because the plan is the living current state,
+update it whenever discoveries, decisions, evidence,
+worker ownership, blockers, or changed constraints alter the executable path.
+The root and human operator use the workstream plan to assess current state.
+Workers continuing or taking over a task use the sibling log to replay how
+the current approach was reached,
+but the current approach itself must be promoted into the plan.
 
 A self-contained plan must:
 
@@ -224,12 +268,17 @@ the sibling `log.md` must identify the workstream and owned outcome.
 It must include essential context and a dated latest recovery checkpoint,
 so an empty-context reader can interpret and resume the record honestly.
 Do not duplicate the plan's full implementation narrative in the log.
+Do not silently edit or delete earlier log entries when new information
+supersedes them.
+Append the new information,
+state what it supersedes,
+and promote the resulting current state into the plan.
 
 ## Supporting Logs
 
 The plan states the current executable truth:
 the mission, operative decisions, current state, and next action.
-The log preserves the detailed record that supports that truth.
+The log is the append-only replay record that supports that truth.
 If a mutable value differs between the files,
 the plan is authoritative.
 
@@ -271,6 +320,10 @@ replace it with the located reference, observation,
 or conclusion that supports the plan.
 Distinguish observations from inferences and decisions.
 Append corrections and superseding facts instead of silently rewriting history.
+When a new entry supersedes an older entry,
+leave the older entry intact,
+state the superseding fact or decision in the new entry,
+and update the plan to match the new current state.
 
 When log evidence changes execution,
 promote the resulting conclusion, decision, current state, or next action
@@ -312,8 +365,12 @@ marking it completed, promoting it from backlog, pausing it, or archiving it.
    because that leaves stale empty workstream directories behind
    and can make the same stable ID appear in multiple lifecycle states.
 4. Update the root Workstream Board row for the same stable ID.
-   Set the lifecycle state, owner, plan path, log path,
+   Set the lifecycle state,
+   owner,
+   runtime assignment,
    and next action or wake so they describe the new state.
+   For ordinary workstreams,
+   the updated state and stable ID provide the current plan and log paths.
 5. Update live handoff references and give any continuing worker
    the new runtime handoff paths. Resume only after acknowledgement.
 
@@ -359,13 +416,35 @@ If dispatch fails, record that outcome rather than deleting the entry.
 
 Keep one writer for each log at a time.
 The root writes preregistration before dispatch.
-An assigned worker may then maintain the plan-defined supporting record
-and its attempt entry until handoff,
-while the root does not edit that log concurrently.
-The worker must also keep the workstream plan current
-when evidence changes an operative decision, state, blocker, or next action.
-A reviewer returns findings to the root instead of editing the workstream log;
-the root appends the reviewer outcome after the reviewer finishes.
+An assigned worker then owns the workstream's durable execution records
+until handoff:
+the worker appends material evidence, decisions, validation results,
+superseding facts, blockers, recovery checkpoints, and attempt outcomes
+to `log.md` as the plan-defined replay log,
+and the worker keeps `plan.md` current as the live mission state.
+During that ownership window,
+the worker maintains the plan-defined supporting record
+and its attempt entry,
+while the root does not edit the workstream plan or log concurrently.
+The worker must update the workstream plan whenever evidence,
+new decisions,
+attempt progress,
+ownership,
+repository state,
+blockers,
+or recovery changes alter what root, a human operator,
+or a replacement worker should understand as current state.
+A reviewer returns findings to the root instead of editing durable files.
+Root relays actionable review findings through a delegated worker attempt,
+using the same worker or a replacement worker as appropriate.
+Root preregisters that review-response attempt in the workstream log before
+dispatch.
+The assigned worker records the review findings as attempt input,
+appends repair evidence and outcome to `log.md`,
+and updates `plan.md` when the findings or repair change current state,
+blockers,
+decisions,
+or next action.
 Record each ownership handoff in the log.
 
 Every delegation needs an owning log.

@@ -8,6 +8,9 @@ Every log should briefly identify the workstream and outcome,
 explain its organization,
 and record a dated latest recovery checkpoint for honest interpretation.
 The associated plan remains authoritative for mutable current state.
+The log is append-only replay:
+append new entries for superseding facts, decisions, and recovery state
+instead of rewriting older entries.
 Every delegated attempt still needs write-ahead preregistration.
 
 ## Implementation
@@ -64,7 +67,7 @@ and record the root's own conclusion or integration decision.
 
 ## Promotion Rule
 
-Logs preserve supporting detail and chronology.
+Logs preserve supporting detail and chronology as append-only replay.
 Plans preserve the current executable truth.
 
 When evidence establishes a durable fact,

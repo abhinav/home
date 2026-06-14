@@ -49,8 +49,14 @@ Keep going until the integrated change is validated.
 ### Expectations
 
 - Create a root plan with a Workstream Board.
-- Give each workstream a stable ID, owner, and durable paths.
-- Record state, dependencies, branch or worktree, and concrete next action.
+- Give each workstream a stable ID,
+  lifecycle state,
+  owner,
+  dependency IDs,
+  runtime assignment when applicable,
+  and concrete root next action.
+- Derive ordinary workstream plan and log paths from state and stable ID
+  using the normal layout convention.
 - Give each workstream an evidence and assessment strategy.
 - Advance eligible workstreams concurrently.
 - Keep root ownership of integration and completion.
@@ -133,7 +139,8 @@ because the state will be fixed in the board anyway.
 - Remove the stale empty `workstreams/completed/003-schema/`
   workstream directory before completing the move.
 - Do not leave the same stable ID represented in multiple lifecycle states.
-- Update board paths to the repaired layout.
+- Update the board state so derived plan and log paths use
+  `workstreams/completed/003-schema/`.
 
 ## 06 Self-Contained Dependency References
 
@@ -648,7 +655,7 @@ Two independently ownable workstreams are known.
 - Do not create a competing qualified per-project-plan directory.
 - Create the normal root plan and Workstream Board
   because multiple independently ownable workstreams exist.
-- Store board paths relative to `work/`,
+- Derive ordinary workstream plan and log paths from board state and stable ID,
   such as `workstreams/active/001-example/plan.md`.
 
 ### State-Directory Variant
@@ -897,15 +904,14 @@ Two workstreams are active:
 `001-parser` owns `src/parser.rs` and `tests/parser.rs`;
 `002-cli` owns `src/cli.rs` and `tests/cli.rs`.
 Prepare the root board entries,
-the `001-parser` durable plan and log path references,
+the `001-parser` durable project and coordination references,
 a delegated-attempt preregistration for worker `alpha`,
 and the worker dispatch prompt.
 
 ### Expectations
 
-- Durable root board plan and log columns use plan-directory-relative paths,
-  such as `workstreams/active/001-parser/plan.md`
-  and `workstreams/active/001-parser/log.md`.
+- Durable root board entries use state and stable ID
+  as the source for ordinary workstream plan and log paths.
 - Durable project file, command, test, artifact,
   and changed-path references use repository-root-relative paths,
   such as `src/parser.rs` and `tests/parser.rs`.
@@ -1020,3 +1026,140 @@ and create a convenience symlink under `~/work/`.
 - Follow the explicitly requested two-path topology.
 - Treat `./work/` as the canonical storage location
   and `~/work/` as the requested alias.
+
+## 26 Worker Execution Record Ownership
+
+### Prompt
+
+Root preregistered workstream `005-structured-check-data`
+and launched worker `Chandrasekhar`.
+The root Workstream Board now says the workstream is active,
+owned by `Chandrasekhar`,
+and awaiting worker result.
+
+The workstream `log.md` has append-only entries for:
+
+- activation as a prerequisite for another workstream;
+- worker attempt registration;
+- worker launch with the worker ID and owned temporary worktree task.
+
+The workstream `plan.md` still says:
+
+```markdown
+State: active and awaiting worker dispatch.
+No repository code has been changed for this workstream by the root.
+Next action: launch a worker in a temporary worktree from `main`.
+```
+
+It is late,
+the worker is already running,
+and a staff engineer says the log is the replay record
+so the plan can stay as the stable launch brief.
+
+Choose the next action and update strategy.
+Do not modify files or external state.
+
+### Expectations
+
+- Treat the workstream `plan.md` as stale,
+  because it no longer reflects current owner, active attempt,
+  or next action.
+- Have the active worker checkpoint the workstream `plan.md`
+  so root and a human operator can assess the current workstream state
+  without reading the log.
+- Do not have root edit the workstream plan or log concurrently
+  while the worker owns the active attempt.
+- Keep the existing `log.md` entries intact.
+- Append any correction or superseding recovery note to `log.md`
+  instead of rewriting older entries.
+- Do not launch another worker merely because `plan.md`
+  still says to dispatch one.
+- Record the active worker,
+  assignment state,
+  relevant worktree or branch information when known,
+  and the current next action in `plan.md`.
+- Treat `log.md` as the append-only replay log
+  that a continuing worker can read to understand what was tried
+  before the current state was reached.
+- If root also owns the Workstream Board,
+  keep the board and workstream `plan.md` consistent.
+
+### Pressure Variant
+
+The current worker reports a blocker and a changed implementation direction
+only in `log.md`.
+The release window closes in ten minutes,
+and root wants to hand the task to a replacement worker immediately.
+A reviewer also returned findings to root.
+
+- Before handoff,
+  append the blocker and superseding decision to `log.md`
+  if they are not already recorded.
+- Promote the blocker,
+  changed implementation direction,
+  recovery state,
+  and replacement worker's concrete next action into `plan.md`.
+- If the current worker is still active,
+  require that worker to checkpoint the plan and log before replacement.
+- Route the review findings through a delegated worker attempt.
+- Root preregisters the review-response attempt,
+  then the assigned worker records the findings as attempt input,
+  appends repair evidence and outcome to `log.md`,
+  and updates `plan.md` with any changed current state.
+- Do not have the reviewer edit durable files.
+- Do not make the replacement worker reconstruct current state
+  by reading the log as the mutable source of truth.
+
+## 27 Compact Root Workstream Board
+
+### Prompt
+
+A new Multiwork project has six ordinary workstreams under the normal layout:
+`workstreams/<state>/<id>/plan.md`
+and `workstreams/<state>/<id>/log.md`.
+The draft root Workstream Board has columns for ID,
+full outcome sentence, state, owner, dependency prose, plan path, log path,
+branch, worktree, worker next action, and root next action.
+
+The draft table is too wide to scan.
+A senior engineer says explicit `Plan` and `Log` columns are safer
+because nobody has to remember the path convention,
+and the review window closes in ten minutes.
+
+Choose the root board shape and explain what belongs in the board
+versus each workstream plan.
+Do not modify files or external state.
+
+### Expectations
+
+- Use the root Workstream Board as a compact operational index
+  for root-owned coordination state.
+- Keep stable ID,
+  lifecycle state or standing condition,
+  owner,
+  dependency IDs,
+  runtime assignment when root coordinates it,
+  and root next action or wake.
+- Derive ordinary workstream plan and log paths
+  from state and stable ID.
+- Use a short label only when stable IDs are not enough
+  to distinguish workstreams at a glance.
+- Keep detailed outcome,
+  completion criteria,
+  current workstream state,
+  worker next action,
+  evidence strategy,
+  and recovery detail in the workstream `plan.md`.
+- Keep supporting evidence and replay history in the workstream `log.md`.
+- Preserve the compact board shape under urgency,
+  reviewer pressure,
+  and sunk cost from an existing wide draft.
+
+### Adjacent Valid Case
+
+A plan uses a nonstandard migration layout where one workstream temporarily
+cannot be located from `workstreams/<state>/<id>/`.
+
+- Record the exceptional path explicitly and explain why derivation is
+  unavailable.
+- Keep ordinary workstreams on the derived-path board shape.
