@@ -128,11 +128,12 @@ those better fit the result.>
 
 ## Worktree Pool
 
-Omit this section when no pool is used.
+Include this section whenever the mission uses worktrees.
+Record actual workspace handoffs and their current ownership.
 
-| Path | Branch / revision | Assignment | Owner / prior owner | Dirty state | Git operation | Processes / assessments | Risks / notes | Available |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `<absolute path>` | `<branch>` / `<commit>` | `001-example` | `<agent-id>` / `<prior-id>` | clean | none | none | no shared-output hazard | no |
+| Workspace / handoff | State | Scope | Owner / prior owner | Observed state | Risks / preserved work | Next action / disposition |
+| --- | --- | --- | --- | --- | --- | --- |
+| `<identity, path, and execution context>` | in-use | `001-example` or root integration | `<agent-id>` / `<prior-id>` | `<actual state>` | `<risks or durable result>` | `<concrete next action>` |
 ```
 
 ## Workstream `plan.md`

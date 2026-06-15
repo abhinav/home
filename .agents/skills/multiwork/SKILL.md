@@ -170,7 +170,7 @@ For a standing workstream,
 also record its execution condition and next wake condition.
 
 The root plan also records project-level constraints, integration order,
-completion evidence, and any optional worktree pool.
+completion evidence, and the Worktree Pool when worktrees are used.
 Add a root `log.md` when root-owned evidence, decisions, or coordination history
 would make `plan.md` hard to skim.
 Also create it before delegating
@@ -415,7 +415,11 @@ append the outcome, evidence, conclusion, and concrete next action.
 If dispatch fails, record that outcome rather than deleting the entry.
 
 Keep one writer for each log at a time.
-The root writes preregistration before dispatch.
+The permitted current writer records preregistration before dispatch.
+Root writes it while root owns the workstream files.
+If an assigned worker owns them,
+root instructs that worker to preregister the attempt and waits for its
+checkpoint instead of writing concurrently.
 An assigned worker then owns the workstream's durable execution records
 until handoff:
 the worker appends material evidence, decisions, validation results,
@@ -437,8 +441,12 @@ or a replacement worker should understand as current state.
 A reviewer returns findings to the root instead of editing durable files.
 Root relays actionable review findings through a delegated worker attempt,
 using the same worker or a replacement worker as appropriate.
-Root preregisters that review-response attempt in the workstream log before
-dispatch.
+The permitted current writer preregisters that review-response attempt in the
+workstream log before dispatch.
+If the same worker still owns the files,
+that worker records the preregistration before follow-up.
+After handoff,
+root may preregister a replacement worker.
 The assigned worker records the review findings as attempt input,
 appends repair evidence and outcome to `log.md`,
 and updates `plan.md` when the findings or repair change current state,
@@ -499,6 +507,9 @@ a long command or assessment is still running.
 Use reviewers as fresh, usually single-shot agents.
 The root reconciles reviewer findings with the worker and owns acceptance.
 
+See [workers.md](references/workers.md)
+for dispatch and inactive-worker checkpoint procedures.
+
 ## Standing Workstreams
 
 A standing workstream performs a recurring bounded cycle
@@ -553,20 +564,37 @@ Do not use separate worktrees when workers must share uncommitted state.
 Do not use them when generated files, lockfiles, ports, schemas,
 external environments, or other shared surfaces make isolation unsafe.
 
-For large repositories, the root may maintain a worktree pool in `plan.md`.
-Before assignment or reassignment, verify and record the worktree's identity,
-ownership, relevant state, active processes, hazards, and availability.
-Preserve unexplained state.
-Never clean or reset a pooled worktree merely to make it reusable.
+When worktrees are used,
+the root records actual workspace handoffs in the root plan's Worktree Pool.
+An extant workspace is either `available` or `in-use`.
+An `in-use` workspace has one declared workstream or root scope,
+one responsible owner,
+and one concrete next action.
+Before root completion,
+no workspace may remain `in-use`,
+and every workspace used by the mission must be released as `available`
+or have verified removal evidence.
 
 When a workstream does not use a worktree,
 leave its changes uncommitted by default.
-When a workstream uses a worktree,
-commit completed changes to the worktree's branch by default.
-An explicit user instruction or clear user preference overrides either default.
+When a workstream uses an isolated Git worktree with a writable task branch,
+commit completed implementation changes to that branch before handoff by
+default.
+Keep the commit scoped to the workstream
+and follow governing repository commit instructions.
+For another kind of workspace,
+preserve completed work through its normal durable result before handoff.
+An explicit user instruction,
+clear user preference,
+repository rule,
+or workstream plan may require another preservation form.
+If the required branch or commit placement remains unresolved,
+report that blocker and hand control back promptly;
+do not remain idle while holding the workspace.
 
-See [workers-and-worktrees.md](references/workers-and-worktrees.md)
-for concise dispatch and pool checklists.
+See [worktrees.md](references/worktrees.md)
+for workspace intent, ownership, preservation,
+release, removal, and completion guidance.
 
 ## Steering And Completion
 
