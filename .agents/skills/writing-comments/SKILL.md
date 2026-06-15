@@ -88,6 +88,29 @@ Documentation should describe the public contract.
 Do not put private implementation algorithms in public documentation
 unless callers must rely on that behavior.
 
+## Document Packages And Modules In Isolation
+
+Write package and module documentation for a reader who begins at that
+boundary.
+Do not assume the reader has inspected sibling modules,
+followed the implementation history,
+or seen the change that introduced the abstraction.
+
+Give the reader enough context to understand:
+
+- the responsibility the package or module owns
+- where it fits in the larger system
+- what it deliberately leaves to callers or neighboring abstractions
+- the important contracts and invariants it enforces
+- what its dependencies represent at the boundary
+- how callers are expected to enter the abstraction
+
+The documentation does not need to restate every exported symbol.
+It should provide the context that makes those symbols coherent as one API.
+If the package cannot be explained without narrating several neighboring
+packages,
+that may indicate either missing context or an unclear boundary.
+
 ## When To Add Comments
 
 Add or keep implementation comments when maintainers need to know:

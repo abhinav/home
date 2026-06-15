@@ -171,3 +171,16 @@ Read them when the task at hand requires that guidance.
 - **Go** (`~/.agents/docs/go.md`):
   Go-specific conventions and tips.
   Read this when working with Go code.
+
+- **Command-line interfaces** (`~/.agents/docs/cli.md`):
+  Language-neutral guidance for command adapters,
+  output contracts,
+  and command organization.
+  Read this when designing or changing a command-line program.
+
+- **Code review** (`~/.agents/docs/code-review.md`):
+  Behavioral,
+  architecture,
+  readability,
+  and documentation review lenses.
+  Read this when reviewing substantial implementation or refactoring work.

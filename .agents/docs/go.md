@@ -9,7 +9,9 @@
   - [Wrapping errors](#wrapping-errors)
 - [Interface compliance checks](#interface-compliance-checks)
 - [Symbol ordering](#symbol-ordering)
+- [File organization](#file-organization)
 - [Parameter and result objects](#parameter-and-result-objects)
+- [Constructors and required dependencies](#constructors-and-required-dependencies)
 - [Accept interfaces, return structs](#accept-interfaces-return-structs)
 - [Map-shaped APIs](#map-shaped-apis)
 - [Parse, don't repeatedly validate](#parse-dont-repeatedly-validate)
@@ -275,6 +277,31 @@ Move the whole block to the narrowest useful location:
 boundary types before the function or group they describe,
 helper types after the function or group they support.
 
+## File organization
+
+Organize files within a package by domain responsibility,
+not by declaration kind.
+A file should contain a concept and the behavior that makes the concept useful.
+Keep a type near its constructors,
+methods,
+private interfaces,
+and closely related helpers.
+
+Avoid package layouts that collect every type,
+service,
+constant,
+or command implementation into a declaration-kind file.
+Such files separate concepts from their behavior
+and make readers reconstruct relationships across the package.
+Apply the same rule to adapter and command packages;
+they are not exempt because their code sits near an entry point.
+
+Create a shared file only when its contents are genuinely package-wide.
+Dependencies or helpers used by one abstraction belong with that abstraction.
+When splitting a file,
+choose boundaries that let each resulting file explain a coherent part of the
+package rather than targeting a particular line count.
+
 ## Parameter and result objects
 
 Use parameter objects when a Go function has several inputs
@@ -305,19 +332,96 @@ func Export(ctx context.Context, req ExportRequest) (ExportResult, error) {
 
 When adding fields to an existing parameter or result object,
 make new fields optional whenever possible.
-Choose field types so the zero value preserves existing behavior
-or maps to a clear default.
+Prefer field types whose zero values preserve existing behavior
+or select a documented default.
+When omission must be distinguished from the type's zero value,
+a pointer, nullable representation, or required field may be clearer.
+
+## Constructors and required dependencies
+
+Use a constructor when creating a value requires behavior:
+validation, normalization, implementation selection, resource acquisition,
+or other work that establishes an invariant.
+
+Use one of these constructor shapes.
+
+A configuration struct may contain both required and optional fields:
+
+```go
+type IndexerConfig struct {
+    Store IndexStore   // required
+    Log   *slog.Logger // required
+
+    BatchSize int
+}
+
+func NewIndexer(cfg IndexerConfig) *Indexer {
+    ...
+}
+```
+
+Use a configuration struct when construction has several required inputs
+or when the input set is likely to grow.
+Mark required configuration fields with an inline `// required` comment.
+
+A constructor may instead accept up to two required positional arguments
+followed by an options struct containing only optional fields:
+
+```go
+type PublisherOptions struct {
+    BatchSize int
+}
+
+func NewPublisher(
+    store PublishStore,
+    log *slog.Logger,
+    opts *PublisherOptions,
+) *Publisher {
+    ...
+}
+```
+
+If a type is named `Options`, every field must be optional.
+A nil options pointer means that all options use their defaults.
+When a constructor needs more than two required inputs,
+use a configuration struct rather than adding more positional arguments.
+
+Do not add a constructor that only copies dependencies into fields.
+When no construction logic is required,
+export the dependency fields directly:
+
+```go
+type Recorder struct {
+    Store RecordStore  // required
+    Log   *slog.Logger // required
+
+    BatchSize int
+}
+```
+
+Required fields in either a configuration struct or a directly initialized
+value use the same marker.
+Place `// required` on the same line as the field declaration.
+Do not put the marker on the line above the field.
+The [requiredfield](https://pkg.go.dev/go.abhg.dev/requiredfield) linter
+uses the inline marker to enforce initialization of required fields.
+
+Prefer useful zero-value behavior for optional fields.
+Document defaults, deferred initialization, or cases where omission must be
+distinguished from the field type's zero value.
 
 ## Accept interfaces, return structs
 
 Prefer accepting interfaces
 and returning concrete structs.
 
-When a function consumes a dependency,
-accept the smallest interface that describes what it needs.
+When a type or function consumes behavior that may vary,
+define the smallest useful interface at the consumption boundary.
+Keep the interface near the consumer that owns the requirement,
+not beside the provider merely to mirror the provider's methods.
 This lets callers provide real implementations,
 test doubles,
-or wrappers without forcing a specific concrete type.
+or wrappers without coupling the consumer to a larger API.
 
 ```go
 func Parse(r io.Reader) (*Document, error) { ... }
@@ -343,6 +447,19 @@ just to hide an implementation.
 Adding methods to that interface later
 will break callers with their own implementations,
 including tests and wrappers.
+
+Do not introduce an interface when substituting the dependency
+would not improve the consumer's design or tests.
+Concrete dependencies are appropriate when their API is already the relevant
+contract,
+they are cheap to construct or pass,
+and callers do not need to replace their behavior.
+This commonly includes structured loggers,
+immutable configuration values,
+standard-library value types,
+and small stateless collaborators.
+Prefer the concrete dependency in these cases
+instead of creating a one-implementation interface for uniformity.
 
 Producer-defined interfaces are still useful
 when the package has multiple implementations,

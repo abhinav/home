@@ -2,6 +2,16 @@
 
 Apply these principles when designing new code or refactoring.
 
+Good design is not measured by the number of packages,
+interfaces,
+objects,
+or helper functions in a system.
+A boundary earns its place when it reduces what callers must know,
+keeps related decisions together,
+and owns a meaningful operation from input to outcome.
+Prefer abstractions that make the system easier to understand and change,
+not abstractions that merely redistribute the same coordination work.
+
 - [Data, dependency, and control flow](#data-dependency-and-control-flow)
   - [Centralize configuration](#centralize-configuration)
   - [Avoid super-configs](#avoid-super-configs)
@@ -10,12 +20,15 @@ Apply these principles when designing new code or refactoring.
   - [Converge shared control flow](#converge-shared-control-flow)
 - [Abstraction shape](#abstraction-shape)
   - [Group cohesive operations](#group-cohesive-operations)
+  - [Organize modules by domain responsibility](#organize-modules-by-domain-responsibility)
   - [Extract helper functions only when they earn a boundary](#extract-helper-functions-only-when-they-earn-a-boundary)
   - [Prefer narrow, deep business packages](#prefer-narrow-deep-business-packages)
+  - [Compose systems from focused components](#compose-systems-from-focused-components)
   - [Plan function expansion with objects](#plan-function-expansion-with-objects)
   - [Model choices as concepts, not booleans](#model-choices-as-concepts-not-booleans)
 - [Boundaries and data modeling](#boundaries-and-data-modeling)
   - [Keep domain boundaries clean](#keep-domain-boundaries-clean)
+  - [Model external tools as domain services](#model-external-tools-as-domain-services)
   - [Parse at abstraction boundaries](#parse-at-abstraction-boundaries)
   - [Keep maps inside abstraction boundaries](#keep-maps-inside-abstraction-boundaries)
 - [Adding new rules](#adding-new-rules)
@@ -319,6 +332,32 @@ func (m *SessionManager) CleanupExpired(maxAge time.Duration) (int, error) {
 }
 ```
 
+### Organize modules by domain responsibility
+
+Define module boundaries around cohesive domain responsibilities,
+not declaration kinds,
+framework layers,
+or arbitrary size targets.
+
+A module should keep the concepts,
+decisions,
+and workflows it owns together.
+Its public surface should express complete domain operations
+while hiding representation,
+coordination,
+and infrastructure details that callers do not need.
+
+Split a module when part of it has an independently explainable
+responsibility,
+lifecycle,
+set of invariants,
+or dependency boundary.
+Do not split a module merely because a file or directory has grown large.
+
+Evaluate the result by tracing representative workflows.
+A useful boundary reduces the knowledge required on both sides;
+it does not simply move the same coordination into another directory.
+
 ### Extract helper functions only when they earn a boundary
 
 Do not extract a helper function only to make a small block of code shorter.
@@ -436,6 +475,40 @@ func (s *BillingService) SendInvoice(id string) error {
 Small helper functions are fine inside the package.
 The concern is exporting shallow fragments
 that force callers to orchestrate the package's internal workflow.
+
+Trace representative workflows through the public API
+when evaluating a package boundary.
+If a caller repeatedly enters and leaves the same package,
+passes one result back into another entry point,
+or must know the order of several internal steps,
+the package may be exposing fragments of an operation it should own.
+The goal is not fewer methods by itself.
+The goal is an API whose operations complete useful work
+without making callers reconstruct the implementation's control flow.
+
+### Compose systems from focused components
+
+When a framework or runtime supports composable components,
+use that capability to keep state and behavior near the concept that owns them.
+A component should own a coherent responsibility,
+including the state it maintains,
+the events or inputs it handles,
+and the result or representation it produces.
+
+Keep the root or host object focused on coordination that is genuinely global:
+routing shared events,
+distributing shared resources,
+and composing component results.
+Do not let the root accumulate behavior merely because every operation passes
+through it.
+
+Repeated behavior or independently understandable regions are candidates for
+components.
+Extract them when doing so creates a useful local contract
+and lets the component be understood or tested without loading the entire
+system into context.
+Do not extract components that only forward calls or move trivial statements
+behind another name.
 
 ### Plan function expansion with objects
 
@@ -603,6 +676,24 @@ Domain abstractions should not.
 Avoid passing through generic bags like `map[string]any`,
 transport DTOs, database rows, or generated API structs
 unless they are the actual domain model.
+
+### Model external tools as domain services
+
+When a program invokes an external process,
+model the dependency in terms of the operation the domain needs.
+Do not expose a generic command runner to business logic
+or make callers assemble command-line arguments.
+
+The adapter at the process boundary should own:
+
+- translating domain requests into command arguments and environment settings
+- selecting the working directory and other process configuration
+- interpreting output, exit status, and tool-specific failure modes
+- translating external representations into domain results
+
+This keeps command syntax and version-specific behavior at the boundary.
+It also lets tests exercise the domain contract
+without reproducing the external tool's command-line protocol.
 
 ### Parse at abstraction boundaries
 
