@@ -6,8 +6,9 @@ scroll_offset = 3
 no_update_check = true
 ignore_whitespace = true
 comment_types = [
-  { id = "comment", color = "yellow", definition = "change or suggestion" },
-  { id = "optional", color = "blue", definition = "optional change or suggestion" },
+  { id = "issue", color = "yellow", definition = "issue, bug, or problem" },
+  { id = "doc", color = "cyan", definition = "documentation or comment change or request" },
+  { id = "optional", color = "blue", definition = "optional suggestion" },
   { id = "blocker", color = "red", definition = "must be fixed before merging" },
 ]
 
