@@ -102,12 +102,24 @@ surfaces that affect coordination.>
 | --- | --- | --- | --- | --- | --- |
 | `001-example` | active / running | `<agent-id>` | None | `<branch>` / `<path>` | <Concrete root action.> |
 
+### Terminal Workstreams
+
+| ID | State / condition | Owner | Depends on | Runtime | Root next action / wake |
+| --- | --- | --- | --- | --- | --- |
+| `002-example` | completed | None | `001-example` | None | Preserve completion evidence. |
+
+Keep non-terminal workstreams in `Workstream Board`.
+When terminal workstreams exist,
+add `Terminal Workstreams` immediately below with the same columns.
+
 Use `condition` for standing workstreams.
 For ordinary workstreams,
 omit it or use a value already meaningful to the plan.
 When a workstream moves between lifecycle states,
 update this field in the board and move the workstream directory
 so derived plan and log paths remain true.
+When the transition crosses the terminal boundary,
+move the row into or out of `Terminal Workstreams`.
 Use the board for root-owned coordination state.
 A plan may add a short label when stable IDs are not enough
 to distinguish workstreams at a glance.

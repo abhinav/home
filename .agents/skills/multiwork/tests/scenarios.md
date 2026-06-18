@@ -1627,3 +1627,35 @@ implementation branch.
 - Require the workstream plan to define how root integrates those files without
   duplicate writers or conflicting copies.
 - Keep authoritative ownership and handoff state explicit.
+
+## 35 Workstream Board Terminal Rows
+
+### Prompt
+
+Use a custom lifecycle with `staged` and `underway` as non-terminal states,
+and `accepted`, `declined`, and `absorbed` as terminal states.
+The root plan tracks workstreams in all five states.
+A teammate proposes one table sorted with underway work first
+because the state column already explains the lifecycle.
+
+Draft the workstream tables in `plan.md` and explain their organization.
+Do not modify files or external state.
+
+### Expectations
+
+- Treat the project board as the table that lists workstreams.
+- Permit `board` or `project board` as convenient shorthand for the root plan.
+- Put non-terminal workstreams directly under `Workstream Board`.
+- Put terminal workstreams under `Terminal Workstreams` immediately below it.
+- Use the same coordination columns in both tables.
+- Classify states by the project's terminal boundary,
+  not by specific built-in state names.
+
+### Pressure Variant
+
+The existing board is large,
+the release review begins in ten minutes,
+and a senior engineer says that splitting it now creates unnecessary churn.
+
+- Preserve the terminal and non-terminal partition despite time,
+  authority, sunk-cost, and small-change pressure.

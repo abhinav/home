@@ -140,6 +140,13 @@ If a standalone mission later gains such work,
 convert it to the normal layout before delegation or parallel execution,
 preserving the existing plan and log content in the new durable structure.
 
+## Terminology
+
+The root `plan.md` has a project board,
+normally headed `Workstream Board`, that lists its workstreams.
+This skill may also call the root plan the board or project board for convenience.
+Other clear project-specific terms remain valid.
+
 ## Root Plan
 
 The root `plan.md` is the authoritative coordination snapshot.
@@ -153,6 +160,10 @@ runtime assignment when applicable,
 and the root's concrete next coordination action.
 The board is an operational index,
 focused on root-owned coordination state.
+Keep non-terminal workstreams in the Workstream Board table.
+List terminal workstreams in a `Terminal Workstreams` subsection immediately
+below it, using the same columns.
+Classify states according to the lifecycle defined by the project.
 A plan may add a short label when stable IDs are not enough
 to distinguish workstreams at a glance.
 For ordinary workstreams, the lifecycle state in the board
@@ -369,6 +380,8 @@ marking it completed, promoting it from backlog, pausing it, or archiving it.
    owner,
    runtime assignment,
    and next action or wake so they describe the new state.
+   If the transition crosses the project's terminal boundary,
+   move the row into or out of the `Terminal Workstreams` table.
    For ordinary workstreams,
    the updated state and stable ID provide the current plan and log paths.
 5. Update live handoff references and give any continuing worker
