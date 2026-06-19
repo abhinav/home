@@ -1201,9 +1201,6 @@ vim.opt.fillchars:append {diff = '·'}
 vim.cmd [[
 colorscheme molokai-dark
 
-" Use terminal background for performance.
-highlight Normal ctermbg=NONE guibg=NONE
-
 " Invisible vertical split
 highlight VertSplit guibg=bg guifg=bg
 
@@ -1215,7 +1212,7 @@ highlight NeogitDiffAdd ctermfg=white guifg=white ctermbg=NONE guibg=NONE
 highlight NeogitDiffAddHighlight ctermfg=47 guifg=#2bff2b ctermbg=NONE guibg=NONE
 
 " highlight typos louder
-highlight SpellBad guibg=#770000
+highlight SpellBad guibg=#660000
 ]]
 
 -- Spell-checking
