@@ -54,9 +54,13 @@ The root agent remains responsible for sequencing, integration, and completion.
 
    Name a per-plan child directory using the first suitable form:
 
-   1. `<YYYY-MM-DD-slug>/`
-   2. `<NNN-slug>/`
-   3. `<slug>/`
+   1. `<YYYY-MM-DD-name>/`
+   2. `<NNN-name>/`
+   3. `<name>/`
+
+   The date or number prefix is part of the directory ID,
+   not part of the project or mission name.
+   Derive `name` from the user-stated project or mission identity.
 
    Always use a child directory under `~/work/`;
    never use `~/work/plan.md` directly.
@@ -64,7 +68,10 @@ The root agent remains responsible for sequencing, integration, and completion.
    search the selected location for an existing plan with the same scope.
    Extend a matching plan instead of creating another one.
 4. Identify the substantial independently ownable outcomes
+   the user asked you to manage
    before choosing a layout.
+   Do not eagerly plan workstreams
+   for work the user has not asked you to manage.
    When no matching plan exists
    and the mission has one cohesive root-owned outcome
    that does not benefit from independent ownership,
