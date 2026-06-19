@@ -191,8 +191,6 @@ Read them when the task at hand requires that guidance.
   Read this when designing or changing a command-line program.
 
 - **Code review** (`~/.agents/docs/code-review.md`):
-  Behavioral,
-  architecture,
-  readability,
-  and documentation review lenses.
-  Read this when reviewing substantial implementation or refactoring work.
+  Behavioral, architecture, readability, and documentation review lenses.
+  Read this whenever reviewing code or a code change.
+  Choose lenses based on the change's risks, not its size or label.
