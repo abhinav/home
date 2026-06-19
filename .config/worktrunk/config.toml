@@ -1,0 +1,48 @@
+skip-shell-integration-prompt = true
+worktree-path = "{{ repo_path }}/../{{ repo }}.{{ branch | codename(2) }}"
+
+# TODO:
+# [list.custom-columns.Description]
+# # Set with:
+# #  > wt config state vars set desc "..."
+# # Or better:
+# #  > wt describe "..."
+# template = "{{ vars.desc }}"
+
+[aliases]
+delete = "wt remove {{ args }}"
+rm = "wt remove {{ args }}"
+
+describe = 'wt config state vars set desc="{{ args }}"'
+undescribe = 'wt config state vars clear desc'
+description = 'wt config state vars get desc'
+
+new = '''
+base=$(git branch --show-current || echo)
+extra_args=()
+if [[ -n "$base" ]]; then
+  if git rev-parse --verify --quiet "refs/spice/data:branches/${base}" >/dev/null; then
+    extra_args+=(--base="$base")
+  fi
+fi
+
+wt switch --create "${extra_args[@]}" {{ args }}
+'''
+
+[post-switch]
+"gs track" = '''
+# do nothing if branch is already tracked by gs.
+branch="{{ branch }}"
+if git rev-parse --verify --quiet "refs/spice/data:branches/${branch}" >/dev/null; then
+  exit 0
+fi
+
+base="{{ base }}"
+# if base branch is tracked by gs (refs/spice/data:branches/${base} exists)
+# then also track the new one.
+if git rev-parse --verify --quiet "refs/spice/data:branches/${base}" >/dev/null; then
+  git-spice btr --base="${base}" "$branch"
+elif [[ "$base" == "$(git-spice trunk -n)" ]]; then
+  git-spice btr --base="${base}" "$branch"
+fi
+'''

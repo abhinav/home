@@ -39,6 +39,7 @@
 "brew:git-lfs"    = "latest"
 "brew:git-spice"  = "latest"
 "brew:lazygit"    = "latest"
+"brew:worktrunk"  = "latest"
 
 # Shell
 "brew:direnv"          = "latest"

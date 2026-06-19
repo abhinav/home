@@ -34,6 +34,7 @@ source ~/.zsh/rc.d/homebrew
 source ~/.zsh/rc.d/git-delta
 source ~/.zsh/rc.d/completion
 source ~/.zsh/rc.d/zoxide
+source ~/.zsh/rc.d/worktrunk
 source ~/.zsh/rc.d/fzf-tab
 source ~/.zsh/rc.d/highlighting
 source ~/.zsh/rc.d/autosuggestions
