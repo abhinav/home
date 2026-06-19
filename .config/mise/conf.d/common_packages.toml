@@ -1,0 +1,53 @@
+# These taps don't publish metadata yet.
+# [bootstrap.brew.taps]
+# "abhinav/tap"  = "https://github.com/abhinav/homebrew-tap.git"
+# [bootstrap.packages]
+# "brew:abhinav/tap/tmux-fastcopy" = "latest"
+
+[bootstrap.packages]
+# Core
+"brew:age"       = "latest"
+"brew:bat"       = "latest"  # > cat
+"brew:curl"      = "latest"
+"brew:dua-cli"   = "latest"
+"brew:eza"       = "latest"
+"brew:fd"        = "latest"
+"brew:fzf"       = "latest"
+"brew:grep"      = "latest"  # still get latest
+"brew:hyperfine" = "latest"  # CLI benchmarks
+"brew:jq"        = "latest"  # JSON munging
+"brew:pv"        = "latest"
+"brew:ripgrep"   = "latest"  # > grep
+"brew:scc"   = "latest"
+"brew:watch"     = "latest"
+
+# Text and friends
+"brew:glow"            = "latest"
+"brew:hexyl"           = "latest"
+"brew:neovim"          = "latest"
+"brew:pandoc"          = "latest"
+"brew:tree-sitter"     = "latest"
+"brew:tree-sitter-cli" = "latest"
+
+# Git and friends
+"brew:difftastic" = "latest"
+"brew:gh"         = "latest"
+"brew:git-absorb" = "latest"  # automatix fixup
+"brew:git-delta"  = "latest"
+"brew:git-lfs"    = "latest"
+"brew:git-spice"  = "latest"
+"brew:lazygit"    = "latest"
+
+# Shell
+"brew:direnv"          = "latest"
+"brew:gawk"            = "latest"  # for fzf-tap-completion
+"brew:stow"            = "latest"
+"brew:zoxide"          = "latest"
+"brew:zsh"             = "latest"
+"brew:zsh-completions" = "latest"
+
+# Terminal
+"brew:asciinema" = "latest"
+"brew:agg"       = "latest"
+"brew:tmux"      = "latest"
+"brew:vhs"       = "latest"

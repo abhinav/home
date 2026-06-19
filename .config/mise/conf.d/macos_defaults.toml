@@ -1,0 +1,9 @@
+[bootstrap.macos.dock]
+autohide = true
+orientation = "bottom"
+show_recents = false
+mru_spaces = false
+
+[bootstrap.macos.trackpad]
+tap_to_click = true
+three_finger_drag = true

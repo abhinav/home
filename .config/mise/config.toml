@@ -2,25 +2,16 @@
 tuicr = "github:agavra/tuicr"
 
 [tools]
-bat = "latest"
-delta = "latest"
-difftastic = "latest"
-eza = "latest"
-fzf = "latest"
 go = "latest"
 gofumpt = "latest"
 golangci-lint = "latest"
-lazygit = "latest"
-ripgrep = "latest"
 rust = "latest"
 tuicr = "latest"
-tree-sitter = "latest"
 zig = "latest"
-zoxide = "latest"
-glow = "latest"
 
 [settings]
 experimental = true
 go_set_gobin = false
 lockfile = true
 env_shell_expand = true
+auto_env = true

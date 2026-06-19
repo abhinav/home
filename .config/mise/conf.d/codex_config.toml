@@ -1,0 +1,9 @@
+[dotfiles]
+# config.toml is not checked into source control
+# because it has too much local configuration.
+# Manage sections of it with mise.
+"~/.codex/config.toml/agent_config" = { block = '''
+    [agents]
+    max_depth = 2
+''' }
+

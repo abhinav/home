@@ -1,0 +1,3 @@
+[bootstrap.packages]
+"brew-cask:flux-app"  = "latest"
+"brew-cask:iterm2"    = "latest"
