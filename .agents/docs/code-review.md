@@ -14,6 +14,12 @@ when the change and its risks justify that separation.
 State which lenses were applied,
 and keep their questions distinct enough that success under one lens
 does not substitute for another.
+When delegating a lens-specific review to a subagent,
+send a self-contained prompt for that review pass.
+Include the selected directives directly in the prompt,
+and state the exact reporting shape expected from the result.
+Do not dispatch a review prompt that depends on the subagent
+opening this guide, or inferring the review lens from a focus phrase.
 
 ## Behavioral review
 
