@@ -64,8 +64,8 @@ Do not assume access to implementation history,
 review discussion,
 or neighboring modules.
 
-Apply the `writing-comments` skill when the review covers in-code documentation
-or implementation comments.
+Read and apply `~/.agents/docs/code-comments.md`
+when the review covers in-code documentation or implementation comments.
 
 ## Close the review loop
 

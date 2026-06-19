@@ -128,20 +128,32 @@ Never rearrange it solely because it would make your final status simpler.
 
 # Code comments
 
-Use the `writing-comments` skill when writing, reviewing,
-or revising in-code documentation or implementation comments.
-This applies while writing code, during review,
-and before finalizing changes that introduce or reshape named concepts.
+Read and apply `~/.agents/docs/code-comments.md`
+before drafting or reviewing code
+when the task includes any of the following:
 
-Use the skill for both sides of the reader boundary:
-in-code documentation is for users of symbols, modules, packages,
-and public APIs;
-implementation comments are for maintainers reading or changing the code.
+- writing, reviewing, adding, deleting,
+  or revising in-code documentation or implementation comments
+- introducing or reshaping a named type, record, state object, interface,
+  field set, or domain concept
+- changing code whose contract, invariants, representation boundaries,
+  or non-obvious behavior may need explanation
 
-When code introduces a new named type, record, state object, interface,
-field set, or domain concept,
-you MUST use and apply the `writing-comments` skill
-before finalizing the code.
+Make the trigger decision before writing the output.
+Read the guide before deciding that a new named type
+is purely mechanical or self-explanatory.
+A code-only request, small patch, private symbol,
+or instruction to avoid extra ceremony does not change the trigger.
+Before returning the output,
+verify the generated code against the guide's documentation,
+comment-selection, and formatting guidance.
+Inspect each new or changed named concept and each field separately.
+A concept-level comment or descriptive identifier does not establish
+a field's meaning, units, source, or valid values.
+
+The guide decides which documentation and comments add value,
+which should be deleted,
+and which named concepts or fields need explanation.
 
 # Code design
 

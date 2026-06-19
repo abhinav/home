@@ -1,13 +1,8 @@
----
-name: writing-comments
-description: Use when writing, reviewing, adding, deleting, or revising in-code documentation, API documentation comments, docstrings, code comments, GoDoc, JSDoc, Rustdoc, struct field comments, comments for non-obvious implementation code, or documentation for new named types and domain concepts.
----
-
-# Writing Comments
+# Code comments
 
 ## Overview
 
-Use this skill when writing, reviewing, or revising comments
+Use this guide when writing, reviewing, or revising comments
 and in-code documentation.
 
 Documentation is for users of a symbol, module, package, or public API.
@@ -339,6 +334,7 @@ Stop and revise when you catch yourself thinking:
 
 - "The type is private, so it does not need a concept comment."
 - "The field names are probably clear enough."
+- "The type comment already covers the fields."
 - "This comment says what the next line does."
 - "The reviewer already has the conversation context."
 - "The caller can inspect the implementation to figure it out."
