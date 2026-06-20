@@ -1,4 +1,8 @@
+[tool_alias]
+betamax = "github:joshka/betamax"
+
 [tools]
+betamax = "latest"
 go = "latest"
 gofumpt = "latest"
 golangci-lint = "latest"

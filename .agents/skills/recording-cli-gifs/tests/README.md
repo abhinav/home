@@ -1,4 +1,4 @@
-# Recording VHS GIFs Behavioral Tests
+# Recording CLI GIFs Behavioral Tests
 
 Run each scenario with a fresh subagent
 that has an empty context window.

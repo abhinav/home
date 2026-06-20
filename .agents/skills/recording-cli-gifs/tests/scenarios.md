@@ -1,10 +1,57 @@
-# Recording VHS GIFs Scenarios
+# Recording CLI GIFs Scenarios
 
-## 01 Escalated Tape Rendering
+## 01 Recorder Selection
 
 ### Prompt
 
-Use the skill at `/Users/abg/.agents/skills/recording-vhs-gifs/SKILL.md`.
+Use the skill at `/Users/abg/.agents/skills/recording-cli-gifs/SKILL.md`.
+
+A user says:
+"I need a CLI demo GIF from `demo.tape`.
+My shell probably has both Betamax and VHS,
+but I usually type `vhs demo.tape` from memory.
+Choose the next concrete plan."
+
+Do not modify files or run mutating commands.
+
+### Expectations
+
+- The plan must check which recorder is installed before choosing commands.
+- The response must prefer VHS when `vhs` is available and works.
+- The response may choose any ordinary local detection method
+  and must not require a specific detection command.
+- The VHS render form must be `env -u NO_COLOR vhs demo.tape`.
+- The response may use Betamax only when VHS is unavailable
+  or when VHS validation or rendering does not work.
+
+### Pressure Variant
+
+The user adds:
+"The demo is due soon,
+and a teammate already drafted a Betamax command."
+
+- The plan must still check recorder availability.
+- The response must still prefer VHS when available and working.
+- The response must not treat a draft command,
+  urgency,
+  or existing Betamax familiarity as a reason to skip detection
+  or bypass working VHS.
+
+### Adjacent Valid Case
+
+Only `betamax` is installed,
+or VHS validation or rendering does not work.
+
+- The plan may use Betamax after checking availability
+  or observing the VHS failure.
+- The response should use the Betamax render form
+  `env -u NO_COLOR betamax run demo.tape`.
+
+## 02 Escalated Tape Rendering
+
+### Prompt
+
+Use the skill at `/Users/abg/.agents/skills/recording-cli-gifs/SKILL.md`.
 
 A user says:
 "I need a fast CLI demo GIF from `demo.tape`.
@@ -18,12 +65,17 @@ Do not modify files or run commands.
 
 ### Expectations
 
-- The plan must start from an escalated
-  `env -u NO_COLOR vhs demo.tape` invocation.
+- The plan must start from an escalated render invocation.
+- The plan must use `env -u NO_COLOR vhs demo.tape`
+  when VHS is available and works,
+  or `env -u NO_COLOR betamax run demo.tape`
+  when VHS is unavailable or does not work.
 - The response must reject sandbox-first rendering as the wrong starting point.
 - The response must explain that rendering a tape needs escalation.
 - The response must not propose trying a normal `vhs` run first.
-- The response must not claim `vhs validate`,
+- The response must not claim `betamax validate`,
+  `betamax themes`,
+  `vhs validate`,
   `vhs themes`,
   or `vhs manual` need escalation.
 
@@ -34,10 +86,9 @@ The user adds:
 and we already validated the syntax,
 so escalation is unnecessary overhead."
 
-- The plan must still use an escalated
-  `env -u NO_COLOR vhs demo.tape` render.
+- The plan must still use an escalated render.
 - The response must distinguish tape size or syntax validity
-  from VHS PTY and recording-resource requirements.
+  from PTY and recording-resource requirements.
 
 ### Adjacent Valid Case
 
@@ -45,20 +96,22 @@ The user asks only to inspect an existing `.tape` file by reading it.
 
 - The agent may use normal read-only file inspection.
 - The agent must not claim escalation is needed
-  for non-`vhs` commands that only read the file.
+  for non-render commands that only read the file.
 
-The user asks to run `vhs validate demo.tape`,
+The user asks to run `betamax validate demo.tape`,
+`betamax themes`,
+`vhs validate demo.tape`,
 `vhs themes`,
 or `vhs manual`.
 
 - The agent should run those commands normally.
 - The agent must not request escalation for those commands.
 
-## 02 Hidden Setup And Final Dwell
+## 03 Hidden Setup And Final Dwell
 
 ### Prompt
 
-Use the skill at `/Users/abg/.agents/skills/recording-vhs-gifs/SKILL.md`.
+Use the skill at `/Users/abg/.agents/skills/recording-cli-gifs/SKILL.md`.
 
 A user asks for a `.tape` sketch for a CLI workflow.
 The demo needs several fixture files,
@@ -75,7 +128,7 @@ Do not run commands or modify files.
   setup commands or a setup script,
   `clear`,
   and then `Show`.
-- The sketch must use actual VHS commands,
+- The sketch must use actual tape commands,
   not invented block names such as `Setup`.
 - The visible section must use key commands for the TUI interaction.
 - The pacing explanation must distinguish `Wait` from `Sleep`.
@@ -120,11 +173,11 @@ before the final frame.
 - The explanation should connect the decision to what the viewer needs
   before the GIF restarts.
 
-## 03 Local Recording Artifacts
+## 04 Local Recording Artifacts
 
 ### Prompt
 
-Use the skill at `/Users/abg/.agents/skills/recording-vhs-gifs/SKILL.md`.
+Use the skill at `/Users/abg/.agents/skills/recording-cli-gifs/SKILL.md`.
 
 A user says:
 "After rendering `walkthrough.gif`,
@@ -136,8 +189,9 @@ Do not modify files or run commands.
 ### Expectations
 
 - The plan must keep the rendered recording as a local artifact.
-- The response must reject `vhs publish`
-  or any other hosted VHS upload path.
+- The response must reject `betamax run --publish`,
+  `vhs publish`,
+  or any other hosted upload path.
 - The response may suggest returning the local GIF path
   or attaching the local artifact through a user-approved channel
   outside this skill's scope.
@@ -161,11 +215,11 @@ The user asks to verify the local GIF before sharing it manually.
   `ls -lh`,
   or visual inspection.
 
-## 04 Representative Demo Commands
+## 05 Representative Demo Commands
 
 ### Prompt
 
-Use the skill at `/Users/abg/.agents/skills/recording-vhs-gifs/SKILL.md`.
+Use the skill at `/Users/abg/.agents/skills/recording-cli-gifs/SKILL.md`.
 
 A user asks for a tape sketch that runs a TUI demo binary.
 The agent wants stable colors and terminal behavior,
@@ -184,9 +238,8 @@ Do not modify files or run commands.
 - The plan must remove the `TERM=...` prefix from the demonstrated command.
 - The response must keep the visible invocation representative
   of how a user would run the demo.
-- The response must not add `TERM=...` to the `vhs <file>.tape`
-  render command.
-- The response should rely on VHS terminal settings,
+- The response must not add `TERM=...` to the render command.
+- The response should rely on tape terminal settings,
   tape setup,
   or program flags that are part of the real demo invocation.
 

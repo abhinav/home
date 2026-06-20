@@ -1,37 +1,43 @@
 ---
-name: recording-vhs-gifs
+name: recording-cli-gifs
 description: >
-  Use when creating, editing, validating, or rendering VHS `.tape` files
-  for CLI and TUI demo GIFs with the `vhs` command,
+  Use when creating, editing, validating, or rendering `.tape` files
+  for CLI and TUI demo GIFs with VHS or Betamax,
   including terminal setup, Hide/Show sections, waits, sleeps,
   and reproducible demo artifacts.
 ---
 
-# Recording VHS GIFs
+# Recording CLI GIFs
 
 ## Scope
 
-Use this skill for CLI and TUI demos recorded with `vhs`.
+Use this skill for CLI and TUI demos recorded with Betamax or VHS.
 Keep recordings local.
 Do not publish recordings to hosted services.
 
 ## Required Operating Rules
 
 Run tape renders with escalated privileges
-using the render form in [Running VHS](#running-vhs).
-VHS opens PTY and browser-backed recording resources while rendering,
+using the render form in [Running Recorders](#running-recorders).
+Betamax and VHS open PTY and recording resources while rendering,
 and sandboxed execution can fail before the tape starts.
 
 Do not request escalated privileges for informational or syntax-check commands
-such as `vhs validate`, `vhs themes`, or `vhs manual`.
+such as `vhs validate`, `vhs themes`, `vhs manual`,
+`betamax validate`, or `betamax themes`.
 
 Before rendering,
-prefer `vhs validate <file>.tape` to catch syntax errors.
+prefer the selected recorder's validate command
+to catch syntax errors.
 Validation does not replace rendering and visual inspection.
 
 After rendering,
 verify the artifact exists and is the expected file type.
 Use `file`, `ls -lh`, or a visual check when the output is a GIF.
+
+Before choosing commands, check whether `vhs` or `betamax` is installed.
+Prefer `vhs` when it is available and works for the tape.
+Use `betamax` only when `vhs` is unavailable or rendering does not work.
 
 ## Tape Design Workflow
 
@@ -63,7 +69,8 @@ Script the minimum terminal path that makes those points legible.
 If setup takes more than a few simple commands,
 put setup in a script and invoke the script from the hidden section.
 This keeps the tape readable
-and avoids making VHS type a long setup transcript into the fake terminal.
+and avoids making the recorder type a long setup transcript
+into the fake terminal.
 
 ## Common CLI/TUI Pattern
 
@@ -79,7 +86,6 @@ Set FontSize 16
 Set Width 900
 Set Height 520
 Set Padding 10
-Set CursorBlink false
 
 Hide
 Type "/path/to/setup-demo-state.sh"
@@ -118,7 +124,7 @@ or cleanup unless those are the point of the demo.
 Keep the demonstrated command representative of how a user would run it.
 Do not prefix the render command or the demonstrated command with `TERM=...`
 unless the demo is specifically about terminal-type behavior.
-Let VHS provide the terminal environment for the recording.
+Let the recorder provide the terminal environment for the recording.
 
 For TUI prompts,
 script realistic key presses:
@@ -165,18 +171,23 @@ Show
 
 Keep cleanup hidden as well when cleanup is needed for local hygiene.
 
-## Running VHS
+## Running Recorders
 
 Request escalation for tape rendering:
 
 ```bash
+env -u NO_COLOR betamax run demo.tape
 env -u NO_COLOR vhs demo.tape
 ```
 
-Always remove `NO_COLOR` at the VHS process boundary.
+Use the VHS form when `vhs` is available and works for the tape.
+Use the Betamax form when `vhs` is unavailable
+or when VHS rendering does not work.
+
+Always remove `NO_COLOR` at the recorder process boundary.
 This lets color-aware commands emit color inside the recording.
-Do not set `TERM` on the VHS invocation for this purpose;
-VHS provides the terminal type inside the recording session.
+Do not set `TERM` on the recorder invocation for this purpose;
+the recorder provides the terminal type inside the recording session.
 
 Do not rationalize a normal sandboxed render as faster,
 temporary,
@@ -190,17 +201,24 @@ Run syntax and reference commands normally:
 vhs validate demo.tape
 vhs themes
 vhs manual
+
+betamax validate demo.tape
+betamax themes
 ```
 
 ## References
 
-Read [references/vhs-command-reference.md](references/vhs-command-reference.md)
-when writing unfamiliar VHS commands,
+Read [references/tape-reference.md](references/tape-reference.md)
+when writing unfamiliar tape commands,
 checking command ordering,
 or deciding between `Wait`, `Sleep`, `Hide`, `Show`, and key commands.
 
 Use `vhs manual` as the local source of truth
 when installed VHS behavior may differ from the reference.
+
+Use `betamax help` or command-specific Betamax help
+as the local source of truth
+when installed Betamax behavior may differ from the reference.
 
 ## Tests
 
