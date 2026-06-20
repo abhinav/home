@@ -1,7 +1,9 @@
 # These taps don't publish metadata yet.
 # [bootstrap.brew.taps]
 # "abhinav/tap"  = "https://github.com/abhinav/homebrew-tap.git"
+# "umputun/apps" = "https://github.com/umputun/homebrew-apps.git"
 # [bootstrap.packages]
+# "brew-cask:umputun/apps/revdiff" = "latest"
 # "brew:abhinav/tap/tmux-fastcopy" = "latest"
 
 [bootstrap.packages]

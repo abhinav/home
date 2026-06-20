@@ -1,0 +1,4 @@
+[Application Options]
+theme = basic
+cross-file-hunks = true
+vim-motion = true

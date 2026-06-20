@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+set -euo pipefail
+IFS=$'\n\t'
+
+# Calls 'revdiff base head` on the given git-spice tracked branch.
+
+red='\033[0;31m'
+reset='\033[0m'
+
+die() {
+	echo -e "${red}FTL${reset} $*" >&2
+	exit 1
+}
+
+revdiff_args=()
+want_branch=""
+for arg in "$@"; do
+	if [[ "$arg" == "-h" || "$arg" == "--help" ]]; then
+		echo "Usage: git-spice revdiff [branch]"
+		exit 0
+	elif [[ "$arg" == -* ]]; then
+		revdiff_args+=("$arg")
+		continue
+	fi
+
+	want_branch="$arg"
+	break
+done
+
+if [[ -z "$want_branch" ]]; then
+	want_branch=$(git-spice bco -n)  # prompt for branch name
+fi
+
+# Convenience: "@" = current branch
+if [[ "$want_branch" == "@" ]]; then
+	want_branch=""
+fi
+
+while read -r branch_entry; do
+	name=$(jq -r '.name' <<< "$branch_entry")
+	if [[ -n "$want_branch" ]]; then
+		if [[ "$name" != "$want_branch" ]]; then
+			continue
+		fi
+	else
+		is_current=$(jq -r '.current' <<< "$branch_entry")
+		if [[ "$is_current" != "true" ]]; then
+			continue
+		fi
+	fi
+
+	base=$(jq -r '(.down // {}).name // ""' <<< "$branch_entry")
+	if [[ -z "$base" ]]; then
+		die "branch '$name' has no base branch"
+	fi
+
+	revdiff_args+=("$base...$name")
+
+	exec revdiff "${revdiff_args[@]}"
+done < <(git-spice ls -a --json)
+
+if [[ -n "$want_branch" ]]; then
+	die "branch '$want_branch' not found"
+fi

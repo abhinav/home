@@ -1,12 +1,9 @@
-[tool_alias]
-tuicr = "github:agavra/tuicr"
-
 [tools]
 go = "latest"
 gofumpt = "latest"
 golangci-lint = "latest"
 rust = "latest"
-tuicr = "latest"
+revdiff = "latest"
 zig = "latest"
 
 [settings]

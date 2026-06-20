@@ -3,6 +3,9 @@
 	la = ls -a
 	lla = ll -a
 
+	# Open the diff for the given branch in revdiff.
+	review = !$HOME/tools/git-spice-revdiff "$@"
+
 [spice "submit"]
 	navigationCommentSync = downstack
 

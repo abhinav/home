@@ -1,0 +1,23 @@
+# name: basic
+# description: minimal palette using terminal-default backgrounds for tree, diff, and status
+# author: umputun
+# bundled: true
+
+chroma-style = monokai
+color-accent = #87afd7
+color-border = #585858
+color-normal = #d0d0d0
+color-muted = #585858
+color-selected-fg = #1a1a1a
+color-selected-bg = #87afd7
+color-annotation = #ffd700
+color-cursor-fg = #5fafff
+color-add-fg = #87d787
+color-add-bg = #143818
+color-remove-fg = #ff8787
+color-remove-bg = #4a1818
+color-modify-fg = #f5c542
+color-modify-bg = #3d2e00
+color-status-fg = #87afd7
+color-search-fg = #1a1a1a
+color-search-bg = #4a4a00
