@@ -25,7 +25,26 @@ Each line should carry a coherent unit of meaning
 so that small text edits do not rewrap unrelated prose
 or hide the meaningful change in a noisy diff.
 
-Semantic line breaks are required for external prose artifacts.
+Semantic line breaks are required when writing new external prose artifacts
+or when reflowing prose as part of the requested change.
+
+When editing an existing artifact,
+match the local source-line style of the text being changed.
+If the surrounding text uses one complete paragraph per physical line,
+keep a narrow edit in that paragraph on one physical line
+unless the user asked for reflowing,
+the paragraph is already being substantially rewritten,
+or the existing line structure would make the result invalid.
+Do not reflow paragraph-per-line text only to satisfy this guide;
+that turns a small content change into unrelated diff churn.
+
+When adding a new paragraph to a paragraph-per-line artifact,
+use one physical line for that new paragraph
+so the addition follows the artifact's existing structure.
+When adding a new section,
+file,
+or block that does not have an established local style,
+use semantic line breaks.
 
 ### Required breaks
 
@@ -86,6 +105,9 @@ would make the line too long.
 
 Keep the entire inline list on one line
 when the list fits within the applicable line-length limit.
+If the whole sentence containing the inline list fits comfortably
+and remains readable,
+keep the sentence on one line.
 When wrapping is required,
 prefer balanced groups of items
 over placing the break exactly where the line would otherwise wrap.
@@ -99,10 +121,27 @@ then continue with normal list splitting rules
 for the remaining list items.
 When a list is followed by another clause,
 prefer a break at the clause boundary
-over attaching the next clause to the final list item.
+over attaching the next clause to the final list item
+only if the sentence already needs to wrap.
 
 Do not add, remove, or move conjunctions to make wrapped lines look balanced.
 The text must keep the same grammar and meaning after reflowing.
+
+Bad:
+
+```markdown
+When alpha,
+beta,
+gamma,
+or delta
+appears, run the fallback.
+```
+
+Good:
+
+```markdown
+When alpha, beta, gamma, or delta appears, run the fallback.
+```
 
 Bad:
 
@@ -178,7 +217,9 @@ Treat these statements as signs that the formatting needs another pass:
 | "It is just documentation." | External prose still needs semantic breaks. |
 | "The line is only slightly long." | Meet the absolute limit unless markup requires otherwise. |
 | "Each list item gets its own line." | Preserve compact lists when they remain readable. |
+| "The sentence has commas, so each comma is a semantic break." | Keep compact inline-list sentences together when they fit and remain readable. |
 | "Chat should look like files." | Format chat for chat unless asked otherwise. |
+| "This paragraph is already one line, but this guide requires semantic breaks." | Preserve paragraph-per-line style for narrow edits to existing text. |
 
 ## Examples
 
