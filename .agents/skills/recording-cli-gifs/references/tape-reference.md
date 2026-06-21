@@ -7,26 +7,20 @@ for installed Betamax behavior.
 
 ## Command-Line Commands
 
-- `vhs new <name>` creates an example tape file.
 - `vhs <file>.tape` renders a tape and writes its declared outputs.
 - `vhs validate <file>...` parses tape files without running them.
 - `vhs themes` lists available theme names.
 - `vhs manual` prints the installed manual.
   Betamax does not support this command.
-- `vhs publish <gif>` uploads a GIF to the VHS hosting service.
-  Do not use this command.
-  Betamax does not support this command.
-- `vhs serve` starts the VHS SSH server.
-  This skill does not cover server operation.
-  Betamax does not support this command.
 
 Betamax uses `betamax run <file>.tape` for rendering.
-Betamax also supports `betamax new`, `betamax validate`,
-and `betamax themes`.
+Betamax also supports `betamax validate` and `betamax themes`.
 
 Rendering a tape requires escalated privileges
-and should use `env -u NO_COLOR vhs <file>.tape`
+and should usually use `env -u NO_COLOR vhs <file>.tape`
 or `env -u NO_COLOR betamax run <file>.tape`.
+Keep `NO_COLOR` only when colorless output or `NO_COLOR` behavior
+is the subject of the demo.
 Run informational and syntax-check commands such as `vhs validate`,
 `vhs themes`, `vhs manual`, `betamax validate`,
 and `betamax themes` normally.

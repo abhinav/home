@@ -1,9 +1,10 @@
 ---
 name: recording-cli-gifs
 description: >
-  Use when creating, editing, validating, or rendering `.tape` files
-  for CLI and TUI demo GIFs with VHS or Betamax,
-  including terminal setup, Hide/Show sections, waits, sleeps,
+  Use when creating, editing, validating, rendering, or debugging
+  local CLI and TUI demo GIFs with asciinema+agg, VHS, or Betamax,
+  including recorder selection, scripted terminal recordings,
+  `.tape` files, Hide/Show sections, waits, sleeps,
   and reproducible demo artifacts.
 ---
 
@@ -11,35 +12,102 @@ description: >
 
 ## Scope
 
-Use this skill for CLI and TUI demos recorded with Betamax or VHS.
+Use this skill for local CLI and TUI demo GIFs recorded with
+asciinema+agg, VHS, or Betamax.
 Keep recordings local.
 Do not publish recordings to hosted services.
 
 ## Required Operating Rules
 
-Run tape renders with escalated privileges
-using the render form in [Running Recorders](#running-recorders).
-Betamax and VHS open PTY and recording resources while rendering,
-and sandboxed execution can fail before the tape starts.
+Choose the recorder from the demo's interaction model
+before writing commands.
+Use asciinema+agg for scripted,
+non-interactive recordings.
+Use VHS or Betamax when the demo needs typed input,
+TUI navigation,
+recorder-observed waits,
+or other tape choreography.
 
-Do not request escalated privileges for informational or syntax-check commands
-such as `vhs validate`, `vhs themes`, `vhs manual`,
-`betamax validate`, or `betamax themes`.
+Run recorder commands with escalated privileges
+using the forms in [Running Recorders](#running-recorders).
+Recorders open PTY,
+terminal capture,
+or rendering resources,
+and sandboxed execution can fail before the recording starts.
+
+Do not request escalated privileges for informational,
+syntax-check,
+or inspection commands such as `vhs validate`,
+`vhs themes`, `vhs manual`, `betamax validate`, `betamax themes`,
+`asciinema --help`, or `agg --help`.
 
 Before rendering,
-prefer the selected recorder's validate command
-to catch syntax errors.
-Validation does not replace rendering and visual inspection.
+use the selected recorder's syntax checks when they exist.
+For tapes,
+prefer `vhs validate` or `betamax validate`.
+For asciinema+agg,
+inspect the script or command that asciinema will run.
+Validation does not replace recording,
+rendering,
+and visual inspection.
 
 After rendering,
 verify the artifact exists and is the expected file type.
 Use `file`, `ls -lh`, or a visual check when the output is a GIF.
 
-Before choosing commands, check whether `vhs` or `betamax` is installed.
-Prefer `vhs` when it is available and works for the tape.
-Use `betamax` only when `vhs` is unavailable or rendering does not work.
+Before choosing tape commands,
+check whether `vhs` or `betamax` is installed.
+Prefer `vhs` for ordinary tapes when it is available and works.
+Use `betamax` when VHS is unavailable,
+VHS rendering does not work,
+or the demo needs Betamax-specific behavior or styling.
 
-## Tape Design Workflow
+## Recorder Selection
+
+Use asciinema+agg when the whole recording can be driven by one finite
+command,
+script,
+or child shell.
+The asciinema recorder command should usually use the `env -u NO_COLOR`
+wrapper shown in [Running Recorders](#running-recorders).
+For asciinema+agg recordings,
+set `TERM=xterm-256color` at the recorder process boundary
+so child commands that inspect terminal capabilities emit ANSI color.
+Good fits include showing a command running,
+printing staged messages for the viewer,
+running a shell script that sleeps between visible states,
+capturing real command output,
+or recording terminal animation produced by a script.
+
+Use VHS or Betamax when the recording needs interactive input
+after the recorder starts.
+Good fits include visible typing,
+arrow-key navigation,
+interactive prompts,
+TUI selection movement,
+recorder-observed waits,
+screenshots,
+or precise tape-controlled pacing.
+If the recorder must deliver keys to the program,
+choose VHS or Betamax.
+
+For asciinema+agg,
+do not start an interactive `asciinema record <file>` session.
+Use the escalated recorder form with a finite command or script:
+`env -u NO_COLOR TERM=xterm-256color asciinema record --headless --return --command ...`.
+The command may start a child shell,
+such as `bash demo.sh` or `bash -lc '...'`,
+as long as that shell exits by itself.
+Do not treat "the keys are known" as enough reason to use asciinema
+when the recorder would still need to send those keys.
+Use asciinema+agg only if the program or script drives that behavior
+and exits by itself.
+
+If either recorder family could work,
+prefer asciinema+agg for a naturally scripted command demo
+and prefer VHS/Betamax for a viewer-facing interaction demo.
+
+## Demo Design Workflow
 
 Start from the viewer's task,
 then design the whole demo around the viewer's experience:
@@ -50,69 +118,50 @@ and what should be clear before the GIF restarts?
 Script the minimum terminal path that makes those points legible.
 
 1. Choose the output path and terminal dimensions.
-2. Put `Require`, `Output`, and `Set` commands at the top.
-3. Decide which terminal states,
+2. Decide which terminal states,
    commands,
    motion,
    and pauses should be visible to the viewer.
-4. Use `Hide` for setup or cleanup
-   that is not part of the visible demo.
-5. Use a prepared fixture, existing example directory,
+3. Keep setup or cleanup out of the visible demo.
+   For VHS or Betamax,
+   use `Hide`,
+   `clear`,
+   and `Show`.
+   For asciinema+agg,
+   run setup before the first visible output in the child command.
+4. Use a prepared fixture, existing example directory,
    temporary directory, or setup script according to the demo's needs.
-6. Type and execute only the commands or TUI interactions
+5. Show only the commands,
+   output,
+   or TUI interactions
    the viewer needs to understand.
-7. Use `Wait` for state-dependent output
-   and `Sleep` for intentional viewer dwell time.
-8. Add final dwell time only when the viewer needs time
+6. Use recorder-observed waits for tape-controlled terminal state.
+   Use script-side waits for asciinema+agg.
+   Use fixed sleeps for viewer pacing or animation capture.
+7. Add final dwell time only when the viewer needs time
    before the GIF restarts.
 
-If setup takes more than a few simple commands,
-put setup in a script and invoke the script from the hidden section.
-This keeps the tape readable
-and avoids making the recorder type a long setup transcript
-into the fake terminal.
+For VHS or Betamax,
+put `Require`,
+`Output`,
+and most `Set` commands at the top of the tape.
+Use `Hide`,
+setup commands or a setup script,
+`clear`,
+and `Show`
+for setup that should not appear in the GIF.
+Read [references/tape-reference.md](references/tape-reference.md)
+for tape command details.
 
-## Common CLI/TUI Pattern
-
-Use this as a shape,
-not as a literal template for every demo:
-
-```tape
-Output "demo.gif"
-Require git
-Require my-cli
-Set Shell "bash"
-Set FontSize 16
-Set Width 900
-Set Height 520
-Set Padding 10
-
-Hide
-Type "/path/to/setup-demo-state.sh"
-Enter
-Type "clear"
-Enter
-Show
-
-Sleep 500ms
-Type "my-cli status"
-Enter
-Wait+Screen /Ready/
-Sleep 1s
-
-Type "my-cli choose"
-Enter
-Sleep 1s
-Down
-Sleep 300ms
-Enter
-Wait+Screen /Complete/
-```
-
-Use short sleeps after visible commands
-when the viewer needs to perceive a transition.
-Add a final sleep when the viewer needs time
-to absorb the final visible state before the loop begins again.
+For asciinema+agg,
+put setup and visible motion in the finite command or script.
+The script can print messages,
+sleep between states,
+clear or redraw the terminal,
+run the demonstrated command,
+and leave a readable final state before exiting.
+Read [references/asciinema-agg-reference.md](references/asciinema-agg-reference.md)
+for scripted recording details.
 
 ## Writing Visible Interactions
 
@@ -122,7 +171,7 @@ fixture generation,
 dependency builds,
 or cleanup unless those are the point of the demo.
 Keep the demonstrated command representative of how a user would run it.
-Do not prefix the render command or the demonstrated command with `TERM=...`
+Do not prefix the demonstrated command with `TERM=...`
 unless the demo is specifically about terminal-type behavior.
 Let the recorder provide the terminal environment for the recording.
 
@@ -137,43 +186,45 @@ prefer `Wait`, `Wait+Screen`, or `Wait+Line`
 over fixed sleeps.
 Use fixed `Sleep` for pacing or animation capture.
 
-## Hide And Show
-
-`Hide` stops frame capture while commands still run in the fake terminal.
-`Show` resumes capture.
-
-The common setup sequence is:
-
-```tape
-Hide
-Type "setup command or setup script"
-Enter
-Type "clear"
-Enter
-Show
-```
-
-The `clear` before `Show` matters.
-It prevents hidden setup output from being visible
-when recording resumes.
-
-If hidden setup must type many commands,
-prefer this shape:
-
-```tape
-Hide
-Type "/absolute/path/to/setup-demo.sh"
-Enter
-Type "clear"
-Enter
-Show
-```
-
-Keep cleanup hidden as well when cleanup is needed for local hygiene.
+For asciinema+agg recordings,
+the visible interaction is the output produced by the child command.
+Make the child command representative of how the user would run it,
+or use a small demo script when the recording needs staged narration,
+delays,
+or terminal redrawing.
+Do not rely on sending input after asciinema starts.
 
 ## Running Recorders
 
-Request escalation for tape rendering:
+Request escalation for recorder commands.
+By default,
+remove `NO_COLOR` at the recorder process boundary.
+This lets color-aware commands emit color inside the recording.
+Keep `NO_COLOR` only when colorless output or `NO_COLOR` behavior
+is the subject of the demo.
+For asciinema recordings,
+also set `TERM=xterm-256color` at the recorder process boundary by default.
+
+For asciinema recording,
+request escalation for the `asciinema record` command:
+
+```bash
+env -u NO_COLOR TERM=xterm-256color \
+  asciinema record --headless --overwrite --return \
+  --window-size 80x24 \
+  --command "bash demo.sh" \
+  demo.cast
+```
+
+Run `agg` normally after the cast exists,
+unless sandboxing blocks conversion:
+
+```bash
+agg --theme github-dark --font-size 16 --idle-time-limit 1 \
+  demo.cast demo.gif
+```
+
+For tape rendering:
 
 ```bash
 env -u NO_COLOR betamax run demo.tape
@@ -181,18 +232,18 @@ env -u NO_COLOR vhs demo.tape
 ```
 
 Use the VHS form when `vhs` is available and works for the tape.
-Use the Betamax form when `vhs` is unavailable
-or when VHS rendering does not work.
+Use the Betamax form when VHS is unavailable,
+VHS rendering does not work,
+or the demo needs Betamax-specific behavior or styling.
 
-Always remove `NO_COLOR` at the recorder process boundary.
-This lets color-aware commands emit color inside the recording.
-Do not set `TERM` on the recorder invocation for this purpose;
-the recorder provides the terminal type inside the recording session.
+Do not add `TERM=...` to tape recorder invocations or visible demo commands
+for ordinary color stability.
+Use `TERM=xterm-256color` only on the asciinema recorder invocation.
 
-Do not rationalize a normal sandboxed render as faster,
+Do not rationalize a normal sandboxed recorder run as faster,
 temporary,
 or acceptable because a fallback is possible.
-Escalation is the starting condition for rendering a tape,
+Escalation is the starting condition for recording,
 not a retry strategy.
 
 Run syntax and reference commands normally:
@@ -204,6 +255,9 @@ vhs manual
 
 betamax validate demo.tape
 betamax themes
+asciinema --help
+asciinema record --help
+agg --help
 ```
 
 ## References
@@ -219,6 +273,12 @@ when installed VHS behavior may differ from the reference.
 Use `betamax help` or command-specific Betamax help
 as the local source of truth
 when installed Betamax behavior may differ from the reference.
+
+Read [references/asciinema-agg-reference.md](references/asciinema-agg-reference.md)
+when choosing asciinema+agg,
+writing a scripted recording,
+debugging cast output,
+or deciding whether the demo needs tape-controlled interactivity.
 
 ## Tests
 
