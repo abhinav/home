@@ -1,5 +1,6 @@
 [tool_alias]
 betamax = "github:joshka/betamax"
+revdiff = "github:umputun/revdiff"
 
 [tools]
 betamax = "latest"
