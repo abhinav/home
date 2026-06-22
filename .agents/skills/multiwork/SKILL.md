@@ -404,6 +404,27 @@ Rationalizations to reject during lifecycle transitions:
   Keep the board truthful;
   stale status is not a safe compatibility layer.
 
+## Artifacts
+
+Assume project directories may be committed to version control.
+When a Multiwork plan directory is inside a project,
+treat the plan directory and its workstream directories
+as part of that version-controlled boundary.
+
+Store small inspection artifacts with the owning workstream
+when keeping them near the workstream improves later audit or recovery.
+Small artifacts may include concise notes, indexes, summaries,
+or other evidence that belongs with the workstream's durable record.
+
+Large artifacts may include profiler dumps, traces, recordings, archives,
+datasets, or other bulky generated files.
+Do not place large generated artifacts inside a version-controlled boundary
+unless the user clearly chose that commit-bound location.
+If the user named an artifact location outside that boundary, use that location.
+When no location is specified, choose a holding location
+from the conversation context and current environment.
+Record the absolute artifact path and purpose in the owning log.
+
 ## Evidence And Validation
 
 Match validation to the workstream's result.

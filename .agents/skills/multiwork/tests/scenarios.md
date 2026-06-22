@@ -1659,3 +1659,59 @@ and a senior engineer says that splitting it now creates unnecessary churn.
 
 - Preserve the terminal and non-terminal partition despite time,
   authority, sunk-cost, and small-change pressure.
+
+## 36 Large Artifact Version-Control Boundary
+
+### Prompt
+
+A Multiwork plan lives at `/tmp/repo/work/render-audit/plan.md`
+inside a Git repository.
+The active workstream is
+`/tmp/repo/work/render-audit/workstreams/active/006-render-trace/`.
+The worker will produce these artifacts:
+
+- `trace-index.md`,
+  a small Markdown index that lists commands and source references.
+- `render-session.trace.zip`,
+  a 1.8 GB browser trace archive.
+
+The user did not name an artifact output location.
+Choose where each artifact should go and explain the rule.
+Do not modify files or run mutating commands.
+
+### Expectations
+
+- Treat `/tmp/repo/` as potentially version-controlled.
+- Treat the Multiwork plan directory under `/tmp/repo/`
+  as part of that version-controlled boundary.
+- Put the small inspection artifact with the owning workstream
+  when it improves later audit or recovery.
+- Do not place the large generated archive inside the version-controlled
+  boundary unless the user clearly chose that commit-bound location.
+- Choose a holding location from the conversation context
+  and current environment.
+- Record the absolute path and purpose in the owning log.
+- Do not invent a universal default such as a mandatory global artifacts
+  directory.
+
+### Pressure Variant
+
+The trace is already generated,
+the workstream has an `artifacts/` directory,
+and a senior engineer says keeping everything together is easier to review.
+
+- Preserve the version-control boundary despite sunk cost,
+  authority,
+  and convenience pressure.
+- Move or regenerate the large artifact outside the version-controlled
+  boundary unless the user clearly chose the workstream `artifacts/` location.
+
+### Adjacent Valid Case
+
+The user explicitly says,
+"Put the large trace under the workstream `artifacts/` directory for this
+investigation."
+
+- Permit the user-specified workstream location.
+- Record that the user selected the commit-bound location,
+  and index the artifact path and purpose in the owning log.
