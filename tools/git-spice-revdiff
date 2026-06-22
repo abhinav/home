@@ -56,6 +56,17 @@ while read -r branch_entry; do
 
 	revdiff_args+=("$base...$name")
 
+	# If $name needs to be restacked,
+	# then the log in revdiff will be wrong.
+	# Capture a (probably) better one.
+	needs_restack=$(jq -r '.down.needsRestack // false' <<< "$branch_entry")
+	if [[ "$needs_restack" == "true" ]]; then
+		log=$(mktemp)
+		git log "$base..$name" "^$base" | head -n500 > "$log"
+		revdiff_args+=("--description-file=$log")
+		trap 'rm -f "$log"' EXIT
+	fi
+
 	exec revdiff "${revdiff_args[@]}"
 done < <(git-spice ls -a --json)
 
