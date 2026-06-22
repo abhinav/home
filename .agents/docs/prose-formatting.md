@@ -103,24 +103,36 @@ would make the line too long.
 
 ## Inline lists
 
-Keep the entire inline list on one line
-when the list fits within the applicable line-length limit.
+Inline lists favor compact, readable units.
+Do not split a short inline list merely because commas appear.
+Before breaking inside an inline list, first check whether the whole list
+and its immediate grammar fit within the applicable line-length limit.
+If they fit, keep that list segment together.
+For Markdown prose,
+use the absolute line-length limit when needed
+to avoid an inferior inline-list break.
 If the whole sentence containing the inline list fits comfortably
 and remains readable,
 keep the sentence on one line.
-When wrapping is required,
-prefer balanced groups of items
-over placing the break exactly where the line would otherwise wrap.
-Break between list items,
-not in the middle of an item.
+When wrapping is required, prefer readable groups
+that keep adjacent short items together.
+Do not optimize for visually equal line lengths.
+For a three-item list,
+do not put only the first item on its own line
+when the first two items fit together.
+Do not use a one-item, one-item, one-item layout for a short inline list
+when any adjacent pair fits on one line.
+When a trailing clause follows the list,
+keep the trailing clause with the final item if that grouping fits.
+Break between list items, not in the middle of an item.
 Do not split every item onto its own line
 unless the list is intentionally formatted as an itemized list.
-If an item is too long to fit on one line,
-apply the regular splitting rules to that item,
+It is acceptable to move the final conjunction with the last list item
+when doing so makes a balanced, readable group.
+If an item is too long to fit on one line, apply the regular splitting rules,
 then continue with normal list splitting rules
 for the remaining list items.
-When a list is followed by another clause,
-prefer a break at the clause boundary
+When a list is followed by another clause, prefer a break at the clause boundary
 over attaching the next clause to the final list item
 only if the sentence already needs to wrap.
 
@@ -170,6 +182,51 @@ then normalizes them to `A`, `B`, `G`, `D`, `E`, and `Z`
 before dispatch.
 ```
 
+Bad:
+
+```markdown
+Before publishing, verify title,
+summary,
+and owner.
+```
+
+Good:
+
+```markdown
+Before publishing, verify title, summary,
+and owner.
+```
+
+Bad:
+
+```markdown
+Assign reviews to Alice,
+Ben, or Casey
+when the draft is ready.
+```
+
+Good:
+
+```markdown
+Assign reviews to Alice, Ben,
+or Casey when the draft is ready.
+```
+
+Bad:
+
+```markdown
+Send notices to the review channel,
+release channel, or support channel
+when the incident starts.
+```
+
+Good:
+
+```markdown
+Send notices to the review channel, release channel,
+or support channel when the incident starts.
+```
+
 ## Line length
 
 Semantic line breaks are required,
@@ -203,6 +260,10 @@ use the first applicable boundary in this order:
 6. Readable grouping boundary inside a long inline list.
 7. Nearest word boundary needed to satisfy the absolute line limit.
 
+Before using steps 3 through 7, check whether the proposed break
+would split a compact inline list.
+If it would, prefer keeping the inline list and its immediate grammar together.
+
 Do not use mechanical wrapping as the primary strategy.
 A line break should usually explain the prose structure
 to the next person editing the file.
@@ -217,7 +278,10 @@ Treat these statements as signs that the formatting needs another pass:
 | "It is just documentation." | External prose still needs semantic breaks. |
 | "The line is only slightly long." | Meet the absolute limit unless markup requires otherwise. |
 | "Each list item gets its own line." | Preserve compact lists when they remain readable. |
+| "Balanced means the lines should be visually even." | Use available line length to keep adjacent short items together; do not optimize for equal-looking lines. |
 | "The sentence has commas, so each comma is a semantic break." | Keep compact inline-list sentences together when they fit and remain readable. |
+| "The conjunction can never start the next line." | Permit a final conjunction to start the next line when it creates a balanced, readable group. |
+| "Semantic breaks mean every clause gets its own line." | Keep short dependent clauses with their governing sentence when the combined line is readable and within limits. |
 | "Chat should look like files." | Format chat for chat unless asked otherwise. |
 | "This paragraph is already one line, but this guide requires semantic breaks." | Preserve paragraph-per-line style for narrow edits to existing text. |
 
