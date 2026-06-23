@@ -31,7 +31,19 @@ and unresolved uncertainty.
 The agent should interpret the record,
 not execute the mission or guess mutable state beyond the checkpoint.
 
-Use [scenarios.md](scenarios.md) for the reusable gamut.
+## Scenario Families
+
+Use the smallest family that covers the behavior under review:
+
+| Family | Scenarios | File |
+| --- | --- | --- |
+| Core layout and lifecycle | 01, 02, 05, 06, 11, 17, 20, 23-25, 27, 35-36 | [core-layout.md](core-layout.md) |
+| Plans and supporting records | 12, 14-16, 21-22, 38-39 | [plans-and-records.md](plans-and-records.md) |
+| Delegation and completion | 03-04, 07, 09-10, 13, 26 | [delegation-and-completion.md](delegation-and-completion.md) |
+| Evergreen workstreams | 18 | [evergreen.md](evergreen.md) |
+| Workspaces and worktrees | 08, 19, 28-34, 37 | [workspaces.md](workspaces.md) |
+
+Scenario IDs remain stable across these files.
 For a behavioral repair,
 first run the relevant scenario without the changed guidance.
 After the edit, rerun that exact scenario.

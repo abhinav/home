@@ -1,6 +1,6 @@
-# Standing Workstreams
+# Evergreen Workstreams
 
-A standing workstream remains part of the active mission
+An evergreen workstream remains part of the durable coordination system
 while it performs recurring bounded cycles.
 It is not continuously executing,
 and it does not require a worker while waiting.
@@ -33,13 +33,14 @@ preserve a boundary that will not skip unassessed inputs.
 ## Board Example
 
 ```markdown
-| Workstream | Outcome | State / condition | Owner | Dependencies | Plan | Log | Branch / worktree | Next action / wake |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `003-status-scan` | Detect and assess new status changes. | active / waiting | unassigned | None | `workstreams/active/003-status-scan/plan.md` | `workstreams/active/003-status-scan/log.md` | none | At `2026-06-08 09:00 America/Los_Angeles`, wake through automation `daily-status`; scan strictly after cursor `1842`. |
+| ID | State / condition | Owner | Depends on | Runtime | Root next action / wake |
+| --- | --- | --- | --- | --- | --- |
+| `003-status-scan` | evergreen / waiting | unassigned | None | none | At `2026-06-08 09:00 America/Los_Angeles`, wake through automation `daily-status`; scan strictly after cursor `1842`. |
 ```
 
-Keep the workstream under `active/`
-while its ongoing outcome remains part of the mission.
+Keep the workstream under `evergreen/`
+while its ongoing outcome remains part of the coordination system.
+Create `evergreen/` only when at least one evergreen workstream exists.
 Use `waiting`, `ready`, `running`, or `blocked`
 as its execution condition.
 
@@ -64,6 +65,11 @@ This cycle record supplements the delegated-attempt entry.
 The attempt entry may summarize or reference the detailed cycle evidence.
 
 ## Dispatch And Sleep
+
+Each independently dispatched cycle is a new delegated attempt.
+Preregister it after the wake condition is satisfied and before dispatch.
+The wake event alone is not an attempt.
+Routine follow-up within one running cycle remains part of that attempt.
 
 When a wake condition is satisfied:
 

@@ -56,26 +56,13 @@ plan directory a long-lived project base:
         log.md
 ```
 
-In either shape,
-ordinary workstream plan and log paths derive from lifecycle state
-and stable ID relative to the selected plan directory.
-For example,
-`001-example` in `active` has plan path
-`workstreams/active/001-example/plan.md`.
-
-Create each state directory only when a workstream first enters that state.
-For example,
-do not create `backlog/`, `completed/`, or `archived/`
-while every known workstream is active.
-
-The root moves workstream directories between lifecycle states.
 Stable workstream IDs do not change.
-The root board should describe the workstream's current lifecycle state
-and root-owned coordination state.
-For ordinary workstreams,
-derive the plan and log paths from lifecycle state and stable ID:
+Non-archived plan and log paths derive from lifecycle state and stable ID:
 `workstreams/<state>/<id>/plan.md`
 and `workstreams/<state>/<id>/log.md`.
+Archived paths derive from `workstreams/archived/<id>/`;
+the workstream plan retains the terminal lifecycle state.
+Create each state directory only when a workstream first enters that state.
 
 ## Root `plan.md`
 
@@ -101,26 +88,17 @@ surfaces that affect coordination.>
 | ID | State / condition | Owner | Depends on | Runtime | Root next action / wake |
 | --- | --- | --- | --- | --- | --- |
 | `001-example` | active / running | `<agent-id>` | None | `<branch>` / `<path>` | <Concrete root action.> |
-
-### Terminal Workstreams
-
-| ID | State / condition | Owner | Depends on | Runtime | Root next action / wake |
-| --- | --- | --- | --- | --- | --- |
 | `002-example` | completed | None | `001-example` | None | Preserve completion evidence. |
 
-Keep non-terminal workstreams in `Workstream Board`.
-When terminal workstreams exist,
-add `Terminal Workstreams` immediately below with the same columns.
-
-Use `condition` for standing workstreams.
+Keep every non-archived workstream in `Workstream Board`,
+regardless of lifecycle state.
+Omit archived terminal workstreams from the project board.
+Use `condition` for evergreen workstreams.
 For ordinary workstreams,
 omit it or use a value already meaningful to the plan.
-When a workstream moves between lifecycle states,
-update this field in the board and move the workstream directory
-so derived plan and log paths remain true.
-When the transition crosses the terminal boundary,
-move the row into or out of `Terminal Workstreams`.
-Use the board for root-owned coordination state.
+Keep lifecycle transitions synchronized with the workstream directory.
+For archival,
+preserve the terminal state in the plan and remove the board row.
 A plan may add a short label when stable IDs are not enough
 to distinguish workstreams at a glance.
 Use explicit path fields only for documented nonstandard layouts
@@ -156,6 +134,15 @@ Record actual workspace handoffs and their current ownership.
 This plan is a living, self-contained mission packet.
 An agent with only the current project state and this file must be able to
 continue without prior conversation or another workstream's files.
+
+Treat purpose, boundaries, dependencies, completion criteria,
+and assessment criteria as mostly stable.
+Treat current context, progress, operative decisions, discoveries,
+observed evidence, outcomes, ownership, blockers,
+and the next action as mutable.
+Update mutable content at every material checkpoint.
+Revise stable content only when the work itself changes,
+and record why in `log.md`.
 
 ## Purpose And Completion
 
@@ -199,28 +186,37 @@ Include the dependency facts needed to act in this file.
 Describe the concrete execution path in order.
 Name the files, symbols, systems, evidence sources, or artifact locations
 involved and explain why each step is needed.
+Keep this section synchronized with the current implemented or investigated
+design rather than leaving completed work in future tense.
+Use reference-first prose,
+and use a compact code or data example when it materially improves the reader's
+understanding of a contract or choice.
+Record relevant rejected alternatives and discoveries that shaped the result.
 Do not outsource known design choices to the worker.>
 
 ## Evidence And Assessment
 
-<State what evidence the work will produce and how the result will be assessed.
+<Before execution,
+state what evidence the work will produce and how the result will be assessed.
 Use commands, tests, focused probes, expected behavior, or artifact inspection.
 Source coverage, a written rubric, independent review,
 or another method may better suit the outcome.
 Name a fast feedback check only when it is useful.
-Define success, failure, and any acceptable inconclusive result.>
+Define success, failure, and any acceptable inconclusive result.
+As work proceeds,
+record the observed evidence,
+the conclusion it supports,
+and any remaining uncertainty.
+At completion,
+state the final evidence and how it establishes the completion criteria.>
 
 ## Supporting Record
 
 <Define what belongs in sibling `log.md`,
-why that material helps interpretation or resumption,
-how it is organized, and when it is updated.
-Keep the current mission, operative decisions, current state,
-ownership, blockers, and next action authoritative in this plan.
-Treat `log.md` as the append-only replay log:
-append material evidence, decisions, superseding facts,
-attempt outcomes, and recovery checkpoints there,
-then promote any changed current state back into this plan.>
+how the work-specific record is organized,
+and when it is updated.
+Keep current executable truth in this plan;
+use the append-only log for supporting evidence and history.>
 
 ## Recovery
 
@@ -229,27 +225,25 @@ State how to recover from partial or risky steps.>
 
 ## Current State And Next Action
 
-<Record completed and remaining work, discoveries, blockers, and decisions.
-Record artifacts, branch or worktree state, uncommitted changes,
-current owner or active attempt,
-and evidence already collected.
-End with one concrete next action that can begin immediately.>
+<Write a concise status and handoff that a reader can trust without `log.md`.
+Do not create a second copy of the design, decisions, discoveries, or evidence.
+Point to their named sections in this plan when a reader needs that detail.
+State current progress, remaining work or blockers,
+branch or worktree state, uncommitted changes,
+and the current owner or active attempt.
+At completion,
+state whether the completion criteria were met
+and replace obsolete prospective instructions elsewhere in the plan.
+End with one concrete next action,
+or state why no workstream action remains and name any root follow-up.>
 ```
 
 ## Workstream `log.md`
 
-Keep stable mission context brief.
-Include enough to identify the workstream,
-understand the record's organization,
-and resume honestly without another workstream or the root conversation.
-Use plan-defined sections for supporting evidence and history.
+Keep stable context brief but sufficient to interpret the record independently.
+Use plan-defined sections for supporting evidence and append-only history.
 Delegated attempts are one required entry type,
-not the entire purpose of the log.
-Do not copy the plan's full implementation narrative.
-Treat the log as append-only replay.
-When information changes,
-append the superseding evidence or decision instead of rewriting older entries.
-The plan remains the current-state surface.
+not the entire log structure.
 
 ```markdown
 # 001-example Log
@@ -268,30 +262,21 @@ The plan remains the current-state surface.
 ## Log Format
 
 <Define the workstream-specific sections and fields used below.
-Every section should explain how it supports interpretation,
-auditability, recovery, or reconstruction of the current plan state.
+Choose a structure suited to implementation, research, design, or operations.
+Use chronology only when sequence itself matters.
+Every section must support interpretation, auditability, recovery,
+or reconstruction of current plan state.
 This file must be understood without reading `plan.md`.>
 
 ## <Plan-Defined Supporting Section>
 
-<Record useful evidence, observations, sources, measurements, decisions,
-artifacts, validation history, reviewer findings, or recovery detail.
-Organize entries around the durable fact they establish,
-the conclusion or uncertainty,
-and the resulting plan update or next action.
-Include command, output, source, or artifact detail when it is needed to
-reconstruct, verify, audit, or resume that durable state.
-Summarize process steps that do not change interpretation or recovery.
-If a step only found the relevant path, symbol, line, artifact, or owner,
-record the located reference and its significance,
-not the search or inspection step.
-Omit sections that only show non-material process history.
-Each section must contribute to interpreting evidence,
-reconstructing recovery, auditing a material interaction, or updating the plan.
-When a section would only show effort, routine exploration,
-or provenance for steps that produced no durable fact,
-replace it with the located reference, observation,
-or conclusion that supports the plan.
+<Record the work-specific evidence and history defined by the plan.
+Lead with stable paths, symbols, APIs, commands, sources, measurements,
+or artifacts.
+Connect each material entry to its conclusion or uncertainty
+and resulting plan update or next action.
+Preserve detail needed to verify, audit, or resume the durable state;
+omit locator steps and non-material process history.
 Use headings, tables, chronology, or indexes that fit the work.>
 
 ## Delegated Attempts
@@ -299,11 +284,8 @@ Use headings, tables, chronology, or indexes that fit the work.>
 Append one subsection per delegated attempt.
 Preregister each attempt before dispatch.
 During an assigned worker attempt,
-the worker appends material evidence, decisions, validation results,
-superseding facts, blockers, recovery checkpoints,
-and attempt outcomes here until handoff.
-The worker also keeps `plan.md` synchronized with the current state
-that those entries establish.
+the worker maintains the attempt entry and keeps `plan.md` synchronized
+until handoff.
 
 ### Attempt <number>: <short objective>
 
@@ -333,12 +315,9 @@ Do not infer or backdate them.
 - Next action: <Concrete prose.>
 ```
 
-Append corrections and superseding facts rather than erasing earlier entries.
-Do not log routine messages or every command.
-
 See [log-patterns.md](log-patterns.md)
 for examples adapted to implementation, research, design,
 and root orchestration.
 
-See [standing-workstreams.md](standing-workstreams.md)
+See [evergreen-workstreams.md](evergreen-workstreams.md)
 for recurring-cycle additions to the workstream plan, log, and root board.

@@ -1,5 +1,19 @@
 # Workers
 
+## Attempt Registration
+
+The current writer preregisters each delegated attempt in the owning log
+before dispatch.
+Record the objective, worker or reviewer, relevant starting state,
+expected result, expected evidence, and assessment method.
+After the attempt,
+append the outcome, evidence, conclusion, and concrete next action.
+Record a dispatch failure as the outcome rather than deleting the entry.
+
+If work started before registration,
+record the known facts and mark the registration late.
+Do not backdate or invent write-ahead state.
+
 ## Worker Dispatch
 
 Before a fresh-context dispatch,
@@ -34,14 +48,17 @@ which reconciles the outcome under the single-writer rule.
 If no active worker owns the workstream files,
 root appends the outcome.
 If a worker still owns them,
-root routes the findings through the owning worker as described in
-Delegate Attempts.
+root routes actionable findings through a preregistered review-response attempt
+owned by that worker.
+To use a replacement worker,
+first checkpoint and complete the current ownership handoff;
+root may preregister the replacement only after write authority returns.
 
 Use `fork_turns: "none"` when the durable files contain the needed context.
 Continue an existing healthy worker in its current workstream,
 rather than replacing it for each revision.
 
-For a standing workstream,
+For an evergreen workstream,
 retain a worker across cycles only when the next cycle is near
 and retaining ownership provides real value.
 A waiting workstream does not require a live worker.
