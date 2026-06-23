@@ -26,8 +26,8 @@ unset fzf_search_command
 
 if [[ -d "/usr/share/fzf" ]]; then
 	_fzf_shell="/usr/share/fzf"
-elif [[ -d "/opt/homebrew/opt/fzf/shell" ]]; then
-	_fzf_shell="/opt/homebrew/opt/fzf/shell"
+elif (( ${+commands[fzf]} )); then
+	_fzf_shell="${commands[fzf]:h:h}/opt/fzf/shell"
 fi
 
 if [[ -n "${_fzf_shell:-}" ]]; then
