@@ -8,7 +8,8 @@ and in-code documentation.
 Documentation is for users of a symbol, module, package, or public API.
 Comments are for maintainers reading or changing the implementation.
 Both should spare the reader from reverse-engineering context
-that the code cannot show by itself.
+or carrying fragile mental state
+that the code cannot show directly.
 
 Write for the reader's task,
 not from the author's memory of the change.
@@ -45,7 +46,8 @@ assume the maintainer can read the statements in front of them.
 Explain implementation context the code does not show:
 hidden state, external behavior, fixture purpose, expensive setup,
 performance constraints, compatibility requirements,
-ordering constraints, and why an obvious simplification would be wrong.
+ordering constraints, domain background,
+and why an obvious simplification would be wrong.
 
 ## Decision Checklist
 
@@ -65,6 +67,9 @@ ask whether the text does at least one of these jobs:
 - reduces the work needed to understand code
   that depends on hidden state, external systems,
   ordering constraints, or non-obvious setup
+- lowers the reader's mental bookkeeping
+  in dense code by naming the current state,
+  phase, or domain fact being applied
 
 If the answer is no,
 delete the text or improve the code instead.
@@ -118,10 +123,23 @@ Add or keep implementation comments when maintainers need to know:
 - what state or setup the surrounding code is trying to create
 - what behavior the surrounding code is isolating or protecting
 - what surprising behavior future readers must not simplify away
+- what hard-to-reconstruct state the reader should track
+- what domain fact, protocol rule, or algorithm case
+  the surrounding code depends on
 
 When available,
 explain the "why" behind non-obvious code,
 not just the "what".
+When code is dense because it depends on hidden state,
+external APIs,
+or specialized domain knowledge,
+comments may also explain the state or concept
+that lets the reader follow the code safely.
+
+Treat comment writing as an analysis step.
+If the comment cannot state the relevant contract, invariant,
+or state transition clearly,
+the code or model may need more design work before the comment is ready.
 
 ```go
 // BAD: narrates the loop.
@@ -138,6 +156,51 @@ for i := 0; i < numWorkers; i++ {
 }
 ```
 
+## Reduce Mental Bookkeeping
+
+Some useful comments explain state that a maintainer could reconstruct,
+but only by keeping too many details in mind at once.
+Use these comments when they make dense code easier to verify or change.
+
+Good candidates include:
+
+- stack, register, cursor, or parser state
+  after calls to an API that hides that state
+- phases in a long routine
+  where future edits should remain grouped with related operations
+- algorithm cases that match a preceding explanation
+- compact domain background needed to understand the implementation
+
+These comments still need to earn their place.
+They should reduce the reader's cognitive load,
+not decorate simple code.
+
+```go
+emit.LoadLocal(userID)    // stack: userID
+emit.LoadConst(limit)     // stack: userID, limit
+emit.Call("withinQuota")  // stack: allowed
+```
+
+The comments are useful only because the operand stack is hidden state
+that every following call depends on.
+
+```go
+// Flush queued writes before detaching transport state.
+if conn.hasBufferedWrites() {
+    conn.flush()
+}
+conn.stopWritePump()
+
+// Detach timers while the connection still owns its callbacks.
+conn.cancelIdleTimer()
+conn.cancelRetryTimer()
+```
+
+The comments are useful when the surrounding function is long enough
+that the section boundaries help maintainers place future cleanup work.
+They would be noise in a short function
+where the grouping is already obvious.
+
 ## When To Delete Or Rewrite
 
 Do not add or keep comments that do not add value.
@@ -145,7 +208,7 @@ Do not add or keep comments that do not add value.
 Delete or rewrite text when:
 
 - the code is self-explanatory
-- the text merely restates what the code does
+- the text merely restates a small obvious operation
 - the text duplicates a clear name or type
 - the text is stale or incorrect
 - the text narrates a single obvious operation
@@ -155,7 +218,8 @@ Delete or rewrite text when:
 Keep or add text when it prevents a reader
 from having to reconstruct hidden state,
 non-obvious setup,
-or the boundary that makes the code meaningful.
+the boundary that makes the code meaningful,
+or the domain context needed to reason about the implementation.
 
 Examples of comments to delete:
 
