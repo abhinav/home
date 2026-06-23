@@ -18,18 +18,22 @@ but do not assume every suggestion is correct or should be implemented.
 Before editing code:
 
 1. Read the complete feedback without acting on individual comments.
-2. Give every comment a stable number,
+2. Establish the reviewed diff before deciding scope.
+   Identify its base and inspect the files and hunks introduced or modified by
+   that diff,
+   or record the explicit boundary supplied by the user.
+3. Give every comment a stable number,
    including questions, nits, and repeated-looking comments.
-3. Correlate each comment with its code-level context.
+4. Correlate each comment with its code-level context.
    Inspect the referenced lines, surrounding symbol, callers, tests,
    relevant contracts, and history when they affect the claim.
-4. Determine the scope of each comment.
+5. Determine the scope of each comment.
    A comment's location is an anchor,
    not necessarily the full scope of the feedback.
    When a comment describes a pattern, rule, or invariant,
    identify every semantically equivalent occurrence introduced or modified by
    the current change.
-5. Record a visible ledger in chat that preserves each comment's stable ID,
+6. Record a visible ledger in chat that preserves each comment's stable ID,
    feedback, code context, scope, assessment, action, and status.
 
 Every raw comment must map to one ledger entry.
@@ -48,6 +52,32 @@ Do not use a textual match alone as proof that two occurrences are equivalent;
 inspect their behavior and note intentional exceptions.
 Ask for clarification only when the requested scope conflicts with this default
 or the change boundary cannot be established.
+
+### Pattern Completeness Gate
+
+Treat each pattern, rule, or invariant as an independent audit dimension.
+A location assigned to one feedback item must still be evaluated under every
+other applicable pattern entry.
+The same occurrence may therefore appear under multiple ledger entries.
+
+Before editing,
+each pattern entry must inventory its verified in-scope occurrences separately.
+Give every occurrence one disposition:
+
+- change required
+- already compliant
+- intentional exception or semantic nonmatch,
+  with the scope or semantic reason
+
+Record plausible candidates that required inspection before exclusion.
+Do not inflate the ledger with unrelated textual matches.
+
+Before marking a pattern entry done,
+rerun that pattern's scope discovery against the post-edit current change.
+The final code, occurrence inventory, and per-occurrence statuses must agree.
+Passing tests, formatting, compilation,
+and resolved review threads validate other properties;
+they do not establish review-scope completeness.
 
 ## Classify Questions Before Review Actions
 
@@ -119,8 +149,13 @@ If no whole-review interlock is active:
    and passes with it,
    or the reason a regression test cannot be written is explained.
 4. Run focused validation and any broader checks justified by the change.
-5. Re-read the raw feedback and reconcile it against the ledger.
-6. Report the final disposition and evidence for every entry.
+5. Rerun every pattern entry's independent occurrence sweep.
+6. Re-read the raw feedback and reconcile it against the ledger.
+   Verify that the ledger-entry count equals the raw-comment count,
+   every pattern entry has an occurrence inventory,
+   every occurrence has a final disposition and status,
+   and every exclusion has a scope or semantic reason.
+7. Report the final disposition and evidence for every entry.
 
 Do not use “addressed all feedback” to mean “implemented every suggestion.”
 It means every comment was correlated, evaluated, answered,
@@ -137,6 +172,10 @@ Stop and repair the process when you notice any of these thoughts:
 - “I can make the undisputed edits while the design disagreement waits.”
 - “These two comments look similar, so one ledger entry is enough.”
 - “The comment is attached to one line, so only that line counts.”
+- “This location belongs to another comment,
+  so I do not need to check it for this pattern.”
+- “I fixed the cited line and one sibling occurrence,
+  so the pattern sweep is complete.”
 - “The pattern also exists in untouched code, so this review must clean it up.”
 
 ## Tests
