@@ -100,9 +100,25 @@ or repository and operational history.
 
 # Reference-first writing
 
-- Repeat an entity's exact name when referring to it again.
-  Do not replace the name with a synonym, metaphor,
-  or alternate noun phrase merely to avoid repetition.
+- Reference-first writing is a clarity check.
+  The writer and reader should both know exactly what each sentence refers to.
+- Stable referents outrank elegant variation.
+  A reader should be able to identify the path, command, flag, API, type,
+  function, module, table, field, invariant, test, owner, behavior,
+  or other named entity a sentence is about.
+- Repetition is preferable to ambiguity.
+  When the same entity remains the subject,
+  reusing its stable name is better than replacing it with a synonym,
+  metaphor, generic title, or polished alternate phrase.
+- Specificity follows materiality.
+  A method, helper, library call, algorithm,
+  or low-level mechanism belongs in the prose when that detail is part of
+  what the reader must understand, evaluate, reproduce, or safely change.
+  Otherwise, write at the level of the behavior, input, output, contract,
+  invariant, or user-visible effect.
+- A name should correspond to a real referent.
+  When no stable name exists or the name is not material,
+  use the precise role or behavior instead of inventing a label.
 
 # Commits
 
