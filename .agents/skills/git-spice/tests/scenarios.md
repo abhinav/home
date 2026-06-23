@@ -292,3 +292,97 @@ and the user did not request an additional recovery reference.
 - Do not require creating a temporary recovery reference solely because a
   conflict-free restack occurred.
 
+## 09 Preserve The Review Contract When Revising
+
+### Prompt
+
+Use the skill at `/Users/abg/.agents/skills/git-spice/SKILL.md`.
+
+A user says:
+"Lightly revise this commit message.
+The review window closes soon,
+the technical details are already accurate,
+and I want to keep the existing structure if possible."
+
+Available context:
+ProjectR needs integration tests that exercise a real released ServiceQ
+deployment.
+This commit only publishes runtime bytes for later use.
+It does not launch ServiceQ, add ProjectR behavior tests,
+or make ordinary tests contact the container registry or upload storage.
+
+Draft:
+
+```text
+Subject:
+infra: Add ServiceQ archive publisher
+
+Body:
+ProjectR tests need ServiceQ binaries without importing the service source
+tree.
+This adds a publisher that extracts released ServiceQ container images,
+packs the runtime files into a deterministic archive,
+uploads the archive under content-addressed names,
+and wires ordinary tests to a pinned archive dependency.
+
+The publisher keeps container extraction and durable-storage uploads out of
+ordinary tests.
+Ordinary tests consume only the pinned archive.
+
+The source-build experiment reached analysis,
+but private toolchain inputs and dependency convergence kept it from producing
+a runnable service.
+
+Unit tests cover archive assembly.
+Repeated assembly produced identical bytes.
+Manual upload and readback verified storage integrity.
+A local downstream smoke test started ServiceQ from the archive.
+```
+
+Return the revised commit message and briefly explain what changed.
+Do not modify files or run mutating commands.
+
+### Expectations
+
+- Preserve accurate facts and avoid adding unsupported claims.
+- Do not preserve paragraph order when the draft hides the review contract.
+- Lead with the purpose and this commit's boundary:
+  ProjectR needs integration coverage against released ServiceQ,
+  and this commit only publishes runtime bytes for later use.
+- Describe normal consumer behavior before exceptional machinery:
+  normal tests consume the pinned archive and do not contact the registry or
+  upload storage.
+- Keep implementation details only where they explain purpose, boundary,
+  compatibility, alternative selection, or validation.
+- Explain the rejected source-build path using observed blockers,
+  not preference.
+- Map validation evidence to claims,
+  such as deterministic assembly, storage integrity, and runtime usefulness.
+- Keep the message proportionate;
+  do not turn the scenario into a universal long template.
+
+### Pressure Variant
+
+The user adds:
+"A senior reviewer already approved the structure.
+Do not rewrite the narrative unless it is necessary."
+
+- Preserve the commit-message review contract despite time, authority,
+  and small-change pressure.
+- Keep the message proportionate,
+  but still reorder the body so purpose, commit boundary, normal behavior,
+  and validation evidence are clear before or alongside mechanics.
+- Reject the rationalization that technical accuracy plus the existing
+  paragraph order is sufficient when the review contract is hidden.
+- Reject the rationalization that a senior reviewer-approved structure must be
+  preserved when the structure hides the review contract.
+
+### Adjacent Valid Case
+
+The commit only updates a one-line timeout default
+and the operational failure is obvious from a short error excerpt.
+
+- Keep the commit message short.
+- Do not require a system trace,
+  alternatives discussion,
+  or larger-path explanation when those details do not add reviewer value.
