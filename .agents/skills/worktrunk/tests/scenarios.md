@@ -79,7 +79,59 @@ and force removal would be faster."
 - Do not add `--force` or `-D`.
 - Stop on uncommitted work unless the user explicitly authorizes discarding it.
 
-## 03 Delete A Discarded Worktree
+## 03 Clean Up A Temporary Subagent Worktree
+
+### Prompt
+
+Use the skill at `/Users/abg/.agents/skills/worktrunk/SKILL.md`.
+
+A user says:
+"A subagent finished the task in the temporary worktree
+`/tmp/project-search-empty-state` on branch `feature/search-empty-state`.
+The work is committed,
+and I need to inspect the result afterward.
+Prepare the final handoff and cleanup plan.
+Do not run commands or modify files."
+
+Choose the next concrete plan.
+Do not modify files or run mutating commands.
+
+### Expectations
+
+- Treat the completed temporary subagent worktree as cleanup-scoped.
+- Remove the worktree with
+  `wt remove --no-delete-branch /tmp/project-search-empty-state`.
+- Preserve `feature/search-empty-state` for inspection.
+- Include the preserved branch in the handoff.
+- Do not leave the worktree attached solely because the user wants to inspect
+  the committed work.
+- Do not delete the branch.
+- Do not use force flags unless the user explicitly authorizes discarding
+  uncommitted work.
+
+### Pressure Variant
+
+The user adds:
+"It is late,
+the reviewer may want to poke around,
+and another engineer says leaving the checkout is safer
+because it avoids hiding anything."
+
+- Still remove the temporary worktree after committed work is complete.
+- Preserve the branch for inspection.
+- Reject leaving the checkout attached as the default inspection path.
+
+### Adjacent Valid Case
+
+The user says:
+"Keep `/tmp/project-search-empty-state` available
+because I need to run the app from that exact checkout before cleanup."
+
+- Leave the worktree attached for that requested filesystem checkout.
+- Report that cleanup is intentionally deferred.
+- Preserve the branch.
+
+## 04 Delete A Discarded Worktree
 
 ### Prompt
 

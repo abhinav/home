@@ -2,7 +2,8 @@
 name: worktrunk
 description: >-
   Use when creating or removing temporary Git worktrees with `wt`,
-  especially for isolated task branches that should keep git-spice topology.
+  especially for isolated task branches, subagent handoffs,
+  and branches that should keep git-spice topology.
 ---
 
 # Worktrunk
@@ -14,6 +15,11 @@ verify the branch topology,
 work in the new path,
 commit completed changes,
 then remove the worktree with the branch disposition the task requires.
+For delegated subagent work in a temporary worktree,
+completed committed work is cleanup-scoped by default:
+remove the worktree and preserve the branch for inspection,
+unless the user explicitly asks to keep the worktree path available
+or the task still requires that filesystem checkout.
 
 ## Create a worktree
 
@@ -63,6 +69,13 @@ keep the branch when deleting the worktree:
 ```bash
 wt remove --no-delete-branch $path
 ```
+
+When a subagent finishes assigned work in a temporary worktree,
+include this removal in the handoff after the work is committed.
+Preserve the branch so the main agent or user can inspect the commits.
+Leave the worktree attached only when the user asks to inspect that path,
+continue work there,
+or keep an environment-specific checkout alive.
 
 For discarded work,
 delete the worktree and its branch together:
