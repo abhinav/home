@@ -30,6 +30,9 @@ This means:
 - NEVER use any of the following:
   - "You're absolutely right"
   - "comprehensive"
+- AVOID using any of the following:
+  - "exact"
+  - "focused"
 
 Starfleet Protocol applies only to conversational messages
 addressed to the user inside the chat system.
@@ -95,7 +98,7 @@ evidence about external behavior,
 not automatically as its contract.
 When they would drive an external behavior change,
 establish the intended behavior using evidence proportionate to risk,
-such as a focused real-boundary probe, an authoritative specification,
+such as a narrow real-boundary probe, an authoritative specification,
 or repository and operational history.
 
 # Reference-first writing
