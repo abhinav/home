@@ -41,7 +41,7 @@ Use the smallest family that covers the behavior under review:
 | Plans and supporting records | 12, 14-16, 21-22, 38-39 | [plans-and-records.md](plans-and-records.md) |
 | Delegation and completion | 03-04, 07, 09-10, 13, 26 | [delegation-and-completion.md](delegation-and-completion.md) |
 | Evergreen workstreams | 18 | [evergreen.md](evergreen.md) |
-| Workspaces and worktrees | 08, 19, 28-34, 37 | [workspaces.md](workspaces.md) |
+| Workspaces and worktrees | 08, 19, 28-34, 37, 40 | [workspaces.md](workspaces.md) |
 
 Scenario IDs remain stable across these files.
 For a behavioral repair,

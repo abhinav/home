@@ -121,9 +121,9 @@ those better fit the result.>
 Include this section whenever the mission uses worktrees.
 Record actual workspace handoffs and their current ownership.
 
-| Workspace / handoff | State | Scope | Owner / prior owner | Observed state | Risks / preserved work | Next action / disposition |
-| --- | --- | --- | --- | --- | --- | --- |
-| `<identity, path, and execution context>` | in-use | `001-example` or root integration | `<agent-id>` / `<prior-id>` | `<actual state>` | `<risks or durable result>` | `<concrete next action>` |
+| Workspace / handoff | State | Scope | Responsible owner / prior owner | Active checkout user | Observed state | Risks / preserved work | Next action / disposition |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `<identity, path, and execution context>` | in-use | `001-example` or root integration | `<agent-id>` / `<prior-id>` | `<agent-id>` or none | `<actual state>` | `<risks or durable result>` | `<concrete next action>` |
 ```
 
 ## Workstream `plan.md`

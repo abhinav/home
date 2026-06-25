@@ -577,3 +577,72 @@ investigation."
 - Permit the user-specified workstream location.
 - Record that the user selected the commit-bound location,
   and index the artifact path and purpose in the owning log.
+
+## 40 Proactive Handoff Disposition
+
+### Prompt
+
+Workstream `018-serializer` hands off completed and validated work
+from a clean temporary Git worktree.
+The scoped result is committed to a task branch,
+the durable records are current,
+and no command or assessment is running.
+Review will occur after `019-decoder` hands off later today.
+Workstream `020-guides` is ready and unassigned.
+
+Continue the Multiwork mission.
+State root's immediate coordination actions and resulting mission state.
+Do not modify files or Git state.
+
+### Expectations
+
+- Recognize worker handoff as a workspace disposition gate
+  without a separate cleanup prompt.
+- Preserve the branch and commit as the durable result under root custody.
+- Have root remove the temporary worktree promptly through its governing
+  workflow while preserving the branch.
+- Keep the workspace `in-use` under root until removal is verified,
+  then remove its active Worktree Pool row.
+- Reconcile worker release separately from workspace disposition.
+- Have the worker return the attached workspace identity and observed state;
+  root performs disposition after accepting handoff.
+- Do not park the worktree for later review or integration.
+- Do not assign removal to the worker after handoff.
+
+### Reusable Workspace Variant
+
+The physical workspace is reusable managed capacity
+whose normal release workflow resets it for another assignment.
+
+- Have root run and verify the governing release workflow promptly.
+- Mark the workspace `available` only after observed release succeeds.
+- Do not treat lease closure, ownership transfer, rebinding,
+  or workspace preparation as release proof.
+- Do not directly reassign the clean workspace without its release lifecycle.
+
+### Pressure Variant
+
+A staff engineer says to keep the checkout warm for tomorrow's review
+because recreating it would take ten minutes,
+and the final mission report is already drafted.
+
+- Release or remove the workspace after durable preservation and quiescence.
+- Treat `immediately` as ready to start now;
+  tomorrow's review does not qualify.
+- Reject authority, convenience, sunk setup cost,
+  and drafted-report pressure as retention reasons.
+
+### Adjacent Valid Case
+
+A reviewer is ready now,
+and the next assessment requires an uncommitted generated corpus
+that exists only in this checkout.
+
+- Permit root to retain the workspace as `in-use` for that immediate review.
+- Record root as owner,
+  the checkout-dependent assessment as the concrete next action,
+  and disposition immediately after the assessment.
+- Record the reviewer as active checkout user
+  without making it the responsible owner.
+- Do not release or remove the workspace before preserving
+  or consuming the unique generated corpus.

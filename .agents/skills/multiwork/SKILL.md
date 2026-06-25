@@ -606,6 +606,7 @@ the root records actual workspace handoffs in the root plan's Worktree Pool.
 An extant workspace is either `available` or `in-use`.
 An `in-use` workspace has one declared workstream or root scope,
 one responsible owner,
+an optional active checkout user,
 and one concrete next action.
 Before root completion,
 no workspace may remain `in-use`,
@@ -625,6 +626,30 @@ An explicit user instruction,
 clear user preference,
 repository rule,
 or workstream plan may require another preservation form.
+At durable handoff from an ephemeral workspace,
+the worker returns any assigned workspace still attached,
+with its identity and quiescent observed state.
+Before unrelated work,
+root accepts the handoff and completes disposition:
+
+- If no named checkout-dependent command or assessment is ready to start now,
+  root runs and verifies the governing release or reset workflow
+  for reusable capacity,
+  or removes the temporary workspace.
+  A durable branch or commit preserves the result independently of the checkout;
+  preserve its ref unless an explicit disposal decision says otherwise.
+  Record later review, integration, or follow-up without a workspace lease,
+  and acquire capacity when that work becomes ready.
+- If a named checkout-dependent action is ready to start now,
+  retain the workspace as `in-use` under root,
+  record the active checkout user and action,
+  and complete disposition immediately afterward.
+
+Clean or quiescent state, administrative lease closure, ownership transfer,
+rebinding, and workspace preparation are not release proof.
+Root performs and verifies post-handoff disposition
+even when another workflow normally assigns cleanup to the former worker;
+an active checkout user does not become the responsible owner.
 If the required branch or commit placement remains unresolved,
 report that blocker and hand control back promptly;
 do not remain idle while holding the workspace.

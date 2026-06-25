@@ -77,9 +77,17 @@ Before closing a worker that is waiting for instructions:
 3. Require a precise handoff.
    After handoff,
    write authority returns to root.
-4. Update the root board and mark the workstream unassigned.
-5. Confirm that the durable files are sufficient for a fresh worker.
-6. Release the worker using the runtime's supported lifecycle operation.
+   The worker returns any assigned workspace still attached
+   with its identity and quiescent observed state.
+   Worker or runtime release does not release or remove that workspace.
+4. Before unrelated work,
+   root applies the workspace disposition procedure separately from worker release.
+   Complete verified release or removal unless a named checkout-dependent action
+   is ready to start now;
+   scheduled future work holds no workspace lease.
+5. Update the root board and mark the workstream unassigned.
+6. Confirm that the durable files are sufficient for a fresh worker.
+7. Release the worker using the runtime's supported lifecycle operation.
    If no release operation exists,
    leave the worker inactive after checkpointing and do not claim that its
    runtime capacity was freed.

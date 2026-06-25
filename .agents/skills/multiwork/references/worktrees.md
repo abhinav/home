@@ -26,12 +26,16 @@ Keep workstream lifecycle,
 workspace ownership,
 and custody of useful results separate.
 A change in one does not imply a change in the others.
+An `in-use` workspace may name an active checkout user
+to perform its concrete action.
+The responsible owner retains lifecycle and disposition responsibility.
 
 ## Invariants
 
 1. **Exclusive ownership.**
    An `in-use` workspace has exactly one declared workstream or root scope,
    one responsible owner,
+   an optional active checkout user,
    and one concrete next action.
 2. **Observed state.**
    Record actual handoff and operation results,
@@ -78,20 +82,40 @@ or removed.
 
 ### Transfer And Recovery
 
-Changing from root setup to worker execution,
-worker handoff to root integration,
-or root integration to recovery does not change `in-use`.
-Update the responsible owner,
-observed state,
-risks,
+Changing from root setup to worker execution
+or from root integration to recovery does not itself change `in-use`.
+Worker handoff instead invokes the disposition procedure below.
+Only a named checkout-dependent action ready to start now
+justifies transferring the workspace to root integration.
+Update the responsible owner, observed state, risks,
 and next action together.
 
 Inspect and recover the workspace through its governing workflow.
 Do not erase unexplained state or transfer cleanup risk to the next worker.
 
-### Release Or Remove
+### Handoff Disposition: Release Or Remove
 
-Release is a root-owned coordination decision.
+Release and removal are root-owned coordination operations.
+At handoff,
+root performs the governing workspace workflow
+and verifies its observed result.
+Clean or quiescent state, administrative lease closure, ownership transfer,
+rebinding, and workspace preparation are not release proof.
+Run and verify the governing release or reset workflow before marking reusable
+capacity `available` or reassigning it.
+When removing a temporary Git worktree,
+preserve its durable branch or ref
+unless an explicit disposal decision says otherwise.
+Root performs the post-handoff operation
+even when another workspace workflow normally assigns cleanup
+to the former worker.
+Pending review or integration and result custody do not retain a physical
+workspace;
+record the later action without a lease
+and acquire capacity when that action becomes ready.
+Only a named checkout-dependent action ready to start now permits retention.
+Record its active checkout user and concrete action under root,
+then complete disposition immediately afterward.
 Before release or removal:
 
 - quiesce workers, commands, assessments, and processes using the workspace;
@@ -115,8 +139,9 @@ then retain the evidence in the root log and remove the active pool row.
 
 ## Useful Results
 
-Physical workspace release does not prove integration,
-and retaining useful work does not require retaining its workspace.
+Physical workspace release does not prove integration.
+Useful-result custody is independent of physical-workspace custody,
+and a durable result remains available after workspace removal.
 Record each retained result's durable locator,
 provenance or revision,
 custodian,
