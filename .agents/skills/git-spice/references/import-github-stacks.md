@@ -7,9 +7,11 @@ so git-spice can operate on it.
 The goal is to recreate local branch heads and git-spice stack topology.
 This workflow can also load existing pull request metadata into git-spice.
 
-Fork pull requests are not supported by this workflow.
-If a pull request is from a fork,
-stop and report that git-spice cannot import it.
+This workflow is an explicit exception to the normal raw-Git boundary.
+It permits raw Git to update fetch configuration, fetch and materialize
+existing remote branches, and set upstreams as described below.
+The exception does not permit raw commits or history rewrites.
+It also does not permit pushes or pull request creation.
 
 Do not use `git-spice branch create` for these branches.
 The branch already exists on GitHub.
@@ -19,21 +21,52 @@ then git-spice owns stack tracking and metadata.
 ## Required Inputs
 
 Identify every pull request that belongs to the import.
-For each pull request,
-query the GitHub head branch and base branch:
+Identify the Git remote that hosts those pull requests.
+Do not assume the remote is named `origin`:
 
 ```bash
-gh pr view <pr> --json number,url,headRefName,headRefOid,baseRefName,baseRefOid,isCrossRepository,state
+git remote -v
+git remote get-url '<remote>'
+gh repo view '<owner/repo>' --json nameWithOwner
+```
+
+Resolve `<owner/repo>` from the selected remote URL and confirm it with the
+explicit `gh repo view` argument.
+Use `<remote>` and `<owner/repo>` consistently in the commands below.
+For each pull request, query the GitHub head branch and base branch:
+
+```bash
+gh pr view '<pr>' --repo '<owner/repo>' --json number,url,headRefName,baseRefName,isCrossRepository
 ```
 
 If `isCrossRepository` is true,
 stop because fork pull requests are not supported.
 
+Inspect the git-spice repository configuration before mutating import state:
+
+```bash
+git cat-file -p refs/spice/data:repo
+```
+
+The legacy `remote` field names both the upstream and push remote.
+When the `remotes` object is present, its `upstream` field must match
+`<remote>` and its `push` field must name the intended push remote.
+Stop and ask whether to reinitialize git-spice when the selected upstream is
+absent or different.
+Do the same when the push remote is not the intended push destination:
+
+```bash
+git-spice repo init --no-prompt --trunk '<trunk>' --upstream '<remote>' --remote '<push-remote>'
+```
+
+Reinitialization mutates repository metadata and may change the configured
+trunk or remotes, so do not infer authorization from the import request.
+
 Use the returned `headRefName` as the GitHub branch name.
 Use `baseRefName` to determine topology:
 
 - If `baseRefName` is trunk,
-  the pull request branch is a stack root based on trunk.
+  the pull request branch is the bottom-most branch in a stack based on trunk.
 - If `baseRefName` is another imported pull request's `headRefName`,
   that pull request branch is based on the matching imported branch.
 - If `baseRefName` names a branch outside the requested import,
@@ -50,29 +83,34 @@ verify that the repository can fetch the needed GitHub branch heads.
 Inspect the existing fetch refspecs:
 
 ```bash
-git config --get-all remote.origin.fetch
+git config --get-all 'remote.<remote>.fetch'
 ```
+
+Request escalated filesystem privileges before changing fetch configuration
+or fetching.
+`git config --add` writes repository configuration.
+`git fetch` uses the network and updates refs.
 
 If the repository already fetches all branch heads from the relevant remote,
 fetch normally:
 
 ```bash
-git fetch origin
+git fetch '<remote>'
 ```
 
 If the repository does not fetch the needed branch head,
 add a branch-specific refspec for that branch and fetch it:
 
 ```bash
-git config --add remote.origin.fetch '+refs/heads/<remote-branch>:refs/remotes/origin/<remote-branch>'
-git fetch origin
+git config --add 'remote.<remote>.fetch' '+refs/heads/<remote-branch>:refs/remotes/<remote>/<remote-branch>'
+git fetch '<remote>'
 ```
 
 After fetching,
 verify every required remote-tracking ref:
 
 ```bash
-git show-ref --verify refs/remotes/<remote>/<remote-branch>
+git show-ref --verify 'refs/remotes/<remote>/<remote-branch>'
 ```
 
 ## Local Branches
@@ -87,16 +125,15 @@ If the local branch does not exist,
 create it from the fetched remote-tracking ref:
 
 ```bash
-git switch -c <local-branch> --track <remote>/<remote-branch>
+git switch -c '<local-branch>' --track '<remote>/<remote-branch>'
 ```
 
-If `git switch --track` cannot create the branch because the remote and local
-names differ,
-use:
+`git switch --track` supports different local and remote branch names.
+If tracked creation fails, stop and diagnose it;
+do not retry without `--track` and silently discard the upstream relationship.
 
-```bash
-git switch -c <local-branch> <remote>/<remote-branch>
-```
+Request escalated filesystem privileges before creating a local branch or
+changing its upstream.
 
 If the local branch already exists,
 inspect it before moving it.
@@ -106,19 +143,21 @@ fast-forward or reset it only with explicit user approval.
 If the local branch exists and does not match the remote-tracking branch,
 do not assume git-spice can find the pull request by branch name alone.
 This may be a conflicting local branch name.
+Verify that the local branch tracks the fetched pull request branch whenever
+the local and remote names differ.
 If the user decides to keep that local branch name for the imported pull
 request,
 set the local branch's upstream explicitly to the fetched pull request branch:
 
 ```bash
-git branch --set-upstream-to=<remote>/<remote-branch> <local-branch>
+git branch --set-upstream-to='<remote>/<remote-branch>' '<local-branch>'
 ```
 
 Then use a forced dry-run submit when loading pull request metadata.
 The explicit upstream tells git-spice which GitHub branch to match:
 
 ```bash
-git-spice branch submit --dry-run --force --no-prompt --branch <local-branch>
+git-spice branch submit --dry-run --force --no-prompt --branch '<local-branch>'
 ```
 
 ## Track Stack Topology
@@ -127,8 +166,8 @@ After all local branches exist,
 track from each topmost branch in the imported topology:
 
 ```bash
-git-spice downstack track --no-prompt <topmost-branch>
-git-spice ls
+git-spice downstack track --no-prompt '<topmost-branch>'
+git-spice ls --no-prompt
 ```
 
 A topmost branch is an imported branch that no other imported branch uses as
@@ -146,8 +185,8 @@ If `git-spice downstack track` cannot infer a base,
 track the ambiguous branch explicitly using the GitHub base metadata:
 
 ```bash
-git-spice branch track --no-prompt --base <base-branch> <branch>
-git-spice ls
+git-spice branch track --no-prompt --base '<base-branch>' '<branch>'
+git-spice ls --no-prompt
 ```
 
 Then rerun downstack tracking from the affected topmost branch.
@@ -159,38 +198,29 @@ including `git-spice branch onto`, `git-spice upstack onto`,
 restack commands, rebase commands, or branch split commands.
 Import must record the intended topology directly with tracking commands.
 
-All mutating git-spice tracking commands require escalated filesystem
-privileges in sandboxed Codex sessions.
+Tracking, dry-run submission, and `git-spice ls` can all update git-spice
+metadata.
+Request escalated filesystem privileges before these commands in sandboxed
+Codex sessions.
 
 ## Load Existing Pull Request Metadata
 
 Tracking recreates the local stack shape.
 It does not import pull request metadata.
-After the stack is tracked,
-run a dry-run submit so git-spice can match branch names to open pull
-requests and load metadata:
+After topology is tracked, load metadata for every imported branch explicitly:
 
 ```bash
-git-spice stack submit --dry-run --no-prompt
+git-spice branch submit --dry-run --no-prompt --branch '<branch>'
 ```
 
-If only one branch was imported,
-or if you need to load metadata branch by branch,
-run:
-
-```bash
-git-spice branch submit --dry-run --no-prompt --branch <branch>
-```
+Repeat that command for each imported branch.
+Do not rely on one stack submission when the imported topology has sibling
+topmost branches.
 
 If the local branch already existed and does not match its upstream pull
 request branch,
-first set the local branch's upstream to the fetched remote-tracking branch,
-then run:
-
-```bash
-git branch --set-upstream-to=<remote>/<remote-branch> <branch>
-git-spice branch submit --dry-run --force --no-prompt --branch <branch>
-```
+follow the upstream and forced-dry-run procedure in
+[Local Branches](#local-branches).
 
 Do not invent pull request titles or bodies for imported branches.
 If the dry-run cannot match a branch to an existing open pull request,
@@ -199,53 +229,5 @@ stop and report which branch did not match.
 Inspect the final stack with:
 
 ```bash
-git-spice ls
+git-spice ls --no-prompt
 ```
-
-## Common Import Shapes
-
-Single pull request branch:
-
-```bash
-gh pr view <pr> --json number,url,headRefName,baseRefName,isCrossRepository,state
-git config --get-all remote.origin.fetch
-git fetch origin
-git show-ref --verify refs/remotes/origin/<remote-branch>
-git switch -c <local-branch> --track origin/<remote-branch>
-git-spice downstack track --no-prompt <local-branch>
-git-spice branch submit --dry-run --no-prompt --branch <local-branch>
-git-spice ls
-```
-
-Linear stack `A` based on trunk,
-`B` based on `A`,
-and `C` based on `B`:
-
-```bash
-gh pr view <pr-a> --json number,url,headRefName,baseRefName,isCrossRepository,state
-gh pr view <pr-b> --json number,url,headRefName,baseRefName,isCrossRepository,state
-gh pr view <pr-c> --json number,url,headRefName,baseRefName,isCrossRepository,state
-git fetch origin
-git switch -c A --track origin/A
-git switch -c B --track origin/B
-git switch -c C --track origin/C
-git-spice downstack track --no-prompt C
-git-spice stack submit --dry-run --no-prompt
-git-spice ls
-```
-
-Two topmost branches `A` and `B` both based on `C`,
-where `C` is based on trunk:
-
-```bash
-git fetch origin
-git switch -c C --track origin/C
-git switch -c A --track origin/A
-git switch -c B --track origin/B
-git-spice downstack track --no-prompt A
-git-spice downstack track --no-prompt B
-git-spice stack submit --dry-run --no-prompt
-git-spice ls
-```
-
-Replace `A`, `B`, and `C` with the actual GitHub `headRefName` values.

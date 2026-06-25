@@ -14,11 +14,12 @@ NEVER use an empty body.
 There MUST ALWAYS be a body to the commit message.
 
 Before returning a commit message,
-verify the hard gates:
-the subject is imperative and under 72 characters,
-the body is present,
-every body line is 72 characters or shorter,
-and the message uses semantic line breaks.
+verify these hard gates:
+
+- The subject is imperative and at most 72 characters.
+- The body is present.
+- Every body line is 72 characters or shorter.
+- The message uses semantic line breaks.
 
 When writing, reviewing, or revising a commit message,
 optimize the body for the reader's review task.
@@ -47,7 +48,8 @@ Where:
 - `<summary>` MUST use the imperative mood.
   For example, use "Add feature" instead of "Added feature" or "Adds feature".
 
-The subject SHOULD be fewer than 50 characters, and MUST be fewer than 72.
+The subject SHOULD be fewer than 50 characters,
+and MUST be 72 characters or fewer.
 If the subject would exceed 72 characters, omit the `<kind>`.
 If it still exceeds 72 characters, omit the `<scope>`.
 If it still exceeds 72 characters, rethink the `<summary>` to shorten it.
@@ -89,14 +91,10 @@ and which named external contracts changed.
 
 When revising a draft,
 first extract the review contract from the draft and supplied context:
-purpose,
-changed behavior,
-boundaries or non-goals,
-and evidence.
+purpose, changed behavior, boundaries or non-goals, and evidence.
 Preserve the draft structure only after those required facts are represented.
-Treat supplied phrases such as "only",
-"does not",
-or "not yet" as boundary signals;
+Treat supplied phrases such as "only", "does not", or "not yet" as boundary
+signals;
 include the boundary or decide explicitly that it is redundant or unsupported.
 
 Every body sentence should add reviewer value that is not already available
@@ -295,109 +293,3 @@ Use separate paragraphs for distinct ideas,
 such as why the change is being made,
 what context the reviewer needs,
 and what this commit changes.
-
-## Explaining Or Reviewing Commit-Message Choices
-
-When reviewing, rewriting, or explaining commit messages:
-
-- Use Markdown headings when the answer covers multiple independent aspects,
-  such as the subject, body, replacement text, examples, or rationale.
-  Keep headings short,
-  and skip them for genuinely one-part answers.
-- Use short fenced code blocks when showing rewritten commit messages,
-  before-and-after examples, representative message shapes,
-  or compact syntax examples.
-  Prefer a small concrete example over a prose-only description
-  when the example will make the rule easier to understand.
-- Use compact visualizations only when they clarify structure
-  that would be harder to follow as prose alone,
-  such as a decision path, timeline, comparison, state transition,
-  or other compact relationship between ideas.
-  Prefer a plain text diagram when the idea fits comfortably in text.
-  Do not add a visualization for simple linear explanations.
-- Keep structure proportional to the answer.
-  Clarity is the goal, not ceremony.
-- Apply the same factual tone guidelines as commit messages themselves.
-
-## Common Mistakes
-
-### Not Using Semantic Line Breaks
-
-NEVER write commit messages without semantic line breaks.
-
-Solution:
-apply semantic line break formatting to commit messages.
-
-### Using Itemized Lists As Diff Inventories
-
-DO NOT use itemized lists merely to enumerate files,
-helpers,
-or implementation details from the diff.
-
-Why:
-any information that is obvious from looking at the `git diff`
-does not need to be present in the commit message.
-However,
-lists are useful when they make changed external contracts easier to audit,
-such as multiple CLI flags, config keys, API fields, or documented forms.
-
-Solution:
-focus on the review contract:
-why the change exists,
-what user-facing behavior changes,
-and which named external contracts reviewers need to see.
-
-### Dumping The Verification Transcript
-
-NEVER turn the commit body into a transcript of every command that ran.
-
-Why:
-routine whitespace checks, formatter checks, lint commands,
-and broad default test commands are handoff details unless they are the
-contract being changed.
-Listing them makes the important proof harder to find.
-
-Solution:
-include only the verification that explains or proves the change,
-such as a focused reproducer, before/after output,
-a migration probe,
-or an end-to-end workflow check.
-If a focused test is worth mentioning,
-state the behavior it proves.
-Do not pair it with routine hygiene commands.
-
-### Repeating Non-Review Signals
-
-DO NOT use the commit body to repeat information that reviewers can already
-get from the diff, repository policy, or routine process.
-
-Why:
-those details do not tell reviewers what behavior changed,
-why the commit exists,
-or which contract they need to evaluate.
-Repository process compliance belongs in the handoff,
-even when the user asks to mention it,
-unless the commit changes the reviewed contract of that process artifact.
-
-Solution:
-describe the behavior, workflow, compatibility contract,
-or operational reason that made the change necessary.
-Mention support files, generated output, changelog entries,
-release-note fragments, formatter runs, and similar details only when their
-reviewed contract is what reviewers need to evaluate.
-Do not justify routine support artifacts as aligned with the real change;
-that still repeats the file inventory instead of explaining the review
-contract.
-If the user asks to mention a routine support artifact,
-keep that explanation in the handoff.
-The commit message should still describe the behavior, contract,
-or rationale that reviewers need.
-
-### Using Single-Line Commit Messages
-
-NEVER use a single-line commit message.
-
-Solution:
-write a subject and a non-empty body.
-The body should explain why the change exists
-and what contract reviewers should expect.
