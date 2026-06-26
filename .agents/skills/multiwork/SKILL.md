@@ -52,12 +52,21 @@ The root agent remains responsible for sequencing, integration, and completion.
    Do not relocate the plan to another root and replace the selected plan
    directory with a symlink unless the user explicitly requests that topology.
 
-   Name a per-plan child directory using the first suitable form:
+   Name a per-plan child directory using the first applicable form:
 
    1. `<YYYY-MM-DD-name>/`
    2. `<NNN-name>/`
    3. `<name>/`
 
+   The dated form applies to a new plan by default,
+   the numbered form if part of an existing convention.
+   `<name>/` applies only via explicit user instruction.
+   Treat an instruction as storage-specific only when it refers to the path,
+   directory, or directory ID.
+   A selected-location convention is a discovered convention in that location,
+   not an inferred preference.
+   A user supplied `name` without a date or number prefix
+   does not make `<name>/` applicable.
    The date or number prefix is part of the directory ID,
    not part of the project or mission name.
    Derive `name` from the user-stated project or mission identity.
