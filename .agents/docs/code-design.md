@@ -21,6 +21,8 @@ not abstractions that merely redistribute the same coordination work.
 - [Abstraction shape](#abstraction-shape)
   - [Group cohesive operations](#group-cohesive-operations)
   - [Organize modules by domain responsibility](#organize-modules-by-domain-responsibility)
+  - [Design for change locality](#design-for-change-locality)
+  - [Design abstractions from the outside in](#design-abstractions-from-the-outside-in)
   - [Extract helper functions only when they earn a boundary](#extract-helper-functions-only-when-they-earn-a-boundary)
   - [Prefer narrow, deep business packages](#prefer-narrow-deep-business-packages)
   - [Compose systems from focused components](#compose-systems-from-focused-components)
@@ -358,6 +360,47 @@ Evaluate the result by tracing representative workflows.
 A useful boundary reduces the knowledge required on both sides;
 it does not simply move the same coordination into another directory.
 
+### Design for change locality
+
+A boundary contains complexity
+when its internal representation and policy can evolve without forcing unrelated callers to change.
+Callers should need edits only when the operation they request or the contract they rely on changes.
+
+Use the current change as evidence.
+If one domain change requires mechanical edits across many callers,
+identify the representation, sequence, or policy those callers all know.
+Move that knowledge behind the boundary that owns the decision.
+
+**Why**: Change amplification spreads one decision across more code
+that must be understood, modified, reviewed, and kept coordinated.
+It indicates that the owning abstraction has leaked part of its responsibility.
+
+Do not add options, indirection, or extension points
+only because an abstraction might change someday.
+Use change locality to respond to credible evolution
+revealed by the current workflow, requirements, or repository history.
+
+### Design abstractions from the outside in
+
+Start with the operation the caller needs.
+Define the boundary in domain terms
+before deciding which internal components, types, or helpers will implement it.
+
+State the contract clearly enough
+to identify its inputs, result, ownership, and failure behavior.
+Check that contract against representative call sites,
+then implement it behind the boundary.
+
+Do not expose intermediate stages or internal representations
+merely because the implementation contains them.
+If callers must assemble those pieces or preserve their ordering,
+they inherit implementation policy that the abstraction should usually own.
+
+**Why**: An implementation-first API exposes accidental structure
+and makes internal changes disruptive.
+An outside-in API stays aligned with the caller's task
+while leaving the implementation free to evolve.
+
 ### Extract helper functions only when they earn a boundary
 
 Do not extract a helper function only to make a small block of code shorter.
@@ -564,9 +607,19 @@ the next mode becomes another boolean,
 and combinations of booleans can create invalid or unclear states.
 
 Prefer naming the broader choice directly.
-Use an enum, strategy, or purpose-built option type
-when behavior has multiple possible modes
-or is likely to grow beyond a stable yes/no decision.
+
+When the choice comes from a known set of modes,
+represent it as inspectable data such as an enum or purpose-built option type.
+Inspectable data can be validated, compared, serialized, and reported
+without executing behavior.
+
+Use a callback or strategy
+only when the caller genuinely supplies open-ended behavior.
+Do not use opaque behavior injection
+merely to make a finite choice appear extensible.
+When the behavior requires more context, metadata, or operations,
+define a named contract that expresses those requirements
+rather than expanding an opaque callback.
 
 Put the option at the scope where it actually varies.
 If behavior is chosen once per object, session, or job,
@@ -607,8 +660,13 @@ func (f *Formatter) FormatReport(report *Report) string { ... }
 ```
 
 The API names the concept directly
-and leaves room for future modes
-without creating boolean combinations.
+and leaves room for future modes without creating boolean combinations.
+Because report format is a finite choice,
+the enum keeps the selected mode visible to callers and the implementation.
+
+Caller-defined formatting behavior would be a different contract.
+Model that behavior explicitly
+rather than hiding the selected mode inside a callback.
 
 Booleans are still appropriate for genuinely binary,
 stable facts:

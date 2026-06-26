@@ -122,6 +122,9 @@ Add or keep implementation comments when maintainers need to know:
 - why a large block is organized the way it is
 - what state or setup the surrounding code is trying to create
 - what behavior the surrounding code is isolating or protecting
+- which stage of a long operation the reader is entering
+- what a call or block does
+  when that lets the reader follow the primary path without opening another implementation
 - what surprising behavior future readers must not simplify away
 - what hard-to-reconstruct state the reader should track
 - what domain fact, protocol rule, or algorithm case
@@ -212,6 +215,8 @@ Delete or rewrite text when:
 - the text duplicates a clear name or type
 - the text is stale or incorrect
 - the text narrates a single obvious operation
+- reading the text costs as much as reading the code
+  and provides no additional orientation
 - documentation exposes implementation detail
   that belongs near the private implementation
 

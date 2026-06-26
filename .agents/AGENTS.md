@@ -221,6 +221,11 @@ Read them when the task at hand requires that guidance.
   and command organization.
   Read this when designing or changing a command-line program.
 
+- **Code readability** (`~/.agents/docs/code-readability.md`):
+  Guidance for reducing cognitive load through clear control flow,
+  naming, locality, helpers, organization, and comments.
+  Read this when writing or reorganizing code.
+
 - **Code review** (`~/.agents/docs/code-review.md`):
   Behavioral, architecture, readability, and documentation review lenses.
   Read this whenever reviewing code or a code change.

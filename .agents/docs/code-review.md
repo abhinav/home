@@ -83,6 +83,11 @@ interfaces defined by the consumer that needs substitution,
 concrete returned data, and dependencies whose lifetime matches their owner.
 Do not demand an abstraction for symmetry or future possibility alone.
 
+Read and apply `~/.agents/docs/code-design.md`
+for the design principles relevant to the workflows under review.
+Keep this lens focused on applying those principles
+to observed caller and boundary costs rather than reproducing the design guide.
+
 ## Readability review
 
 Review as an intelligent maintainer encountering the changed code cold.
@@ -99,7 +104,7 @@ Account explicitly for:
 - whether related concepts are physically near one another
 - whether names expose the domain operation rather than the mechanism
 - whether control flow converges or requires reconstructing several branches
-- whether comments supply missing context instead of narrating statements
+- whether comments reduce cognitive load with missing context or useful structure
 
 Also check whether types are separated from the behavior that gives them
 meaning, one file contains unrelated services,
@@ -108,8 +113,13 @@ or a command coordinates many abstractions by hand.
 Formatting and naming matter,
 but they do not compensate for scattered ownership,
 branching that must be mentally replayed, or excessive orchestration.
-Comments should supply missing purpose, constraints, and invariants.
-They should not narrate syntax or excuse complexity that the code can remove.
+Comments should reduce cognitive load
+by supplying missing context or guiding the reader through coherent stages.
+Trivial comments that only narrate syntax are forbidden.
+Comments should not excuse complexity that the code can remove.
+
+Read and apply `~/.agents/docs/code-readability.md`
+when applying the readability review lens.
 
 ## Documentation review
 
