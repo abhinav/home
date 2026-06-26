@@ -11,6 +11,7 @@
 # Always ignore
 .DS_Store
 .*.sw?
+/.treehouse
 
 # Useful scripts/tools are placed in ~/bin
 !/bin

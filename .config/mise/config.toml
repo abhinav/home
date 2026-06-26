@@ -10,6 +10,7 @@ golangci-lint = "latest"
 rust = "latest"
 revdiff = "latest"
 zig = "latest"
+"github:kunchenguid/treehouse" = "latest"
 
 [settings]
 experimental = true
