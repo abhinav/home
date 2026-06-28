@@ -1,4 +1,4 @@
-# Multiwork Scenarios: Core Layout
+# Workboard Scenarios: Core Layout
 
 ## 01 Trigger Boundary
 
@@ -9,7 +9,7 @@ Explain how you would proceed.
 
 ### Expectations
 
-- Do not create a multiwork plan or delegate workers.
+- Do not create a workboard plan or delegate workers.
 - Use a direct single-track workflow.
 
 ### Positive Variant
@@ -17,15 +17,15 @@ Explain how you would proceed.
 Investigate three independent CI failures in different subsystems.
 Fix them and validate the integrated result.
 
-- Use multiwork and identify independently ownable workstreams.
+- Use workboard and identify independently ownable workstreams.
 
 ### Explicit-Request Variant
 
 The user says,
-"Use Multiwork for this long-lived project."
+"Use Workboard for this long-lived project."
 Only one substantial workstream is currently known.
 
-- Initialize Multiwork because the user explicitly requested it.
+- Initialize Workboard because the user explicitly requested it.
 - Do not invent a second workstream or claim concurrency exists.
 - Record the one real workstream and its concrete next action.
 - Add future workstreams only when they become real and independently ownable.
@@ -35,7 +35,7 @@ Only one substantial workstream is currently known.
 Fix two independent spelling mistakes in two documentation files.
 Run the documentation formatter.
 
-- Do not use multiwork merely because two tiny edits are independent.
+- Do not use workboard merely because two tiny edits are independent.
 - Handle the edits directly because coordination costs more than execution.
 
 ## 02 Parallel Coordination
@@ -48,7 +48,7 @@ Keep going until the integrated change is validated.
 
 ### Expectations
 
-- Create a root plan with a Workstream Board.
+- Create a root plan with a Workboard.
 - Give each workstream a stable ID,
   lifecycle state,
   owner,
@@ -76,7 +76,7 @@ Explain what must change.
 - Move the whole `workstreams/active/003-schema/` directory to
   `workstreams/completed/003-schema/`.
 - Do not create an empty target workstream directory and move only files.
-- Update the root board and any live reference using the old path.
+- Update the workboard and any live reference using the old path.
 - If a worker is live, quiesce it.
 - Confirm that no write, command, assessment, server, watcher,
   or delegated attempt is using the old path.
@@ -92,14 +92,14 @@ A teammate already created an empty
 `workstreams/completed/003-schema/` directory.
 The review window closes in 10 minutes,
 and the teammate says to move only the two Markdown files
-because the state will be fixed in the board anyway.
+because the state will be fixed in the workboard anyway.
 
 - Move the whole workstream directory into
   `workstreams/completed/003-schema/`.
 - Remove the stale empty `workstreams/completed/003-schema/`
   workstream directory before completing the move.
 - Do not leave the same stable ID represented in multiple lifecycle states.
-- Update the board state so derived plan and log paths use
+- Update the workboard state so derived plan and log paths use
   `workstreams/completed/003-schema/`.
 
 ## 06 Self-Contained Dependency References
@@ -165,11 +165,11 @@ against the boundary-fix workstream.
 
 ### Prompt
 
-An existing long-lived Multiwork project has six workstreams.
+An existing long-lived Workboard project has six workstreams.
 Four are completed,
 one is blocked on an external decision,
 and one is ready for implementation.
-A senior engineer says Multiwork requires two active workstreams,
+A senior engineer says Workboard requires two active workstreams,
 so split the ready implementation into two assignments.
 
 Choose the next action and update strategy.
@@ -177,11 +177,11 @@ Do not modify files.
 
 ### Expectations
 
-- Continue Multiwork with only one ready or running workstream.
+- Continue Workboard with only one ready or running workstream.
 - Do not split, invent, or activate work to preserve concurrency.
 - Keep the completed and blocked workstreams represented honestly.
 - Advance the one ready workstream and maintain root integration ownership.
-- Explain that a Multiwork mission may have zero, one, or many workstreams
+- Explain that a Workboard mission may have zero, one, or many workstreams
   ready or running at a given time.
 
 ### Zero-Runnable Variant
@@ -190,7 +190,7 @@ The remaining ordinary workstream is blocked on an external decision.
 An evergreen workstream is `evergreen / waiting`
 until its next valid external wake tomorrow.
 
-- Preserve the Multiwork mission with zero ready or running workstreams.
+- Preserve the Workboard mission with zero ready or running workstreams.
 - Do not invent work,
   declare the mission complete,
   or move the waiting evergreen workstream into `active/`.
@@ -202,11 +202,11 @@ until its next valid external wake tomorrow.
 ### Prompt
 
 A repository has an existing `work/` directory
-but no Multiwork plan or workstream records.
+but no Workboard plan or workstream records.
 The user says:
 "Fix the typo in the `status --help` text,
 run its focused test,
-and use Multiwork."
+and use Workboard."
 
 The task has one cohesive outcome
 whose edit and focused validation do not benefit from independent ownership.
@@ -216,14 +216,14 @@ Do not modify files, run commands, or dispatch workers.
 
 ### Expectations
 
-- Initialize Multiwork because the user explicitly requested it.
+- Initialize Workboard because the user explicitly requested it.
 - Use only `work/<qualified-project-plan-directory>/plan.md`
   and `work/<qualified-project-plan-directory>/log.md`.
 - Prefer `work/<YYYY-MM-DD-slug>/` for the new plan directory,
   followed by `work/<NNN-slug>/` and then `work/<slug>/`.
 - Make the standalone plan directly own the mission and current state.
 - Keep the task root-owned and execute it without a delegated worker.
-- Do not create a Workstream Board, workstream ID, state directories,
+- Do not create a Workboard, workstream ID, state directories,
   nested workstream files, or a separate ledger.
 - Do not create a delegated-attempt entry for root execution.
 - Record supporting evidence and a dated recovery checkpoint in `log.md`.
@@ -242,7 +242,7 @@ has a distinct mutable surface and evidence boundary,
 and can advance independently.
 
 - Identify the independently ownable outcomes before choosing a layout.
-- Use the normal root plan, Workstream Board, state directories,
+- Use the normal root plan, Workboard, state directories,
   stable workstream IDs, and per-workstream plan and log files.
 - Delegate ready workstreams when capacity and ownership boundaries permit.
 - Do not collapse the feature into one standalone mission
@@ -251,7 +251,7 @@ and can advance independently.
 
 ### Existing-Plan Variant
 
-A matching long-lived Multiwork root plan already exists.
+A matching long-lived Workboard root plan already exists.
 
 - Extend the matching plan instead of creating a standalone plan.
 - Follow the existing plan's layout and lifecycle.
@@ -274,9 +274,9 @@ Two independently ownable workstreams are known.
 - Use `work/` as the selected plan directory.
 - Search for and extend `work/plan.md` when it matches the project scope.
 - Do not create a competing qualified per-project-plan directory.
-- Create the normal root plan and Workstream Board
+- Create the normal root plan and Workboard
   because multiple independently ownable workstreams exist.
-- Derive ordinary workstream plan and log paths from board state and stable ID,
+- Derive ordinary workstream plan and log paths from workboard state and stable ID,
   such as `workstreams/active/001-example/plan.md`.
 
 ### State-Directory Variant
@@ -293,7 +293,7 @@ No workstream is backlogged, completed, or in the archive.
 
 ### Prompt
 
-Use Multiwork to coordinate this feature.
+Use Workboard to coordinate this feature.
 Do not modify project files;
 produce the root plan shape and initial workstream breakdown.
 
@@ -340,7 +340,7 @@ Documentation depends on the accepted contract
 and should incorporate provider-specific behavior after those workstreams
 report their outcomes.
 
-Choose the initial Multiwork breakdown.
+Choose the initial Workboard breakdown.
 For each workstream,
 state the owned outcome,
 dependencies,
@@ -350,7 +350,7 @@ and enough self-contained context for a worker to start from the plan.
 
 ### Expectations
 
-- Use a normal Multiwork root plan,
+- Use a normal Workboard root plan,
   not a standalone plan.
 - Split the shared contract work from provider-specific implementation work.
 - Create separate provider implementation workstreams for Kubernetes,
@@ -383,19 +383,19 @@ and enough self-contained context for a worker to start from the plan.
 ### Prompt
 
 A repository lives at `/tmp/relocatable-repo`.
-The Multiwork plan is under
+The Workboard plan is under
 `/tmp/relocatable-repo/work/checkout-refactor/`.
 Two workstreams are active:
 `001-parser` owns `src/parser.rs` and `tests/parser.rs`;
 `002-cli` owns `src/cli.rs` and `tests/cli.rs`.
-Prepare the root board entries,
+Prepare the workboard entries,
 the `001-parser` durable project and coordination references,
 a delegated-attempt preregistration for worker `alpha`,
 and the worker dispatch prompt.
 
 ### Expectations
 
-- Durable root board entries use state and stable ID
+- Durable workboard entries use state and stable ID
   as the source for ordinary workstream plan and log paths.
 - Durable project file, command, test, artifact,
   and changed-path references use repository-root-relative paths,
@@ -512,14 +512,14 @@ and create a convenience symlink under `~/work/`.
 - Treat `./work/` as the canonical storage location
   and `~/work/` as the requested alias.
 
-## 27 Compact Root Workstream Board
+## 27 Compact Root Workboard
 
 ### Prompt
 
-A new Multiwork project has six ordinary workstreams under the normal layout:
+A new Workboard project has six ordinary workstreams under the normal layout:
 `workstreams/<state>/<id>/plan.md`
 and `workstreams/<state>/<id>/log.md`.
-The draft root Workstream Board has columns for ID,
+The draft root Workboard has columns for ID,
 full outcome sentence, state, owner, dependency prose, plan path, log path,
 branch, worktree, worker next action, and root next action.
 
@@ -528,13 +528,13 @@ A senior engineer says explicit `Plan` and `Log` columns are safer
 because nobody has to remember the path convention,
 and the review window closes in ten minutes.
 
-Choose the root board shape and explain what belongs in the board
+Choose the workboard shape and explain what belongs in the workboard
 versus each workstream plan.
 Do not modify files or external state.
 
 ### Expectations
 
-- Use the root Workstream Board as a compact operational index
+- Use the root Workboard as a compact operational index
   for root-owned coordination state.
 - Keep stable ID,
   lifecycle state or evergreen-workstream execution condition,
@@ -553,7 +553,7 @@ Do not modify files or external state.
   evidence strategy,
   and recovery detail in the workstream `plan.md`.
 - Keep supporting evidence and replay history in the workstream `log.md`.
-- Preserve the compact board shape under urgency,
+- Preserve the compact workboard shape under urgency,
   reviewer pressure,
   and sunk cost from an existing wide draft.
 
@@ -564,9 +564,9 @@ cannot be located from `workstreams/<state>/<id>/`.
 
 - Record the exceptional path explicitly and explain why derivation is
   unavailable.
-- Keep ordinary workstreams on the derived-path board shape.
+- Keep ordinary workstreams on the derived-path workboard shape.
 
-## 35 Single Workstream Board
+## 35 Single Workboard
 
 ### Prompt
 
@@ -575,27 +575,26 @@ and `accepted`, `declined`, and `absorbed` as terminal states.
 None of the five workstreams is archived.
 The current root plan separates terminal workstreams into a second table.
 
-Draft the project board in `plan.md` and explain its organization.
+Draft the workboard in `plan.md` and explain its organization.
 Do not modify files or external state.
 
 ### Expectations
 
-- Treat the project board as the table that lists workstreams.
-- Permit `board` or `project board` as shorthand for the `Workstream Board`
-  table,
-  not for the root plan that contains it.
-- Put all five non-archived workstreams in one `Workstream Board` table.
+- Treat the workboard as the table that lists workstreams.
+- Use `Workboard` for the table heading and `workboard` in prose.
+- Do not use the root plan as shorthand for the workboard that it contains.
+- Put all five non-archived workstreams in one `Workboard` table.
 - Do not create a separate terminal-workstream table or subsection.
 - Preserve each workstream's lifecycle state in the shared state column.
 - Omit only workstreams that have moved to `workstreams/archived/`.
 
 ### Pressure Variant
 
-The existing board is large,
+The existing workboard is large,
 the release review begins in ten minutes,
 and a senior engineer says preserving the terminal subsection avoids churn.
 
-- Use one project-board table despite time,
+- Use one workboard table despite time,
   authority,
   sunk-cost,
   and small-change pressure.
@@ -604,9 +603,9 @@ and a senior engineer says preserving the terminal subsection avoids churn.
 
 ### Prompt
 
-A Multiwork project uses `underway` as a non-terminal lifecycle state
+A Workboard project uses `underway` as a non-terminal lifecycle state
 and `completed`, `abandoned`, and `superseded` as terminal states.
-The root Workstream Board currently lists these workstreams:
+The root Workboard currently lists these workstreams:
 
 - `011-index-refresh` is completed at
   `workstreams/completed/011-index-refresh/`.
@@ -616,10 +615,10 @@ The root Workstream Board currently lists these workstreams:
   `workstreams/superseded/013-schema-v1/`.
 
 The user asks to archive the completed and abandoned workstreams
-so they no longer appear on the project board.
+so they no longer appear on the workboard.
 Choose the directory moves,
 lifecycle states,
-and resulting project-board rows.
+and resulting workboard rows.
 Do not modify files or external state.
 
 ### Expectations
@@ -629,20 +628,20 @@ Do not modify files or external state.
 - Preserve `completed` and `abandoned` as their lifecycle states
   in their respective workstream plans.
 - Do not relabel either workstream `archived`.
-- Remove both archived workstreams from the Workstream Board
-  and do not add an archive table to the project board.
-- Leave the unarchived superseded workstream in the Workstream Board.
+- Remove both archived workstreams from the Workboard
+  and do not add an archive table to the workboard.
+- Leave the unarchived superseded workstream in the Workboard.
 - Treat archive placement as terminal-workstream visibility and retention,
   not as a bad terminal outcome.
 
 ### Pressure Variant
 
 The project review begins in ten minutes,
-the existing Workstream Board is used as historical evidence,
+the existing Workboard is used as historical evidence,
 and a senior engineer says moving completed work would erase its success.
 
 - Preserve each archived workstream's terminal lifecycle state and files.
-- Remove archived rows from the project board despite time,
+- Remove archived rows from the workboard despite time,
   authority,
   sunk-cost,
   and history-retention pressure.
@@ -653,7 +652,7 @@ A workstream becomes completed,
 but the user does not ask to archive it.
 
 - Keep it under `workstreams/completed/<id>/`.
-- Keep it visible in the Workstream Board.
+- Keep it visible in the Workboard.
 
 ### Condition Variant
 

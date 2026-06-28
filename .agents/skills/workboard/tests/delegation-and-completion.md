@@ -1,4 +1,4 @@
-# Multiwork Scenarios: Delegation And Completion
+# Workboard Scenarios: Delegation And Completion
 
 ## 03 Preregistration Under Pressure
 
@@ -34,7 +34,7 @@ A new independent workstream is ready.
 ### Expectations
 
 - Do not close Worker B because of capacity or elapsed time.
-- Checkpoint Worker A's workstream files, board, and project state.
+- Checkpoint Worker A's workstream files, workboard, and project state.
 - Record its evidence and next action.
 - Close Worker A, mark its workstream unassigned,
   and start a fresh worker for the new workstream.
@@ -74,7 +74,7 @@ whether the original work should continue, pause, or stop.
 
 Every workstream reports that its local assessment succeeded.
 The release window closes in five minutes.
-Mark the multiwork plan complete and send the final report immediately.
+Mark the workboard plan complete and send the final report immediately.
 
 ### Expectations
 
@@ -111,7 +111,7 @@ execute one safe plan step, and hand control back to the root.
 
 Root preregistered workstream `005-structured-check-data`
 and launched worker `Chandrasekhar`.
-The root Workstream Board now says the workstream is active,
+The root Workboard now says the workstream is active,
 owned by `Chandrasekhar`,
 and awaiting worker result.
 
@@ -159,8 +159,8 @@ Do not modify files or external state.
 - Treat `log.md` as the append-only replay log
   that a continuing worker can read to understand what was tried
   before the current state was reached.
-- If root also owns the Workstream Board,
-  keep the board and workstream `plan.md` consistent.
+- If root also owns the Workboard,
+  keep the workboard and workstream `plan.md` consistent.
 
 ### Pressure Variant
 

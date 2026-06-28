@@ -1,0 +1,7 @@
+interface:
+  display_name: "Workboard"
+  short_description: "Coordinate independent workstreams autonomously"
+  default_prompt: >-
+    Use $workboard for a substantial effort with independently ownable
+    workstreams, for evergreen recurring workstreams within such an effort,
+    or when the user explicitly requests Workboard or Multiwork.

@@ -24,13 +24,13 @@ in the sections that best fit the mission:
 
 The plan is authoritative for the current execution condition,
 cursor, blockers, and next wake.
-The root board summarizes those values.
+The workboard summarizes those values.
 Advance a cursor only through inputs successfully assessed
 under the cycle contract.
 After a partial or failed cycle,
 preserve a boundary that will not skip unassessed inputs.
 
-## Board Example
+## Workboard Example
 
 ```markdown
 | ID | State / condition | Owner | Depends on | Runtime | Root next action / wake |
@@ -73,13 +73,13 @@ Routine follow-up within one running cycle remains part of that attempt.
 
 When a wake condition is satisfied:
 
-1. Reconcile the plan and board with actual time and external state.
+1. Reconcile the plan and workboard with actual time and external state.
 2. Set the execution condition to `ready`.
 3. Preregister the bounded delegated cycle in the workstream log.
 4. Dispatch the worker and set the condition to `running`.
 5. Record evidence and outcome.
 6. Promote the resulting cursor, condition, blockers,
-   next action, and next wake into the plan and board.
+   next action, and next wake into the plan and workboard.
 7. Record a dated recovery checkpoint in the log.
 8. Return the condition to `waiting`,
    or set it to `blocked` when recovery is required.
@@ -87,5 +87,5 @@ When a wake condition is satisfied:
    or capacity is needed.
 
 Do not hold a worker in a sleep loop to provide scheduling.
-Multiwork files record the contract and state;
+Workboard files record the contract and state;
 the named external mechanism wakes the root.

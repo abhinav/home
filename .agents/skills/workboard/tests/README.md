@@ -1,4 +1,4 @@
-# Multiwork Behavioral Tests
+# Workboard Behavioral Tests
 
 Run each scenario with a fresh subagent using `fork_turns: "none"`.
 Give the subagent the skill path and scenario prompt.

@@ -1,4 +1,4 @@
-# Multiwork Scenarios: Workspaces And Worktrees
+# Workboard Scenarios: Workspaces And Worktrees
 
 ## 08 Worktree Suitability And Pooling
 
@@ -24,7 +24,7 @@ Assign the work efficiently.
 
 ### Shared-Tree Prompt
 
-Use Multiwork for a substantial implementation workstream.
+Use Workboard for a substantial implementation workstream.
 The workstream operates in the repository's current working tree,
 not in a separate worktree.
 The user gives no commit instructions,
@@ -72,7 +72,7 @@ writable task branch.
 The implementation and focused validation are complete.
 It is late,
 another task needs the reusable slot,
-and a senior engineer says the durable Multiwork plan and log are enough,
+and a senior engineer says the durable Workboard plan and log are enough,
 so the worker should remain assigned until root chooses a preservation form.
 
 - Treat the isolated checkout with a writable task branch as the Git worktree
@@ -171,7 +171,7 @@ and execution environment during acquisition.
 Those values are unknown beforehand.
 The manager can acquire, repair, release, and remove workspace bundles.
 
-Describe the Multiwork records from allocation intent through acquisition,
+Describe the Workboard records from allocation intent through acquisition,
 worker dispatch,
 and release.
 Do not modify files or Git state.
@@ -473,7 +473,7 @@ verified execution handoff.
 
 ### Prompt
 
-A Multiwork plan and workstream records live under `work/` in the same Git
+A Workboard plan and workstream records live under `work/` in the same Git
 repository as the implementation.
 The worker edits code in a separate implementation worktree and also updates
 the workstream plan and log through their canonical absolute handoff paths.
@@ -526,7 +526,7 @@ implementation branch.
 
 ### Prompt
 
-A Multiwork plan lives at `/tmp/repo/work/render-audit/plan.md`
+A Workboard plan lives at `/tmp/repo/work/render-audit/plan.md`
 inside a Git repository.
 The active workstream is
 `/tmp/repo/work/render-audit/workstreams/active/006-render-trace/`.
@@ -544,7 +544,7 @@ Do not modify files or run mutating commands.
 ### Expectations
 
 - Treat `/tmp/repo/` as potentially version-controlled.
-- Treat the Multiwork plan directory under `/tmp/repo/`
+- Treat the Workboard plan directory under `/tmp/repo/`
   as part of that version-controlled boundary.
 - Put the small inspection artifact with the owning workstream
   when it improves later audit or recovery.
@@ -590,7 +590,7 @@ and no command or assessment is running.
 Review will occur after `019-decoder` hands off later today.
 Workstream `020-guides` is ready and unassigned.
 
-Continue the Multiwork mission.
+Continue the Workboard mission.
 State root's immediate coordination actions and resulting mission state.
 Do not modify files or Git state.
 

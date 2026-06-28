@@ -119,7 +119,7 @@ then complete disposition immediately afterward.
 Before release or removal:
 
 - quiesce workers, commands, assessments, and processes using the workspace;
-- checkpoint durable Multiwork records;
+- checkpoint durable Workboard records;
 - preserve useful work under the preservation invariant; and
 - record the expected release or removal result.
 

@@ -31,7 +31,7 @@ Provide every worker or reviewer with:
 The absolute paths are runtime handoff coordinates.
 When the worker updates repository-local durable files,
 it should continue using repository-root-relative paths for project files
-and plan-directory-relative paths for files inside the Multiwork
+and plan-directory-relative paths for files inside the Workboard
 coordination tree.
 
 Give a worker temporary ownership of the workstream plan and log
@@ -85,7 +85,7 @@ Before closing a worker that is waiting for instructions:
    Complete verified release or removal unless a named checkout-dependent action
    is ready to start now;
    scheduled future work holds no workspace lease.
-5. Update the root board and mark the workstream unassigned.
+5. Update the workboard and mark the workstream unassigned.
 6. Confirm that the durable files are sufficient for a fresh worker.
 7. Release the worker using the runtime's supported lifecycle operation.
    If no release operation exists,

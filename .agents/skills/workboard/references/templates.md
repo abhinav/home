@@ -1,11 +1,11 @@
-# Multiwork Templates
+# Workboard Templates
 
 Use these as starting points and adapt them to the project.
 Do not leave placeholders in an active plan.
 
 ## Standalone Layout
 
-Use this compact layout only when no matching Multiwork plan already exists
+Use this compact layout only when no matching Workboard plan already exists
 and the mission has one cohesive root-owned outcome
 that does not benefit from independent ownership:
 
@@ -21,7 +21,7 @@ It directly records the mission's current state and completion.
 The sibling `log.md` uses the workstream log shape below,
 but records no delegated attempt unless delegation later occurs.
 
-Do not add a Workstream Board, state directories,
+Do not add a Workboard, state directories,
 or nested workstream records to this layout.
 If independently ownable work or delegation later becomes necessary,
 convert the mission to the default layout before dispatch.
@@ -83,22 +83,22 @@ associated artifact locations.>
 <Record project-wide scope, exclusions, assumptions, approvals, and shared
 surfaces that affect coordination.>
 
-## Workstream Board
+## Workboard
 
 | ID | State / condition | Owner | Depends on | Runtime | Root next action / wake |
 | --- | --- | --- | --- | --- | --- |
 | `001-example` | active / running | `<agent-id>` | None | `<branch>` / `<path>` | <Concrete root action.> |
 | `002-example` | completed | None | `001-example` | None | Preserve completion evidence. |
 
-Keep every non-archived workstream in `Workstream Board`,
+Keep every non-archived workstream in `Workboard`,
 regardless of lifecycle state.
-Omit archived terminal workstreams from the project board.
+Omit archived terminal workstreams from the workboard.
 Use `condition` for evergreen workstreams.
 For ordinary workstreams,
 omit it or use a value already meaningful to the plan.
 Keep lifecycle transitions synchronized with the workstream directory.
 For archival,
-preserve the terminal state in the plan and remove the board row.
+preserve the terminal state in the plan and remove the workboard row.
 A plan may add a short label when stable IDs are not enough
 to distinguish workstreams at a glance.
 Use explicit path fields only for documented nonstandard layouts
@@ -320,4 +320,4 @@ for examples adapted to implementation, research, design,
 and root orchestration.
 
 See [evergreen-workstreams.md](evergreen-workstreams.md)
-for recurring-cycle additions to the workstream plan, log, and root board.
+for recurring-cycle additions to the workstream plan, log, and workboard.

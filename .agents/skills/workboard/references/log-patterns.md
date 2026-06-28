@@ -121,7 +121,7 @@ such as:
 
 - launches, ownership changes, handoffs, and reconciliation decisions;
 - dependency or sequence changes and why they were necessary;
-- worktree assignment history when the board snapshot is insufficient;
+- worktree assignment history when the workboard snapshot is insufficient;
 - integration observations, conflicts, resolutions, and combined evidence;
 - root-level delegated reviews and dated acceptance assessments.
 

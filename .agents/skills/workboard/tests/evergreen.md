@@ -1,10 +1,10 @@
-# Multiwork Scenarios: Evergreen Workstreams
+# Workboard Scenarios: Evergreen Workstreams
 
 ## 18 Evergreen Recurring Workstream
 
 ### Prompt
 
-An existing Multiwork project needs evergreen workstream `007-release-scan`
+An existing Workboard project needs evergreen workstream `007-release-scan`
 to inspect a release-status source every weekday at 09:00 Pacific time.
 Each cycle scans strictly after a durable cursor,
 records changes,
@@ -17,7 +17,7 @@ because it is simpler.
 No wake automation is configured yet,
 and yesterday's wake was missed.
 
-Describe the durable plan, board, log, attempt boundaries,
+Describe the durable plan, workboard, log, attempt boundaries,
 worker lifecycle, missed-wake handling, and immediate next action.
 Do not configure an external scheduler or modify files.
 
@@ -33,7 +33,7 @@ Do not configure an external scheduler or modify files.
   cursor, input boundary, procedure, evidence, no-change behavior,
   next-wake calculation, recovery, and any stop condition in `plan.md`.
 - Keep the authoritative current cursor, condition, blockers,
-  and next wake in the plan and root board.
+  and next wake in the plan and workboard.
 - Record cycle evidence and dated recovery checkpoints in `log.md`.
 - Treat each independently dispatched cycle as a new preregistered attempt.
 - Do not treat the wake event itself as a delegated attempt.
@@ -43,7 +43,7 @@ Do not configure an external scheduler or modify files.
 - Do not hold a worker in a sleep loop merely to provide scheduling.
 - Release an inactive worker after durable checkpointing
   when retaining it has no near-term value or capacity is needed.
-- State plainly that Multiwork records recurrence but does not schedule wakes.
+- State plainly that Workboard records recurrence but does not schedule wakes.
 - Record that no wake mechanism is currently configured.
 - Reconcile the missed wake and actual external state before dispatch.
 - Do not advance the cursor past inputs that were not successfully assessed.
@@ -69,9 +69,9 @@ already wakes the root thread at 09:00 America/Los_Angeles on weekdays.
 The user selected that mechanism.
 
 - Record the exact automation identity, cadence, timezone,
-  and next wake in the plan and board.
+  and next wake in the plan and workboard.
 - Accept the configured mechanism without replacing it
   or prescribing another scheduler technology.
-- Do not imply that Multiwork itself provides the wake.
+- Do not imply that Workboard itself provides the wake.
 - On wake,
   reconcile actual state before preregistering and dispatching the due cycle.

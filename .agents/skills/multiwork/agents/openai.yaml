@@ -1,7 +1,5 @@
 interface:
-  display_name: "Multiwork"
-  short_description: "Coordinate independent workstreams autonomously"
+  display_name: "Multiwork (Workboard alias)"
+  short_description: "Compatibility alias for Workboard"
   default_prompt: >-
-    Use $multiwork for a substantial effort with independently ownable
-    workstreams, for evergreen recurring workstreams within such an effort,
-    or when the user explicitly requests Multiwork.
+    Use $multiwork as a compatibility alias for $workboard.
