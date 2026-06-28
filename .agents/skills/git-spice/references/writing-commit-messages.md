@@ -26,6 +26,12 @@ optimize the body for the reader's review task.
 Preserve accurate facts and avoid unsupported claims,
 but do not preserve draft structure that hides why the change exists,
 where the change fits, what behavior changes, or what evidence proves.
+Apply all of these guidelines to every revision,
+including constrained edits to existing drafts.
+Before revising a draft,
+apply `Evidence` to every validation claim
+and `Code Formatting` to every inline-code span.
+Do this before preserving the draft's structure or requested edit scope.
 
 ### `<subject>`
 
@@ -195,27 +201,25 @@ such as public interface, compatibility rationale, migration behavior,
 examples, and verification.
 Do not add headings to simple one-part changes.
 
-For code examples, use four-space-indented command blocks.
+Use blocks for copyable examples such as config stanzas and request shapes.
 Keep examples short and representative.
-When the exact command, flag combination, config stanza,
-or request shape is meant to be copied later,
-preserve it exactly in a block instead of paraphrasing it in prose.
-Inline flag lists are not a substitute for a copyable invocation
-when the invocation is the operational contract.
 
 #### Evidence
 
-Mention tests only when they clarify the contract or guarantee reviewers
-should trust.
-Do not enumerate test files, fixture types, or every covered mode.
-Prefer a concise guarantee-oriented sentence,
-such as "Unit tests cover the new parser contract
-and the dry-run no-mutation guarantee."
-
-When a regression test is used as evidence for a bug fix,
-make clear what failed before the patch and what passes after it.
-If the proof comes from strengthening an existing test,
-say what old failure shape the changed test reproduces.
+Routine automated check status is not evidence worth reporting.
+Do not list commands or results from tests, CI, formatters, linters,
+or repository hygiene merely to report routine pass status.
+Never mention `git diff --check`.
+When the change modifies one of those systems,
+describe its changed contract and material evidence at the behavior level.
+When test coverage is added or strengthened,
+it may be described in `Validation`.
+For bug fixes,
+name the old failure shape it reproduces and the behavior it protects.
+Do not report test commands, execution status, or pass results.
+Unchanged existing coverage is not validation content.
+If the change strengthens existing coverage,
+state the previously unprotected failure shape.
 
 When a concrete failing command,
 error excerpt,
@@ -232,12 +236,12 @@ have to reconstruct several state transitions from prose.
 The restriction on diff-inventory lists does not apply to ordered failure
 narratives.
 
-For manual testing, state what was verified and how.
-When commands help,
-place short four-space-indented command blocks directly below the relevant
-claim.
-This should give reviewers evidence of the work performed,
-not just a loose list of commands.
+Use a `Validation` section when non-routine evidence adds review context.
+Qualifying evidence includes added or strengthened test coverage,
+a manual workflow, reproducer, migration or compatibility probe,
+end-to-end workflow, real-boundary check, or soak result.
+State what was verified and what the observation established.
+Apply the `Code Formatting` rules below to any retained commands.
 
 When the body mentions several validation signals,
 map each signal to the claim it supports.
@@ -253,25 +257,33 @@ Focused reproducers, before/after output, migration probes,
 compatibility checks, and end-to-end workflow checks are usually useful.
 Routine hygiene belongs in the handoff unless it is the contract being
 changed.
-NEVER write a `Verified with` sentence or block that lists `git diff --check`,
-formatter commands, lint commands,
-or broad default test commands as generic proof.
-Do not mention those routine checks under equivalent wording
-or any generic "commands/checks run" sentence.
-If a focused test is worth mentioning,
-state the behavior guarantee it provides instead of pairing it with routine
-checks.
+Preserve a specific validation gap when it materially affects reviewer
+confidence, rollout risk, or required metadata,
+and explain why the gap remains.
+Do not infer such a gap from the absence of other validation.
 
-Omit test details entirely when they do not add review context.
+Section requirements do not change what qualifies as evidence.
+When there is neither qualifying evidence nor a material validation gap,
+omit `Validation` instead of filling it with an absence statement.
 
 #### Formatting And Tone
 
 Treat commit messages as Markdown documents:
-use backticks for inline code,
 use other Markdown formatting judiciously,
 and maintain semantic line breaks.
-Backticks are for code, commands, flags, paths, API fields, config keys,
-and other literal technical syntax.
+
+##### Code Formatting
+
+Use backticks for inline code,
+including command names, flags, paths, API fields, and config keys.
+Before returning the message,
+scan every inline-code span.
+Move each complete command invocation to an indented code block,
+including invocations inherited from existing text or templates.
+Preserve the invocation exactly.
+
+##### Tone
+
 Do not wrap PR numbers, issue numbers, ticket IDs,
 or commit hashes in backticks when they are references in prose.
 Prefer plain text such as PR #123, ABC-456, or abc1234

@@ -121,7 +121,8 @@ Load these references before doing the matching work:
 - Commit messages:
   `references/writing-commit-messages.md`
 - Pull requests, PR templates, and metadata edits:
-  `references/pull-requests.md`
+  `references/writing-commit-messages.md`
+  and `references/pull-requests.md`
 - Non-interactive commit splitting and other raw history surgery:
   `references/history-surgery.md`
 - Branch topology surgery with `branch onto`, `upstack onto`, or `branch split`:

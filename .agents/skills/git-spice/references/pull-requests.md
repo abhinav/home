@@ -49,28 +49,22 @@ For multiple commits,
 summarize the overall change.
 Keep the title at or below 72 characters.
 
-When deriving a pull request body from a commit body,
-carry over a well-structured single-commit body directly when there is no
-repository template.
-Use the complete commit body as the starting body.
-Append new validation or risk information without replacing its existing
-narrative.
-Otherwise,
-adapt without losing high-value structure.
-Examples include headings, command blocks, before/after evidence, compatibility
-notes, and verification sections.
-Do not shorten the pull request body merely because the commit message already
-has the details,
-and do not preserve only verification while summarizing away the failure or
-fixed behavior.
-Reshape only as needed to fit a repository template.
-Before submitting,
-compare the final body with the commit body
-and account for each omission or rewrite using a repository template,
-a verified factual correction, or an explicit pull-request-specific
-instruction.
-If the draft invents a new heading structure without one of those reasons,
-restore the direct carryover.
+Before preparing a pull request body,
+read and apply `writing-commit-messages.md`.
+A pull request body follows the same guidelines as a commit-message body.
+For a single-commit pull request without a repository template,
+normalize the commit body under those guidelines before carrying it over,
+even when its wording or formatting is already approved.
+For a multi-commit pull request,
+synthesize the commits' aggregate review contract.
+When a repository template exists,
+adapt the body to its structure.
+
+Preserve the relevant purpose, changed behavior, boundaries,
+and evidence from the commit bodies.
+Omit or rewrite that information only for the aggregate pull request scope,
+the repository template, a verified factual correction,
+or an explicit pull-request-specific instruction.
 
 For a new pull request:
 
@@ -155,6 +149,16 @@ File names are case-insensitive.
 If the repository has a pull request template:
 
 1. Follow the template format.
-2. Fill placeholders.
+2. Replace placeholders with substantive content.
+   Preserve requested section or list structure,
+   but never retain literal tokens such as `<command>` or `<result>`.
 3. Delete instruction text.
 4. Include all relevant information from the commit message body.
+
+The template governs structure;
+apply the commit-message guidelines within that structure.
+Reshape field contents as needed to satisfy those guidelines.
+Placeholder syntax does not create a formatting exception.
+If a required section has neither material evidence nor a supported material
+gap,
+stop only when completing it would require an unsupported assertion.

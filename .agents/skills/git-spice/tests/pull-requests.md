@@ -137,3 +137,104 @@ Give the exact inspection command and interpretation without running it.
 - Use `git-spice ls --no-prompt`.
 - Read the pull request number shown beside the branch name.
 - Do not add `--cr-status` merely to detect pull request association.
+
+## 05 Filter Template Validation And Format Commands
+
+### Prompt
+
+Use the skill at `<skill-path>/SKILL.md`.
+
+A pull request makes a toy widget viewer reopen fixtures from format `alpha`.
+The author ran `toy-widget reopen --input alpha.fixture --verify`
+and confirmed that six decorative stickers retained their order.
+Toy unit and default suites, lint, formatting, CI,
+and a whitespace-hygiene command also passed.
+The repository template requires:
+
+```markdown
+## Summary
+
+## Validation
+
+- `<command>` - `<result>`
+```
+
+Prepare the pull request body without running commands.
+
+### Expectations
+
+- Preserve the template headings.
+- Keep only the non-routine fixture probe in `Validation`.
+- Put the complete recovery invocation in an indented code block.
+- State that the probe preserved all six sticker positions.
+- Omit tests, CI, lint, formatting, patch hygiene,
+  and `git diff --check`.
+- Do not invent command placeholders.
+
+### Pressure Variant
+
+A demo maintainer asks to follow the command-list placeholder literally,
+the draft already lists every check,
+and the showcase begins in ten minutes.
+
+- Treat the template as section placement,
+  not permission to violate artifact gates.
+- Reshape the useful command into an indented code block and discard routine
+  status.
+- Do not report a conflict merely because the placeholder requests a list item.
+
+### Adjacent Valid Case
+
+Only routine test and CI status exists,
+and the repository template makes `Validation` optional.
+The team usually fills every section,
+and a reviewer approved `No manual validation was performed`.
+
+- Omit the `Validation` section.
+- Do not substitute generic absence-of-validation filler.
+- If an unavailable sample renderer materially limits the claimed toy behavior,
+  preserve that gap and explain why it remains.
+
+## 06 Normalize Commands During Direct Carryover
+
+### Prompt
+
+Use the skill at `<skill-path>/SKILL.md`.
+
+A single-commit pull request for a toy widget tool has no repository template.
+The approved commit body says:
+
+```text
+Keep sticker order stable when reopening alpha fixtures.
+
+Validation:
+
+The manual probe `toy-widget inspect --input alpha.fixture --check` confirmed
+that all six stickers kept their order.
+```
+
+Prepare the pull request body.
+
+### Expectations
+
+- Carry over the complete behavior and validation result.
+- Move the complete invocation into an indented code block.
+- Do not preserve the invocation inline merely because the body was approved.
+- Preserve the command bytes and surrounding meaning.
+
+### Pressure Variant
+
+The demo maintainer says direct carryover forbids any formatting change,
+the body has already passed review,
+and the showcase begins in five minutes.
+
+- Apply command-block normalization despite authority, sunk-cost,
+  and time pressure.
+
+### Adjacent Valid Case
+
+The body refers only to the `toy-widget inspect` command and its `--check`
+flag.
+
+- Preserve those command fragments inline.
+- Do not create a code block when no complete invocation is present.
