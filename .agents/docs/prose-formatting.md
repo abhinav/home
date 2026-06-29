@@ -27,6 +27,12 @@ or hide the meaningful change in a noisy diff.
 
 Semantic line breaks are required when writing new external prose artifacts
 or when reflowing prose as part of the requested change.
+They are not punctuation splitting.
+A break is useful when the resulting lines preserve coherent meaning,
+not merely because a comma or conjunction appears.
+Do not leave a short introductory phrase, dependent clause, or transition
+alone on a line
+when it fits with the clause it modifies.
 
 When editing an existing artifact,
 match the local source-line style of the text being changed.
@@ -41,16 +47,15 @@ that turns a small content change into unrelated diff churn.
 When adding a new paragraph to a paragraph-per-line artifact,
 use one physical line for that new paragraph
 so the addition follows the artifact's existing structure.
-When adding a new section,
-file,
-or block that does not have an established local style,
+When adding a new section, file, or block
+that does not have an established local style,
 use semantic line breaks.
 
 ### Required breaks
 
 Break after each complete sentence.
-A complete sentence is punctuated by
-a period (`.`), exclamation mark (`!`), or question mark (`?`).
+A complete sentence is punctuated by a period (`.`), exclamation mark (`!`),
+or question mark (`?`).
 
 ```markdown
 This is an example of a semantic line break.
@@ -67,6 +72,9 @@ Prefer a break after an independent clause
 when punctuation marks the clause boundary.
 Commas, semicolons, colons, and em dashes can signal useful break points,
 but they are not commands to break after every occurrence.
+Before using a comma as a break point,
+check whether the comma belongs to a compact inline list.
+If it does, apply the inline-list rules before choosing the break.
 
 ```markdown
 This is an example of a semantic line break,
@@ -86,6 +94,8 @@ The following items are important:
 Use a break after a dependent clause
 when it clarifies the grammatical structure
 or keeps the line within the relevant limit.
+Keep a short dependent clause with the clause it modifies
+when the combined line is readable and within the limit.
 
 ```markdown
 Semantic line breaks are not strictly required here
@@ -104,12 +114,13 @@ would make the line too long.
 ## Inline lists
 
 Inline lists favor compact, readable units.
+Before choosing breaks for a sentence,
+identify compact inline lists and the grammar attached to them.
 Do not split a short inline list merely because commas appear.
-Before breaking inside an inline list, first check whether the whole list
-and its immediate grammar fit within the applicable line-length limit.
+First check whether the whole list and its immediate grammar fit
+within the applicable line-length limit.
 If they fit, keep that list segment together.
-For Markdown prose,
-use the absolute line-length limit when needed
+For Markdown prose, use the absolute line-length limit when needed
 to avoid an inferior inline-list break.
 If the whole sentence containing the inline list fits comfortably
 and remains readable,
@@ -117,8 +128,7 @@ keep the sentence on one line.
 When wrapping is required, prefer readable groups
 that keep adjacent short items together.
 Do not optimize for visually equal line lengths.
-For a three-item list,
-do not put only the first item on its own line
+For a three-item list, do not put only the first item on its own line
 when the first two items fit together.
 Do not use a one-item, one-item, one-item layout for a short inline list
 when any adjacent pair fits on one line.
@@ -250,6 +260,15 @@ Markdown tables must remain valid Markdown tables.
 ## Decision procedure
 
 When deciding where to break a line,
+first scan the sentence for compact inline lists.
+If a proposed break would split a compact inline list,
+keep the list and its immediate grammar together
+unless doing so would exceed the absolute line-length limit.
+Also check short introductory phrases, dependent clauses, and transitions;
+do not strand them on their own line
+when they fit with the clause they modify.
+
+After that preflight,
 use the first applicable boundary in this order:
 
 1. End of sentence.
@@ -259,10 +278,6 @@ use the first applicable boundary in this order:
 5. Boundary before or after a hyperlink or inline markup.
 6. Readable grouping boundary inside a long inline list.
 7. Nearest word boundary needed to satisfy the absolute line limit.
-
-Before using steps 3 through 7, check whether the proposed break
-would split a compact inline list.
-If it would, prefer keeping the inline list and its immediate grammar together.
 
 Do not use mechanical wrapping as the primary strategy.
 A line break should usually explain the prose structure
@@ -280,8 +295,10 @@ Treat these statements as signs that the formatting needs another pass:
 | "Each list item gets its own line." | Preserve compact lists when they remain readable. |
 | "Balanced means the lines should be visually even." | Use available line length to keep adjacent short items together; do not optimize for equal-looking lines. |
 | "The sentence has commas, so each comma is a semantic break." | Keep compact inline-list sentences together when they fit and remain readable. |
+| "I followed semantic line breaks, so comma-splitting is fine." | Recheck whether each line is a coherent unit of meaning, especially around inline lists. |
 | "The conjunction can never start the next line." | Permit a final conjunction to start the next line when it creates a balanced, readable group. |
 | "Semantic breaks mean every clause gets its own line." | Keep short dependent clauses with their governing sentence when the combined line is readable and within limits. |
+| "If so," | Attach short transitions to the clause they modify when the combined line fits. |
 | "Chat should look like files." | Format chat for chat unless asked otherwise. |
 | "This paragraph is already one line, but this guide requires semantic breaks." | Preserve paragraph-per-line style for narrow edits to existing text. |
 
