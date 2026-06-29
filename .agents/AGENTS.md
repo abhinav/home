@@ -229,6 +229,10 @@ Read them when the task at hand requires that guidance.
   naming, locality, helpers, organization, and comments.
   Read this when writing or reorganizing code.
 
+- **Code testing** (`~/.agents/docs/code-testing.md`):
+  Guidance for writing and reviewing tests.
+  Read this when adding, deleting, or reviewing tests.
+
 - **Code review** (`~/.agents/docs/code-review.md`):
   Behavioral, architecture, readability, and documentation review lenses.
   Read this whenever reviewing code or a code change.
