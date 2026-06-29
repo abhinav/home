@@ -325,7 +325,8 @@ Do not modify files or Git state.
 - Permit release of the clean workspace as `available`
   after preservation and quiescence.
 - Keep physical reuse separate from result custody.
-- Require combined root validation before overall acceptance.
+- Require combined validation from an assigned workstream
+  before root makes the overall acceptance decision.
 
 ### Pressure Variant
 
@@ -340,21 +341,22 @@ and pool capacity is exhausted.
 
 ### Squash Integration Variant
 
-Root later squashes the branch into a different commit and combined validation
-passes.
+An integration worker later squashes the branch into a different commit
+and combined validation passes.
 
 - Accept repository-appropriate integration evidence instead of requiring the
   original result identity to remain unchanged.
 - Record the accepted integrated revision before result disposal.
 
-### Root Integration Workspace Variant
+### Integration Workstream Workspace Variant
 
-Root acquires a separate workspace to combine results from three completed
-workstreams.
+An integration workstream acquires a separate workspace
+to combine results from three completed workstreams.
 
-- Record the workspace as `in-use` under a root integration scope rather than
-  assigning it to one workstream.
-- Record root as responsible owner and name the concrete integration action.
+- Record the workspace as `in-use` under the integration workstream.
+- Record the integration worker as active checkout user
+  and name the concrete integration action.
+- Keep root responsible for coordination and workspace disposition.
 - Keep the overall mission incomplete until combined validation and workspace
   release or removal succeed.
 
@@ -466,7 +468,8 @@ The manager returns the same workspace with the requested configuration and a
 verified execution handoff.
 
 - Permit root to update the actual handoff and mark it `in-use`.
-- Select and preregister an actual worker before dispatch.
+- Select and dispatch an actual worker.
+- Have the worker accept ownership and preregister before meaningful execution.
 - Transfer responsible ownership while keeping state `in-use`.
 
 ## 34 Repository-Local Coordination Commit Boundary

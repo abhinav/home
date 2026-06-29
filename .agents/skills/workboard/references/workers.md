@@ -2,9 +2,10 @@
 
 ## Attempt Registration
 
-The current writer preregisters each delegated attempt in the owning log
-before dispatch.
-Record the objective, worker or reviewer, relevant starting state,
+After accepting assignment and workstream-file ownership,
+the executor preregisters the delegated attempt in the owning log
+before meaningful execution.
+Record the objective, executor, relevant starting state,
 expected result, expected evidence, and assessment method.
 After the attempt,
 append the outcome, evidence, conclusion, and concrete next action.
@@ -34,29 +35,29 @@ it should continue using repository-root-relative paths for project files
 and plan-directory-relative paths for files inside the Workboard
 coordination tree.
 
-Give a worker temporary ownership of the workstream plan and log
-for its assignment.
-Require the worker to maintain the plan-defined supporting record,
+After the executor accepts the assignment,
+require it to report acceptance to root.
+Root records the accepted executor and runtime assignment;
+that update transfers temporary ownership of the workstream plan and log.
+Require the executor to preregister before meaningful work,
+maintain the plan-defined supporting record,
 including its attempt entry,
 and return a precise handoff.
 When evidence changes an operative conclusion, decision, state, or next action,
 require the worker to update the workstream plan before handoff.
 
-Do not give a reviewer log ownership.
-Require the reviewer to return findings to the root,
-which reconciles the outcome under the single-writer rule.
-If no active worker owns the workstream files,
-root appends the outcome.
-If a worker still owns them,
-root routes actionable findings through a preregistered review-response attempt
-owned by that worker.
-To use a replacement worker,
-first checkpoint and complete the current ownership handoff;
-root may preregister the replacement only after write authority returns.
+For review tasks,
+root assigns a reviewer directly after any current executor hands off.
+The reviewer accepts ownership,
+preregisters the review attempt,
+keeps the plan and log current,
+and hands both files back with the findings.
+Assign any resulting repair to the executor that owns the repair outcome.
 
 Use `fork_turns: "none"` when the durable files contain the needed context.
-Continue an existing healthy worker in its current workstream,
-rather than replacing it for each revision.
+Continue an existing healthy worker in its current live assignment.
+After checkpoint and release,
+record the handoff and assign a replacement for later follow-up.
 
 For an evergreen workstream,
 retain a worker across cycles only when the next cycle is near

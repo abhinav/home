@@ -18,7 +18,12 @@ Every extant workspace recorded in the Worktree Pool is one of:
 | `available` | The workspace is ready for reuse and no workstream or root scope owns it. |
 | `in-use` | One declared workstream or root scope and one responsible owner control it. |
 
-Setup, worker execution, integration, and recovery are all `in-use`.
+Root scope means standalone execution,
+an explicitly root-assigned normal-layout task,
+or coordination-only setup, recovery, or disposition.
+It does not independently authorize meaningful root execution.
+
+Setup, worker execution, integration execution, and recovery are all `in-use`.
 Represent those phases through the owner, observed state, risks,
 and concrete next action rather than additional lifecycle states.
 
@@ -83,10 +88,11 @@ or removed.
 ### Transfer And Recovery
 
 Changing from root setup to worker execution
-or from root integration to recovery does not itself change `in-use`.
+or from integration-worker handoff to root recovery
+does not itself change `in-use`.
 Worker handoff instead invokes the disposition procedure below.
 Only a named checkout-dependent action ready to start now
-justifies transferring the workspace to root integration.
+justifies retaining the workspace for another assigned workstream attempt.
 Update the responsible owner, observed state, risks,
 and next action together.
 
@@ -122,8 +128,9 @@ does not establish that requirement by itself.
 The next assessment must identify workspace-local state
 that is absent from the durable result.
 When the next action qualifies,
-record the active checkout user and concrete action under root,
-then complete disposition immediately afterward.
+preregister and dispatch it under its owning workstream,
+record the assigned worker as active checkout user,
+then complete disposition after handoff.
 Before release or removal:
 
 - quiesce workers, commands, assessments, and processes using the workspace;

@@ -67,7 +67,8 @@ The attempt entry may summarize or reference the detailed cycle evidence.
 ## Dispatch And Sleep
 
 Each independently dispatched cycle is a new delegated attempt.
-Preregister it after the wake condition is satisfied and before dispatch.
+After dispatch and assignment acceptance,
+the executor preregisters the cycle before meaningful execution.
 The wake event alone is not an attempt.
 Routine follow-up within one running cycle remains part of that attempt.
 
@@ -75,8 +76,9 @@ When a wake condition is satisfied:
 
 1. Reconcile the plan and workboard with actual time and external state.
 2. Set the execution condition to `ready`.
-3. Preregister the bounded delegated cycle in the workstream log.
-4. Dispatch the worker and set the condition to `running`.
+3. Dispatch the worker and transfer workstream-file ownership.
+4. The worker preregisters the bounded cycle,
+   then root sets the condition to `running`.
 5. Record evidence and outcome.
 6. Promote the resulting cursor, condition, blockers,
    next action, and next wake into the plan and workboard.

@@ -18,7 +18,8 @@ Skip the paperwork, assign a reviewer, and ship when local tests pass.
 - Label unknown starting facts rather than inventing them.
 - Record objective, agent, role, starting state, expected result,
   expected evidence, and assessment.
-- Preregister the reviewer before dispatch.
+- Have the reviewer accept file ownership
+  and preregister before beginning the review.
 - Treat a retry or material pivot as a new attempt, but not routine follow-up.
 - Require root-level integrated evidence.
 
@@ -79,8 +80,11 @@ Mark the workboard plan complete and send the final report immediately.
 ### Expectations
 
 - Do not infer root completion from workstream evidence alone.
-- Reconcile and integrate workstream results.
-- Establish the root plan's completion evidence.
+- Reconcile workstream results and define the integration contract.
+- Create or use an owning workstream for artifact-changing integration
+  and combined validation.
+- Delegate production and first-pass assessment of completion evidence.
+- Have root compare returned evidence with the acceptance criteria.
 - Mark completion only when the overall objective is verified.
 
 ## 13 Dispatch And Handoff Lifecycle
@@ -88,13 +92,18 @@ Mark the workboard plan complete and send the final report immediately.
 ### Prompt
 
 Use a task-local fixture and a self-contained `plan.md` and `log.md`.
-Preregister a fresh worker attempt, dispatch with `fork_turns: "none"`,
-execute one safe plan step, and hand control back to the root.
+Dispatch a fresh worker with `fork_turns: "none"`.
+After it accepts file ownership,
+have it preregister the attempt,
+execute one safe plan step,
+and hand control back to the root.
 
 ### Expectations
 
-- The root is the log writer during preregistration.
-- The worker receives log ownership for its active attempt.
+- The worker accepts ownership of both workstream files.
+- The worker reports acceptance to root.
+- Root records owner and runtime assignment before execution begins.
+- The worker preregisters before meaningful execution.
 - The root does not edit the log concurrently.
 - The worker records outcome, evidence, conclusion,
   and a dated recovery checkpoint before handoff.
@@ -102,15 +111,18 @@ execute one safe plan step, and hand control back to the root.
   current state, blockers, and next action into `plan.md` before handoff.
 - The worker returns a precise handoff.
 - The root resumes log ownership only after the worker finishes.
-- A reviewer does not edit the worker's log concurrently;
-  it returns findings for the root to append.
+- A reviewer begins only after the current executor hands off.
+- The reviewer owns both files during review,
+  preregisters the review attempt,
+  and hands the files back with the findings.
 
 ## 26 Worker Execution Record Ownership
 
 ### Prompt
 
-Root preregistered workstream `005-structured-check-data`
+Root prepared workstream `005-structured-check-data`
 and launched worker `Chandrasekhar`.
+`Chandrasekhar` accepted file ownership and preregistered the attempt.
 The root Workboard now says the workstream is active,
 owned by `Chandrasekhar`,
 and awaiting worker result.
@@ -118,7 +130,7 @@ and awaiting worker result.
 The workstream `log.md` has append-only entries for:
 
 - activation as a prerequisite for another workstream;
-- worker attempt registration;
+- worker attempt registration by the assigned executor;
 - worker launch with the worker ID and owned temporary worktree task.
 
 The workstream `plan.md` still says:
@@ -179,11 +191,166 @@ A reviewer also returned findings to root.
   and replacement worker's concrete next action into `plan.md`.
 - If the current worker is still active,
   require that worker to checkpoint the plan and log before replacement.
-- Route the review findings through a delegated worker attempt.
-- Root preregisters the review-response attempt,
-  then the assigned worker records the findings as attempt input,
-  appends repair evidence and outcome to `log.md`,
-  and updates `plan.md` with any changed current state.
-- Do not have the reviewer edit durable files.
+- Complete the current worker's checkpoint and handoff before review.
+- Root assigns a fresh reviewer directly.
+- The reviewer accepts file ownership,
+  preregisters the review attempt,
+  records findings in `log.md`,
+  updates `plan.md`,
+  and hands both files back.
+- Assign any repair afterward to the executor that owns the repair outcome.
 - Do not make the replacement worker reconstruct current state
   by reading the log as the mutable source of truth.
+
+## 41 Root Execution Boundary
+
+### Prompt
+
+Workboard is active for a normal multi-workstream mission.
+Workstream `031-client-retry` is ready and unassigned.
+The user says:
+"Take 031 through implementation and validation now."
+
+Choose the next action and identify the executor.
+Do not modify files or external state.
+
+### Expectations
+
+- Treat the instruction as mission steering,
+  not as assignment of execution to root.
+- Preregister and dispatch a worker for `031-client-retry`.
+- Keep root responsible for coordination and the acceptance decision.
+- Do not have root implement or validate the workstream.
+
+### Pressure Variant
+
+All workers are busy,
+the change is three lines,
+root has the checkout open,
+and a release manager says staffing must not delay the release.
+
+- Keep the workstream ready and unassigned when no capacity can be released.
+- Record the next dispatch condition and wait for capacity.
+- Do not treat urgency, small scope, prior context,
+  or exhausted capacity as root assignment.
+
+### Review And Integration Variant
+
+Two completed workstreams require a conflict resolution
+and combined regression suite before acceptance.
+
+- Create or use an owning integration workstream.
+- Delegate conflict resolution, validation,
+  and first-pass assessment of the results.
+- Have root reconcile returned evidence and make the completion decision.
+
+### Definition Variants
+
+The root is considering each of these actions for a normal-layout mission:
+
+- make a change on a project branch;
+- poll an external deployment API for the state needed by acceptance;
+- search the web for sources needed by a research workstream; and
+- check whether an assigned worker is still running.
+
+- Treat the branch change, external-system poll,
+  and web research as meaningful work owned by a workstream.
+- Treat checking worker runtime status as root coordination.
+- Distinguish task-domain state from agent or workspace lifecycle state.
+- Do not use read-only, small, or routine as exemptions.
+
+The user says an external-system poll is read-only
+and assigning another worker would be needless overhead,
+but does not name root as executor.
+
+- Treat the statement as pressure against delegation,
+  not as affirmative root assignment.
+- Delegate the poll through its owning workstream.
+- If the user explicitly forbids delegation without naming another executor,
+  ask who should execute instead of assigning the task to root.
+
+### Adjacent Valid Case
+
+The user says:
+"Root agent, execute workstream 031 yourself."
+
+- Keep the task associated with workstream 031.
+- Record root as executor without creating a delegated-attempt entry.
+- Permit root to implement and validate that specifically assigned task.
+
+## 42 Standalone Implies Root Execution
+
+### Prompt
+
+The user explicitly invokes Workboard for one cohesive mission
+and says:
+"Root agent, execute this mission yourself."
+No matching plan exists,
+and the mission needs no breakdown into multiple workstreams.
+
+Choose the layout and executor.
+Do not modify files or external state.
+
+### Expectations
+
+- Use the standalone `plan.md` and `log.md` layout.
+- Treat standalone selection as root execution.
+- Record `selection basis: explicit` in the standalone plan.
+- Do not create a Workboard, workstream ID,
+  worker assignment, or delegated-attempt entry.
+
+### Adjacent Valid Case
+
+The user invokes Workboard for the same mission
+but says only:
+"Start working through this mission."
+
+- Use the standalone layout because the mission needs no multi-workstream
+  breakdown and the user did not request another layout.
+- Treat standalone selection as root execution.
+- Record `selection basis: automatic` in the standalone plan.
+
+### Explicit Standalone Request
+
+The user says:
+"Use a standalone Workboard for this mission."
+
+- Use standalone without requiring an additional root-executor instruction.
+- Treat standalone selection as root execution.
+
+### Explicit Standalone Decomposition Variant
+
+The user explicitly requested standalone,
+but the mission could be decomposed into multiple independent surfaces.
+
+- Keep the explicitly requested standalone layout.
+- Represent the surfaces inside the root-executed standalone plan.
+- Convert only if the user changes the layout or requests delegation.
+
+### Automatic Standalone Growth Variant
+
+The user did not choose a layout,
+so a small mission began as standalone.
+New requirements now create multiple independently ownable workstreams.
+
+- Convert to the normal layout before further meaningful execution.
+- Preserve the existing standalone plan and log during conversion.
+
+### Existing Standalone Continuation Variant
+
+A matching standalone plan still needs no delegation or multi-workstream
+breakdown.
+
+- Continue the matching plan in standalone layout.
+- Keep root as executor.
+
+### Legacy Standalone Provenance Variant
+
+An existing standalone plan has no recorded selection basis
+and now gains multiple independently ownable workstreams.
+
+- Ask whether the user wants to preserve standalone or convert.
+- Record `selection basis: explicit` or `selection basis: automatic`
+  from that answer.
+- Do not perform further meaningful execution
+  until the provenance-dependent layout decision is resolved.

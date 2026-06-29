@@ -5,9 +5,15 @@ Do not leave placeholders in an active plan.
 
 ## Standalone Layout
 
-Use this compact layout only when no matching Workboard plan already exists
-and the mission has one cohesive root-owned outcome
-that does not benefit from independent ownership:
+Use this compact layout when no matching Workboard plan exists and either
+the user asks for a standalone Workboard
+or the mission needs no breakdown into multiple independently ownable
+workstreams:
+
+An explicit standalone request controls the layout.
+Without one,
+use the default layout when the user requests delegation
+or the mission needs multiple workstreams.
 
 ```text
 <base>/<plan-slug>/
@@ -18,12 +24,16 @@ that does not benefit from independent ownership:
 The standalone `plan.md` uses the workstream plan sections below,
 but its title names the mission without a workstream ID.
 It directly records the mission's current state and completion.
-The sibling `log.md` uses the workstream log shape below,
-but records no delegated attempt unless delegation later occurs.
+It records `selection basis: explicit` when the user requested standalone
+or `selection basis: automatic` when task size selected the layout.
+For a legacy standalone plan without this field,
+ask and record the basis before a provenance-dependent layout decision.
+The sibling `log.md` uses the workstream log shape below
+but records no delegated attempt for root execution.
 
 Do not add a Workboard, state directories,
 or nested workstream records to this layout.
-If independently ownable work or delegation later becomes necessary,
+If independently ownable work or delegation becomes necessary,
 convert the mission to the default layout before dispatch.
 
 ## Default Layout
@@ -106,15 +116,18 @@ or migration states where path derivation is unavailable.
 
 ## Integration
 
-<Explain how the workstream outcomes combine, their ordering, and the shared
-interfaces or artifacts that the root owns.>
+<Explain how the workstream outcomes combine,
+their ordering,
+the integration decisions the root owns,
+and the workstream assigned to any artifact-changing integration.>
 
 ## Completion Evidence
 
-<State the overall criteria and how the root will establish them.
-Use commands and expected outputs when deterministic checks apply.
-Use observable behavior, artifact inspection, or a written review rubric when
-those better fit the result.>
+<State the overall criteria,
+the workstream that will produce the combined evidence,
+and how the root will reconcile returned evidence into a completion decision.
+Put commands, expected outputs, artifact inspection,
+or first-pass assessment in the assigned workstream.>
 
 ## Worktree Pool
 
@@ -123,7 +136,7 @@ Record actual workspace handoffs and their current ownership.
 
 | Workspace / handoff | State | Scope | Responsible owner / prior owner | Active checkout user | Observed state | Risks / preserved work | Next action / disposition |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| `<identity, path, and execution context>` | in-use | `001-example` or root integration | `<agent-id>` / `<prior-id>` | `<agent-id>` or none | `<actual state>` | `<risks or durable result>` | `<concrete next action>` |
+| `<identity, path, and execution context>` | in-use | `001-example` or root coordination | `<agent-id>` / `<prior-id>` | `<agent-id>` or none | `<actual state>` | `<risks or durable result>` | `<concrete next action>` |
 ```
 
 ## Workstream `plan.md`
@@ -282,9 +295,10 @@ Use headings, tables, chronology, or indexes that fit the work.>
 ## Delegated Attempts
 
 Append one subsection per delegated attempt.
-Preregister each attempt before dispatch.
-During an assigned worker attempt,
-the worker maintains the attempt entry and keeps `plan.md` synchronized
+After accepting assignment and file ownership,
+the executor preregisters each attempt before meaningful execution.
+During execution,
+the executor maintains the attempt entry and keeps `plan.md` synchronized
 until handoff.
 
 ### Attempt <number>: <short objective>

@@ -122,8 +122,10 @@ such as:
 - launches, ownership changes, handoffs, and reconciliation decisions;
 - dependency or sequence changes and why they were necessary;
 - worktree assignment history when the workboard snapshot is insufficient;
-- integration observations, conflicts, resolutions, and combined evidence;
-- root-level delegated reviews and dated acceptance assessments.
+- integration observations, returned evidence,
+  and root reconciliation decisions;
+- reviewer outcomes identified by owning workstream ID
+  and dated acceptance decisions.
 
 Do not copy detailed workstream evidence into the root log.
 Name the stable workstream ID,

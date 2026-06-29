@@ -23,7 +23,63 @@ do not rename durable records solely to adopt the new name.
 
 Coordinate independent workstreams
 through durable files and delegated ownership.
-The root agent remains responsible for sequencing, integration, and completion.
+The root agent remains responsible for coordination, sequencing,
+integration decisions, and completion decisions.
+
+## Root Execution Boundary
+
+In the normal layout,
+the root is the coordinator and assigned workstream owners are the executors.
+Root ownership means accountability for coordination and decisions;
+it does not authorize the root to perform meaningful project work.
+
+The root may execute a meaningful task only when the user affirmatively names
+the root as executor for that task.
+Otherwise,
+the root assigns the task to a workstream and delegates it.
+Requests or imperatives addressed to the root steer the mission;
+they do not assign execution to root unless they affirmatively name root
+as executor for the task.
+Saying that delegation is unnecessary, slow, or undesirable
+does not count as root assignment.
+In the normal layout,
+if the user forbids delegation without naming the root as executor,
+ask who should execute instead of inferring root execution.
+
+Meaningful work is any action whose primary purpose is to create, modify,
+retrieve, or independently evaluate task-domain state or evidence
+needed to advance or assess the mission outcome.
+Task-domain state is the project, branch, service, external system,
+source material, or evidence the mission is about;
+it excludes Workboard records and agent or workspace lifecycle state.
+An action remains meaningful when it is read-only, small, or routine.
+As a heuristic,
+if the action would still need to happen after removing Workboard
+and ownership bookkeeping,
+delegate it.
+Working on a branch,
+polling a task-domain external system,
+and researching through web search are examples of meaningful work.
+
+The root may inspect root-owned coordination records
+and agent or workspace lifecycle state to coordinate safely,
+edit root-owned coordination files,
+create and transition workstreams,
+preregister and dispatch attempts,
+steer workers and monitor agent or workspace lifecycle state,
+receive handoffs,
+compare returned evidence with acceptance criteria,
+make acceptance decisions,
+record coordination and completion state,
+and dispose of workspaces.
+
+When the user explicitly assigns a normal-layout task to the root,
+keep the task in its owning workstream,
+and record the root as executor.
+Root execution is not a delegated attempt.
+
+Standalone mode is the layout exception described below;
+selecting it identifies the root as executor.
 
 ## Start
 
@@ -87,8 +143,7 @@ The root agent remains responsible for sequencing, integration, and completion.
    Do not eagerly plan workstreams
    for work the user has not asked you to manage.
    When no matching plan exists
-   and the mission has one cohesive root-owned outcome
-   that does not benefit from independent ownership,
+   and the mission satisfies the standalone criteria below,
    use the standalone plan layout described below.
    Otherwise create the root `plan.md`
    and a `workstreams/` directory that contains the lifecycle state
@@ -101,12 +156,7 @@ The root agent remains responsible for sequencing, integration, and completion.
    Suggested states are `backlog/`, `active/`, `evergreen/`,
    and `completed/`.
    A root plan may define another clear lifecycle.
-   Store archived terminal workstreams under `workstreams/archived/<id>/`.
-   Archive placement preserves the workstream's lifecycle state
-   and means that the workstream no longer appears on the workboard.
-   Archive only when the user asks
-   or when a user-specified archival condition matches the workstream.
-   Terminal state alone does not trigger archival.
+   Use the lifecycle procedure below for state transitions and archival.
    Do not create empty state directories or `archived/` in advance.
 
 When decomposing implementation work,
@@ -117,10 +167,6 @@ Keep ordered units separate only when each becomes independently valid
 and landable after those prerequisites.
 If no ordering allows each unit to pass and land safely,
 combine the coupled work.
-
-The number of workstreams ready or running at one time may be zero, one,
-or many.
-Do not create, split, or activate work merely to preserve concurrency.
 
 ## Reference Map
 
@@ -138,9 +184,20 @@ Read the focused reference when its decision applies:
 
 ## Standalone Plan
 
-When an explicit Workboard request starts with no matching existing plan
-and contains one cohesive root-owned outcome
-that does not benefit from independent ownership,
+After Workboard has been selected under Start step 1,
+use the standalone layout for a new plan when either:
+
+- the user asks for a standalone Workboard; or
+- the user does not choose a layout
+  and the mission is small enough that it needs no breakdown
+  into multiple independently ownable workstreams.
+
+An explicit standalone request controls the new layout,
+even when the mission could be decomposed.
+Without one,
+use the normal layout when the user requests delegation
+or the mission needs multiple workstreams.
+When standalone applies,
 the root may represent the mission with only:
 
 ```text
@@ -154,69 +211,71 @@ Select `<plan-directory>` using the location and naming rules above.
 The standalone `plan.md` directly owns the mission and current state.
 It contains the workstream outcome, context, boundaries, execution path,
 evidence strategy, recovery, and concrete next action.
+It records whether standalone selection was `explicit` or `automatic`
+so future continuation can apply the correct conversion rule.
+For a legacy standalone plan without that provenance,
+continue while the distinction is immaterial.
+Before a provenance-dependent layout decision,
+ask whether the user wants to preserve standalone or convert,
+then record the selection basis before further meaningful execution.
 The sibling `log.md` is the self-contained supporting record.
 
-The root executes a standalone plan directly.
+Standalone mode implies that the root executes the plan directly.
 Do not create a Workboard, workstream ID, state directories,
 nested workstream files, worker assignment,
 or delegated-attempt entry merely to represent the one workstream.
 
-Before selecting this layout,
-identify the mission's meaningful outcomes, mutable surfaces, dependencies,
+When the user did not explicitly request standalone,
+assess the mission's outcomes, mutable surfaces, dependencies,
 and evidence boundaries.
-Use the normal layout when multiple substantial outcomes
-can be owned and advanced independently,
-even when the user described them as one task
-or one agent could execute them sequentially.
-Do not collapse a decomposable mission into a standalone plan
-to avoid coordination overhead.
+Use the normal layout when that assessment yields
+multiple independently ownable workstreams.
 
-Use the normal multi-workstream layout
-when the mission already has a matching root plan,
-requires delegation,
-or contains multiple independently ownable workstreams.
-If a standalone mission later gains such work,
+Continue a matching plan in its existing layout
+unless the user changes the layout or a conversion rule below applies.
+If any standalone mission later requires delegation,
 convert it to the normal layout before delegation or parallel execution,
 preserving the existing plan and log content in the new durable structure.
+If an automatically selected standalone mission later gains
+multiple independently ownable workstreams,
+convert it before further meaningful execution.
+An explicitly requested standalone plan remains standalone
+until the user changes the layout or requests delegation.
 
 ## Terminology
 
 Workboard is the coordination workflow
 and the canonical name of its workstream table.
-The root `plan.md` contains a workboard,
+In the normal layout,
+the root `plan.md` contains a workboard,
 normally headed `Workboard`, that lists its workstreams.
 `Workstream Board`, `project board`, `root board`, and `board`
 are aliases for the workboard.
 Use `workboard` as the canonical name.
-The root plan contains the workboard;
+The normal-layout root plan contains the workboard;
 the root plan is not itself the workboard.
 Other clear project-specific terms remain valid.
 
 ## Root Plan
 
-The root `plan.md` is the authoritative coordination snapshot.
+In the normal layout,
+the root `plan.md` is the authoritative coordination snapshot.
 Only the root agent edits its Workboard.
 
-For each workstream that has not been archived,
-the Workboard must identify its stable ID and lifecycle state.
-It also records the current owner,
-dependencies by stable ID,
-runtime assignment when applicable,
+For every non-archived normal-layout workstream,
+the Workboard records its stable ID, lifecycle state, current owner,
+dependencies, runtime assignment when applicable,
 and the root's concrete next coordination action.
 The workboard is an operational index,
 focused on root-owned coordination state.
-Keep every non-archived workstream in one Workboard table.
-Archived terminal workstreams do not appear on the workboard.
-Their files under `workstreams/archived/<id>/` retain their terminal lifecycle
-state and durable history.
+Keep those workstreams in one Workboard table.
+Archived terminal workstreams do not appear on the workboard;
+the lifecycle procedure below governs archival placement.
 Classify states according to the lifecycle defined by the project.
 A plan may add a short label when stable IDs are not enough
 to distinguish workstreams at a glance.
-For non-archived workstreams using the normal layout,
-the lifecycle state in the workboard
-and the `workstreams/<state>/<id>/` directory must agree.
-For non-archived workstreams using the normal layout,
-derive plan and log paths from the workboard state and stable ID:
+The Workboard lifecycle state and state directory must agree;
+derive plan and log paths from that state and stable ID:
 `workstreams/<state>/<id>/plan.md`
 and `workstreams/<state>/<id>/log.md`.
 For an archived workstream,
@@ -231,12 +290,9 @@ For an evergreen workstream,
 also record its execution condition and next wake condition.
 
 The root plan also records project-level constraints, integration order,
-completion evidence, and the Worktree Pool when worktrees are used.
-Add a root `log.md` when root-owned evidence, decisions, or coordination history
+completion criteria, and the Worktree Pool when worktrees are used.
+Add a root `log.md` when returned evidence, decisions, or coordination history
 would make `plan.md` hard to skim.
-Also create it before delegating
-a review, synthesis, or integration-support attempt whose result informs root
-reconciliation.
 
 ## File Ownership
 
@@ -248,95 +304,74 @@ under its contract.
 | --- | --- |
 | Root `plan.md` | Root agent only. |
 | Root `log.md` | Root agent only. |
-| Workstream `plan.md` before dispatch | Root agent. |
-| Workstream `log.md` before dispatch | Root agent. |
-| Workstream `plan.md` during an active worker attempt | Assigned worker. |
-| Workstream `log.md` during an active worker attempt | Assigned worker. |
-| Workstream files after handoff | Root agent until reassignment. |
-| Reviewer pass | Reviewer reports to root; reviewer does not edit durable files. |
+| Workstream `plan.md` and `log.md` while unassigned | Root agent as custodian. |
+| Workstream `plan.md` and `log.md` during execution | Assigned executor. |
+| Workstream `plan.md` and `log.md` after handoff | Root agent as custodian. |
 
-Root-owned files are never edited by workers or reviewers.
-Workstream files are written by the assigned worker only while that worker
-is actively working on the workstream.
+The executor is the worker, reviewer,
+or explicitly assigned root agent performing the workstream's current task.
+During execution,
+the executor owns both workstream files and keeps them current.
+Before meaningful execution,
+a delegated executor follows the attempt contract below.
+An explicitly assigned root executor records execution in the log
+without a delegated-attempt entry.
 At handoff,
-write authority returns to root after the worker checkpoints the workstream plan,
-appends the required log entries,
-and reports the current state.
+the executor checkpoints both files and reports the current state;
+write authority then returns to root.
+Root-owned files are never edited by another executor.
 If the root needs a live worker's workstream plan or log updated,
 the root instructs that worker to checkpoint the files instead of editing them
 concurrently.
 
+The Workboard owner names the current executor,
+or root as custodian while the workstream is unassigned.
+Runtime assignment names the live agent when one exists.
+A workspace's responsible owner controls its lifecycle and disposition;
+its active checkout user performs the current workspace action.
+
 ## Workstream Files
 
-Each workstream has exactly two durable files by default,
-stored together under `workstreams/<state>/<id>/` while it appears on the
-workboard and under `workstreams/archived/<id>/` after archival:
+In the normal layout,
+each workstream has exactly the two durable files
+whose paths derive from its Workboard state and stable ID:
 
 - `plan.md` is the complete mission and continuation guide.
   It defines the useful supporting record for this workstream.
 - `log.md` is that self-contained supporting record.
-  It includes write-ahead entries for delegated attempts,
-  but it is not merely an attempt ledger.
-  It is the append-only replay log for the workstream:
-  add new entries for new evidence, decisions, attempts, superseding facts,
-  corrections, and recovery checkpoints instead of rewriting history.
+  The Supporting Logs section defines its replay contract.
 
-Write each workstream `plan.md`
-for an agent that receives only that file and the current tree.
-The plan must contain every task-specific fact, assumption, decision, and
-instruction needed to continue without the root conversation or agent memory.
-It is operational guidance for doing the work,
-not just a request to inspect files or decide the work later.
-Because the plan is the living current state,
-distinguish mostly stable intent
-from mutable state that changes as work proceeds.
-Purpose, boundaries, dependencies, completion criteria,
-and the assessment strategy are usually stable.
-Progress, operative decisions, discoveries, blockers, evidence, outcomes,
-ownership,
-and the next action are mutable.
-Update the mutable state at every material checkpoint.
-Revise stable intent only when the work itself changes,
+Write `plan.md` for an agent that receives only that file and the current tree.
+The plan is the living current state;
+the log preserves the replay history behind it.
+Treat purpose, boundaries, dependencies, completion criteria,
+and assessment strategy as mostly stable.
+Update progress, decisions, discoveries, blockers, evidence, ownership,
+and the next action at every material checkpoint.
+Revise stable intent only when the mission changes,
 and record why in the log.
-The root and human operator use the workstream plan to assess current state.
-A casual reader should be able to identify that state from headings and first
-sentences before reading supporting detail.
-Workers continuing or taking over a task use the sibling log to replay how
-the current approach was reached,
-but the current approach itself must be promoted into the plan.
-At completion,
-make the outcome and remaining work understandable from the plan alone,
-and remove prospective text that contradicts the finished state.
-Write reference-first prose throughout:
-name the concrete file, symbol, API, command, source, artifact, or decision
-before explaining its significance.
-For code-facing work,
-use a compact code or data example when it materially clarifies the contract
-or choice;
-do not require one when stable references and prose are clearer.
+Write reference-first prose,
+using compact code or data examples only when they clarify a material contract.
 
 A self-contained plan must:
 
-- explain why the work matters and state the owned outcome;
-- explain how completion is recognized;
-- orient the reader to the relevant repository or project state;
-- name concrete paths, modules, symbols, services, and commands;
-- name relevant artifacts and terms;
-- explain how those parts fit together;
-- explain what currently exists and how the implemented paths, symbols,
-  interfaces, data shapes, or system boundaries work together;
+- explain why the work matters,
+  state the owned outcome and required contracts,
+  and explain how completion is recognized;
+- be executable without the root conversation, agent memory,
+  or reconstruction of the task through inspection;
+- orient the reader to the current repository or project state;
+  name relevant paths, modules, symbols, services, commands, artifacts,
+  and terms;
+  and explain how those parts fit together;
 - summarize required facts from other sources instead of merely linking to them;
-- record known requirements, decisions, constraints, contracts, and acceptance
-  details at the level needed to act without re-deciding the mission;
+- record known requirements, decisions, constraints, and acceptance details
+  at the level needed to act without re-deciding the mission;
 - name the mutable surface, important exclusions, environmental assumptions,
   prerequisites, and governing repository instructions;
 - describe dependencies by stable workstream ID;
-- state each exact required outcome or contract;
-- record resolved decisions and a concrete execution path, including where and
-  why changes or investigations occur;
-- record the rationale for material decisions,
-  relevant rejected alternatives,
-  and discoveries or surprises that shaped the current result;
+- record resolved decisions, rationale, relevant rejected alternatives,
+  and discoveries that shaped the concrete execution path;
 - define an evidence and assessment strategy appropriate to the outcome;
 - define what belongs in the sibling log,
   how the record is organized, and when it should be updated;
@@ -347,13 +382,6 @@ A self-contained plan must:
   how it was achieved,
   and any remaining gaps or follow-up.
 
-A plan is not self-contained merely because it names files to inspect.
-Inspection should verify or refine an already specified path.
-It must not reconstruct the project context or decide what the task means.
-Keep the plan current as facts, decisions, and progress change.
-Every revision must remain internally consistent
-and executable from empty context.
-
 ### Dependency References
 
 A workstream may name another workstream by stable ID.
@@ -361,17 +389,6 @@ It must state the exact outcome or contract it requires.
 It must not refer to another workstream's `plan.md` or `log.md` path.
 Moving a workstream between state directories therefore does not require edits
 to other workstreams.
-
-Independently,
-the sibling `log.md` must identify the workstream and owned outcome.
-It must include essential context and a dated latest recovery checkpoint,
-so an empty-context reader can interpret and resume the record honestly.
-Do not duplicate the plan's full implementation narrative in the log.
-Do not silently edit or delete earlier log entries when new information
-supersedes them.
-Append the new information,
-state what it supersedes,
-and promote the resulting current state into the plan.
 
 ## Supporting Logs
 
@@ -415,12 +432,9 @@ neither may depend on another workstream's plan or log,
 and the log must explain its own organization and stable context.
 
 For a root log,
-record root-owned coordination, reconciliation, integration,
-combined assessment, and the evidence behind root decisions.
+record root-owned coordination, reconciliation of returned evidence,
+integration decisions, and the basis for acceptance decisions.
 Do not mirror workstream detail already preserved in a workstream log.
-
-See [log-patterns.md](references/log-patterns.md)
-for adaptable record shapes.
 
 ## Lifecycle Transitions And Archival
 
@@ -430,11 +444,15 @@ This includes moving a workstream between state directories,
 marking it completed, promoting it from backlog, pausing it,
 archiving it, or restoring it from the archive.
 
-1. Quiesce any live worker for the workstream first.
-   Confirm that no write, command, assessment, server, watcher,
-   or delegated attempt is using the old path.
-2. Checkpoint the workstream plan, log, and any root-owned coordination record
-   that explains the transition.
+1. Have any live executor checkpoint the workstream plan and log,
+   stop all work that uses the old path,
+   and complete an ownership handoff to root.
+   Confirm that root has write authority
+   and that no command, assessment, server, watcher,
+   or delegated attempt is still using the old path.
+2. Root checkpoints any root-owned coordination record
+   that explains the transition
+   and verifies that the workstream plan and log describe the handoff state.
    Before archiving,
    confirm that the lifecycle state is terminal and record that state in the
    workstream plan.
@@ -460,24 +478,15 @@ archiving it, or restoring it from the archive.
    remove the row from the Workboard.
    For restoration,
    add the row back to the Workboard with its preserved terminal state.
-5. Update live handoff references and give any continuing worker
-   the new runtime handoff paths. Resume only after acknowledgement.
+5. For continuing execution,
+   root reassigns the executor with the new runtime handoff paths.
+   The executor accepts the assignment and file ownership before resuming.
 
-Rationalizations to reject during lifecycle transitions:
-
-- "Workboard cleanup can happen later."
-  Update the root Workboard as part of the transition.
-- "Only path updates are needed to prevent broken links."
-  Update paths and lifecycle fields together.
-- "Do not disturb the workboard status because another dashboard scrapes it."
-  Keep the workboard truthful;
-  stale status is not a safe compatibility layer.
-- "Archive is a lifecycle state."
-  Archive placement controls workboard visibility;
-  preserve the workstream's terminal lifecycle state.
-- "Keep archived rows on the workboard for history."
-  The archived workstream files are the durable history;
-  remove archived workstreams from the workboard.
+Treat directory placement, lifecycle state, Workboard visibility,
+ownership, runtime assignment, and archival placement
+as one atomic transition.
+Archive placement controls Workboard visibility;
+it does not replace the workstream's terminal lifecycle state.
 
 ## Artifacts
 
@@ -514,12 +523,28 @@ State what evidence will be produced and how it will be assessed.
 Define success, failure, and any acceptable inconclusive result.
 
 Workstream evidence does not complete the root plan by itself.
-The root defines and establishes the combined acceptance evidence.
+The root defines the combined acceptance criteria,
+delegates meaningful validation under the Root Execution Boundary,
+and makes the final decision by reconciling returned evidence.
 
 ## Delegate Attempts
 
-Preregister every delegated attempt
-in the owning workstream's `log.md` before dispatch.
+Every delegated meaningful task needs an owning workstream and workstream log.
+Use the existing owning workstream for follow-up within its outcome.
+Create another workstream when review, synthesis,
+integration support, or validation owns an independently useful outcome.
+The root log records root coordination and reconciliation;
+it does not replace a workstream for delegated execution.
+
+Before dispatch,
+root remains the recorded custodian
+and names the intended executor in the next coordination action.
+After accepting the assignment and file ownership,
+the executor reports acceptance to root.
+Root records the executor as Workboard owner and runtime assignment;
+that update completes the ownership transfer.
+The delegated executor then preregisters the attempt
+in the owning workstream's `log.md` before meaningful execution.
 This includes worker assignments, retries, material pivots, and reviewer passes.
 Routine follow-up within the same objective and strategy is not a new attempt.
 
@@ -527,26 +552,14 @@ Keep preregistration lightweight.
 Record enough starting state, expected evidence, and assessment detail
 to judge the attempt afterward.
 Append its observed outcome and resulting next action.
-If dispatch fails, record that outcome rather than deleting the entry.
+If dispatch fails before acceptance,
+root retains file ownership and records the failed assignment.
 
-Keep one writer for each workstream plan and log at a time.
-The permitted current writer preregisters the attempt before dispatch.
-An assigned worker owns both files until handoff,
-maintains the plan-defined supporting record,
-and keeps the plan synchronized with current state.
-Root does not edit those files concurrently.
-A reviewer returns findings to the root instead of editing durable files.
-Root routes actionable findings through the current owner
-or through a replacement worker after handoff.
-Record each ownership handoff in the log.
-
-Every delegation needs an owning log.
-Use a workstream log for workstream attempts.
-For delegated review, synthesis, or integration-support attempts
-that produce an independently useful artifact for root,
-create and use the root `log.md` first.
-The root still owns reconciliation, integration decisions,
-and final acceptance evidence.
+For delegated review tasks,
+root delegates directly to a reviewer rather than an implementation worker.
+The reviewer follows the executor ownership and attempt contracts,
+then hands both files back with the findings.
+Route any repair through the executor that owns the repair outcome.
 
 If an attempt already started without preregistration, preserve valid work and
 reconcile it immediately.
@@ -556,16 +569,22 @@ Be as accurate as the available evidence permits.
 Do not invent a write-ahead entry
 or restart work solely to make the log orderly.
 
-Read [workers.md](references/workers.md)
-before dispatch, review routing, handoff, or worker release.
-
 ## Worker Lifecycle
 
-Assign a persistent worker to each ready workstream when capacity permits.
-Continue the same worker for follow-up within that workstream.
+Assign a persistent worker to each ready delegated non-review workstream.
+Continue the same live worker for follow-up while its assignment is retained.
+After checkpoint and release,
+assign a replacement and record the new ownership handoff.
 Never reuse a worker for an unrelated workstream.
 This assignment rule applies to workstreams in the normal layout,
 not to a root-executed standalone plan.
+
+When capacity is unavailable,
+keep the ready workstream unassigned,
+record which handoff or release will permit dispatch,
+and wait.
+Capacity controls dispatch timing;
+it never transfers workstream execution to the root.
 
 When the next meaningful decision depends on worker results,
 the root must wait for them.
@@ -577,11 +596,7 @@ after checkpointing their durable state.
 Do not close a worker merely because
 a long command or assessment is still running.
 
-Use reviewers as fresh, usually single-shot agents.
-The root reconciles reviewer findings with the worker and owns acceptance.
-
-See [workers.md](references/workers.md)
-for dispatch and inactive-worker checkpoint procedures.
+Use reviewers as fresh, usually single-shot executors.
 
 ## Evergreen Workstreams
 
@@ -608,9 +623,6 @@ A waiting evergreen workstream does not require a live worker.
 Workboard records recurrence but does not create wall-clock wakes;
 name the external mechanism that wakes the root.
 
-See [evergreen-workstreams.md](references/evergreen-workstreams.md)
-for the cycle contract and concise templates.
-
 ## Worktrees
 
 Worktrees are optional.
@@ -627,6 +639,10 @@ An `in-use` workspace has one declared workstream or root scope,
 one responsible owner,
 an optional active checkout user,
 and one concrete next action.
+Root scope means standalone execution,
+an explicitly root-assigned normal-layout task,
+or coordination-only setup, recovery, or disposition.
+It does not independently authorize meaningful root execution.
 Before root completion,
 no workspace may remain `in-use`,
 and every workspace used by the mission must be released as `available`
@@ -646,36 +662,24 @@ clear user preference,
 repository rule,
 or workstream plan may require another preservation form.
 At durable handoff from an ephemeral workspace,
-the worker returns any assigned workspace still attached,
+the executor returns any assigned workspace still attached,
 with its identity and quiescent observed state.
-Before unrelated work,
-root accepts the handoff and completes disposition:
-
-- If no named checkout-dependent command or assessment is ready to start now,
-  root runs and verifies the governing release or reset workflow
-  for reusable capacity,
-  or removes the temporary workspace.
-  A durable branch or commit preserves the result independently of the checkout;
-  preserve its ref unless an explicit disposal decision says otherwise.
-  Record later actions without a workspace lease,
-  and acquire capacity when a checkout-dependent action becomes ready.
-- If a named checkout-dependent action is ready to start now,
-  retain the workspace as `in-use` under root,
-  record the active checkout user and action,
-  and complete disposition immediately afterward.
-
-Retain a temporary workspace after handoff only when the next action is ready
-to start now and requires that workspace's current checkout state.
-Otherwise,
-a durable branch or commit preserves the result independently of the workspace.
-Release or remove the workspace right away unless the next assessment
-needs workspace-local state that is not preserved in the durable result,
+The handoff transfers responsible workspace ownership to root
+for retention, release, or removal.
+Root retains the workspace only when an immediate next action
+requires workspace-local state absent from the durable result,
 such as uncommitted generated files, local runtime state,
-or an active process that the assessment will consume immediately.
+or an active process that the action will consume.
+In that case,
+record the owning workstream,
+dispatch its executor under the Root Execution Boundary,
+and record that executor as active checkout user.
 A request to inspect or evaluate the durable result in the producing checkout
 does not establish that requirement by itself.
-The next assessment must identify workspace-local state
-that is absent from the durable result.
+Otherwise,
+root runs and verifies the governing release or removal workflow immediately.
+Preserve any durable branch or commit
+unless an explicit disposal decision says otherwise.
 
 Clean or quiescent state, administrative lease closure, ownership transfer,
 rebinding, and workspace preparation are not release proof.
@@ -686,13 +690,9 @@ If the required branch or commit placement remains unresolved,
 report that blocker and hand control back promptly;
 do not remain idle while holding the workspace.
 
-See [worktrees.md](references/worktrees.md)
-for workspace intent, ownership, preservation,
-release, removal, and completion guidance.
-
 ## Steering And Completion
 
-Advance every ready workstream
+Advance every ready workstream by dispatching it when capacity is available,
 without forcing unrelated work into serial execution.
 It is valid for only one workstream to be ready or running.
 It is also valid for all evergreen workstreams to be waiting.
@@ -705,9 +705,21 @@ Use the Codex goal supervisor only when requested or authorized
 by the user or governing platform instructions.
 Keep mutable status in the plan files and point the goal at those files.
 
-The root reconciles and integrates workstream results.
-It establishes the root completion evidence
-and records completion only when the overall objective is verified.
+The root reconciles workstream results,
+coordinates any required integration through an assigned workstream,
+and makes the completion decision from returned evidence.
+An integration action that operates on task-domain state or evidence
+is meaningful work and follows the Root Execution Boundary.
+After the final executor handoff,
+or after standalone root execution ends,
+root accepts the outcome,
+synchronizes the final plan and log state,
+confirms that every non-evergreen workstream is in a project-defined
+terminal state,
+and releases or removes every used workspace with verified evidence.
+Evergreen workstreams may remain evergreen,
+and archival remains optional unless the user supplied an archival condition.
+Root records mission completion only after those steps finish.
 
 ## Tests
 

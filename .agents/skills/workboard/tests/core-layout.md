@@ -180,7 +180,8 @@ Do not modify files.
 - Continue Workboard with only one ready or running workstream.
 - Do not split, invent, or activate work to preserve concurrency.
 - Keep the completed and blocked workstreams represented honestly.
-- Advance the one ready workstream and maintain root integration ownership.
+- Advance the one ready workstream
+  and maintain root ownership of integration decisions.
 - Explain that a Workboard mission may have zero, one, or many workstreams
   ready or running at a given time.
 
@@ -204,7 +205,7 @@ until its next valid external wake tomorrow.
 A repository has an existing `work/` directory
 but no Workboard plan or workstream records.
 The user says:
-"Fix the typo in the `status --help` text,
+"Root agent, fix the typo in the `status --help` text yourself,
 run its focused test,
 and use Workboard."
 
@@ -331,7 +332,7 @@ The work requires:
   to honor the option in its own provider-specific way;
 - update docs after the implementation shape is known;
 - validate with focused tests for changed surfaces
-  and root-owned integrated evidence.
+  and delegated combined evidence.
 
 The four provider implementations are independently owned by different teams.
 Provider behavior can be implemented and tested independently
@@ -363,8 +364,10 @@ and enough self-contained context for a worker to start from the plan.
   or on exact copied contract facts once available.
 - Create a documentation workstream that depends on the accepted contract
   and provider behavior facts.
-- Keep root-owned integration and final completion evidence in the root plan
-  instead of creating a placeholder verification-only workstream.
+- Create an integration-and-validation workstream
+  that depends on the implementation workstreams
+  and owns combined evidence.
+- Keep the integration decision and final completion decision in the root plan.
 - Give every scheduled workstream a concrete owned outcome,
   mutable surface,
   evidence strategy,

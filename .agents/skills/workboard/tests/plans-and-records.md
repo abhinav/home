@@ -81,8 +81,9 @@ Preregister one delegated attempt.
 - Preserve detailed supporting material outside attempt lifecycle entries,
   such as metric observations, queries and results, source inventories,
   hypotheses, disconfirming evidence, reviewer findings, or artifact indexes.
-- Preregister attempt-specific intent, starting state, expected evidence,
-  and assessment before dispatch.
+- After accepting assignment,
+  preregister attempt-specific intent, starting state, expected evidence,
+  and assessment before meaningful execution.
 - Append the attempt outcome afterward,
   summarizing or referencing the detailed supporting record.
 - Do not duplicate the plan's full implementation narrative
@@ -103,7 +104,9 @@ for four fixture-owned records:
 - root orchestration with ownership changes, reconciliation decisions,
   combined evidence, and one unresolved integration question.
 
-Each record has exactly one delegated attempt.
+Each workstream record has exactly one delegated attempt.
+The root orchestration record has no delegated attempt;
+it records coordination and reconciliation by workstream ID.
 Show what belongs in each log and what remains authoritative in its plan.
 Stop before dispatch.
 
@@ -118,8 +121,10 @@ Stop before dispatch.
 - Design logs preserve requirements, constraints, options, tradeoffs,
   decisions with rationale, review findings, and open risks.
 - Root logs preserve root-owned coordination, reconciliation,
-  integration evidence, unresolved conflicts,
+  returned integration evidence, unresolved conflicts,
   and dated acceptance assessments.
+- Root logs do not replace an owning workstream log
+  for delegated review, integration, or validation.
 - Attempt entries may summarize or reference supporting sections;
   they are not the sole evidence store.
 - Every plan and log is understandable without inherited conversation
