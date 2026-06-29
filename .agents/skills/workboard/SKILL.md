@@ -657,12 +657,25 @@ root accepts the handoff and completes disposition:
   or removes the temporary workspace.
   A durable branch or commit preserves the result independently of the checkout;
   preserve its ref unless an explicit disposal decision says otherwise.
-  Record later review, integration, or follow-up without a workspace lease,
-  and acquire capacity when that work becomes ready.
+  Record later actions without a workspace lease,
+  and acquire capacity when a checkout-dependent action becomes ready.
 - If a named checkout-dependent action is ready to start now,
   retain the workspace as `in-use` under root,
   record the active checkout user and action,
   and complete disposition immediately afterward.
+
+Retain a temporary workspace after handoff only when the next action is ready
+to start now and requires that workspace's current checkout state.
+Otherwise,
+a durable branch or commit preserves the result independently of the workspace.
+Release or remove the workspace right away unless the next assessment
+needs workspace-local state that is not preserved in the durable result,
+such as uncommitted generated files, local runtime state,
+or an active process that the assessment will consume immediately.
+A request to inspect or evaluate the durable result in the producing checkout
+does not establish that requirement by itself.
+The next assessment must identify workspace-local state
+that is absent from the durable result.
 
 Clean or quiescent state, administrative lease closure, ownership transfer,
 rebinding, and workspace preparation are not release proof.

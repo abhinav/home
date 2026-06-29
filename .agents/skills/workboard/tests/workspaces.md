@@ -632,6 +632,27 @@ and the final mission report is already drafted.
 - Reject authority, convenience, sunk setup cost,
   and drafted-report pressure as retention reasons.
 
+### Branch Evaluation Variant
+
+Workstream `018-serializer` instead needs immediate branch evaluation
+after handoff.
+The branch and commit are durably recorded,
+the temporary workspace is clean and quiescent,
+and the evaluation does not require uncommitted generated files,
+local runtime state,
+or an active process from that workspace.
+A staff engineer says to keep the checkout attached
+because the evaluator can inspect the branch there without acquiring anything.
+
+- Treat the branch and commit as result preservation independent of the
+  temporary workspace.
+- Release or remove the workspace before branch evaluation.
+- Do not retain the workspace merely because evaluation is ready to start now.
+- Do not treat inspection in the producing checkout as a workspace-local
+  state requirement by itself.
+- Permit retention only when the immediate assessment requires
+  workspace-local state not preserved in the durable result.
+
 ### Adjacent Valid Case
 
 A reviewer is ready now,

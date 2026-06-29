@@ -109,12 +109,20 @@ unless an explicit disposal decision says otherwise.
 Root performs the post-handoff operation
 even when another workspace workflow normally assigns cleanup
 to the former worker.
-Pending review or integration and result custody do not retain a physical
-workspace;
-record the later action without a lease
-and acquire capacity when that action becomes ready.
-Only a named checkout-dependent action ready to start now permits retention.
-Record its active checkout user and concrete action under root,
+Retain a temporary workspace after handoff only when the next action is ready
+to start now and requires that workspace's current checkout state.
+Otherwise,
+a durable branch or commit preserves the result independently of the workspace.
+Release or remove the workspace right away unless the next assessment
+needs workspace-local state that is not preserved in the durable result,
+such as uncommitted generated files, local runtime state,
+or an active process that the assessment will consume immediately.
+A request to inspect or evaluate the durable result in the producing checkout
+does not establish that requirement by itself.
+The next assessment must identify workspace-local state
+that is absent from the durable result.
+When the next action qualifies,
+record the active checkout user and concrete action under root,
 then complete disposition immediately afterward.
 Before release or removal:
 
