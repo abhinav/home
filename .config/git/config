@@ -41,9 +41,7 @@
 	autoSquash = true
 	# Update refs affected by a rebase by default.
 	updateRefs = true
-	; Temporarily disabling %d to work around updateRefs bug
-	; until next release.
-	; instructionFormat = %s%d
+	instructionFormat = %s%d
 [pager]
 	branch = false
 	tag = false
