@@ -51,6 +51,23 @@ and passes with the fix.
 If a regression test cannot be written,
 explain why before presenting the fix as complete.
 
+When revising work after feedback,
+derive the revision from the user's intended outcome,
+the valid requirements already in scope,
+and authoritative evidence.
+Feedback that identifies or rejects an agent-introduced mistake
+directs the current revision;
+it does not by itself establish subject matter for the resulting artifact.
+Every new rule, guardrail, comment, test expectation,
+or artifact detail must have support independent of both
+the discarded agent proposal and feedback that only describes or rejects it.
+When feedback exposes a reusable boundary,
+make the accepted source or decision criterion the subject of durable guidance.
+Rejected material may reveal the gap,
+but it is not the subject of the new rule in affirmative, negative,
+conditional, or contrastive form.
+Preserve verified history only when that history is part of the reader's task.
+
 # Theory of mind
 
 When writing external artifacts including

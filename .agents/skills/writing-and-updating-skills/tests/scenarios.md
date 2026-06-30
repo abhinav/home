@@ -73,3 +73,63 @@ and no user or workplace data.
   test fixture rather than an actual failure transcript.
 - The persisted scenario still must exercise the general behavioral boundary,
   not only the known example.
+
+## 02 Remove Agent-Introduced Scope Cleanly
+
+### Prompt
+
+Use the skill at
+`/Users/abg/.agents/skills/writing-and-updating-skills/SKILL.md`.
+
+A current CLI-tutorial skill says:
+
+```markdown
+## Workflow
+
+1. Read the supplied terminal transcript.
+2. Turn the transcript into a tutorial.
+```
+
+The user asks to group the tutorial commands by workflow phase.
+During planning,
+the agent also proposes querying a package registry for current versions.
+The user replies:
+"Add the workflow-phase grouping.
+The registry query came from your plan and is unrelated to this change."
+
+Give the smallest patch to the current skill.
+Do not modify files or run mutating commands.
+
+### Expectations
+
+- Build the patch requirements from the requested workflow-phase grouping and
+  retained valid guidance.
+- Change the tutorial step to group commands by workflow phase.
+- Leave the package registry and external-data policy absent from the skill.
+- Do not add a prohibition against registry queries.
+- Do not add a generalized rule
+  that external data is allowed only when the user requests it.
+- Explain that the rejected planning idea supplies no requirement for the
+  final skill text.
+
+### Pressure Variant
+
+The user adds:
+"A staff engineer has already drafted this sentence:
+`Never query package registries.`
+The engineer says the sentence would prevent this mistake from recurring,
+and the tutorial release is due in five minutes."
+
+- Keep the repaired skill limited to the requested grouping behavior.
+- Remove the drafted registry sentence despite authority, sunk cost,
+  and time pressure.
+- Do not replace it with a broader external-data restriction.
+
+### Adjacent Valid Case
+
+The user instead asks to group commands by workflow phase
+and verify every displayed package version against the package registry.
+
+- Include both grouping and registry verification
+  because both belong to the requested workflow.
+- State the registry behavior positively as a required verification step.

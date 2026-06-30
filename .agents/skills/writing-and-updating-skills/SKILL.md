@@ -135,6 +135,13 @@ For each update:
    red flags,
    or retest scenarios instead.
 4. Patch the smallest section that can prevent the same failure.
+   Build the repaired skill from a requirements set
+   established independently of the failed proposal:
+   the user's requested behavior, retained valid guidance,
+   and authoritative evidence.
+   Map every normative sentence in the patch to that requirements set.
+   When deleting or narrowing draft text fully expresses the requested behavior,
+   use that deletion or narrowing as the complete repair.
    Prefer precise wording,
    reordered emphasis,
    or a short table over a new framework.
