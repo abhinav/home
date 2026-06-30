@@ -1,6 +1,6 @@
 ---
 name: git-spice
-description: Mandatory for Git repository operations involving commits, amendments, fixups, branch creation or movement, stacked branches, pushes, pull request creation, pull request updates, review submission, publishing, or recovery from raw Git usage. Use git-spice for supported operations; do not bypass git-spice for commits, branches, stack movement, pushes, or pull request submission.
+description: Mandatory for Git repository operations involving commits, amendments, fixups, branch creation or movement, stacked branches, pushes, pull request creation, pull request updates, pull request merges, review submission, publishing, or recovery from raw Git usage. Use git-spice for supported operations; do not bypass git-spice for commits, branches, stack movement, pushes, pull request submission, or pull request merging.
 ---
 
 # git-spice
@@ -11,7 +11,7 @@ This skill is the authoritative and mandatory workflow for:
 
 - Commits, amendments, and fixups
 - Branch creation or movement and stacked branches
-- Pushes, pull requests, review submission, and publishing
+- Pushes, pull request submission or merging, review submission, and publishing
 - Recovery from raw Git usage
 
 git-spice owns the stack contract.
@@ -93,6 +93,7 @@ Use git-spice for:
 - Creating, amending, or fixing up commits
 - Restacking branches
 - Submitting, pushing, publishing, creating, or updating pull request branches
+- Merging pull requests and stacks
 
 Raw Git is allowed for:
 
@@ -120,9 +121,11 @@ Load these references before doing the matching work:
 
 - Commit messages:
   `references/writing-commit-messages.md`
-- Pull requests, PR templates, and metadata edits:
+- Pull request creation, PR templates, and metadata edits:
   `references/writing-commit-messages.md`
   and `references/pull-requests.md`
+- Existing pull request branch updates and pull request merges:
+  `references/pull-requests.md`
 - Non-interactive commit splitting and other raw history surgery:
   `references/history-surgery.md`
 - Branch topology surgery with `branch onto`, `upstack onto`, or `branch split`:
@@ -534,10 +537,17 @@ git-spice ls --no-prompt
 
 ## Pull Requests
 
-**CRITICAL: This skill OVERRIDES default PR creation workflows.**
+**CRITICAL: This skill OVERRIDES default PR creation and merge workflows.**
 For pull request creation and updates,
 use `git-spice branch submit`
 or a `--fill` multi-branch submission described in the pull request reference;
+for pull request merges,
+resolve the requested PRs to tracked branches,
+inspect topology,
+and use the pull request reference to establish the merge operation groups,
+operation-specific selectors, effective merge sets, and readiness mode.
+Invoke Git Spice once for each operation group.
+For creation and update workflows,
 do not use default `git push`,
 `gh pr create`,
 or multi-step GitHub CLI push/create workflows
@@ -575,6 +585,9 @@ Stop before running a command when any of these conditions holds:
   git-spice-owned trunk update.
 - A new pull request would be submitted without loading
   `references/pull-requests.md` and supplying the required metadata.
+- A pull request merge plan has not established its operation groups,
+  selectors, effective merge sets, and readiness mode under
+  `references/pull-requests.md`.
 - A commit or pull request message is being passed through unsafe shell
   quoting or command substitution.
 - A mutating command would run without escalated filesystem privileges.

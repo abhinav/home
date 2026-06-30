@@ -136,7 +136,6 @@ Give the exact inspection command and interpretation without running it.
 
 - Use `git-spice ls --no-prompt`.
 - Read the pull request number shown beside the branch name.
-- Do not add `--cr-status` merely to detect pull request association.
 
 ## 05 Filter Template Validation And Format Commands
 

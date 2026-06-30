@@ -10,6 +10,9 @@ Run the scenario domain that matches the guidance being changed:
 - [pull-requests.md](pull-requests.md):
   single-branch metadata, side-task fidelity, stacked submission, and
   existing-PR metadata edits.
+- [merging-pull-requests.md](merging-pull-requests.md):
+  named pull requests, dependency paths, complete stacks, and readiness
+  filtering.
 - [history-surgery.md](history-surgery.md):
   authorized raw history surgery, recovery refs, and exact non-interactive
   split operations.
