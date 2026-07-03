@@ -203,16 +203,37 @@ Read `~/.agents/docs/code-design.md` when designing new code or refactoring.
 It provides principles and examples for structuring code,
 choosing abstraction boundaries, modeling data, and organizing control flow.
 
-# Reference docs
+# Required task guides
 
-The following docs contain additional reference material.
-Read them when the task at hand requires that guidance.
+Before editing code, tests, documentation, or command behavior,
+decide which task guides apply.
+Read each applicable guide before drafting the implementation,
+test, review, or prose.
+Do not defer reading an applicable guide until after writing the change.
+
+Apply these guides as operating constraints,
+not as optional background references.
+Before returning,
+verify the changed code, tests, or prose against each guide that applied.
+
+If a task triggers a guide,
+reading the guide is part of the task setup.
+A deadline, small patch, familiar repo, or already drafted solution
+does not remove the trigger.
+Read only the guides that apply to the task.
+Do not read every guide as a substitute for routing.
+Conversational replies to the user are not external prose artifacts
+and do not trigger the prose-formatting guide.
+
+Use this routing table:
 
 - **Prose formatting** (`~/.agents/docs/prose-formatting.md`):
   Semantic line break rules for Markdown,
   commit messages, and multi-line comments.
   Includes line length limits and examples.
-  Read this when writing prose or multi-line comments.
+  Read this when writing or editing external prose artifacts
+  such as Markdown files, documentation, changelogs, commit messages,
+  pull request descriptions, or multi-line comments.
 
 - **Go** (`~/.agents/docs/go.md`):
   Go-specific conventions and tips.
@@ -227,7 +248,10 @@ Read them when the task at hand requires that guidance.
 - **Code readability** (`~/.agents/docs/code-readability.md`):
   Guidance for reducing cognitive load through clear control flow,
   naming, locality, helpers, organization, and comments.
-  Read this when writing or reorganizing code.
+  Read this before writing or changing non-generated code.
+  A small patch still triggers this guide
+  when it changes control flow, names, helper structure, test setup,
+  locality, organization, or comments.
 
 - **Code testing** (`~/.agents/docs/code-testing.md`):
   Guidance for writing and reviewing tests.
