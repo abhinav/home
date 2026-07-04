@@ -257,6 +257,9 @@ Keep stable context brief but sufficient to interpret the record independently.
 Use plan-defined sections for supporting evidence and append-only history.
 Delegated attempts are one required entry type,
 not the entire log structure.
+The log should let a reader derive the plan's material decisions,
+current state, and next action from recorded evidence, observations,
+decisions, corrections, and recovery checkpoints.
 
 ```markdown
 # 001-example Log
@@ -295,6 +298,9 @@ Use headings, tables, chronology, or indexes that fit the work.>
 ## Delegated Attempts
 
 Append one subsection per delegated attempt.
+Keep each attempt subsection as a lightweight replay boundary;
+store detailed evidence in the work-specific supporting sections above
+when that makes the record easier to interpret.
 After accepting assignment and file ownership,
 the executor preregisters each attempt before meaningful execution.
 During execution,

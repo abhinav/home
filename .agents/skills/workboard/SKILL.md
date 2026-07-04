@@ -394,13 +394,20 @@ to other workstreams.
 
 The plan states the current executable truth:
 the mission, operative decisions, current state, and next action.
-The log is the append-only replay record that supports that truth.
+The log is the append-only replay record that lets a later executor,
+reviewer, or root coordinator understand how the plan reached that truth.
+A reader should be able to derive the plan's material decisions,
+current state, and next action from the log's evidence, observations,
+decisions, corrections, and recovery checkpoints.
 If a mutable value differs between the files,
 the plan is authoritative.
 
 Choose a log structure suited to the workstream.
 Every log section should earn its place by improving interpretation,
 auditability, recovery, or plan reconstruction.
+Do not use the log as a transcript of coordination mechanics.
+Record events only when they improve interpretation, auditability, recovery,
+or plan reconstruction.
 Write log entries reference-first.
 Lead with concrete paths, symbols, APIs, commands, sources, measurements,
 commits, or artifacts,
@@ -549,9 +556,15 @@ This includes worker assignments, retries, material pivots, and reviewer passes.
 Routine follow-up within the same objective and strategy is not a new attempt.
 
 Keep preregistration lightweight.
-Record enough starting state, expected evidence, and assessment detail
-to judge the attempt afterward.
-Append its observed outcome and resulting next action.
+Record only enough starting state, intended evidence, and assessment detail
+to identify the replay boundary and judge the attempt afterward.
+Do not repeat the workstream plan
+or record assignment mechanics that do not affect interpretation,
+auditability, recovery, or plan reconstruction.
+Append the observed evidence,
+what that evidence established,
+any decision or state change,
+and the resulting next action.
 If dispatch fails before acceptance,
 root retains file ownership and records the failed assignment.
 

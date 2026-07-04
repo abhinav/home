@@ -12,6 +12,8 @@ The log is append-only replay:
 append new entries for superseding facts, decisions, and recovery state
 instead of rewriting older entries.
 Every delegated attempt still needs write-ahead preregistration.
+That preregistration is a lightweight replay boundary,
+not the main purpose of the log.
 
 ## Record Selection
 
@@ -21,10 +23,14 @@ what evidence was obtained,
 what conclusion or uncertainty it established,
 what changed in the operative plan,
 and what next action follows.
+A reader should be able to derive the plan's material decisions,
+current state, and next action from those facts.
 Preserve command, output, source, or artifact detail when it establishes one
 of those facts or would be needed to rerun, verify, audit, or resume safely.
 
 Do not turn the log into a chat transcript or indiscriminate command history.
+Do not let delegated-attempt mechanics crowd out the workstream evidence
+that explains the plan.
 Collapse process steps that only show how the agent found a fact into the
 resulting observation or conclusion.
 When an investigation step only locates a path, symbol, line, artifact,

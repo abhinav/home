@@ -81,6 +81,9 @@ Preregister one delegated attempt.
 - Preserve detailed supporting material outside attempt lifecycle entries,
   such as metric observations, queries and results, source inventories,
   hypotheses, disconfirming evidence, reviewer findings, or artifact indexes.
+- Make the log sufficient to derive the plan's material decisions,
+  current state, and next action from evidence, observations, decisions,
+  corrections, and recovery checkpoints.
 - After accepting assignment,
   preregister attempt-specific intent, starting state, expected evidence,
   and assessment before meaningful execution.
@@ -127,6 +130,9 @@ Stop before dispatch.
   for delegated review, integration, or validation.
 - Attempt entries may summarize or reference supporting sections;
   they are not the sole evidence store.
+- Logs let a reader derive the plan's material decisions, current state,
+  and next action from evidence, observations, decisions, corrections,
+  and recovery checkpoints.
 - Every plan and log is understandable without inherited conversation
   or another workstream's files.
 - Promote current conclusions, decisions, state, and next actions to the plan.
