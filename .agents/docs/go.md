@@ -12,6 +12,7 @@
 - [File organization](#file-organization)
 - [Parameter and result objects](#parameter-and-result-objects)
 - [Constructors and required dependencies](#constructors-and-required-dependencies)
+- [Exported members on unexported types](#exported-members-on-unexported-types)
 - [Accept interfaces, return structs](#accept-interfaces-return-structs)
 - [Map-shaped APIs](#map-shaped-apis)
 - [Parse, don't repeatedly validate](#parse-dont-repeatedly-validate)
@@ -409,6 +410,40 @@ uses the inline marker to enforce initialization of required fields.
 Prefer useful zero-value behavior for optional fields.
 Document defaults, deferred initialization, or cases where omission must be
 distinguished from the field type's zero value.
+
+## Exported members on unexported types
+
+Unexported concrete types can still have exported members.
+
+Use exported methods or fields when another component is expected
+to call, set, read, or rely on that member as part of the type's contract.
+The type name may be package-local,
+but the member is still a selector surface for its callers.
+Document exported members with the same care you would use on an exported type.
+
+Keep members unexported when they are implementation details
+owned by the type's own methods or tightly local construction code.
+
+Do not use lowercase methods or fields
+merely because the concrete type is unexported.
+Lowercase names signal implementation ownership.
+If another component must know about the member to do its job,
+the member is part of the collaboration boundary.
+
+```go
+type reportWriter struct {
+    Output io.Writer // required
+}
+
+// WriteSummary writes the summary section to the configured output.
+func (w *reportWriter) WriteSummary(ctx context.Context, report Report) error {
+    ...
+}
+```
+
+In this example, `reportWriter` is package-local.
+`Output` and `WriteSummary` are exported because another package component
+constructs the writer and asks it to write a summary.
 
 ## Accept interfaces, return structs
 
