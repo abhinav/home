@@ -341,7 +341,7 @@ require('lazy').setup({
 		end,
 	},
 	{
-		'echasnovski/mini.nvim',
+		'nvim-mini/mini.nvim',
 		config = function()
 			require('mini.align').setup()
 			require('mini.jump').setup()
@@ -718,6 +718,17 @@ require('lazy').setup({
                         	neogit.open({ cwd = vim.fn.expand('%:p:h') })
                 	end, {desc = "Open neogit"})
         	end,
+	},
+	{
+		'MeanderingProgrammer/render-markdown.nvim',
+		dependencies = {'nvim-treesitter/nvim-treesitter', 'nvim-mini/mini.nvim'},
+		opts = {
+			completions = { lsp = { enabled = true } },
+			preset = 'obsidian',
+			-- code = {
+			-- 	conceal_delimiters = false,
+			-- },
+		},
 	},
 
 	-- Look and feel {{{2
@@ -1542,7 +1553,7 @@ let_g('terminal_color_', {
 
 -- Neovide {{{2
 if vim.g.neovide then
-	vim.opt.guifont = "Pragmasevka Nerd Font:h14"
+	vim.opt.guifont = "IoskeleyMonoTerm Nerd Font:h14"
 	vim.opt.linespace = -1
 	let_g('neovide_', {
 		cursor_animation_length = 0.00,
