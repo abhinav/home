@@ -5,14 +5,21 @@
 Use this guide when writing, reviewing, or revising comments
 and in-code documentation.
 
-Documentation is for users of a symbol, module, package, or public API.
-Comments are for maintainers reading or changing the implementation.
+Documentation is attached to a symbol, module, package, or API
+and is for users of that interface,
+whether the interface is public or private.
+Comments may appear beside a statement, block, or function
+or stand at file level,
+and are for maintainers reading or changing the implementation.
 Both should spare the reader from reverse-engineering context
 or carrying fragile mental state
 that the code cannot show directly.
 
-Write for the reader's task,
-not from the author's memory of the change.
+Apply theory of mind for the reader's task:
+write documentation for what a user of the interface needs to know,
+and write comments for what a maintainer of the implementation
+needs to understand.
+Do not write either from the author's memory of the change.
 
 ## Choose The Reader
 
@@ -24,14 +31,13 @@ identify the target reader:
   how to use it,
   and which constraints matter at the boundary.
 - Comments are for maintainers changing the implementation.
-  They explain why the code is shaped this way,
-  what invariant must hold,
-  and what would break if simplified.
+  They compact the implementation into the purpose, state, relationships,
+  or constraints a maintainer needs while reading and changing it.
 
 Do not make callers read implementation comments
-to understand the public contract.
+to understand the interface contract.
 Do not make maintainers infer hidden implementation constraints
-from public documentation alone.
+from interface documentation alone.
 
 For documentation,
 assume the reader can see the symbol name, signature, types,
@@ -48,6 +54,8 @@ hidden state, external behavior, fixture purpose, expensive setup,
 performance constraints, compatibility requirements,
 ordering constraints, domain background,
 and why an obvious simplification would be wrong.
+When several visible details create cognitive load,
+compact how they fit together instead of restating each one.
 
 ## Decision Checklist
 
@@ -68,8 +76,9 @@ ask whether the text does at least one of these jobs:
   that depends on hidden state, external systems,
   ordering constraints, or non-obvious setup
 - lowers the reader's mental bookkeeping
-  in dense code by naming the current state,
-  phase, or domain fact being applied
+  in dense code by compacting multiple conditions, variables,
+  state transitions, phases, or domain facts into a smaller number
+  of meaningful chunks
 
 If the answer is no,
 delete the text or improve the code instead.
@@ -84,9 +93,11 @@ Add or keep documentation when a symbol's users need to know:
 - side effects, concurrency behavior, ordering, or error behavior
 - the external system, protocol, file format, or domain concept it models
 
-Documentation should describe the public contract.
-Do not put private implementation algorithms in public documentation
-unless callers must rely on that behavior.
+Documentation should describe the interface contract well enough
+that users can treat the symbol as a black box
+and use it correctly without reading its implementation.
+Do not put implementation algorithms in symbol documentation
+unless users of the symbol must rely on that behavior.
 
 ## Document Packages And Modules In Isolation
 
@@ -129,19 +140,19 @@ Add or keep implementation comments when maintainers need to know:
 - what hard-to-reconstruct state the reader should track
 - what domain fact, protocol rule, or algorithm case
   the surrounding code depends on
+- how several conditions, variables, or state transitions fit together
+  when following them directly would overload the reader's working memory
 
-When available,
-explain the "why" behind non-obvious code,
-not just the "what".
-When code is dense because it depends on hidden state,
-external APIs,
-or specialized domain knowledge,
-comments may also explain the state or concept
-that lets the reader follow the code safely.
+Comments may explain why non-obvious code is shaped a particular way.
+They may also give a higher-level account of what a block does
+when that account compacts several implementation details
+into one useful concept.
+A useful comment operates at a higher level than the statements it covers;
+it does not translate each statement back into prose.
 
 Treat comment writing as an analysis step.
-If the comment cannot state the relevant contract, invariant,
-or state transition clearly,
+If the comment cannot state the relevant purpose, relationship,
+contract, invariant, or state transition clearly,
 the code or model may need more design work before the comment is ready.
 
 ```go
@@ -161,9 +172,19 @@ for i := 0; i < numWorkers; i++ {
 
 ## Reduce Mental Bookkeeping
 
-Some useful comments explain state that a maintainer could reconstruct,
-but only by keeping too many details in mind at once.
-Use these comments when they make dense code easier to verify or change.
+Treat comments as compaction of code.
+A useful comment gives the maintainer a smaller representation
+of the code needed for the current reading task.
+It lets the maintainer reason about one purpose, phase, relationship,
+or state summary instead of keeping every underlying detail
+in working memory.
+
+Add this assistance when reading a block requires tracking
+several conditions, variables, state transitions, phases,
+or other facts at once.
+The facts do not have to be hidden or individually confusing.
+The comment earns its place when their combination creates cognitive load
+and the compact representation makes the block easier to verify or change.
 
 Good candidates include:
 
@@ -175,8 +196,10 @@ Good candidates include:
 - compact domain background needed to understand the implementation
 
 These comments still need to earn their place.
-They should reduce the reader's cognitive load,
-not decorate simple code.
+The compact representation should cost less to read
+than reconstructing the same meaning from the code.
+It must remain consistent with the code
+and should not decorate a simple block that already reads as one chunk.
 
 ```go
 emit.LoadLocal(userID)    // stack: userID
@@ -337,7 +360,7 @@ Inline comments appear at the end of a line of code.
 They are fragments starting with a lowercase letter.
 
 ```go
-eventChan chan *Event // channel for events
+deadline := time.Time{} // no deadline
 ```
 
 If an inline comment has to become multi-line,
@@ -345,8 +368,8 @@ convert it to a standalone comment
 and make it a full sentence.
 
 ```go
-// Channel for events received from the network.
-eventChan chan *Event
+// Use an empty deadline so the transport waits indefinitely.
+deadline := time.Time{}
 ```
 
 ## Multi-Line Comment Style
@@ -404,7 +427,7 @@ Stop and revise when you catch yourself thinking:
 - "The type is private, so it does not need a concept comment."
 - "The field names are probably clear enough."
 - "The type comment already covers the fields."
-- "This comment says what the next line does."
+- "This comment translates only the next line into prose."
 - "The reviewer already has the conversation context."
 - "The caller can inspect the implementation to figure it out."
 - "The maintainer will know why this cannot be simplified."

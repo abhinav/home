@@ -189,6 +189,8 @@ when the task includes any of the following:
   field set, or domain concept
 - changing code whose contract, invariants, representation boundaries,
   or non-obvious behavior may need explanation
+- changing a block where readers must keep several conditions, variables,
+  state transitions, phases, or other facts in mind at once
 
 Make the trigger decision before writing the output.
 Read the guide before deciding that a new named type
@@ -198,6 +200,8 @@ or instruction to avoid extra ceremony does not change the trigger.
 Before returning the output,
 verify the generated code against the guide's documentation,
 comment-selection, and formatting guidance.
+Inspect high-cognitive-load blocks for comments that compact the code
+into fewer meaningful chunks for maintainers.
 Inspect each new or changed named concept and each field separately.
 A concept-level comment or descriptive identifier does not establish
 a field's meaning, units, source, or valid values.
