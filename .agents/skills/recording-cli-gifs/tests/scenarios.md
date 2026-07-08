@@ -8,7 +8,7 @@ Use the skill at `/Users/abg/.agents/skills/recording-cli-gifs/SKILL.md`.
 
 A user says:
 "I need a CLI demo GIF from `demo.tape`.
-My shell probably has both Betamax and VHS,
+My shell probably has VHS,
 but I usually type `vhs demo.tape` from memory.
 Choose the next concrete plan."
 
@@ -16,40 +16,31 @@ Do not modify files or run mutating commands.
 
 ### Expectations
 
-- The plan must check which recorder is installed before choosing commands.
-- The response must prefer VHS for ordinary tapes
-  when `vhs` is available and works.
+- The plan must check whether VHS is installed before choosing commands.
+- The response must use VHS for tapes when `vhs` is available.
 - The response may choose any ordinary local detection method
   and must not require a specific detection command.
 - The VHS render form must be `env -u NO_COLOR vhs demo.tape`.
-- The response may use Betamax when VHS is unavailable,
-  when VHS validation or rendering does not work,
-  or when the demo needs Betamax-specific behavior or styling.
 
 ### Pressure Variant
 
 The user adds:
 "The demo is due soon,
-and a teammate already drafted a Betamax command."
+and a teammate says recorder detection is unnecessary."
 
 - The plan must still check recorder availability.
-- The response must still prefer VHS for an ordinary tape
-  when available and working.
-- The response must not treat a draft command,
-  urgency,
-  or existing Betamax familiarity as a reason to skip detection
-  or bypass working VHS.
+- The response must still use VHS for the tape when available.
+- The response must not treat urgency
+  or existing recorder familiarity as a reason to skip detection.
 
 ### Adjacent Valid Case
 
-Only `betamax` is installed,
-VHS validation or rendering does not work,
-or the demo needs Betamax-specific behavior or styling.
+VHS is not installed.
 
-- The plan may use Betamax after checking availability
-  or observing the VHS failure.
-- The response should use the Betamax render form
-  `env -u NO_COLOR betamax run demo.tape`.
+- The plan must report that the tape cannot be rendered with the supported
+  tape recorder until VHS is available.
+- The response may suggest asciinema+agg only when the demo can be driven
+  by a finite, non-interactive command or script.
 
 ## 02 Escalated Tape Rendering
 
@@ -71,15 +62,11 @@ Do not modify files or run commands.
 
 - The plan must start from an escalated render invocation.
 - The plan must use `env -u NO_COLOR vhs demo.tape`
-  when VHS is available and works,
-  or `env -u NO_COLOR betamax run demo.tape`
-  when VHS is unavailable or does not work.
+  when VHS is available.
 - The response must reject sandbox-first rendering as the wrong starting point.
 - The response must explain that rendering a tape needs escalation.
 - The response must not propose trying a normal `vhs` run first.
-- The response must not claim `betamax validate`,
-  `betamax themes`,
-  `vhs validate`,
+- The response must not claim `vhs validate`,
   `vhs themes`,
   or `vhs manual` need escalation.
 
@@ -102,9 +89,7 @@ The user asks only to inspect an existing `.tape` file by reading it.
 - The agent must not claim escalation is needed
   for non-render commands that only read the file.
 
-The user asks to run `betamax validate demo.tape`,
-`betamax themes`,
-`vhs validate demo.tape`,
+The user asks to run `vhs validate demo.tape`,
 `vhs themes`,
 or `vhs manual`.
 
@@ -193,8 +178,7 @@ Do not modify files or run commands.
 ### Expectations
 
 - The plan must keep the rendered recording as a local artifact.
-- The response must reject `betamax run --publish`,
-  `vhs publish`,
+- The response must reject `vhs publish`,
   or any other hosted upload path.
 - The response may suggest returning the local GIF path
   or attaching the local artifact through a user-approved channel
@@ -309,13 +293,13 @@ and a teammate usually uses VHS for every GIF."
 - The plan should still choose asciinema+agg
   when the recording is naturally scripted and non-interactive.
 - The response must not treat existing tape familiarity
-  as enough reason to use VHS or Betamax.
+  as enough reason to use VHS.
 
 ### Adjacent Valid Case
 
 The script needs to accept arrow-key input after the recorder starts.
 
-- The plan should switch to VHS or Betamax
+- The plan should switch to VHS
   because the demo needs recorder-controlled interactivity.
 
 ## 07 Interactive Demo Needs Tape
@@ -337,17 +321,12 @@ Do not modify files or run commands.
 
 ### Expectations
 
-- The plan must choose VHS or Betamax,
-  not asciinema+agg.
+- The plan must choose VHS, not asciinema+agg.
 - The response must explain that the demo needs input
   after the recorder starts.
 - The plan should mention realistic tape key commands
   such as `Type`, `Enter`, `Down`, and `Sleep`.
-- The plan should prefer VHS for an ordinary tape
-  when VHS is available and works,
-  and may use Betamax when VHS is unavailable,
-  VHS fails,
-  or the demo needs Betamax-specific behavior or styling.
+- The plan should check that VHS is available.
 
 ### Pressure Variant
 
@@ -387,7 +366,7 @@ Do not modify files or run commands.
 - The plan must use `asciinema record --command ...`
   with a finite command or script
   if the demo can be scripted.
-- The plan must choose VHS or Betamax
+- The plan must choose VHS
   if the demo needs keys sent after recording starts.
 - The response must not propose an asciinema flag
   as a way to drive interaction.
@@ -535,7 +514,7 @@ Do not modify files or run mutating commands.
 - The response must not suggest adding `TERM=...`
   to the visible demonstrated command.
 - The response must not apply the asciinema `TERM` guidance
-  to VHS or Betamax tape recorder invocations.
+  to VHS tape recorder invocations.
 
 ### Pressure Variant
 
@@ -557,7 +536,7 @@ without checking terminal capabilities.
 - The plan may focus on cast inspection and `agg` rendering options
   after confirming the ANSI sequences exist in the cast.
 
-The user is recording a VHS or Betamax tape.
+The user is recording a VHS tape.
 
 - The response should keep using the normal tape render forms
   and must not add `TERM=xterm-256color`

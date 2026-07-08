@@ -1,9 +1,7 @@
 # Tape Reference
 
-This reference summarizes common `.tape` commands for VHS and Betamax.
-Use `vhs manual` for installed VHS behavior
-and `betamax help` or command-specific Betamax help
-for installed Betamax behavior.
+This reference summarizes common `.tape` commands for VHS.
+Use `vhs manual` for installed VHS behavior.
 
 ## Command-Line Commands
 
@@ -11,27 +9,18 @@ for installed Betamax behavior.
 - `vhs validate <file>...` parses tape files without running them.
 - `vhs themes` lists available theme names.
 - `vhs manual` prints the installed manual.
-  Betamax does not support this command.
-
-Betamax uses `betamax run <file>.tape` for rendering.
-Betamax also supports `betamax validate` and `betamax themes`.
 
 Rendering a tape requires escalated privileges
-and should usually use `env -u NO_COLOR vhs <file>.tape`
-or `env -u NO_COLOR betamax run <file>.tape`.
+and should usually use `env -u NO_COLOR vhs <file>.tape`.
 Keep `NO_COLOR` only when colorless output or `NO_COLOR` behavior
 is the subject of the demo.
 Run informational and syntax-check commands such as `vhs validate`,
-`vhs themes`, `vhs manual`, `betamax validate`,
-and `betamax themes` normally.
+`vhs themes`, and `vhs manual` normally.
 
 ## Tape Command Ordering
 
 Put `Require`, `Output`, and most `Set` commands at the top of the tape.
-Put `Env` with those startup commands when using Betamax.
 VHS expects requirements before non-setting work.
-Betamax parses the full tape before starting the shell
-and rejects startup commands after runtime commands.
 
 `TypingSpeed` is the setting most often adjusted near the action,
 but prefer keeping all settings near the top unless a local tape needs
@@ -49,7 +38,7 @@ Common outputs are:
 
 Multiple `Output` lines can produce multiple formats from one tape.
 For frame directory outputs,
-use `Output frames/` for VHS and `Output frames` for Betamax.
+use `Output frames/`.
 For skill use,
 prefer GIF unless the user asks for another artifact.
 
@@ -117,8 +106,7 @@ Use key commands for prompts and TUIs:
 - `Enter`, `Tab`, `Space`, `Backspace`
 - `Up`, `Down`, `Left`, `Right`
 - `PageUp`, `PageDown`
-- `ScrollUp`, `ScrollDown`:
-  Betamax does not support these commands.
+- `ScrollUp`, `ScrollDown`
 - `Ctrl+<char>`, with optional `Alt` or `Shift`
 - `Alt+<key>`
 - `Escape`
@@ -149,8 +137,6 @@ The default pattern waits for a prompt-like final line.
 Use explicit patterns when the terminal state matters.
 VHS expects explicit wait patterns as regular expressions,
 such as `Wait /Ready/`.
-Betamax also accepts plain substring waits,
-such as `Wait Ready`.
 
 ## Sleep
 
@@ -215,24 +201,3 @@ or for commands where typed pacing would distract from the demo.
 `Source <path>.tape` includes commands from another tape.
 Use it for shared setup or shared visual settings
 when multiple tapes in the same project need the same prelude.
-Betamax does not support executing sourced tapes.
-
-## Betamax Styling
-
-Betamax supports additional styling settings
-that are not part of the VHS manual:
-
-- `Set CursorBlink false`:
-  disable simulated cursor blinking in captured frames.
-- `Set LoopOffset 25%`:
-  rotate animated output frames to change the GIF loop boundary.
-- `Set Margin 12`:
-  add an outer decoration margin.
-- `Set MarginFill "#101010"`:
-  fill the outer margin with a color.
-- `Set BorderRadius 8`:
-  apply a rounded-corner mask to the terminal frame.
-- `Set WindowBar Rings`:
-  draw a synthetic window bar.
-- `Set WindowBarSize 24`:
-  set the synthetic window bar height.

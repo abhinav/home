@@ -2,7 +2,7 @@
 name: recording-cli-gifs
 description: >
   Use when creating, editing, validating, rendering, or debugging
-  local CLI and TUI demo GIFs with asciinema+agg, VHS, or Betamax,
+  local CLI and TUI demo GIFs with asciinema+agg or VHS,
   including recorder selection, scripted terminal recordings,
   `.tape` files, Hide/Show sections, waits, sleeps,
   and reproducible demo artifacts.
@@ -13,7 +13,7 @@ description: >
 ## Scope
 
 Use this skill for local CLI and TUI demo GIFs recorded with
-asciinema+agg, VHS, or Betamax.
+asciinema+agg or VHS.
 Keep recordings local.
 Do not publish recordings to hosted services.
 
@@ -23,7 +23,7 @@ Choose the recorder from the demo's interaction model
 before writing commands.
 Use asciinema+agg for scripted,
 non-interactive recordings.
-Use VHS or Betamax when the demo needs typed input,
+Use VHS when the demo needs typed input,
 TUI navigation,
 recorder-observed waits,
 or other tape choreography.
@@ -38,13 +38,13 @@ and sandboxed execution can fail before the recording starts.
 Do not request escalated privileges for informational,
 syntax-check,
 or inspection commands such as `vhs validate`,
-`vhs themes`, `vhs manual`, `betamax validate`, `betamax themes`,
+`vhs themes`, `vhs manual`,
 `asciinema --help`, or `agg --help`.
 
 Before rendering,
 use the selected recorder's syntax checks when they exist.
 For tapes,
-prefer `vhs validate` or `betamax validate`.
+use `vhs validate`.
 For asciinema+agg,
 inspect the script or command that asciinema will run.
 Validation does not replace recording,
@@ -56,11 +56,7 @@ verify the artifact exists and is the expected file type.
 Use `file`, `ls -lh`, or a visual check when the output is a GIF.
 
 Before choosing tape commands,
-check whether `vhs` or `betamax` is installed.
-Prefer `vhs` for ordinary tapes when it is available and works.
-Use `betamax` when VHS is unavailable,
-VHS rendering does not work,
-or the demo needs Betamax-specific behavior or styling.
+check whether `vhs` is installed.
 
 ## Recorder Selection
 
@@ -79,7 +75,7 @@ running a shell script that sleeps between visible states,
 capturing real command output,
 or recording terminal animation produced by a script.
 
-Use VHS or Betamax when the recording needs interactive input
+Use VHS when the recording needs interactive input
 after the recorder starts.
 Good fits include visible typing,
 arrow-key navigation,
@@ -89,7 +85,7 @@ recorder-observed waits,
 screenshots,
 or precise tape-controlled pacing.
 If the recorder must deliver keys to the program,
-choose VHS or Betamax.
+choose VHS.
 
 For asciinema+agg,
 do not start an interactive `asciinema record <file>` session.
@@ -105,7 +101,7 @@ and exits by itself.
 
 If either recorder family could work,
 prefer asciinema+agg for a naturally scripted command demo
-and prefer VHS/Betamax for a viewer-facing interaction demo.
+and prefer VHS for a viewer-facing interaction demo.
 
 ## Demo Design Workflow
 
@@ -123,7 +119,7 @@ Script the minimum terminal path that makes those points legible.
    motion,
    and pauses should be visible to the viewer.
 3. Keep setup or cleanup out of the visible demo.
-   For VHS or Betamax,
+   For VHS,
    use `Hide`,
    `clear`,
    and `Show`.
@@ -141,7 +137,7 @@ Script the minimum terminal path that makes those points legible.
 7. Add final dwell time only when the viewer needs time
    before the GIF restarts.
 
-For VHS or Betamax,
+For VHS,
 put `Require`,
 `Output`,
 and most `Set` commands at the top of the tape.
@@ -227,14 +223,8 @@ agg --theme github-dark --font-size 16 --idle-time-limit 1 \
 For tape rendering:
 
 ```bash
-env -u NO_COLOR betamax run demo.tape
 env -u NO_COLOR vhs demo.tape
 ```
-
-Use the VHS form when `vhs` is available and works for the tape.
-Use the Betamax form when VHS is unavailable,
-VHS rendering does not work,
-or the demo needs Betamax-specific behavior or styling.
 
 Do not add `TERM=...` to tape recorder invocations or visible demo commands
 for ordinary color stability.
@@ -253,8 +243,6 @@ vhs validate demo.tape
 vhs themes
 vhs manual
 
-betamax validate demo.tape
-betamax themes
 asciinema --help
 asciinema record --help
 agg --help
@@ -269,10 +257,6 @@ or deciding between `Wait`, `Sleep`, `Hide`, `Show`, and key commands.
 
 Use `vhs manual` as the local source of truth
 when installed VHS behavior may differ from the reference.
-
-Use `betamax help` or command-specific Betamax help
-as the local source of truth
-when installed Betamax behavior may differ from the reference.
 
 Read [references/asciinema-agg-reference.md](references/asciinema-agg-reference.md)
 when choosing asciinema+agg,
