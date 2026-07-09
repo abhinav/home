@@ -43,6 +43,17 @@ including commit messages, pull request titles or descriptions,
 Slack messages, documentation, changelogs, issues, release notes,
 code comments, generated files, or any other output artifacts.
 
+## Referring to pull requests
+
+In chat, Slack, and other systems that support links,
+use the shortest unambiguous pull request label:
+
+- One repository: `[#123](https://github.com/<owner>/<repo>/pull/123)`
+- Multiple repositories in one organization:
+  `[<repo>#123](https://github.com/<owner>/<repo>/pull/123)`
+- Multiple organizations:
+  `[<owner>/<repo>#123](https://github.com/<owner>/<repo>/pull/123)`
+
 # Working rules
 
 A bug is not fixed without a regression test
