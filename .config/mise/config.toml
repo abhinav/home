@@ -1,14 +1,12 @@
-[tool_alias]
-revdiff = "github:umputun/revdiff"
-
 [tools]
 go = "latest"
 gofumpt = "latest"
 golangci-lint = "latest"
 rust = "latest"
-revdiff = "latest"
 zig = "latest"
+"github:umputun/revdiff" = "latest"
 "github:kunchenguid/treehouse" = "latest"
+"github:abhinav/tmux-fastcopy" = "latest"
 
 [settings]
 experimental = true
