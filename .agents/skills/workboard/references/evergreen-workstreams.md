@@ -82,7 +82,8 @@ When a wake condition is satisfied:
 5. Record evidence and outcome.
 6. Promote the resulting cursor, condition, blockers,
    next action, and next wake into the plan and workboard.
-7. Record a dated recovery checkpoint in the log.
+7. Record a dated recovery checkpoint only when resumption depends on
+   uncommitted state, an active process, a blocker, or a durable result locator.
 8. Return the condition to `waiting`,
    or set it to `blocked` when recovery is required.
 9. Release the inactive worker when retaining it has no near-term value

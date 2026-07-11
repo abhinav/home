@@ -6,10 +6,14 @@ The Worktree Pool records the workspace handed to a worker,
 including the checkout,
 execution context,
 and shared resources required to use it.
-Preregister allocation intent in the owning workstream or root coordination
-log.
+Record allocation intent in the root plan's next coordination action
+and returned workspace state in the root-owned Worktree Pool.
 Do not invent workspace identity, paths, revisions, or execution context before
 acquisition returns them.
+Mention workspace state in a workstream log only when it affects recovery of
+meaningful work, such as workspace-only changes, an active process,
+contamination that shaped evidence,
+or the branch or commit that preserves the result.
 
 Every extant workspace recorded in the Worktree Pool is one of:
 
@@ -61,7 +65,7 @@ Urgency, authority, exhaustion, and convenience do not relax these invariants.
 ### Acquire And Reuse
 
 Before acquisition,
-record the intended workstream or root scope,
+record in the root plan the intended workstream or root scope,
 isolation requirements,
 requested configuration,
 and expected evidence.
@@ -79,7 +83,8 @@ Verify that the returned workspace satisfies the declared scope's isolation
 and evidence requirements before dispatch.
 
 If acquisition fails before a workspace exists,
-record the attempt outcome without creating a fictional pool entry.
+keep the pool truthful and update the root next action when the failure changes
+coordination state.
 If a workspace or partial workspace exists,
 record it as `in-use` under a root recovery owner until it is repaired,
 released,

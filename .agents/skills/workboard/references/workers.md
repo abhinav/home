@@ -6,10 +6,14 @@ After accepting assignment and workstream-file ownership,
 the executor preregisters the delegated attempt in the owning log
 before meaningful execution.
 Record the objective, executor, relevant starting state,
-expected result, expected evidence, and assessment method.
-After the attempt,
-append the outcome, evidence, conclusion, and concrete next action.
-Record a dispatch failure as the outcome rather than deleting the entry.
+and intended evidence or success condition.
+During the attempt,
+record material evidence and conclusions before continuing into work that
+depends on them.
+Append a recovery checkpoint when resumption depends on uncommitted state,
+an active process, a blocker, or a durable result locator.
+Record a dispatch failure only when it changes the workstream's operative state
+or next action.
 
 If work started before registration,
 record the known facts and mark the registration late.
@@ -44,7 +48,11 @@ maintain the plan-defined supporting record,
 including its attempt entry,
 and return a precise handoff.
 When evidence changes an operative conclusion, decision, state, or next action,
-require the worker to update the workstream plan before handoff.
+require the worker to record the supporting evidence and update the workstream
+plan before continuing into work that depends on the change.
+Before handoff,
+require a final synchronization rather than treating handoff as the normal
+recording time.
 
 For review tasks,
 root assigns a reviewer directly after any current executor hands off.
@@ -70,8 +78,9 @@ Before closing a worker that is waiting for instructions:
 
 1. Confirm that no command, review, assessment,
    or delegated attempt is in flight.
-2. Have the assigned worker bring the supporting record and attempt outcome
-   current in `log.md`,
+2. Have the assigned worker bring the supporting record current in `log.md`,
+   including any material evidence, decisions, blockers,
+   or recovery state not yet recorded,
    update `plan.md` with authoritative conclusions,
    actual project state, and concrete next action.
    Root does not edit those files concurrently.

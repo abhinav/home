@@ -227,7 +227,9 @@ Do not modify files, run commands, or dispatch workers.
 - Do not create a Workboard, workstream ID, state directories,
   nested workstream files, or a separate ledger.
 - Do not create a delegated-attempt entry for root execution.
-- Record supporting evidence and a dated recovery checkpoint in `log.md`.
+- Record supporting evidence in `log.md`.
+- Because the completed edit remains uncommitted,
+  record a dated recovery checkpoint that identifies that recoverable state.
 - Mark the standalone mission complete after the edit and focused test pass.
 - Retain the completed plan and log as durable history.
 - Leave changes uncommitted by default because no worktree is used.

@@ -403,11 +403,15 @@ If a mutable value differs between the files,
 the plan is authoritative.
 
 Choose a log structure suited to the workstream.
-Every log section should earn its place by improving interpretation,
-auditability, recovery, or plan reconstruction.
+Record a fact when losing it would require a replacement executor to repeat
+meaningful work, reconsider an operative decision,
+or search for a durable result.
+Every log section should earn its place by preserving evidence, decisions,
+rejected alternatives, blockers, or recoverable results needed to reconstruct
+the plan.
 Do not use the log as a transcript of coordination mechanics.
-Record events only when they improve interpretation, auditability, recovery,
-or plan reconstruction.
+Lifecycle events belong only when they materially change interpretation or
+recovery of meaningful work.
 Write log entries reference-first.
 Lead with concrete paths, symbols, APIs, commands, sources, measurements,
 commits, or artifacts,
@@ -416,6 +420,8 @@ Use compact code, data, output, or artifact examples when they materially
 improve understanding.
 Distinguish observations from inferences and decisions.
 Append corrections and superseding facts instead of silently rewriting history.
+When evidence produces a material conclusion, decision, rejected alternative,
+or blocker, record it before continuing into work that depends on it.
 
 When log evidence establishes what now exists,
 how it works,
@@ -427,7 +433,8 @@ or the next action,
 promote a concise account into the plan.
 Leave detailed provenance and chronology in the log.
 Before handoff,
-synchronize the plan with the latest dated recovery checkpoint in the log.
+synchronize the plan with the current material record
+and any applicable dated recovery checkpoint in the log.
 For completed work,
 reread the plan without the log and replace stale prospective text so the plan
 alone explains the final design or result,
@@ -439,8 +446,11 @@ neither may depend on another workstream's plan or log,
 and the log must explain its own organization and stable context.
 
 For a root log,
-record root-owned coordination, reconciliation of returned evidence,
-integration decisions, and the basis for acceptance decisions.
+record dependency and sequencing decisions and reconcile returned evidence.
+Record integration decisions, the basis for acceptance decisions,
+and exceptional lifecycle events that affect recovery.
+Keep routine launch, ownership,
+and workspace state in the Workboard and Worktree Pool snapshots.
 Do not mirror workstream detail already preserved in a workstream log.
 
 ## Lifecycle Transitions And Archival
@@ -556,17 +566,21 @@ This includes worker assignments, retries, material pivots, and reviewer passes.
 Routine follow-up within the same objective and strategy is not a new attempt.
 
 Keep preregistration lightweight.
-Record only enough starting state, intended evidence, and assessment detail
-to identify the replay boundary and judge the attempt afterward.
+Record only the executor and objective,
+the meaningful starting revision or artifact state,
+and the intended evidence or success condition.
 Do not repeat the workstream plan
-or record assignment mechanics that do not affect interpretation,
-auditability, recovery, or plan reconstruction.
-Append the observed evidence,
-what that evidence established,
-any decision or state change,
-and the resulting next action.
+or record dispatch, acceptance, runtime, workspace allocation,
+or ownership mechanics unless they materially affect recovery of meaningful
+work.
+During the attempt, append material evidence and the conclusion, decision,
+or uncertainty it establishes before work relies on it.
+Record a dated recovery checkpoint when uncommitted state, an active process,
+a blocker, or a durable result locator is needed for resumption.
 If dispatch fails before acceptance,
-root retains file ownership and records the failed assignment.
+root retains file ownership;
+record the failure only when it changes the workstream's operative state or
+next action.
 
 For delegated review tasks,
 root delegates directly to a reviewer rather than an implementation worker.

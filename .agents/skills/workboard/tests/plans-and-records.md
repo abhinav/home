@@ -75,8 +75,8 @@ Preregister one delegated attempt.
 - Put the full mission, project orientation, decisions,
   and execution path in `plan.md`.
 - Define the log's useful contents, organization, and update rules in `plan.md`.
-- Keep identity, owned outcome, essential context, dependency contracts,
-  and a dated latest recovery checkpoint in `log.md`.
+- Keep identity, owned outcome, essential context,
+  and dependency contracts in `log.md`.
 - Treat `plan.md` as authoritative if mutable current state differs.
 - Preserve detailed supporting material outside attempt lifecycle entries,
   such as metric observations, queries and results, source inventories,
@@ -85,10 +85,11 @@ Preregister one delegated attempt.
   current state, and next action from evidence, observations, decisions,
   corrections, and recovery checkpoints.
 - After accepting assignment,
-  preregister attempt-specific intent, starting state, expected evidence,
-  and assessment before meaningful execution.
-- Append the attempt outcome afterward,
-  summarizing or referencing the detailed supporting record.
+  preregister a compact attempt boundary with executor, objective,
+  meaningful starting state,
+  and intended evidence or success condition.
+- Record material evidence and conclusions as they become operative,
+  rather than waiting for an attempt outcome or handoff.
 - Do not duplicate the plan's full implementation narrative
   or turn the log into a transcript of every command and message.
 
@@ -115,7 +116,7 @@ Stop before dispatch.
 
 ### Expectations
 
-- Keep preregistration and outcome fields for each delegated attempt.
+- Keep a compact boundary for each delegated attempt.
 - Do not force all four logs into one fixed schema.
 - Implementation logs preserve changed paths or symbols,
   behavioral observations, check results, failures, and residual risks.
@@ -137,8 +138,11 @@ Stop before dispatch.
   or another workstream's files.
 - Promote current conclusions, decisions, state, and next actions to the plan.
 - Preserve detailed provenance and chronology in the log.
-- Before handoff,
-  synchronize the plan with the latest recovery checkpoint recorded in the log.
+- Synchronize the plan when evidence changes an operative conclusion,
+  decision, state,
+  or next action.
+- Use handoff as a final synchronization check,
+  not the normal recording time.
 
 ### Log-Only Readback
 
@@ -147,11 +151,40 @@ against at least one generated workstream log.
 
 - The fresh agent correctly explains the outcome and record organization.
 - It identifies material evidence, uncertainty,
-  and the dated latest recovery checkpoint.
+  and any dated recovery checkpoints.
 - It does not require the plan, original prompt,
   conversation, or another workstream's files to interpret the record.
 - It does not treat the checkpoint as guaranteed current beyond its timestamp
   or attempt to execute the mission from the log alone.
+
+### Mid-Attempt Interruption Variant
+
+The implementation worker has completed an investigation but has not changed
+code or produced a commit.
+The investigation established a required ordering invariant,
+rejected a shared mutable representation because concurrent callers would
+race, and selected an immutable value representation.
+Another hour of implementation remains,
+and the worker may lose its session at any time.
+
+- Record the supporting evidence, decision, rejected alternative,
+  and resulting next action immediately.
+- Promote the operative decision and current state into `plan.md` before
+  implementation relies on them.
+- Do not wait for implementation completion, a commit,
+  or handoff.
+- A fresh executor given the current plan and log can continue without
+  repeating the investigation or re-deciding the representation.
+
+### Adjacent Valid Case
+
+A worker has accepted ownership,
+but no meaningful work has begun and no workspace-only state exists.
+
+- Keep the compact attempt boundary.
+- Do not add separate log entries for dispatch,
+  runtime startup, ownership acceptance,
+  or routine workspace acquisition.
 
 ## 21 Log Evidence Versus Locator Process
 

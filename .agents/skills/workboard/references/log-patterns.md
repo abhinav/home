@@ -4,20 +4,29 @@ Adapt these patterns to the work.
 They are examples, not required schemas.
 Omit sections that do not earn their place.
 
-Every log should briefly identify the workstream and outcome,
-explain its organization,
-and record a dated latest recovery checkpoint for honest interpretation.
+Every log should briefly identify the workstream and outcome
+and explain its organization.
+Append dated recovery checkpoints when they preserve state needed for honest
+resumption.
 The associated plan remains authoritative for mutable current state.
 The log is append-only replay:
 append new entries for superseding facts, decisions, and recovery state
 instead of rewriting older entries.
-Every delegated attempt still needs write-ahead preregistration.
-That preregistration is a lightweight replay boundary,
+Every delegated attempt still needs a compact attempt boundary.
+That boundary identifies the executor, objective, meaningful starting state,
+and intended evidence or success condition;
+it is not a lifecycle transcript.
+Record it write-ahead normally,
+or label it `late` when the attempt began before registration.
+The attempt boundary is a lightweight replay boundary,
 not the main purpose of the log.
 
 ## Record Selection
 
 Record material that matters for audit, interpretation, or resumption.
+Use this selection test:
+would losing the fact force a replacement executor to repeat meaningful work,
+reconsider an operative decision, or search for a durable result?
 Organize detail around the durable facts needed to reconstruct plan state:
 what evidence was obtained,
 what conclusion or uncertainty it established,
@@ -42,6 +51,9 @@ Distinguish observations from inferences and decisions.
 When a new entry supersedes an older entry,
 leave the older entry intact and append the superseding fact or decision.
 Update the plan when the resulting current state changes.
+Record a material conclusion or decision before continuing into work that
+depends on it;
+do not defer the normal update until handoff.
 
 ## Implementation
 
@@ -51,7 +63,7 @@ Useful sections may include:
 - a validation ledger with commands, observed results, and failures;
 - behavioral observations and residual risks;
 - reviewer findings and their disposition;
-- delegated attempts and handoffs.
+- compact attempt boundaries and material recovery checkpoints.
 
 A validation ledger should connect each check to the fact,
 conclusion, or recovery decision it establishes.
@@ -125,15 +137,19 @@ Useful sections may include:
 A root log records only root-owned supporting material,
 such as:
 
-- launches, ownership changes, handoffs, and reconciliation decisions;
 - dependency or sequence changes and why they were necessary;
-- worktree assignment history when the workboard snapshot is insufficient;
+- reconciliation decisions after handoff;
+- exceptional ownership or worktree events when the current snapshots are
+  insufficient for recovery;
 - integration observations, returned evidence,
   and root reconciliation decisions;
 - reviewer outcomes identified by owning workstream ID
   and dated acceptance decisions.
 
 Do not copy detailed workstream evidence into the root log.
+Do not narrate routine launch, ownership transfer,
+or workspace administration already represented by the Workboard or Worktree
+Pool.
 Name the stable workstream ID,
 state the exact outcome used by the root,
 and record the root's own conclusion or integration decision.

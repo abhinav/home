@@ -26,7 +26,7 @@ applicable repository instructions,
 and the relevant `log.md` path.
 Do not provide the plan, original prompt, conversation, or skill.
 Ask the agent to explain the owned outcome,
-record organization, material evidence, latest recovery checkpoint,
+record organization, material evidence, any recovery checkpoints,
 and unresolved uncertainty.
 The agent should interpret the record,
 not execute the mission or guess mutable state beyond the checkpoint.

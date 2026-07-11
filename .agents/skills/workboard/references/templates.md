@@ -270,10 +270,6 @@ decisions, corrections, and recovery checkpoints.
 - Essential context: <Facts needed to interpret the record below.>
 - Mutable surface: `<files, modules, systems, artifacts, or questions>`
 - Dependencies: <Stable IDs and exact required outcomes, or none.>
-- Latest recovery checkpoint: `<timestamp>`.
-  <Project or worktree, artifacts, uncommitted state,
-  blocker, and the next action recorded at that time.
-  The workstream plan is authoritative for mutable current state.>
 
 ## Log Format
 
@@ -295,44 +291,42 @@ Preserve detail needed to verify, audit, or resume the durable state;
 omit locator steps and non-material process history.
 Use headings, tables, chronology, or indexes that fit the work.>
 
-## Delegated Attempts
+## Material Record
 
-Append one subsection per delegated attempt.
-Keep each attempt subsection as a lightweight replay boundary;
-store detailed evidence in the work-specific supporting sections above
-when that makes the record easier to interpret.
+Append one compact boundary per delegated attempt,
+then record material evidence, decisions, rejected alternatives, blockers,
+and recovery checkpoints in the work-appropriate structure.
 After accepting assignment and file ownership,
 the executor preregisters each attempt before meaningful execution.
 During execution,
-the executor maintains the attempt entry and keeps `plan.md` synchronized
-until handoff.
+the executor records material conclusions before relying on them
+and keeps `plan.md` synchronized.
 
-### Attempt <number>: <short objective>
+### Attempt <number> — <agent>: <short objective>
 
-#### Preregistration
-
-- Registration: write-ahead | late
-- Recorded at: `<timestamp>`
-- Attempt began at: `<timestamp or unknown>`
-- Agent: `<worker or reviewer ID>`
-- Role: worker | reviewer
-- Objective: <Distinct objective, retry, or material pivot.>
-- Starting state: `<commit, artifact revision, environment, or unknown>`
-- Expected result: <Artifact, conclusion, or observable change.>
-- Expected evidence: <What the attempt should produce.>
-- Assessment: <How the result will be judged.>
+- Registration: `write-ahead` | `late`
+- Started from: `<meaningful commit, artifact revision, or observed state>`
+- Intended evidence or success condition: <Concrete prose.>
 
 Use `late` when the attempt began before this entry.
-Label unavailable facts `unknown`.
-Do not infer or backdate them.
+Label unavailable starting state `unknown`;
+do not infer or backdate it.
 
-#### Outcome
+### `<path`, symbol, API, command, source, measurement, commit, or artifact>` — <conclusion>
 
-- Result: <Observed result or dispatch failure.>
-- Evidence: <Relevant artifacts, sources, commits, or changed paths.
-  Include observations or review findings.>
-- Conclusion: <What the evidence establishes and any remaining uncertainty.>
-- Next action: <Concrete prose.>
+<Record the observation or evidence, the conclusion or uncertainty it establishes,
+the operative decision or plan change,
+and the resulting next action when material.>
+
+### Recovery checkpoint — `<timestamp>`
+
+<Add only when resumption depends on uncommitted state, an active process,
+a blocker, or a durable result locator.
+Record the relevant project or worktree state, artifacts or commit,
+remaining uncertainty,
+and concrete next action.
+The newest dated checkpoint is the latest checkpoint;
+the workstream plan remains authoritative for mutable current state.>
 ```
 
 See [log-patterns.md](log-patterns.md)

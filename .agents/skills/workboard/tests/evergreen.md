@@ -34,7 +34,9 @@ Do not configure an external scheduler or modify files.
   next-wake calculation, recovery, and any stop condition in `plan.md`.
 - Keep the authoritative current cursor, condition, blockers,
   and next wake in the plan and workboard.
-- Record cycle evidence and dated recovery checkpoints in `log.md`.
+- Record cycle evidence in `log.md`.
+- Add a dated recovery checkpoint only when resumption depends on uncommitted
+  state, an active process, a blocker, or a durable result locator.
 - Treat each independently dispatched cycle as a new preregistered attempt.
 - Do not treat the wake event itself as a delegated attempt.
 - Keep routine follow-up within one running cycle in the same attempt.
@@ -61,6 +63,14 @@ and the same healthy worker retains useful external session state.
 - Treat retention as an optimization,
   not a requirement of the evergreen-workstream contract.
 - Keep the next wake and recovery state durable despite worker retention.
+
+### No-Change Cycle Variant
+
+A cycle completes without changed inputs, uncommitted state, an active process,
+a blocker, or a durable result locator needed for resumption.
+
+- Record the cycle evidence and resulting cursor.
+- Do not manufacture a dated recovery checkpoint for the quiet cycle.
 
 ### Configured-Wake Variant
 

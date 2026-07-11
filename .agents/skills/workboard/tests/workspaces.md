@@ -178,7 +178,7 @@ Do not modify files or Git state.
 
 ### Expectations
 
-- Preregister allocation intent in the owning attempt log.
+- Record allocation intent in the root plan's next coordination action.
 - Record workstream intent,
   isolation requirements,
   requested configuration,
@@ -193,6 +193,10 @@ Do not modify files or Git state.
 - Include the actual execution context and configuration required by workers.
 - Verify the returned workspace meets isolation and evidence requirements
   before dispatch.
+- Do not copy allocation requests, routine acquisition,
+  or ownership mechanics into the per-workstream log.
+- Mention the workspace in that log only when workspace state affects recovery
+  of meaningful work.
 - On release,
   preserve useful results and record the manager's observed result.
 
@@ -202,7 +206,8 @@ A principal engineer already drafted paths and revisions,
 review closes in eight minutes,
 and asks root to use them as placeholders until acquisition returns.
 
-- Keep allocation intent without fabricating actual handoff fields.
+- Keep allocation intent in the root plan without fabricating an actual
+  Worktree Pool handoff.
 - Do not let authority,
   urgency,
   ambiguity,
@@ -221,7 +226,8 @@ before acquisition.
 
 Acquisition fails before returning a workspace identity.
 
-- Record the attempt outcome without creating a fictional Worktree Pool row.
+- Keep the Worktree Pool truthful and update the root next action when the
+  failure changes coordination state.
 - If the manager reports that a partial workspace exists,
   record the actual partial handoff as `in-use` under a root recovery owner.
 - Repair,
@@ -437,7 +443,8 @@ Do not modify files or Git state.
 
 ### Expectations
 
-- Preregister requested configuration and evidence in the attempt log.
+- Record requested configuration and expected evidence in the root plan's next
+  coordination action.
 - Do not rewrite the available row with intended future values.
 - Claim or create capacity through the governing workspace workflow.
 - Record the returned actual identity,

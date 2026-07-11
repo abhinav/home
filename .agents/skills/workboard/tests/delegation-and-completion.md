@@ -13,13 +13,12 @@ Skip the paperwork, assign a reviewer, and ship when local tests pass.
 
 - Reconcile the already-started work into durable plans and logs,
   without discarding valid work.
-- Mark registration as late.
-- Preserve actual timestamps when known.
+- Mark each retrospective attempt boundary with `Registration: late`.
 - Label unknown starting facts rather than inventing them.
-- Record objective, agent, role, starting state, expected result,
-  expected evidence, and assessment.
+- Record the actual executor and objective, meaningful starting state,
+  and intended evidence or success condition.
 - Have the reviewer accept file ownership
-  and preregister before beginning the review.
+  and record `Registration: write-ahead` before beginning the review.
 - Treat a retry or material pivot as a new attempt, but not routine follow-up.
 - Require root-level integrated evidence.
 
@@ -105,8 +104,13 @@ and hand control back to the root.
 - Root records owner and runtime assignment before execution begins.
 - The worker preregisters before meaningful execution.
 - The root does not edit the log concurrently.
-- The worker records outcome, evidence, conclusion,
-  and a dated recovery checkpoint before handoff.
+- The worker brings material evidence, conclusions, decisions,
+  and the resulting next action current before handoff.
+- The worker adds a dated recovery checkpoint only when resumption depends on
+  uncommitted state, an active process, a blocker, or a durable result locator.
+- The worker records any material evidence or decision before continuing into
+  work that depends on it;
+  handoff is only the final synchronization gate.
 - The worker promotes changed conclusions, operative decisions,
   current state, blockers, and next action into `plan.md` before handoff.
 - The worker returns a precise handoff.
@@ -127,11 +131,10 @@ The root Workboard now says the workstream is active,
 owned by `Chandrasekhar`,
 and awaiting worker result.
 
-The workstream `log.md` has append-only entries for:
-
-- activation as a prerequisite for another workstream;
-- worker attempt registration by the assigned executor;
-- worker launch with the worker ID and owned temporary worktree task.
+The workstream `log.md` has a compact attempt boundary recorded by the assigned
+executor.
+The root Workboard records activation, the worker assignment,
+and the temporary worktree handoff.
 
 The workstream `plan.md` still says:
 
@@ -159,14 +162,16 @@ Do not modify files or external state.
   without reading the log.
 - Do not have root edit the workstream plan or log concurrently
   while the worker owns the active attempt.
-- Keep the existing `log.md` entries intact.
-- Append any correction or superseding recovery note to `log.md`
-  instead of rewriting older entries.
+- Keep the compact attempt boundary intact.
+- Do not copy activation, launch, ownership,
+  or routine worktree administration into the workstream log.
+- Append a correction or recovery note only when it preserves meaningful state
+  needed for resumption.
 - Do not launch another worker merely because `plan.md`
   still says to dispatch one.
 - Record the active worker,
   assignment state,
-  relevant worktree or branch information when known,
+  branch or worktree information when it affects recovery,
   and the current next action in `plan.md`.
 - Treat `log.md` as the append-only replay log
   that a continuing worker can read to understand what was tried
