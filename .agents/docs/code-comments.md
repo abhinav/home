@@ -30,6 +30,9 @@ identify the target reader:
   It explains what the symbol promises,
   how to use it,
   and which constraints matter at the boundary.
+  For a private symbol,
+  these users include maintainers navigating the implementation
+  through its call graph and named operations.
 - Comments are for maintainers changing the implementation.
   They compact the implementation into the purpose, state, relationships,
   or constraints a maintainer needs while reading and changing it.
@@ -38,6 +41,8 @@ Do not make callers read implementation comments
 to understand the interface contract.
 Do not make maintainers infer hidden implementation constraints
 from interface documentation alone.
+An implementation comment inside a private symbol
+does not replace documentation of the symbol's responsibility and contract.
 
 For documentation,
 assume the reader can see the symbol name, signature, types,
@@ -88,10 +93,23 @@ delete the text or improve the code instead.
 Add or keep documentation when a symbol's users need to know:
 
 - what the symbol represents or promises
-- how to call it correctly
+- how to call it correctly or preserve the operation it owns
 - valid values, units, ownership, or lifetime rules
-- side effects, concurrency behavior, ordering, or error behavior
+- side effects, state transitions, concurrency behavior, ordering,
+  or error and return-value meanings
+- the algorithm, policy, or cohesive implementation stage it owns
 - the external system, protocol, file format, or domain concept it models
+
+Apply these criteria to public and private types, fields, functions, methods,
+and callbacks alike.
+Visibility, caller count, body length,
+and documentation on a surrounding public API
+do not determine whether a private symbol needs documentation.
+A private symbol needs documentation when it owns meaningful behavior,
+state, or invariants that maintainers must preserve.
+A mechanical private helper does not need documentation
+when its name, signature, and immediately visible behavior
+fully express everything its users need to know.
 
 Documentation should describe the interface contract well enough
 that users can treat the symbol as a black box
@@ -425,6 +443,9 @@ type Report struct {
 Stop and revise when you catch yourself thinking:
 
 - "The type is private, so it does not need a concept comment."
+- "The method has one caller, so it does not need documentation."
+- "The public API documentation already covers the private operation."
+- "The method is short, so an implementation comment is enough."
 - "The field names are probably clear enough."
 - "The type comment already covers the fields."
 - "This comment translates only the next line into prose."
@@ -437,3 +458,9 @@ Stop and revise when you catch yourself thinking:
 These usually mean the text is aimed at the author,
 or at volume of comments,
 not at the future reader.
+
+## Tests
+
+When changing this guide,
+read [tests/README.md](tests/README.md).
+Run the relevant scenarios with fresh subagents that have empty context windows.

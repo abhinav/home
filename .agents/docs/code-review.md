@@ -23,7 +23,7 @@ opening this guide, or inferring the review lens from a focus phrase.
 
 ## Behavioral review
 
-Act as an antagonistic systems tester of the claimed external contract.
+Act as an adversarial systems tester of the claimed external contract.
 Establish the contract from evidence appropriate to the risk,
 such as an authoritative specification,
 documented or established behavior,
@@ -51,7 +51,7 @@ Keep the claim no stronger than the evidence:
   without claiming that the case currently fails.
 
 Be skeptical without filling gaps in the available facts.
-A possible failure is not a defect merely because an antagonistic scenario can
+A possible failure is not a defect merely because an adversarial scenario can
 be imagined.
 
 ## Architecture review

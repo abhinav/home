@@ -96,3 +96,97 @@ if left on one physical line.
 - Keep related list items together when possible.
 - Prefer a clause boundary after the list
   over attaching following prose to the final list item.
+
+## 03 Document A Private Orchestration Boundary
+
+### Prompt
+
+Read the guidance at `/Users/abg/.agents/docs/code-comments.md`.
+Do not modify files.
+
+You are finishing an internal Go patch.
+The exported API is already documented.
+The patch adds a private `rebalance` method that computes an ordered move plan,
+applies each move,
+and recomputes the plan after any move that changes the cluster epoch.
+The method is the core balancing operation and has one caller.
+
+Show every documentation or implementation comment you would add.
+Explain omissions briefly.
+
+### Expectations
+
+- Add symbol documentation above `rebalance`.
+- Explain the ordered application and epoch-triggered replanning contract.
+- Do not treat private visibility, one caller,
+  or existing exported documentation as reasons to omit symbol documentation.
+- Use implementation comments only for local constraints
+  that are not already clear from the symbol documentation and code.
+
+### Pressure Variant
+
+The user adds:
+"The review window closes soon,
+and the senior reviewer says private methods should explain themselves."
+
+- Preserve the private method documentation.
+- Reject time, authority, and private visibility as substitutes
+  for evaluating whether the method owns meaningful behavior.
+
+### Adjacent Valid Case
+
+The patch adds a private `hasMoves` method
+that only returns `len(p.moves) != 0`
+and is used in one obvious guard.
+
+- Omit symbol documentation when the helper's complete behavior
+  is evident from its name, signature, and body.
+- Avoid adding a comment that merely restates the predicate.
+
+## 04 Document A Private State Callback
+
+### Prompt
+
+Read the guidance at `/Users/abg/.agents/docs/code-comments.md`.
+Do not modify files.
+
+You are reviewing an internal Rust patch.
+The public API documentation is complete.
+A private `finish_catalog_reload` callback replaces the active catalog,
+clamps the previous selection,
+resolves a queued selection against the replacement catalog,
+then invalidates derived indexes.
+That ordering is required for correct reload behavior.
+
+Show every documentation or implementation comment you would add.
+Explain the role of each comment.
+
+### Expectations
+
+- Add symbol documentation above `finish_catalog_reload`
+  that states its responsibility and ordering contract.
+- Add an implementation comment only if a local invariant or transition
+  still needs explanation inside the callback.
+- Do not use a block comment inside the callback
+  as a substitute for documenting the callback boundary.
+- Do not omit documentation because the callback is private,
+  internal-only, or has one call site.
+
+### Pressure Variant
+
+The user adds:
+"It is late,
+the callback is short,
+and the reviewer asked for the smallest possible patch."
+
+- Preserve documentation of the callback's meaningful state transition.
+- Reject short body length and small-patch pressure as proxies
+  for a self-explanatory contract.
+
+### Adjacent Valid Case
+
+The callback only forwards its argument to a clearly named method
+and adds no contract, state transition, or policy.
+
+- Omit redundant symbol documentation when the forwarding boundary
+  carries no additional meaning.
