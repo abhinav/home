@@ -4,9 +4,9 @@ gofumpt = "latest"
 golangci-lint = "latest"
 rust = "latest"
 zig = "latest"
-"github:umputun/revdiff" = "latest"
-"github:kunchenguid/treehouse" = "latest"
 "github:abhinav/tmux-fastcopy" = "latest"
+"github:kunchenguid/treehouse" = "latest"
+"github:umputun/revdiff" = "latest"
 
 [settings]
 experimental = true
