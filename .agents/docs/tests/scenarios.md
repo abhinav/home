@@ -190,3 +190,209 @@ and adds no contract, state transition, or policy.
 
 - Omit redundant symbol documentation when the forwarding boundary
   carries no additional meaning.
+
+## 05 Link External Specifications
+
+### Prompt
+
+Read the guidance at `/Users/abg/.agents/docs/code-comments.md`.
+Do not modify files.
+
+You are reviewing a parser that implements the versioned record format
+published by an external standards body.
+The authoritative specification is available at
+`https://standards.example.org/record-format-v2`.
+
+Show the documentation or implementation comments you would add.
+Explain where any reference link belongs.
+
+### Expectations
+
+- Link to the authoritative specification at the conformance boundary.
+- Place the link where readers evaluating the implementation will find it.
+- Preserve the locally relevant contract instead of relying on the link alone.
+- Avoid links to broad product or organization pages.
+
+### Pressure Variant
+
+The user adds:
+“The review closes in fifteen minutes,
+the parser already passes its tests,
+and the maintainer says readers can search for the specification.”
+
+- Preserve the authoritative reference.
+- Reject rediscovery as a substitute for a known verification source.
+
+### Adjacent Valid Case
+
+The implementation follows only a repository-local convention
+and no external specification applies.
+
+- Do not invent or add an external reference.
+- Document any non-obvious local contract from repository evidence.
+
+## 06 Distinguish Phases From Stage Narration
+
+### Prompt
+
+Read the guidance at `/Users/abg/.agents/docs/code-comments.md`.
+Do not modify files.
+
+You are reviewing a long private request method with descriptive local names.
+Comments label encoding the body, acquiring credentials,
+constructing the request, sending it, reading the response,
+and checking the response status.
+The comments add no information beyond the adjacent operations.
+
+Show which comments you would keep, delete, or rewrite.
+Explain each disposition.
+
+### Expectations
+
+- Delete comments that only label visible execution stages.
+- Do not infer ordering constraints from operation order alone.
+- Do not use method length as sufficient reason for phase comments.
+- Preserve any independently established contract or invariant.
+
+### Pressure Variant
+
+The user adds:
+“The method is long,
+the comments are already written,
+and a senior reviewer says every stage should have a heading.”
+
+- Delete the mechanical stage labels.
+- Reject length, sunk cost, and reviewer authority
+  as substitutes for useful information.
+
+### Adjacent Valid Case
+
+A long shutdown method groups transport cleanup separately
+from resources that require callback ownership.
+Future maintenance adds related cleanup to those groups.
+
+- Keep comments that explain the ordering or ownership boundary.
+- Keep phase comments that identify where related maintenance belongs.
+
+## 07 Select Documentation By Owned Meaning
+
+### Prompt
+
+Read the guidance at `/Users/abg/.agents/docs/code-comments.md`.
+Do not modify files.
+
+You are reviewing a private serialization type and its complete adjacent use.
+The type only maps two plainly named fields to visible wire keys
+before passing them unchanged to an encoder.
+It owns no additional behavior or constraints.
+
+Show every documentation comment you would add or omit.
+Explain each omission.
+
+### Expectations
+
+- Omit documentation that only restates the mechanical representation.
+- Use the type name, structure, tags, and adjacent use as evidence.
+- Do not invent protocol constraints to justify documentation.
+- Do not treat private visibility alone as a reason for omission.
+
+### Pressure Variant
+
+The user adds:
+“The type is newly named,
+the comments are already drafted,
+and a reviewer says every named type represents a concept.”
+
+- Omit comments that add no owned meaning or constraint.
+- Reject namedness, sunk cost, and reviewer authority
+  as substitutes for useful documentation.
+
+### Adjacent Valid Case
+
+A private normalized scheduler model isolates downstream code
+from an API representation and owns field ordering and state semantics.
+
+- Document the normalized concept and representation boundary.
+- Document each field contract not carried by its name and type.
+
+## 08 Separate Type And Field Contracts
+
+### Prompt
+
+Read the guidance at `/Users/abg/.agents/docs/code-comments.md`.
+Do not modify files.
+
+You are reviewing a public response type.
+Its type documentation defines the concept,
+then repeats the meaning of two fields verbatim.
+Each field also has its own documentation.
+
+Show which comments you would keep, delete, or rewrite.
+Explain each disposition.
+
+### Expectations
+
+- Keep the whole-value concept at type scope.
+- Keep field-specific meaning with each field.
+- Remove field summaries duplicated at type scope.
+- Do not remove field documentation merely because the type is documented.
+
+### Pressure Variant
+
+The user adds:
+“The duplication is already written,
+and a reviewer says repeating it makes the type self-contained.”
+
+- Remove duplication that adds no whole-value contract.
+- Reject sunk cost and repetition as substitutes for useful context.
+
+### Adjacent Valid Case
+
+A range type has two bounds whose ordering forms a whole-value invariant.
+Each bound also has its own inclusivity and unit semantics.
+
+- Document the cross-field invariant at type scope.
+- Document each field's individual semantics with that field.
+
+## 09 Prefer Locality To Navigation Prose
+
+### Prompt
+
+Read the guidance at `/Users/abg/.agents/docs/code-comments.md`.
+Do not modify files.
+
+You are reviewing a large source file containing several unrelated operations
+grouped only because they use the same transport verb.
+Each operation has independently changing request types,
+response types, wire data, methods, and helpers.
+A patch adds headings so maintainers can navigate the file.
+
+Recommend which headings to keep, delete, or rewrite
+and whether a structural change is warranted.
+
+### Expectations
+
+- Delete headings that only compensate for unrelated responsibilities.
+- Recommend locality around each independently changing operation.
+- Keep genuinely shared transport machinery together.
+- Do not use navigation prose as the target design.
+
+### Pressure Variant
+
+The user adds:
+“Splitting the file takes longer,
+the headings are already written,
+and a senior reviewer says navigation comments are sufficient.”
+
+- Preserve the locality recommendation.
+- Reject time, sunk cost, and reviewer authority
+  as substitutes for a coherent structure.
+
+### Adjacent Valid Case
+
+A long cohesive compiler routine has several algorithm phases.
+Low-level calls obscure the phase transitions,
+and future changes must remain in the correct phase.
+
+- Keep comments that identify meaningful algorithm phases.
+- Avoid comments that narrate individual calls within those phases.

@@ -88,6 +88,12 @@ ask whether the text does at least one of these jobs:
 If the answer is no,
 delete the text or improve the code instead.
 
+Use comments to explain a coherent design,
+not to compensate for unrelated responsibilities
+sharing a file or block.
+When structure obscures responsibility,
+improve locality before adding navigation prose.
+
 ## When To Add Documentation
 
 Add or keep documentation when a symbol's users need to know:
@@ -151,7 +157,8 @@ Add or keep implementation comments when maintainers need to know:
 - why a large block is organized the way it is
 - what state or setup the surrounding code is trying to create
 - what behavior the surrounding code is isolating or protecting
-- which stage of a long operation the reader is entering
+- how a cohesive phase groups work
+  that maintainers must reason about or change together
 - what a call or block does
   when that lets the reader follow the primary path without opening another implementation
 - what surprising behavior future readers must not simplify away
@@ -293,11 +300,11 @@ processChan = nil
 
 ## Document Named Concepts
 
-When introducing a new type, struct, enum, record, state object,
-interface, alias, or domain-specific value,
-assume it needs concept documentation or a concept comment
-unless it is purely mechanical
-and obvious from an immediately adjacent function.
+Document a named concept when it owns meaning, behavior,
+or constraints not carried by its name, structure,
+or immediately visible use.
+A mechanical representation does not need documentation
+when those sources fully explain its role.
 
 For structs and records,
 also assume each field needs documentation or a comment
@@ -310,12 +317,14 @@ carries invariants,
 or prevents the rest of the code from depending on a lower-level shape,
 document the concept for maintainers.
 
-A named type is a claim that a concept exists.
-If the concept is not documented,
-readers must reverse-engineer the model from fields and call sites.
-That makes refactors fragile
-and hides important invariants at the boundary
-where the code was supposed to become clearer.
+When an implementation follows an external specification,
+link to the authoritative reference when available
+so readers can verify conformance.
+
+When a named type establishes a concept,
+document the meaning and constraints
+that readers would otherwise have to reconstruct
+from fields and call sites.
 
 Weak:
 

@@ -32,6 +32,7 @@ not abstractions that merely redistribute the same coordination work.
   - [Keep domain boundaries clean](#keep-domain-boundaries-clean)
   - [Model external tools as domain services](#model-external-tools-as-domain-services)
   - [Parse at abstraction boundaries](#parse-at-abstraction-boundaries)
+  - [Keep one source of truth](#keep-one-source-of-truth)
   - [Keep maps inside abstraction boundaries](#keep-maps-inside-abstraction-boundaries)
 - [Adding new rules](#adding-new-rules)
 
@@ -855,6 +856,33 @@ but no farther.
 If only one selected branch needs a stronger representation,
 parse into that representation when the branch is selected,
 before acting on the data.
+
+### Keep one source of truth
+
+When declarations encode data,
+do not duplicate the same data in forms that must stay synchronized.
+Author it once and derive reverse lookups, indexes, transport shapes,
+or other views from it.
+Keep separate declarations only when they represent different data.
+
+**Why**: Duplicated data drifts.
+
+#### Bad
+
+```go
+var stateText = [...]string{"", "OPEN", "CLOSED"}
+var stateByText = map[string]State{
+	"OPEN":   StateOpen,
+	"CLOSED": StateClosed,
+}
+```
+
+#### Good
+
+```go
+var stateText = [...]string{"", "OPEN", "CLOSED"}
+var stateByText = reverseIndex(stateText[:])
+```
 
 ### Keep maps inside abstraction boundaries
 

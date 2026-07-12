@@ -7,6 +7,7 @@
 - [Error handling](#error-handling)
   - [Formatting variable values](#formatting-variable-values)
   - [Wrapping errors](#wrapping-errors)
+  - [Error variables](#error-variables)
 - [Interface compliance checks](#interface-compliance-checks)
 - [Symbol ordering](#symbol-ordering)
 - [File organization](#file-organization)
@@ -16,6 +17,8 @@
 - [Accept interfaces, return structs](#accept-interfaces-return-structs)
 - [Map-shaped APIs](#map-shaped-apis)
 - [Parse, don't repeatedly validate](#parse-dont-repeatedly-validate)
+- [Enums](#enums)
+- [Pointers and values](#pointers-and-values)
 - [Avoid boolean API knobs](#avoid-boolean-api-knobs)
 - [Testing](#testing)
   - [Context](#context)
@@ -184,6 +187,26 @@ for _, target := range targets {
 		// GOOD: the failed sub-operation is building this target.
 		return fmt.Errorf("build %q: %w", target.Label, err)
 	}
+}
+```
+
+### Error variables
+
+Use `err` for operation errors.
+Reuse it for sequential operations,
+and shadow it in a narrower scope
+when no earlier error must remain available there.
+
+Introduce separately named error variables only when multiple errors
+must remain independently readable at the same time.
+An error that is immediately combined with `err`
+does not require another variable.
+
+```go
+responseBody, err := io.ReadAll(res.Body)
+err = errors.Join(err, res.Body.Close())
+if err != nil {
+	return fmt.Errorf("read response: %w", err)
 }
 ```
 
@@ -559,6 +582,44 @@ Code that receives a `JobID`
 should not need to re-check
 whether it is shaped like a valid job ID.
 The type boundary should carry that guarantee.
+
+## Enums
+
+Prefer an integer-backed enum with `iota`
+when the package owns a closed set of values.
+Choose the zero value deliberately;
+reserve it for unknown or unspecified when there is no natural zero value.
+
+Convert external strings at the protocol boundary,
+usually with text marshaling and unmarshaling.
+Reject unknown text unless the contract requires preserving or round-tripping it.
+
+Use a string-backed enum when the set is open,
+unknown values must round-trip,
+or the strings themselves are domain values.
+Document the reason when it is not apparent.
+
+## Pointers and values
+
+Give each type one sharing model.
+Use pointers for objects with identity,
+owned resources or state,
+or values that should not be freely copied.
+Carry that model through parameters, results, and collections.
+Pointer semantics do not make `nil` valid.
+
+Use values for types modeled as independent copies,
+such as enums, times, colors, coordinates,
+or immutable configuration records.
+
+Choose a receiver by what the method operates on,
+not by whether the method mutates.
+Use a pointer receiver for the original object,
+including read-only behavior.
+Use a value receiver only when the method operates on an independent copy.
+A pointer-oriented type that needs a snapshot should copy explicitly
+rather than change receiver semantics for one method.
+Do not mix pointer and value semantics without a domain reason.
 
 ## Avoid boolean API knobs
 
