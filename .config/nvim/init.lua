@@ -725,9 +725,8 @@ require('lazy').setup({
 		opts = {
 			completions = { lsp = { enabled = true } },
 			preset = 'obsidian',
-			-- code = {
-			-- 	conceal_delimiters = false,
-			-- },
+			pipe_table = { style = 'normal' },
+			heading = { sign = false, icons = {} },
 		},
 	},
 
