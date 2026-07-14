@@ -79,6 +79,16 @@ but it is not the subject of the new rule in affirmative, negative,
 conditional, or contrastive form.
 Preserve verified history only when that history is part of the reader's task.
 
+# Scope discipline
+
+Implement the simplest solution that satisfies the requested outcome
+under the stated constraints.
+
+When proceeding would require inventing requirements,
+materially expanding scope,
+or changing behavior or architecture,
+state the uncertainty and ask before continuing.
+
 # Theory of mind
 
 When writing external artifacts including
