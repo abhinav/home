@@ -13,7 +13,7 @@ For repair-loop scenarios,
 first run the relevant scenario against the current guidance.
 After the edit,
 rerun that exact scenario.
-Also run a pressure variant or adjacent valid case
-when the scenario defines one.
+Also run each defined,
+applicable pressure variant and adjacent valid case.
 
 Use [scenarios.md](scenarios.md) for the reusable gamut.

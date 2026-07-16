@@ -24,21 +24,27 @@ Follow this loop for new skills and for edits to existing skills:
    target runtime,
    destination folder,
    and existing skill conventions.
-2. Capture a baseline failure before finalizing the skill or edit.
+2. Capture a baseline failure before drafting behavior-shaping guidance.
    For a new skill,
    test without the new guidance.
    For an update,
    test the current skill before the proposed change.
+   A passing baseline is not RED.
+   Strengthen the scenario and rerun isolated subagents to seek the reported
+   failure before drafting its repair.
+   If realistic variants still pass,
+   stop and report the reproduction gap;
+   use the narrow inaccessible-boundary exception only when it applies.
 3. Write the smallest useful skill or update
    that addresses the observed failure.
-4. Pressure test with fresh subagents that have empty context windows.
+4. Behaviorally test with fresh subagents that have empty context windows.
    First rerun the baseline scenario with the guidance,
-   then add pressure that tempts the agent to misbehave.
-5. Close loopholes by converting observed rationalizations
-   into explicit guidance,
-   trigger-description changes,
-   red flags,
-   or better section order.
+   then use pressure, application, variation, or gap cases appropriate to the
+   behavior being tested.
+5. Close loopholes by refining the guidance that governs the failed behavior.
+   Merge overlapping rules and keep each distinct boundary explicit.
+   Use trigger changes, red flags, or better section order only when they make
+   that boundary easier to apply.
 6. Persist reusable behavioral tests
    when the scenario should protect future changes to the skill.
    Before adding or planning these artifacts,
@@ -88,7 +94,8 @@ Keep `SKILL.md` focused on the operating procedure:
   Move bulky examples, rare cases, command references,
   and repeated workflow details into referenced files or existing tools.
 - Prefer one strong example over several similar examples.
-  Add more examples only when each one protects a distinct decision boundary.
+  Add another example only when it materially improves recognition or application,
+  or protects a distinct decision boundary.
 - Check size when a skill starts to sprawl.
   If a skill is hard to scan,
   split reference material out before adding more primary guidance.
@@ -113,9 +120,13 @@ For each update:
 1. Identify the failing behavior,
    the prompt or scenario that exposed it,
    and the part of the skill the agent likely relied on.
-2. Preserve guidance that still works.
-   Skill edits should close the gap without changing unrelated behavior.
-3. Generalize the failure before drafting the patch.
+   Locate the existing rules, tables, examples, and references that govern
+   the affected boundary before deciding where the repair belongs.
+   Reproduce a reported behavioral failure against the current skill before
+   drafting its repair.
+   If the baseline passes,
+   follow the non-reproduction loop in `references/subagent-testing.md`.
+2. Generalize the failure before drafting the patch.
    For behavior-shaping repairs,
    name the boundary the failure exposed before writing normative text:
 
@@ -134,17 +145,19 @@ For each update:
    Use observed symptoms and adjacent valid cases in examples,
    red flags,
    or retest scenarios instead.
-4. Patch the smallest section that can prevent the same failure.
+3. Revise the smallest governing section that can prevent the same failure.
    Build the repaired skill from a requirements set
    established independently of the failed proposal:
    the user's requested behavior, retained valid guidance,
    and authoritative evidence.
    Map every normative sentence in the patch to that requirements set.
-   When deleting or narrowing draft text fully expresses the requested behavior,
-   use that deletion or narrowing as the complete repair.
-   Prefer precise wording,
-   reordered emphasis,
-   or a short table over a new framework.
+   Replace, narrow, merge, or delete existing text before adding another rule.
+   Preserve distinct requirements and unrelated behavior.
+   When the revision fully expresses the requested behavior,
+   use it as the complete repair.
+   Add a rule or heading only when it protects a distinct decision boundary.
+   Keep a table row, red flag, or example when it materially improves
+   recognition or application without restating the rule.
    Write the primary repair as positive criteria:
    what future agents should optimize for,
    include,
@@ -158,7 +171,12 @@ For each update:
    Do not add fallback patch text that reintroduces symptom-shaped wording.
    If placement depends on the target skill's structure,
    describe where the same invariant wording should go.
-5. Retest the same scenario.
+   Read the affected sections and references once more before accepting the
+   patch.
+   Consolidate requirements that merely repeat one another;
+   retain repetition only where a separate decision point needs it.
+   Confirm that each application aid earns its place.
+4. Retest the same scenario.
    A prose-only change still needs behavioral validation
    when the skill is meant to shape agent behavior.
 
@@ -169,9 +187,9 @@ Common repairs:
 | Skill does not trigger | Add concrete symptoms to the description. |
 | Skill triggers too broadly | Narrow the description and add non-use boundaries. |
 | Agent skips a required step | Move the step earlier and make the decision point explicit. |
-| Agent follows a shortcut | Name the shortcut as a red flag and state the correct action. |
+| Agent follows a shortcut | Refine the governing rule; retain a red flag only when the shortcut remains hard to recognize. |
 | Agent misses a detail | Move rare detail to a reference and link it at the decision point. |
-| Agent treats testing as optional | Require a subagent or scenario check before deployment. |
+| Agent treats testing as optional | Make the existing validation gate explicit before deployment. |
 | Agent overfits a repair to one observed example | Replace the symptom-specific rule with positive criteria for the underlying decision boundary, then test an adjacent valid case. |
 
 ## Test With Subagents
@@ -291,15 +309,12 @@ Combine at least three pressures for discipline-enforcing guidance:
   the edit looks too minor to test.
 
 When an agent misbehaves,
-capture the exact reasoning and turn it into skill text.
-
-| Rationalization | Skill repair |
-| --- | --- |
-| "This is just documentation." | Require behavioral validation for behavior-shaping prose. |
-| "The skill is clear enough." | Require a realistic subagent pass before deployment. |
-| "I'll test after shipping." | Make validation part of the deployment boundary. |
-| "This follows the spirit." | State the specific boundary the shortcut violates. |
-| "The fix is obvious." | Require retesting the scenario that exposed the gap. |
+capture the exact reasoning and use it to refine the governing guidance or
+behavioral scenario.
+Keep a separate rationalization entry only when it protects a distinct,
+reusable recognition cue.
+Use the common red flags in `references/subagent-testing.md` to recognize
+these shortcuts without maintaining a second rationalization table.
 
 ## Validation
 
@@ -313,7 +328,10 @@ Before considering a skill ready:
 - Update or create persisted tests
   when the repair protects a reusable behavioral boundary.
 - For updates,
-  rerun the scenario that exposed the original misbehavior.
+  show the pre-change failure and rerun the same scenario after the repair,
+  or state the narrow inaccessible-boundary exception and its validation gap.
+- Treat a missing reproduction as a validation gap,
+  not as evidence that speculative guidance fixed the report.
 - Report the behavioral evidence,
   not only that the Markdown looked correct.
 

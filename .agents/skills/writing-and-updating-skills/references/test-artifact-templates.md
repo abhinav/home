@@ -23,8 +23,8 @@ For repair-loop scenarios,
 first run the relevant scenario against the current guidance.
 After the edit,
 rerun that exact scenario.
-Also run a pressure variant or adjacent valid case
-when the scenario defines one.
+Also run each defined,
+applicable pressure variant and adjacent valid case.
 
 Use [scenarios.md](scenarios.md) for the reusable gamut.
 ```
@@ -61,7 +61,7 @@ Do not modify files or run mutating commands.
 
 ### Pressure Variant
 
-The user adds:
+The staff engineer adds:
 "<invented pressure that combines time, authority, sunk cost,
 or small-change temptation>"
 
