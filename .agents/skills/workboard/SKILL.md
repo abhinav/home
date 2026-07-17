@@ -178,7 +178,9 @@ Read the focused reference when its decision applies:
 - [workers.md](references/workers.md)
   before dispatching or releasing a worker;
 - [evergreen-workstreams.md](references/evergreen-workstreams.md)
-  when a workstream performs recurring bounded cycles; and
+  when a workstream performs recurring bounded cycles;
+- [exporting-to-cardamom.md](references/exporting-to-cardamom.md)
+  when the user asks to export or migrate a Workboard into Cardamom; and
 - [worktrees.md](references/worktrees.md)
   when the mission uses worktrees or another managed workspace.
 
