@@ -245,6 +245,12 @@ Read `~/.agents/docs/code-design.md` when designing new code or refactoring.
 It provides principles and examples for structuring code,
 choosing abstraction boundaries, modeling data, and organizing control flow.
 
+# Using subagents
+
+Unless otherwise specified by the user,
+do not give subagents access to the parent agent's entire context.
+Provide detailed self-contained context to subagents in the message.
+
 # Required task guides
 
 Before editing code, tests, documentation, or command behavior,
