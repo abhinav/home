@@ -220,6 +220,14 @@ Good candidates include:
 - algorithm cases that match a preceding explanation
 - compact domain background needed to understand the implementation
 
+When a phase or block comment is useful,
+orient the maintainer using the incoming state,
+the operation or constraint,
+and the resulting state or consequence.
+Preserve stable names across adjacent phase comments.
+Make causal and ordering relationships explicit
+so the maintainer can safely change the transition.
+
 These comments still need to earn their place.
 The compact representation should cost less to read
 than reconstructing the same meaning from the code.
@@ -325,6 +333,19 @@ When a named type establishes a concept,
 document the meaning and constraints
 that readers would otherwise have to reconstruct
 from fields and call sites.
+
+When a named concept carries non-obvious meaning,
+introduce the relevant parts in this order:
+
+- the need or responsibility the concept addresses
+- what the concept represents
+- its representation and source
+- an illustrative value or state
+- the behavior or transition it controls
+- important limits or invalid cases
+
+Include only the parts that help the intended reader.
+Do not turn a mechanical representation into a domain explanation.
 
 Weak:
 
