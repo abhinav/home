@@ -21,11 +21,6 @@ verify these hard gates:
 - Every body line is 72 characters or shorter.
 - The message uses semantic line breaks.
 
-When writing, reviewing, or revising a commit message,
-optimize the body for the reader's review task.
-Preserve accurate facts and avoid unsupported claims,
-but do not preserve draft structure that hides why the change exists,
-where the change fits, what behavior changes, or what evidence proves.
 Apply all of these guidelines to every revision,
 including constrained edits to existing drafts.
 Before revising a draft,
@@ -111,12 +106,27 @@ risk boundaries, or focused verification evidence.
 
 #### Purpose And Boundary
 
-Lead with the operational or product intent before implementation details.
-Explain the workflow, failure mode,
-or user need that makes the change necessary.
+For a non-trivial change, use this default review arc:
 
-When the purpose or boundary is not obvious from the diff,
-establish the intended behavior or capability before implementation details.
+1. State the motivating user or operational need.
+2. Establish the prior behavior that makes the change necessary.
+3. Describe the observable behavior after the change.
+4. State the important boundary, exception, or non-goal.
+5. Present evidence that supports the changed behavior.
+
+Combine adjacent stages for a simple change.
+Keep implementation details subordinate to the behavior they explain.
+
+Lead with the reader-visible consequence in ordinary language.
+Before explaining its cause,
+identify what the reviewer must know to evaluate a non-obvious change,
+such as the affected actor, prior contract, lifecycle phase, domain term,
+unit, configuration source, or system boundary.
+Define each unfamiliar domain term or unit at first use,
+before describing the behavior that relies on it.
+Introduce other necessary prerequisites before relying on them.
+Omit prerequisites that do not change the review decision.
+
 A dependency, packaging, build, or test obstacle is supporting rationale,
 not the purpose,
 unless that obstacle is itself the behavior users or operators observe.
@@ -132,6 +142,17 @@ Describe the normal consumer path before exceptional machinery.
 State what normal users, tests, operators, or callers observe,
 then identify any privileged, networked, expensive, stateful,
 migration-only, or maintenance-only operation that sits outside that path.
+
+For bug fixes where the ordering of events matters,
+explain the failure sequence before the implementation.
+Use a short numbered list or timeline when reviewers would otherwise have to
+reconstruct several state transitions from prose.
+Keep recurring actors and state names stable,
+preserve handoffs between actors or systems,
+and group adjacent transitions when their relationship remains clear.
+End with the user-visible failure,
+then state the resulting behavior or invariant before validation.
+Ordered causal narratives are not diff-inventory lists.
 
 When a change crosses a meaningful boundary,
 explain what crosses that boundary,
@@ -201,8 +222,14 @@ such as public interface, compatibility rationale, migration behavior,
 examples, and verification.
 Do not add headings to simple one-part changes.
 
+When an example or reproducer helps explain a change,
+use one short, representative example across prior behavior, changed behavior,
+and validation evidence.
+Keep names, inputs, and units stable,
+and change one relevant factor at a time so reviewers can attribute the result
+to the behavioral change.
 Use blocks for copyable examples such as config stanzas and request shapes.
-Keep examples short and representative.
+Omit unrelated debugging examples.
 
 #### Evidence
 
@@ -226,15 +253,7 @@ error excerpt,
 or before/after invocation is the shortest way to understand the value
 of the patch,
 put that evidence near the start of the body before broader explanation.
-Use a short command block and explain immediately below it why it failed
-and how the patch changes that behavior.
-
-For bug fixes where the ordering of events matters,
-explain the failure sequence before the implementation.
-Prefer a short numbered list or timeline when the reader would otherwise
-have to reconstruct several state transitions from prose.
-The restriction on diff-inventory lists does not apply to ordered failure
-narratives.
+Explain why it failed and how the patch changes that behavior.
 
 Use a `Validation` section when non-routine evidence adds review context.
 Qualifying evidence includes added or strengthened test coverage,
