@@ -49,6 +49,45 @@ limit it to read-only inspection
 or artifacts under a task-local temporary directory
 outside the target repository.
 
+## Prepare The Evaluation
+
+Before spending subagent runs,
+resolve the target skill and a representative input,
+then define the quality bar a useful result must clear.
+The bar should state the observable outcome and the smells that demonstrate
+failure.
+If either the input or bar is unavailable,
+ask for the missing information instead of inventing an evaluation.
+
+Choose the evaluation mode:
+
+- Judgment:
+  state the outcome and failure smells,
+  then allow defensible differences in structure or approach.
+  Do not turn the bar into a prescribed answer.
+- Conformance:
+  list the required fields, format, procedure, or other fixed contract
+  the result must satisfy.
+
+```markdown
+Input:
+<representative task or artifact>
+
+Quality bar:
+<observable outcome a competent practitioner should achieve>
+
+Failure smells:
+<behaviors or omissions that demonstrate the bar was missed>
+
+Evaluation mode:
+judgment | conformance
+```
+
+Give the runner the prompt and representative input.
+Keep the Quality Bar, Expectations, and proposed repair outside the runner
+prompt;
+the evaluator or judge applies them afterward.
+
 ## Skill Kinds And Test Shapes
 
 Use the test shape that matches the skill kind.
@@ -83,6 +122,16 @@ test the behavior that carries the highest risk.
   file-format notes,
   schema references,
   and style guides.
+- Trigger-selection tests:
+  present the task and an available-skill catalog,
+  but withhold the target skill path and body.
+  Test positive triggers, alternate user wording,
+  competing skill descriptions,
+  and nearby non-use cases.
+- Artifact-producing skills:
+  ask a runner to produce the artifact,
+  then grade that artifact against the quality bar.
+  A convincing rationale does not establish that the artifact is useful.
 
 ```text
 Given the skill at /path/to/skill and the scenario below,
@@ -111,6 +160,58 @@ Avoid prompts that leak the answer:
 Review this flaky-test skill and confirm whether it should mention
 shared-state pollution.
 ```
+
+For trigger-selection tests,
+passing the target skill path is an answer leak:
+
+```text
+Available skills:
+- schema-migration: Plans and performs live schema changes.
+- schema-inspection: Explains or inspects existing schemas.
+
+User request:
+Rename a nullable column while writes continue.
+
+Choose the skill or skills you would load and explain briefly.
+```
+
+## Grade Artifacts Independently
+
+When the skill produces an artifact,
+use separate runner and judge roles:
+
+1. Give a fresh runner the skill path and representative input.
+   Withhold the Quality Bar, Expectations, other cases,
+   and proposed repair.
+   Capture the artifact without modifying shared state.
+2. Give a separate fresh judge the artifact, source input, quality bar,
+   and the target skill's governing principles.
+   Withhold any expected artifact and do not ask the judge to make the run pass.
+3. Require the judge to cite the source-and-output evidence behind each verdict.
+   A numeric score alone can hide which part of the bar failed.
+4. Diagnose a failing verdict as a skill gap or a bad case.
+   If the bar punishes a defensible choice or requires behavior outside the
+   skill's purpose,
+   repair the case instead of bending the skill to pass it.
+
+For a simple decision test,
+the parent evaluator can apply the stated expectations directly.
+Use an independent judge when the artifact or judgment boundary is substantial.
+
+## Account For Variability And Regressions
+
+One passing run is weak evidence for intermittent or borderline behavior.
+Run important or borderline cases two or three times with fresh subagents,
+record the observed pass rate,
+and retain the raw failures.
+A case that passes once and fails twice remains a failure.
+
+After repairing a skill,
+rerun the failing case, applicable variants,
+and relevant previously passing cases.
+The regression sweep should exercise every retained behavior the repair could
+plausibly affect,
+not every unrelated scenario in the folder.
 
 ## Baseline Prompt Pattern
 
@@ -366,10 +467,19 @@ not merely recite it.
 - The new or changed guidance addresses an observed failure
   or the narrowly supported preventive boundary.
 - A fresh subagent ran a realistic isolated scenario with the skill.
+- The evaluation has a representative input and an observable quality bar.
+- Judgment tests permit defensible variation;
+  conformance tests state the fixed contract.
+- Trigger-selection tests withhold the target path and body
+  and cover positive and nearby non-use cases.
+- Artifact-producing tests grade the artifact with cited source-and-output
+  evidence.
 - Discipline tests combined multiple pressures
   and forced a concrete choice with no easy out.
 - For reproduced repairs,
   the same failing scenario passes after the change.
+- Important or borderline cases have repeated-run evidence,
+  and relevant previously passing cases were rerun.
 - The passing subagent cites or relies on the relevant guidance.
 - When a subagent fails,
   meta-testing was used to diagnose whether the skill was unclear.

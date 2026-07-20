@@ -24,6 +24,10 @@ Follow this loop for new skills and for edits to existing skills:
    target runtime,
    destination folder,
    and existing skill conventions.
+   Define the observable quality bar and whether the skill needs judgment
+   or conformance before spending subagent runs.
+   Orientation is complete when the target, representative input,
+   and pass/fail boundary are clear.
 2. Capture a baseline failure before drafting behavior-shaping guidance.
    For a new skill,
    test without the new guidance.
@@ -35,12 +39,20 @@ Follow this loop for new skills and for edits to existing skills:
    If realistic variants still pass,
    stop and report the reproduction gap;
    use the narrow inaccessible-boundary exception only when it applies.
+   The baseline is complete when a fresh run or faithful recorded failure
+   tied to the current skill revision exhibits the target behavior,
+   or the supported preventive boundary and validation gap are recorded.
 3. Write the smallest useful skill or update
    that addresses the observed failure.
+   The repair is complete when every normative change has independent support,
+   the adjacent valid case remains permitted,
+   and overlapping guidance has been removed.
 4. Behaviorally test with fresh subagents that have empty context windows.
    First rerun the baseline scenario with the guidance,
    then use pressure, application, variation, or gap cases appropriate to the
    behavior being tested.
+   For artifact-producing skills,
+   grade the artifact independently against the quality bar.
 5. Close loopholes by refining the guidance that governs the failed behavior.
    Merge overlapping rules and keep each distinct boundary explicit.
    Use trigger changes, red flags, or better section order only when they make
@@ -50,6 +62,8 @@ Follow this loop for new skills and for edits to existing skills:
    Before adding or planning these artifacts,
    read `references/test-artifact-templates.md`.
 7. Validate the folder mechanically and behaviorally before deployment.
+   Validation is complete when the failing case, applicable variants,
+   and relevant previously passing cases clear the bar.
 
 Read `references/subagent-testing.md` before designing subagent validation,
 running pressure tests,
@@ -96,6 +110,11 @@ Keep `SKILL.md` focused on the operating procedure:
 - Prefer one strong example over several similar examples.
   Add another example only when it materially improves recognition or application,
   or protects a distinct decision boundary.
+- Use examples to teach the recurring symptom,
+  the evidence that reveals it,
+  and the decision boundary.
+  Keep incident-specific implementation details out of durable guidance
+  unless the skill teaches a required format or procedure.
 - Check size when a skill starts to sprawl.
   If a skill is hard to scan,
   split reference material out before adding more primary guidance.
@@ -109,6 +128,11 @@ Keep `SKILL.md` focused on the operating procedure:
   changelog,
   installation guide,
   or process notes unless the runtime explicitly requires them.
+- Give ordered steps checkable completion criteria.
+  Disclose a finding that materially affects the user's current decision
+  when it is discovered;
+  workflow order governs execution and presentation,
+  not disclosure.
 
 ## Update Existing Skills
 
@@ -187,10 +211,17 @@ Common repairs:
 | Skill does not trigger | Add concrete symptoms to the description. |
 | Skill triggers too broadly | Narrow the description and add non-use boundaries. |
 | Agent skips a required step | Move the step earlier and make the decision point explicit. |
+| Agent ends a step early | Replace the vague done-condition with an observable completion criterion. |
+| Agent passes only because an input was volunteered | Add the elicitation or inspection step that reliably obtains the input. |
 | Agent follows a shortcut | Refine the governing rule; retain a red flag only when the shortcut remains hard to recognize. |
 | Agent misses a detail | Move rare detail to a reference and link it at the decision point. |
 | Agent treats testing as optional | Make the existing validation gate explicit before deployment. |
 | Agent overfits a repair to one observed example | Replace the symptom-specific rule with positive criteria for the underlying decision boundary, then test an adjacent valid case. |
+| Several ordered stages collapse into one response | Make each stage's deliverable checkable and progressively disclose later stages when needed. |
+| Agent withholds a finding because it belongs to a later stage | Disclose findings that materially affect the user's current decision when discovered. |
+| Guidance points to transient paths, lines, or constants | State the durable boundary and direct the agent to locate the current owner. |
+| Guidance has accumulated repeated or stale rules | Prune, merge, or move them behind the relevant reference pointer. |
+| Guidance does not change the agent's next action | Remove the no-op. |
 
 ## Test With Subagents
 
@@ -202,10 +233,15 @@ When testing:
 
 - Use fresh subagents with empty context windows
   for independent passes.
-- Pass the skill path and task-local artifacts,
+- For application tests,
+  pass the skill path and task-local artifacts,
   not your diagnosis,
   expected answer,
   or planned fix.
+- For trigger-selection tests,
+  give the subagent the task and an available-skill catalog,
+  but withhold the target skill path and body.
+  Test positive, alternate-wording, and nearby non-use cases.
 - Keep tests isolated.
   Ask the subagent for a decision,
   rationale,
@@ -223,6 +259,15 @@ When testing:
   decisions,
   skipped steps,
   and rationalizations.
+- For artifact-producing skills,
+  give a separate fresh judge the artifact, source input, quality bar,
+  and governing skill principles.
+  Require a verdict grounded in specific source-and-output evidence;
+  do not give the judge an expected artifact or ask it to make the run pass.
+- Repeat important or borderline scenarios two or three times with fresh
+  subagents and report the observed pass rate.
+  Rerun relevant previously passing scenarios after a repair
+  so a local fix does not hide a regression.
 - Treat subagent failures as diagnostics for the skill
   or the test setup.
 
@@ -254,11 +299,14 @@ tests/
 `tests/README.md` explains how to run the reusable scenarios.
 It should say to use fresh subagents with empty context windows,
 hide expectations from the tested subagent,
-keep tests read-only or confined to task-local temporary directories,
-and compare the raw response with expectations afterward.
+keep tests read-only or confined to task-local temporary directories
+outside the target repository,
+and compare the raw response with the quality bar afterward.
+It should distinguish application tests from trigger-selection tests
+and explain any independent artifact-grading step.
 
 `tests/scenarios.md` records the reusable gamut.
-Store prompts, expectations, pressure variants,
+Store representative inputs, quality bars, expectations, pressure variants,
 adjacent valid cases,
 and any special harness steps needed to reproduce the behavioral check.
 
@@ -325,6 +373,8 @@ Before considering a skill ready:
 - Confirm frontmatter is valid and trigger-focused.
 - Follow the sufficient testing checklist
   in `references/subagent-testing.md`.
+- Repeat important or borderline scenarios and report their observed pass rate.
+- Rerun relevant previously passing scenarios after the repair.
 - Update or create persisted tests
   when the repair protects a reusable behavioral boundary.
 - For updates,
