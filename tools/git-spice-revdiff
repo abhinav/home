@@ -62,7 +62,7 @@ while read -r branch_entry; do
 	needs_restack=$(jq -r '.down.needsRestack // false' <<< "$branch_entry")
 	if [[ "$needs_restack" == "true" ]]; then
 		log=$(mktemp)
-		git log "$base..$name" "^$base" | head -n500 > "$log"
+		git log "$base..$name" "^$base" | sed -n '1,500p' > "$log"
 		revdiff_args+=("--description-file=$log")
 		trap 'rm -f "$log"' EXIT
 	fi
