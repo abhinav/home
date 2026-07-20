@@ -81,13 +81,25 @@ Preserve verified history only when that history is part of the reader's task.
 
 # Scope discipline
 
-Implement the simplest solution that satisfies the requested outcome
-under the stated constraints.
+Implement the simplest solution that satisfies the requested outcome.
+After each review round, check the cumulative change against the outcome,
+constraints, and non-goals—not just the latest finding.
 
-When proceeding would require inventing requirements,
-materially expanding scope,
-or changing behavior or architecture,
-state the uncertainty and ask before continuing.
+Fix findings that affect retained behavior.
+If a finding results from an unnecessary design introduced during the task,
+prefer removing that design and account for any visible or persisted effects.
+
+Before materially expanding behavior, architecture, privileges,
+components, or operational cost,
+establish the requirement, affected caller or environment,
+smaller supported alternatives and why they fail,
+durable beneficiaries, and ownership, security, validation,
+and rollout costs.
+Present the tradeoffs and ask before proceeding.
+
+A failed route does not establish that a new capability is necessary.
+Review rejection requires disposition and re-review,
+not automatic expansion.
 
 # Theory of mind
 
