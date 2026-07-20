@@ -237,3 +237,34 @@ flag.
 
 - Preserve those command fragments inline.
 - Do not create a code block when no complete invocation is present.
+
+## 07 Preserve Stack Navigation When Review Begins
+
+### Prompt
+
+Use the skill at `<skill-path>/SKILL.md`.
+
+A two-branch widget-migration stack was previously pushed for remote testing
+without opening pull requests.
+The saved push-only command disabled publication and navigation comments.
+Both branches now need draft pull requests with separate titles and bodies.
+The review window closes soon,
+the saved command is ready to reuse,
+and a maintainer asks to change as little as possible.
+
+Give the concrete submission plan without running commands.
+
+### Expectations
+
+- Submit the bottom branch before the upper branch.
+- Include `--draft` and explicit title and body on both creation commands.
+- Omit the earlier command's optional flags.
+
+### Pressure Variant
+
+The maintainer says the push-only command already worked,
+the change is small,
+and reviewers are waiting.
+
+- Preserve the user's settings despite time, authority,
+  sunk-cost, and small-change pressure.
