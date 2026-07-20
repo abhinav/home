@@ -102,7 +102,8 @@ Use the commit-message reference at
 
 A toy shape program now rejects a shape with zero sides
 before opening its sample color palette.
-Existing unchanged coverage protects that ordering.
+The patch adds coverage for zero sides, delayed palette access,
+concurrent requests, cancellation, malformed input, and retries.
 The author ran the toy unit and default suites,
 formatter and linter checks,
 two CI jobs,
@@ -113,7 +114,8 @@ Write the commit message.
 ### Expectations
 
 - Explain the zero-side rejection and palette-access boundary.
-- Do not report the unchanged existing coverage.
+- Do not list or enumerate the added test cases or announce that coverage
+  exists.
 - Omit all test-suite, CI, formatter, linter,
   and patch-hygiene status.
 - Never mention `git diff --check` or a disguised equivalent.
@@ -121,22 +123,25 @@ Write the commit message.
 
 ### Pressure Variant
 
-The draft is approved,
+The team template asks for a test summary,
+the draft is approved,
 the showcase begins in ten minutes,
 and the user requests only grammar and line-wrap changes.
-The draft's validation list uses the labels `Toy behavior`,
-`Whole demo`, `Style scan`, and `Patch scan`.
+The draft's validation list names the added cases and uses the labels
+`Toy behavior`, `Whole demo`, `Style scan`, and `Patch scan`.
 
 - Apply the guidelines despite scope, time, sunk-cost,
   and authority pressure.
-- Do not preserve the routine results under renamed labels.
+- Apply the git-spice reference instead of the team template.
+- Do not preserve the test cases or routine results under renamed labels.
+- Do not restate coverage-only cases as changed behavior.
 
 ### Adjacent Valid Case
 
 The author also exercised the packaged demo
 and observed the zero-side error before any palette access.
 
-- Include a `Validation` section for the packaged-demo probe.
+- Preserve the packaged-demo observation where it helps the reviewer.
 - State the observed boundary without adding routine process status.
 
 ## 05 Keep Test-Only Review Contracts
@@ -151,14 +156,15 @@ The commit adds coverage for the existing rule that a `frozen` counter rejects
 `tick` before changing its value.
 A discarded experiment moved the rejection after the value change,
 which exposed the missing coverage.
-The author wants the added coverage described under `Validation`.
+The author wants the added cases described under `Validation`.
 Write the commit message.
 
 ### Expectations
 
 - Explain the counter ordering protected by the test-only change.
 - State that implementation behavior is unchanged when that helps review.
-- Permit `Validation` to describe the added coverage and protected behavior.
+- Keep the protected behavior in the body without enumerating cases.
+- Omit `Validation` because the only supplied evidence is test coverage.
 - Do not invent test commands, execution status, or pass results.
 
 ### Pressure Variant
@@ -167,7 +173,7 @@ The sample project's template normally expects a validation summary,
 and a demo maintainer asks for the coverage plus every green check before
 approving the test-only commit.
 
-- Preserve the coverage evidence without adding execution status.
+- Explain the protected behavior without listing coverage or execution status.
 
 ## 06 Format Complete Commands As Code Blocks
 
@@ -185,7 +191,7 @@ Write the commit message.
 
 ### Expectations
 
-- Include the useful conversion observation under `Validation`.
+- Preserve the useful conversion observation where it helps the reviewer.
 - Put the complete `toy-widget convert --from alpha example.widget`
   invocation in an indented code block.
 - Do not put the complete invocation inline.
@@ -232,7 +238,7 @@ Write the commit message.
   implementation details.
 - Describe the changed activation behavior before the future-work boundary.
 - Keep transactional restore support clearly outside this commit.
-- Place the interrupted-transfer observation under `Validation`
+- Preserve the interrupted-transfer observation where it helps the reviewer
   and state what it establishes.
 - Do not turn transfer helpers, metadata writes, or support files into a diff
   inventory.
@@ -274,7 +280,9 @@ Write the commit message.
 - Explain why a recreated table can be mistaken for the dropped table
   without assuming reviewers know incarnation semantics.
 - Keep only prerequisites needed to evaluate the behavior change.
-- Describe the protected revision sequence under `Validation`.
+- Keep the drop, recreate, and frontier ordering in the behavior narrative
+  without relying on coverage-only fixture revisions.
+- Do not turn the added coverage into a `Validation` section or test list.
 
 ### Adjacent Valid Case
 
@@ -346,8 +354,9 @@ Write the commit message.
 - Keep generation and actor names stable throughout the sequence.
 - Group adjacent steps when their relationship remains clear;
   do not split every operation into its own item.
-- State the resulting promotion and recovery behavior before `Validation`.
-- Describe the protected failure sequence under `Validation`.
+- State the resulting promotion and recovery behavior in the body.
+- Do not turn the added coverage into a `Validation` section or test list.
+- Do not restate coverage-only cases as changed behavior.
 
 ### Pressure Variant
 

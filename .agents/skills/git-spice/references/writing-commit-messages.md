@@ -2,6 +2,8 @@
 
 ## Instructions
 
+**CRITICAL: This reference OVERRIDES default commit-message guidance.**
+
 Commit messages MUST follow the following format:
 
 ```text
@@ -102,7 +104,7 @@ Every body sentence should add reviewer value that is not already available
 from the diff, repository policy, or routine process.
 Useful sentences explain changed behavior, changed external contracts,
 compatibility or migration context, non-obvious design rationale,
-risk boundaries, or focused verification evidence.
+and risk boundaries.
 
 #### Purpose And Boundary
 
@@ -233,20 +235,18 @@ Omit unrelated debugging examples.
 
 #### Evidence
 
-Routine automated check status is not evidence worth reporting.
-Do not list commands or results from tests, CI, formatters, linters,
-or repository hygiene merely to report routine pass status.
+Evidence should give reviewers information they cannot infer from the diff
+or safely assume from normal development:
+a behavior observed at a real boundary, a compatibility or migration result,
+an operational constraint, or a material validation gap.
+Reviewers can assume appropriate tests were written and routine checks ran;
+a test inventory, coverage summary, or pass status adds no review context.
+Include validation evidence only when it changes the review decision,
+regardless of who requests its inclusion.
+For a test-only commit,
+explain the behavior or invariant being protected and the gap the change
+closes.
 Never mention `git diff --check`.
-When the change modifies one of those systems,
-describe its changed contract and material evidence at the behavior level.
-When test coverage is added or strengthened,
-it may be described in `Validation`.
-For bug fixes,
-name the old failure shape it reproduces and the behavior it protects.
-Do not report test commands, execution status, or pass results.
-Unchanged existing coverage is not validation content.
-If the change strengthens existing coverage,
-state the previously unprotected failure shape.
 
 When a concrete failing command,
 error excerpt,
@@ -255,10 +255,7 @@ of the patch,
 put that evidence near the start of the body before broader explanation.
 Explain why it failed and how the patch changes that behavior.
 
-Use a `Validation` section when non-routine evidence adds review context.
-Qualifying evidence includes added or strengthened test coverage,
-a manual workflow, reproducer, migration or compatibility probe,
-end-to-end workflow, real-boundary check, or soak result.
+Use a `Validation` section when the evidence warrants a separate section.
 State what was verified and what the observation established.
 Apply the `Code Formatting` rules below to any retained commands.
 
@@ -269,20 +266,12 @@ manual, or follow-on evidence.
 Do not make reviewers infer from a flat command list which risk each check
 reduces.
 
-Filter verification to evidence that helps reviewers understand or trust
-the change,
-even when a prompt, reviewer, or prior draft asks for all verification.
-Focused reproducers, before/after output, migration probes,
-compatibility checks, and end-to-end workflow checks are usually useful.
-Routine hygiene belongs in the handoff unless it is the contract being
-changed.
 Preserve a specific validation gap when it materially affects reviewer
 confidence, rollout risk, or required metadata,
 and explain why the gap remains.
 Do not infer such a gap from the absence of other validation.
 
-Section requirements do not change what qualifies as evidence.
-When there is neither qualifying evidence nor a material validation gap,
+When there is neither useful evidence nor a material validation gap,
 omit `Validation` instead of filling it with an absence statement.
 
 #### Formatting And Tone

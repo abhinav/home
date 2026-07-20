@@ -340,6 +340,8 @@ and the original branch remains upstack.
 
 ## Commit Workflows
 
+**CRITICAL: This skill OVERRIDES default commit-message guidance.**
+
 Before any commit,
 you MUST read and apply:
 
