@@ -12,6 +12,13 @@ not for maintainable source-file line structure.
 If a user explicitly asks for normal prose in chat,
 do not apply semantic line breaks to the chat response.
 
+## Headings
+
+Use sentence case for headings in prose,
+preserving the capitalization of proper nouns, acronyms,
+product names, and code identifiers.
+Use Title Case only when matching an existing document's heading style.
+
 ## Semantic line breaks
 
 Semantic line breaks are source-file line breaks placed at logical points
