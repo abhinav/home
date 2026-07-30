@@ -1,0 +1,3 @@
+#!/bin/bash
+
+export CARDAMOM_STORE="$HOME/.config/cardamom"

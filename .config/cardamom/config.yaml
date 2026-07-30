@@ -1,0 +1,6 @@
+version: 1
+
+issue:
+  id:
+    prefix: ab-
+    strategy: random

@@ -1,0 +1,5 @@
+[daemons.cardamom]
+run = 'exec card web --store "$HOME/.config/cardamom" --port=5999 --no-browser'
+mise = true
+boot_start = true
+ready_port = 5999

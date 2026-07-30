@@ -3,6 +3,11 @@
 
 !.gitignore
 
+
+!/cardamom
+/cardamom/*
+!/cardamom/config.yaml
+
 # Neovim
 !/nvim
 !/vim-go

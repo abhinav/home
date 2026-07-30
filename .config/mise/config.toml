@@ -4,6 +4,7 @@ gofumpt = "latest"
 golangci-lint = "latest"
 rust = "latest"
 zig = "latest"
+"github:abhinav/cardamom" = { version = "latest", exe = "card" }
 "github:abhinav/tmux-fastcopy" = "latest"
 "github:kunchenguid/treehouse" = "latest"
 "github:umputun/revdiff" = "latest"

@@ -28,6 +28,7 @@ source ~/.profile.d/haskell
 source ~/.profile.d/zig
 source ~/.profile.d/obsidian
 source ~/.profile.d/glow
+source ~/.profile.d/cardamom
 
 test -f ~/.profile.d/local && source ~/.profile.d/local
 
