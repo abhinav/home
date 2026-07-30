@@ -275,6 +275,15 @@ and do not trigger the prose-formatting guide.
 
 Use this routing table:
 
+- **Prose writing** (`~/.agents/docs/prose-writing.md`):
+  Guidance for reader context, causal explanations,
+  stable examples, material boundaries, evidence,
+  and explanatory cognitive load.
+  Read this when writing or substantially revising external prose artifacts
+  such as documentation, design documents, incident reports,
+  commit messages, pull request descriptions, release notes,
+  or substantive multi-line comments.
+
 - **Prose formatting** (`~/.agents/docs/prose-formatting.md`):
   Semantic line break rules for Markdown,
   commit messages, and multi-line comments.

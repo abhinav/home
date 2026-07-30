@@ -41,8 +41,7 @@ Do not leave a short introductory phrase, dependent clause, or transition
 alone on a line
 when it fits with the clause it modifies.
 
-When editing an existing artifact,
-match the local source-line style of the text being changed.
+When editing an existing artifact, match the local source-line style of the text being changed.
 If the surrounding text uses one complete paragraph per physical line,
 keep a narrow edit in that paragraph on one physical line
 unless the user asked for reflowing,
@@ -79,8 +78,7 @@ Prefer a break after an independent clause
 when punctuation marks the clause boundary.
 Commas, semicolons, colons, and em dashes can signal useful break points,
 but they are not commands to break after every occurrence.
-Before using a comma as a break point,
-check whether the comma belongs to a compact inline list.
+Before using a comma as a break point, check whether the comma belongs to a compact inline list.
 If it does, apply the inline-list rules before choosing the break.
 
 ```markdown
@@ -195,8 +193,7 @@ Also good:
 
 ```markdown
 The parser accepts alpha, beta, gamma, delta, epsilon, and zeta modes,
-then normalizes them to `A`, `B`, `G`, `D`, `E`, and `Z`
-before dispatch.
+then normalizes them to `A`, `B`, `G`, `D`, `E`, and `Z` before dispatch.
 ```
 
 Bad:
@@ -210,8 +207,7 @@ and owner.
 Good:
 
 ```markdown
-Before publishing, verify title, summary,
-and owner.
+Before publishing, verify title, summary, and owner.
 ```
 
 Bad:
@@ -225,8 +221,7 @@ when the draft is ready.
 Good:
 
 ```markdown
-Assign reviews to Alice, Ben,
-or Casey when the draft is ready.
+Assign reviews to Alice, Ben, or Casey when the draft is ready.
 ```
 
 Bad:
@@ -240,8 +235,7 @@ when the incident starts.
 Good:
 
 ```markdown
-Send notices to the review channel, release channel,
-or support channel when the incident starts.
+Send notices to the review channel, release channel, or support channel when the incident starts.
 ```
 
 ## Line length
@@ -275,8 +269,7 @@ Also check short introductory phrases, dependent clauses, and transitions;
 do not strand them on their own line
 when they fit with the clause they modify.
 
-After that preflight,
-use the first applicable boundary in this order:
+After that preflight, use the first applicable boundary in this order:
 
 1. End of sentence.
 2. Boundary before a list, block quote, code block, table, or other block.
@@ -364,8 +357,7 @@ to get started.
 Also good:
 
 ```markdown
-For more information,
-visit our documentation at <https://example.com/documentation/getting-started>
+For more information, visit our documentation at <https://example.com/documentation/getting-started>
 to get started.
 ```
 
