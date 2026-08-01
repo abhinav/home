@@ -1,5 +1,0 @@
-interface:
-  display_name: "Multiwork (Workboard alias)"
-  short_description: "Compatibility alias for Workboard"
-  default_prompt: >-
-    Use $multiwork as a compatibility alias for $workboard.
