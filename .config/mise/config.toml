@@ -9,6 +9,7 @@ zig = "latest"
 "github:kunchenguid/treehouse" = "latest"
 "github:umputun/revdiff" = "latest"
 pitchfork = "latest"
+"aqua:benbjohnson/litestream" = "latest"
 
 [settings]
 experimental = true
