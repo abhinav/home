@@ -18,6 +18,9 @@
 [spice "branchPrompt"]
 	sort = committerdate
 
+[spice "merge"]
+	method = squash
+
 [spice "log"]
 	pushStatusFormat = aheadBehind
 [spice "experiment"]
