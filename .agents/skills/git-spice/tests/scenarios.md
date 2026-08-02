@@ -16,6 +16,8 @@ Run the scenario domain that matches the guidance being changed:
 - [history-surgery.md](history-surgery.md):
   authorized raw history surgery, recovery refs, and exact non-interactive
   split operations.
+- [stack-design.md](stack-design.md):
+  self-contained review units and valid dependent work.
 - [routing.md](routing.md): commit and pull-request wrapper delegation.
 
 Follow [README.md](README.md) for the harness and variant protocol.

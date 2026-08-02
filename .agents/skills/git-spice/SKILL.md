@@ -130,6 +130,9 @@ Load these references before doing the matching work:
   `references/history-surgery.md`
 - Branch topology surgery with `branch onto`, `upstack onto`, or `branch split`:
   `references/history-surgery.md`
+- Planning more than one branch for one requested outcome,
+  or splitting work into review branches:
+  `references/designing-stacks.md`
 - Recovery from raw Git usage or stale stack metadata:
   `references/recovery.md`
 - Importing existing GitHub pull request branches or stacks locally:
@@ -219,6 +222,21 @@ including any required prefix such as `abhinav/`.
 
 If the user provides a non-conforming branch name,
 normalize it automatically and inform them.
+
+## Choosing Branch Boundaries
+
+Before planning more than one branch for one requested outcome,
+or splitting work into review branches,
+read and apply:
+
+```text
+references/designing-stacks.md
+```
+
+Settle the review boundary before choosing the stack position.
+A stacked branch is a self-contained review unit.
+Its incremental diff must provide the implementation, context, and validation
+needed to understand and evaluate its outcome with its downstack dependencies.
 
 ## Choosing Stack Position
 
@@ -580,6 +598,9 @@ Stop before running a command when any of these conditions holds:
 - The command could prompt because required input is missing.
   Required input includes `--no-prompt`, an explicit message, and `--no-edit`.
 - The current branch has not been chosen as the intended stack position.
+- More than one branch is planned for one requested outcome,
+  but the proposed review units have not been checked
+  for self-containedness under `references/designing-stacks.md`.
 - A topology-changing command such as `onto`, `--insert`, or `branch split`
   is being used for an ordinary restack or a different topology operation.
 - A remote-tracking ref is being used where git-spice requires a local branch.
