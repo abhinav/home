@@ -7,6 +7,10 @@ Use `git-spice stack submit --fill` for the whole stack
 or `git-spice upstack submit --fill` for the current branch and its upstack.
 Do not use `--fill` when any branch has multiple commits;
 git-spice appends all of those commit messages into that pull request metadata.
+Choose publication, navigation, browser, and other optional flags
+only for effects the user currently requests.
+`--no-publish` already implies push-only behavior;
+otherwise preserve configured defaults, including stack-navigation comments.
 
 Do not use:
 

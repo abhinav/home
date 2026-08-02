@@ -559,8 +559,8 @@ git-spice ls --no-prompt
 For pull request creation and updates,
 use `git-spice branch submit`
 or a `--fill` multi-branch submission described in the pull request reference;
-set optional submission flags only when the user requests their effect,
-not because an earlier command used them.
+select optional flags from the current requested outcome,
+preserving operation-implied behavior and configured defaults.
 For pull request merges,
 resolve the requested PRs to tracked branches,
 inspect topology,

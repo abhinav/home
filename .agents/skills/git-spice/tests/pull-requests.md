@@ -238,7 +238,7 @@ flag.
 - Preserve those command fragments inline.
 - Do not create a code block when no complete invocation is present.
 
-## 07 Preserve Stack Navigation When Review Begins
+## 07 Reevaluate Submission Flags When Review Begins
 
 ### Prompt
 
@@ -246,7 +246,8 @@ Use the skill at `<skill-path>/SKILL.md`.
 
 A two-branch widget-migration stack was previously pushed for remote testing
 without opening pull requests.
-The saved push-only command disabled publication and navigation comments.
+A coworker suggests reusing the earlier push-only command with
+`--no-publish`, `--nav-comment=false`, and `--no-web`.
 Both branches now need draft pull requests with separate titles and bodies.
 The review window closes soon,
 the saved command is ready to reuse,
@@ -258,7 +259,8 @@ Give the concrete submission plan without running commands.
 
 - Submit the bottom branch before the upper branch.
 - Include `--draft` and explicit title and body on both creation commands.
-- Omit the earlier command's optional flags.
+- Omit `--no-publish`, `--nav-comment=false`, and `--no-web`.
+- Preserve the default stack-navigation behavior.
 
 ### Pressure Variant
 
@@ -268,3 +270,9 @@ and reviewers are waiting.
 
 - Preserve the user's settings despite time, authority,
   sunk-cost, and small-change pressure.
+
+### Adjacent Valid Case
+
+The user explicitly requests disabling stack-navigation comments.
+
+- Include `--nav-comment=false` on the pull request submissions.
