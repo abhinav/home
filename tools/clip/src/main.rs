@@ -1,5 +1,5 @@
 use clap::Parser;
-use std::{error::Error, io::Read};
+use std::{env, error::Error, io::Read, process::Command};
 
 use arboard::Clipboard;
 
@@ -19,12 +19,15 @@ enum Cmd {
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
-    let mut clipboard = Clipboard::new()?;
     let cli = Cli::parse();
+    let use_tmux_clipboard = cfg!(target_os = "linux")
+        && env::var_os("DISPLAY").map_or(true, |display| display.is_empty())
+        && env::var_os("TMUX").is_some_and(|session| !session.is_empty());
 
     match &cli.cmd {
-        Cmd::Get => clip_get(&mut clipboard),
-        Cmd::Set => clip_set(&mut clipboard),
+        Cmd::Get => clip_get(&mut Clipboard::new()?),
+        Cmd::Set if use_tmux_clipboard => clip_set_with_tmux(),
+        Cmd::Set => clip_set(&mut Clipboard::new()?),
     }
 }
 
@@ -41,4 +44,17 @@ fn clip_set(clipboard: &mut Clipboard) -> Result<(), Box<dyn Error>> {
     clipboard.set_text(&contents)?;
 
     Ok(())
+}
+
+/// Writes stdin to tmux's active client clipboard using OSC 52.
+fn clip_set_with_tmux() -> Result<(), Box<dyn Error>> {
+    let status = Command::new("tmux")
+        .args(["load-buffer", "-w", "-"])
+        .status()?;
+
+    if status.success() {
+        Ok(())
+    } else {
+        Err(format!("tmux load-buffer failed with {status}").into())
+    }
 }
