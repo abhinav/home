@@ -20,7 +20,7 @@ customCommands:
 
 git:
   fetchAll: false
-  autoFetch: false   # don't git fetch in the background
+  autoFetch: false # don't git fetch in the background
   autoRefresh: false # don't refresh file list in the background
   overrideGpg: true
 
@@ -29,19 +29,21 @@ git:
 
   ignoreWhitespaceInDiffView: true
 
-  pagers:
+  diffRenderers:
+
     # delta: inline and side by side
-    - pager: >-
+    - command: >-
         delta --dark --paging=never
         --hyperlinks --hyperlinks-file-link-format="lazygit-edit://{path}:{line}"
-    - pager: >-
+    - command: >-
         delta --dark --paging=never --side-by-side
         --hyperlinks --hyperlinks-file-link-format="lazygit-edit://{path}:{line}"
 
     # difft: inline and side by side
-    - externalDiffCommand: difft --color=always --display=inline
-    - externalDiffCommand: difft --color=always
-
+    - command: difft --color=always --display=inline
+      type: extDiff
+    - command: difft --color=always
+      type: extDiff
 os:
   editPreset: nvim
 
@@ -53,7 +55,7 @@ gui:
   animateExplosion: false
   filterMode: fuzzy
 
-  skipAmendWarning: true       # I know what I'm doing
+  skipAmendWarning: true # I know what I'm doing
   expandFocusedSidePanel: true # accordion mode
   switchTabsWithPanelJumpKeys: true
 
