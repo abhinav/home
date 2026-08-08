@@ -1,238 +1,171 @@
 # Code comments
 
-## Overview
-
 Use this guide when writing, reviewing, or revising comments
 and in-code documentation.
 
-Documentation is attached to a symbol, module, package, or API
-and is for users of that interface,
-whether the interface is public or private.
-Comments may appear beside a statement, block, or function
-or stand at file level,
-and are for maintainers reading or changing the implementation.
-Both should spare the reader from reverse-engineering context
-or carrying fragile mental state
-that the code cannot show directly.
+Documentation and implementation comments serve different readers.
+Documentation is attached to a symbol, type, field, module, package, or API
+and helps users of that interface use it without reading its implementation.
+Implementation comments help maintainers understand, verify,
+and safely change the code in front of them.
 
-Apply theory of mind for the reader's task:
-write documentation for what a user of the interface needs to know,
-and write comments for what a maintainer of the implementation
-needs to understand.
-Do not write either from the author's memory of the change.
+Both forms should reduce work for a concrete reader.
+Write from the reader's task and available context,
+not from the author's memory of the change.
 
-## Choose The Reader
+## Choose the reader and representation
 
-Before adding, keeping, deleting, or rewriting text in code,
-identify the target reader:
+Assume an interface user can see the symbol name, signature, types,
+and nearby module documentation.
+Document the contract those elements do not carry.
 
-- Documentation is for callers, importers, integrators, and API users.
-  It explains what the symbol promises,
-  how to use it,
-  and which constraints matter at the boundary.
-  For a private symbol,
-  these users include maintainers navigating the implementation
-  through its call graph and named operations.
-- Comments are for maintainers changing the implementation.
-  They compact the implementation into the purpose, state, relationships,
-  or constraints a maintainer needs while reading and changing it.
+Assume an implementation maintainer can read the statements in front of them.
+Comment the local model that would otherwise require reconstruction,
+navigation, mental simulation, or unfamiliar domain knowledge.
 
-Do not make callers read implementation comments
-to understand the interface contract.
-Do not make maintainers infer hidden implementation constraints
-from interface documentation alone.
-An implementation comment inside a private symbol
-does not replace documentation of the symbol's responsibility and contract.
+Choose the representation with the lowest net reading cost:
 
-For documentation,
-assume the reader can see the symbol name, signature, types,
-and nearby package or module overview.
-Explain contract details the signature does not show:
-valid values, units, ownership, lifetime, side effects,
-ordering requirements, concurrency behavior, error meanings,
-and external systems or domain concepts.
+- Use names, types, and structure when they can express the meaning
+  locally and reliably.
+- Use documentation for the contract of a named boundary.
+- Use an implementation comment for the model needed
+  to reason about a coherent span of code.
+- Use an external design note or authoritative specification
+  when the full explanation spans several implementations;
+  leave a local summary and route when readers still need them.
 
-For comments,
-assume the maintainer can read the statements in front of them.
-Explain implementation context the code does not show:
-hidden state, external behavior, fixture purpose, expensive setup,
-performance constraints, compatibility requirements,
-ordering constraints, domain background,
-and why an obvious simplification would be wrong.
-When several visible details create cognitive load,
-compact how they fit together instead of restating each one.
+Do not ask only whether the information is visible in the code.
+Ask whether the code presents it at a useful scale for the reader's task.
+A comment may reveal unavailable context,
+make hidden state visible,
+compress several operations into one meaningful chunk,
+or teach prerequisite knowledge.
 
-## Decision Checklist
+A comment loses to clearer code
+when a name, type, helper, or structural change expresses the same model
+without adding navigation or indirection.
+It loses to blank lines or existing structure
+when they already make the same grouping apparent.
+Improve locality instead of using navigation prose
+to compensate for unrelated responsibilities sharing a file or block.
 
-Before adding or keeping documentation or a comment,
-ask whether the text does at least one of these jobs:
+## Document interface contracts
 
-- explains what a user of the symbol needs to know
-  to call it correctly
-- explains why the implementation exists
-- identifies an invariant that must be preserved
-- marks a representation or system boundary
-- documents a named concept
-  that would otherwise need to be reverse-engineered
-  from fields, call sites, or lower-level representations
-- explains a large block's intent or expensive setup
-  without narrating each line
-- reduces the work needed to understand code
-  that depends on hidden state, external systems,
-  ordering constraints, or non-obvious setup
-- lowers the reader's mental bookkeeping
-  in dense code by compacting multiple conditions, variables,
-  state transitions, phases, or domain facts into a smaller number
-  of meaningful chunks
+Documentation should let a user treat a symbol as a black box.
+Include the parts needed to answer, as applicable:
 
-If the answer is no,
-delete the text or improve the code instead.
+- What responsibility or concept does this interface own?
+- What must the caller supply, establish, or preserve?
+- What result, state transition, side effect, or error does it produce?
+- Which units, valid values, ownership, lifetime, ordering,
+  or concurrency rules constrain its use?
+- Which limit or exceptional case changes how it should be used?
 
-Use comments to explain a coherent design,
-not to compensate for unrelated responsibilities
-sharing a file or block.
-When structure obscures responsibility,
-improve locality before adding navigation prose.
+Do not include an implementation algorithm
+unless users must rely on that behavior.
+Do not duplicate a clear name, signature, or type
+merely to produce documentation.
 
-## When To Add Documentation
+Apply the same boundary test to public and private symbols.
+Visibility, caller count, and body length do not decide the need.
+A private orchestration method, callback, or normalized type needs documentation
+when it owns meaningful behavior, state, or invariants
+that its users in the internal call graph must preserve.
+A mechanical forwarding method or plainly represented record does not.
 
-Add or keep documentation when a symbol's users need to know:
+When a private boundary needs documentation,
+an implementation comment inside it
+does not replace documentation of its responsibility and contract.
+Likewise,
+interface documentation does not replace a local comment
+when maintainers need an implementation invariant or transition
+at the code that enforces it.
 
-- what the symbol represents or promises
-- how to call it correctly or preserve the operation it owns
-- valid values, units, ownership, or lifetime rules
-- side effects, state transitions, concurrency behavior, ordering,
-  or error and return-value meanings
-- the algorithm, policy, or cohesive implementation stage it owns
-- the external system, protocol, file format, or domain concept it models
+### Document packages and modules in isolation
 
-Apply these criteria to public and private types, fields, functions, methods,
-and callbacks alike.
-Visibility, caller count, body length,
-and documentation on a surrounding public API
-do not determine whether a private symbol needs documentation.
-A private symbol needs documentation when it owns meaningful behavior,
-state, or invariants that maintainers must preserve.
-A mechanical private helper does not need documentation
-when its name, signature, and immediately visible behavior
-fully express everything its users need to know.
+Write package and module documentation for a reader
+who begins at that boundary.
+Establish:
 
-Documentation should describe the interface contract well enough
-that users can treat the symbol as a black box
-and use it correctly without reading its implementation.
-Do not put implementation algorithms in symbol documentation
-unless users of the symbol must rely on that behavior.
+- the responsibility the package or module owns;
+- where it fits in the larger system;
+- what it leaves to callers or neighboring abstractions;
+- the important contracts and invariants it enforces; and
+- how callers enter the abstraction.
 
-## Document Packages And Modules In Isolation
-
-Write package and module documentation for a reader who begins at that
-boundary.
-Do not assume the reader has inspected sibling modules,
-followed the implementation history,
+Do not assume the reader has inspected sibling modules
 or seen the change that introduced the abstraction.
+Do not restate every exported symbol.
+Provide the context that makes those symbols coherent as one interface.
 
-Give the reader enough context to understand:
+### Document named concepts and fields
 
-- the responsibility the package or module owns
-- where it fits in the larger system
-- what it deliberately leaves to callers or neighboring abstractions
-- the important contracts and invariants it enforces
-- what its dependencies represent at the boundary
-- how callers are expected to enter the abstraction
+Document a named concept when it owns meaning, behavior,
+or constraints not carried by its name, structure,
+and immediately visible use.
+Explain the need it addresses,
+what it represents,
+its source or representation boundary,
+the behavior it controls,
+and material limits.
+Include only the parts the concept's users need.
 
-The documentation does not need to restate every exported symbol.
-It should provide the context that makes those symbols coherent as one API.
-If the package cannot be explained without narrating several neighboring
-packages,
-that may indicate either missing context or an unclear boundary.
+Private concepts are not exempt.
+A private type often needs documentation when it normalizes another shape,
+prevents lower-level representations from leaking,
+or carries a whole-value invariant.
+A mechanical type does not need prose invented to justify its name.
 
-## When To Add Comments
+Inspect each field separately.
+A type comment does not replace field-specific meaning,
+and a descriptive identifier does not necessarily establish units,
+source, valid values, ordering, or ownership.
+Document those facts with the field that owns them.
+Omit a field comment when the name and type make its complete meaning obvious.
 
-Add or keep implementation comments when maintainers need to know:
+Put a relationship among fields at type scope
+and keep each field's individual contract with that field.
+Do not repeat field descriptions in the type comment
+unless the repetition establishes a whole-value relationship.
 
-- why a non-obvious decision was made
-- which invariant must be preserved
-- which representation or system boundary is being crossed
-- what a named domain concept means
-- why a large block is organized the way it is
-- what state or setup the surrounding code is trying to create
-- what behavior the surrounding code is isolating or protecting
-- how a cohesive phase groups work
-  that maintainers must reason about or change together
-- what a call or block does
-  when that lets the reader follow the primary path without opening another implementation
-- what surprising behavior future readers must not simplify away
-- what hard-to-reconstruct state the reader should track
-- what domain fact, protocol rule, or algorithm case
-  the surrounding code depends on
-- how several conditions, variables, or state transitions fit together
-  when following them directly would overload the reader's working memory
+When an interface implements an external specification,
+link the authoritative source at the conformance boundary
+and state the locally relevant contract.
+A link should support verification,
+not replace the explanation needed to read the code.
 
-Comments may explain why non-obvious code is shaped a particular way.
-They may also give a higher-level account of what a block does
-when that account compacts several implementation details
-into one useful concept.
-A useful comment operates at a higher level than the statements it covers;
-it does not translate each statement back into prose.
+## Reduce implementation load with comments
 
-Treat comment writing as an analysis step.
-If the comment cannot state the relevant purpose, relationship,
-contract, invariant, or state transition clearly,
-the code or model may need more design work before the comment is ready.
+An implementation comment should give a maintainer
+a cheaper representation of the covered code.
+It commonly does one of four jobs.
+
+### Explain context
+
+Explain a purpose, cause, invariant, compatibility constraint,
+or reason an apparent simplification would be wrong.
+Place the comment beside the smallest coherent span that owns the constraint.
 
 ```go
-// BAD: narrates the loop.
-// Start workers.
-for i := 0; i < numWorkers; i++ {
-    go worker()
-}
-
-// GOOD: explains the ordering invariant.
-// Workers must be spawned before sending the first event
-// or there will be a deadlock.
+// Workers must exist before the first event is sent;
+// otherwise the unbuffered handoff deadlocks.
 for i := 0; i < numWorkers; i++ {
     go worker()
 }
 ```
 
-## Reduce Mental Bookkeeping
+Treat comment writing as an analysis step.
+If the comment cannot state the purpose, relationship,
+invariant, or transition clearly,
+the implementation or model may need more design work.
 
-Treat comments as compaction of code.
-A useful comment gives the maintainer a smaller representation
-of the code needed for the current reading task.
-It lets the maintainer reason about one purpose, phase, relationship,
-or state summary instead of keeping every underlying detail
-in working memory.
+### Expose working state
 
-Add this assistance when reading a block requires tracking
-several conditions, variables, state transitions, phases,
-or other facts at once.
-The facts do not have to be hidden or individually confusing.
-The comment earns its place when their combination creates cognitive load
-and the compact representation makes the block easier to verify or change.
-
-Good candidates include:
-
-- stack, register, cursor, or parser state
-  after calls to an API that hides that state
-- phases in a long routine
-  where future edits should remain grouped with related operations
-- algorithm cases that match a preceding explanation
-- compact domain background needed to understand the implementation
-
-When a phase or block comment is useful,
-orient the maintainer using the incoming state,
-the operation or constraint,
-and the resulting state or consequence.
-Preserve stable names across adjacent phase comments.
-Make causal and ordering relationships explicit
-so the maintainer can safely change the transition.
-
-These comments still need to earn their place.
-The compact representation should cost less to read
-than reconstructing the same meaning from the code.
-It must remain consistent with the code
-and should not decorate a simple block that already reads as one chunk.
+Make a stack, cursor, parser position, ownership state,
+protocol phase, or other hidden state visible
+when later operations depend on it.
+These comments may describe what each call does
+because the useful result is the otherwise invisible state after the call.
 
 ```go
 emit.LoadLocal(userID)    // stack: userID
@@ -240,257 +173,200 @@ emit.LoadConst(limit)     // stack: userID, limit
 emit.Call("withinQuota")  // stack: allowed
 ```
 
-The comments are useful only because the operand stack is hidden state
-that every following call depends on.
+The comments save the reader from replaying every stack mutation
+or repeatedly consulting another API.
+Introduce the notation once when its direction or omitted context is unclear.
+
+### Guide the primary path
+
+Give several visible operations one meaningful phase or maintenance region,
+or summarize a callee so the reader can stay at the current level.
+A guide comment may add no hidden fact;
+its value can be division, rhythm, confirmation,
+or showing where related maintenance belongs.
+
+Judge the comment together with the span it covers.
+A label over one obvious statement is usually narration.
+A precise label over several operations may let the reader
+treat them as one unit while scanning, verifying, or changing the routine.
+The label still loses when blank lines, names, or structure
+already provide the same orientation at lower cost.
+
+When a phase has a meaningful transition,
+orient the reader with the incoming state,
+the operation or constraint,
+and the resulting state or consequence.
+Preserve stable names across adjacent phase comments.
 
 ```go
-// Flush queued writes before detaching transport state.
-if conn.hasBufferedWrites() {
-    conn.flush()
-}
-conn.stopWritePump()
+// Release request-scoped allocations.
+freeQueryBuffer(c)
+freeParsedArguments(c)
+releaseRequestArena(c)
 
-// Detach timers while the connection still owns its callbacks.
-conn.cancelIdleTimer()
-conn.cancelRetryTimer()
+// Leave shared registrations.
+unsubscribeTopics(c)
+unwatchResources(c)
+releaseTracking(c)
 ```
 
-The comments are useful when the surrounding function is long enough
-that the section boundaries help maintainers place future cleanup work.
-They would be noise in a short function
-where the grouping is already obvious.
+The calls already show each operation.
+The comments earn their place in a longer cleanup routine
+because they turn the calls into two maintenance regions.
+They would be noise in a short routine
+that already reads as one chunk.
 
-## When To Delete Or Rewrite
+### Teach prerequisite knowledge
 
-Do not add or keep comments that do not add value.
+A teacher comment explains domain knowledge
+that the implementation depends on
+but a capable maintainer may not know or recall.
+Use one when that knowledge is necessary to verify or change the code
+and names, types, or structure cannot carry it.
 
-Delete or rewrite text when:
+Teach only the model used here:
 
-- the code is self-explanatory
-- the text merely restates a small obvious operation
-- the text duplicates a clear name or type
-- the text is stale or incorrect
-- the text narrates a single obvious operation
-- reading the text costs as much as reading the code
-  and provides no additional orientation
-- documentation exposes implementation detail
-  that belongs near the private implementation
+1. State the implementation goal.
+2. Introduce the minimum prerequisite concept.
+3. Explain the relationship, state transition, or case split the code uses.
+4. Map stable terms and labels in the explanation to names in the code.
+5. State the material limit or exceptional case.
 
-Keep or add text when it prevents a reader
-from having to reconstruct hidden state,
-non-obvious setup,
-the boundary that makes the code meaningful,
-or the domain context needed to reason about the implementation.
+Do not stop at naming an algorithm or linking background material.
+The reader should be able to use the explanation
+to predict the non-obvious conditions, updates, or cases in the code.
+For an accumulated quantity or state machine,
+state what the value represents,
+what moves it in each direction,
+and why each threshold selects its corresponding transition.
+Naming an `error`, `score`, `phase`, or `state`
+without explaining that causal role does not teach the model.
 
-Examples of comments to delete:
+Use a small plain-text visualization
+when shape, ownership, ordering, or a transition
+would take more effort to reconstruct from prose.
+Introduce the notation,
+show only the relationships used by the implementation,
+and reuse the code's names in the diagram and explanation.
 
 ```go
-// Close the channel.
-close(ch)
+// Ownership is the clockwise interval (start, end].
+// A wrapped interval contains the high and low ends of the ring:
+//
+//     0 === owned === end ... start === owned === max
+//
+// The two comparisons below test those low and high segments.
+return token <= end || token > start
+```
 
-// Start the worker.
-go worker()
+Substantive multi-line comments are prose artifacts.
+Apply `~/.agents/docs/prose-writing.md`
+to establish prerequisites, causal relationships, examples, and boundaries.
+Apply `~/.agents/docs/prose-formatting.md`
+for scannable paragraphs, sectioning, semantic line breaks,
+and comment width.
+Use section labels when they help navigate a long explanation,
+not as a fixed template.
 
-// Increment counter.
+If the full lesson applies to several implementations,
+put it in an owned design note or reference.
+Keep enough local explanation and routing
+for a reader to understand how this code maps to that model.
+
+## Delete or rewrite comments that do not help
+
+Delete or rewrite a comment when:
+
+- it translates one obvious statement at the same scale;
+- its label costs as much to read as the covered code
+  and adds no orientation;
+- it duplicates a clear name, type, or nearby contract;
+- it is stale, incorrect, or broader than the code it describes;
+- it exposes implementation detail in interface documentation; or
+- it compensates for structure that should reasonably be made local or cohesive.
+
+Do not delete a comment merely because it describes `what` the code does.
+Keep it when the description exposes hidden state,
+summarizes a larger span,
+or supplies a model the code does not present at a useful scale.
+
+```go
+// BAD: translates the next statement.
+// Increment the counter.
 count++
-```
 
-Examples of comments to keep:
-
-```go
-// Workers must be spawned before sending the first event
-// or there will be a deadlock.
-for i := 0; i < numWorkers; i++ { go worker() }
-
-// Use a nil channel to disable this select case when buffer is empty.
+// GOOD: explains how a visible mechanism controls behavior.
+// A nil channel disables this select case while the buffer is empty.
 processChan = nil
 ```
 
-## Document Named Concepts
+Stop and reconsider reasoning such as:
 
-Document a named concept when it owns meaning, behavior,
-or constraints not carried by its name, structure,
-or immediately visible use.
-A mechanical representation does not need documentation
-when those sources fully explain its role.
+- "Private symbols do not need documentation."
+- "Every named type needs documentation."
+- "The code says what happens, so a `what` comment is always redundant."
+- "The function is long, so every stage needs a heading."
+- "More comments are safer."
+- "The reviewer can recover the missing context from the conversation."
 
-For structs and records,
-also assume each field needs documentation or a comment
-unless the field's meaning, units, source,
-and valid values are obvious from the field name and type.
+These use visibility, namedness, size, volume, or author context
+as substitutes for the future reader's task.
 
-Private concepts are not exempt.
-If a private type translates from another representation,
-carries invariants,
-or prevents the rest of the code from depending on a lower-level shape,
-document the concept for maintainers.
+## Write and format comments
 
-When an implementation follows an external specification,
-link to the authoritative reference when available
-so readers can verify conformance.
-
-When a named type establishes a concept,
-document the meaning and constraints
-that readers would otherwise have to reconstruct
-from fields and call sites.
-
-When a named concept carries non-obvious meaning,
-introduce the relevant parts in this order:
-
-- the need or responsibility the concept addresses
-- what the concept represents
-- its representation and source
-- an illustrative value or state
-- the behavior or transition it controls
-- important limits or invalid cases
-
-Include only the parts that help the intended reader.
-Do not turn a mechanical representation into a domain explanation.
-
-Weak:
-
-```go
-type deliveryPlan struct {
-    id       string
-    lanes    []string
-    priority int
-    active   bool
-}
-```
-
-The type hides what a delivery plan is,
-where the data came from,
-what the lanes represent,
-and what active controls.
-
-Better:
-
-```go
-// deliveryPlan is the scheduler's normalized view of one delivery request.
-//
-// It is built at the API boundary so scheduling code does not depend on the
-// wire-format request shape.
-type deliveryPlan struct {
-    // id identifies the delivery request in scheduler logs.
-    id string
-
-    // lanes lists the allowed transport lanes in preference order.
-    //
-    // For example, []string{"ground", "rail"} means the scheduler should try
-    // ground transport before rail.
-    lanes []string
-
-    // priority controls scheduling order.
-    //
-    // Lower values are scheduled first.
-    priority int
-
-    // active is false when the request should be retained but not scheduled.
-    active bool
-}
-```
-
-## Standalone And Inline Comments
+Attach a comment to the smallest coherent span it explains.
+Use stable names from the code
+instead of introducing synonyms for the same concept.
 
 Standalone comments are full sentences
-that start with a capital letter
-and end with a period.
-
-```go
-// BAD
-// Start dispatcher
-
-// GOOD
-// Start the dispatcher.
-```
-
-Inline comments appear at the end of a line of code.
-They are fragments starting with a lowercase letter.
-
-```go
-deadline := time.Time{} // no deadline
-```
-
-If an inline comment has to become multi-line,
-convert it to a standalone comment
-and make it a full sentence.
+that start with a capital letter and end with a period.
+End-of-line comments are short fragments
+when they annotate a value or state compactly.
 
 ```go
 // Use an empty deadline so the transport waits indefinitely.
 deadline := time.Time{}
+
+deadline := time.Time{} // no deadline
 ```
 
-## Multi-Line Comment Style
+If an end-of-line comment becomes multi-line,
+move it above the code and write complete sentences.
 
 In languages that support line comments,
-multi-line explanatory comments must use line comments such as `//`,
-not block comments such as `/* ... */`.
+use line comments such as `//` for multi-line explanations
+rather than enclosing prose in `/* ... */`.
+Follow the repository's established representation when it differs.
 
-Apply semantic line breaks to long comments and documentation
-when the repository expects prose wrapping.
+### Go documentation and struct fields
 
-```go
-// This is a multi-line comment.
-// It uses line comment syntax.
-```
-
-## Go: GoDoc And Struct Fields
-
-When writing comments for exported functions, types, variables,
-or fields in Go,
-use GoDoc style:
-start the documentation comment with the exported name.
+For exported Go functions, types, variables, and fields,
+use GoDoc style and begin with the exported name.
 
 ```go
-// BAD
-// This function starts the dispatcher.
-func StartDispatcher() { ... }
-
-// GOOD
-// StartDispatcher starts the dispatcher.
-func StartDispatcher() { ... }
+// StartDispatcher runs workers until ctx is canceled.
+// It blocks until every worker has stopped.
+func StartDispatcher(ctx context.Context) { ... }
 ```
 
-When documenting struct fields,
-separate each documented field from the previous field
-with an empty line.
+When documenting Go struct fields,
+separate each documented field from the previous field with an empty line.
 This keeps multi-field structs scannable
-and makes each field's comment visually attach
-to only that field.
+and visually attaches each comment to one field.
 
 ```go
 type Report struct {
-    // Name identifies the report.
-    Name string
+    // GeneratedAt records when source collection finished, in UTC.
+    GeneratedAt time.Time
 
-    // Format selects the report renderer.
+    // Format selects the renderer; an empty value uses the account default.
     Format ReportFormat
 }
 ```
-
-## Red Flags
-
-Stop and revise when you catch yourself thinking:
-
-- "The type is private, so it does not need a concept comment."
-- "The method has one caller, so it does not need documentation."
-- "The public API documentation already covers the private operation."
-- "The method is short, so an implementation comment is enough."
-- "The field names are probably clear enough."
-- "The type comment already covers the fields."
-- "This comment translates only the next line into prose."
-- "The reviewer already has the conversation context."
-- "The caller can inspect the implementation to figure it out."
-- "The maintainer will know why this cannot be simplified."
-- "More comments are safer."
-- "This is too small to apply the comment guidance."
-
-These usually mean the text is aimed at the author,
-or at volume of comments,
-not at the future reader.
 
 ## Tests
 
 When changing this guide,
 read [tests/README.md](tests/README.md).
-Run the relevant scenarios with fresh subagents that have empty context windows.
+Run the relevant scenarios with fresh subagents
+that have empty context windows.

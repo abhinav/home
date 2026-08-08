@@ -22,6 +22,8 @@ An on-call handoff should establish current service health, what remains unknown
 and the evidence needed for the next decision.
 A reviewer-facing explanation should establish the affected behavior,
 why it changes, and what remains unchanged.
+Application copy should identify the user's task
+and provide the information or action the user needs next.
 
 The reader does not have access to the conversation, the writer's investigation,
 or unstated implementation history.
@@ -58,6 +60,25 @@ Introduce only the prerequisites needed for the reader's task.
 Present each prerequisite before reasoning that depends on it.
 When an important concept is unfamiliar, explain the need it answers, give its stable name,
 show what it represents or does, and state its material limits.
+
+## Keep referents stable
+
+The writer and reader should both be able to identify
+what each sentence refers to.
+Reuse a stable, real name when the same entity remains the subject.
+Repetition is preferable to a synonym, generic title,
+or polished variation that makes identity ambiguous.
+
+Choose specificity by materiality.
+Include a method, helper, library call, algorithm,
+or other low-level mechanism
+when the reader must understand, evaluate, reproduce,
+or safely change that detail.
+Otherwise write at the level of the behavior,
+contract, invariant, input, output, or user-visible effect.
+
+When no stable name exists or the name does not matter,
+describe the precise role or behavior instead of inventing a label.
 
 ## Make causes and boundaries visible
 
@@ -132,10 +153,9 @@ when the artifact supports it.
 ## Manage cognitive load
 
 Give each paragraph one explanatory job.
-Use subjects and concrete actions
+Use concrete subjects and actions
 that identify what changes and who changes it.
 Define an unfamiliar acronym, unit, or term on first material use.
-Preserve stable names when the same actor or concept recurs.
 
 Introduce new information progressively.
 Keep directly related context near the claim it supports.

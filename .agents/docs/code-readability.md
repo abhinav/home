@@ -1,169 +1,168 @@
 # Code readability
 
 Use this guide when writing, organizing, or reviewing code.
-It explains how readily a capable maintainer can understand and safely change it.
+It explains how readily a capable maintainer can understand and safely change
+a coherent part of a system.
 
-Readability measures extraneous cognitive load:
-how much a capable maintainer must carry
-to understand and change a coherent section of code.
+Readable code gives that maintainer an economical mental model
+for a concrete task.
+It preserves complexity inherent to the domain
+while reducing presentation, indirection, and organization costs
+that do not help complete the task.
 
-Evaluate readability relative to a concrete reading task and a coherent code path.
-Preserve complexity inherent to the domain.
-Reduce presentation, indirection, and organization costs
-that do not help the reader complete the task.
+## Model the maintainer
 
-## Evaluate cognitive load
+Judge readability from the maintainer's position,
+not from the agent's ability to inspect and retain the repository.
+The agent may already have search results, conversation context,
+and several files in its active window.
+The maintainer encounters code in an order
+and must discover which surrounding information matters.
 
-Read code from the perspective of a capable maintainer.
-Identify the information the maintainer must keep active
-while answering a specific question or making a realistic change.
+Model an intelligent reader who knows the language and general engineering
+practice but does not know the author's private reasoning.
+Familiarity with a codebase can make a complicated local model feel simple.
+Do not treat the author's or agent's fluency as evidence
+that another capable maintainer receives the needed model from the code.
+
+## Trace the reader's mental model
+
+Choose a realistic reading or modification task
+and follow one coherent path through the code.
+At each point, identify the information that enters the reader's attention,
+what must remain active together,
+and what the representation lets the reader safely compress or discard.
 
 Cognitive load comes from:
 
-- Local load: values, states, conditions, and branches that must be understood together.
-- Navigational load: the distance between related code
-  and the files, callees, helpers, or paths the reader must inspect.
-- Reconstruction load: purpose, invariants, ownership, ordering, and domain facts
-  the reader must infer because they are not available where needed.
+- Local load: values, states, conditions, effects, and branches
+  that must be understood together.
+- Navigational load: the files, callees, helpers, and paths
+  the reader must inspect and relate.
+- Reconstruction load: purpose, invariants, ownership, ordering,
+  and domain facts the reader must infer because they are unavailable
+  where needed.
+
+A readable representation lets the reader replace several details
+with one trustworthy concept or retire facts that no longer matter.
+A name, type, helper, comment, or module helps only when the reader
+can rely on it at the needed scale.
+Do not count facts mechanically:
+the task, relationships between facts, and quality of the representation
+determine the cost.
 
 These costs interact.
-A helper can reduce local expression complexity
-while adding navigation and another abstraction to understand.
+A helper may shorten a local expression while adding navigation
+and another relationship to reconstruct.
 Judge the net load across the coherent path,
 not the apparent improvement at one line.
 
-## Keep control flow easy to follow
+## Help the reader release attention
 
-A reader should be able to identify the current state
-and the conditions governing the next action.
+Make the current state and the next governing decision visible.
 The reader should not have to replay the entire function
-to learn which effects have already occurred.
+to determine which effects have occurred or which possibilities remain.
 
-Keep the primary path visible and reduce the facts that must remain active at the same time.
-
-- Give a complex condition a meaningful intermediate name
-  when that lets the reader treat the expression as one fact.
-- Use early exits for invalid or failure states
-  when they let the reader discard those states and continue with the primary path.
+- Give a complex condition a meaningful name
+  when the name forms a stable concept
+  and lets the reader stop carrying the expression.
+- Use early exits when they retire terminal or invalid states.
+  Keep nesting when it directly represents a hierarchy
+  or several outcomes that remain relevant.
 - Converge successful branches before work they share.
 - Represent mutually exclusive states directly
   instead of encoding them as combinations of booleans.
-- Keep mutations and ordering near the operations they affect.
+- Keep mutations, effects, and ordering near the operations they govern.
 
-A longer sequence can be more readable than a compressed expression
-when it makes decisions and state transitions visible.
+A longer visible sequence can be easier to understand
+than a compressed expression or chain of calls
+when it makes decisions and state transitions explicit.
 
-## Keep related context local
+## Keep context and language local
 
 Place information near the code that needs it.
-A reader should not have to cross files, packages, or unrelated declarations
+A reader should not have to cross unrelated declarations, files, or packages
 to reconstruct one concept or operation.
 
 Keep a type near the behavior that gives it meaning.
-Keep request and result records with the operation that consumes or produces them.
+Keep request and result records with the operation that consumes or produces
+them.
 When code defines the behavior it requires from a collaborator,
 keep that contract near the consumer.
-Move a concept into a shared location only for genuine reuse.
-The operations must share the same meaning and contract.
+Arrange code around coherent operations and in the order a reader needs it,
+not by declaration kind or arbitrary size.
 
-Arrange code around coherent operations and in the order a reader needs it.
-Avoid grouping declarations by kind
-when that separates concepts from their behavior.
-Within a file, make the primary path visible
-and place supporting details where the reader encounters the need for them.
+Physical organization is part of the code's representation.
+Optimize file and module boundaries for coherent changes,
+not declaration lookup:
+search can locate a symbol,
+but it cannot recover ownership scattered across boundaries.
+Layout conventions are evidence about discoverability,
+not authority over ownership.
+Apply them within meaningful boundaries.
+When a representative change repeatedly crosses boundaries
+that replace no knowledge,
+regroup the code or deepen the owner.
+If an authoritative convention prevents that,
+expose the tradeoff and seek a decision.
 
-A module can own one cohesive domain responsibility
-without placing all of its code in one file.
-Within a module, use files or nested modules as the language permits
-to keep coherent subdomains and operations readable in isolation.
-Choose those internal boundaries by responsibility or operation,
-not declaration kind or arbitrary size.
-
-## Use one term for one concept
-
-Use one term consistently for one domain concept
+Use one stable term for one domain concept
 across names, types, comments, and neighboring modules.
-Introduce another term only when it represents a meaningful distinction.
+Introduce another term only for a meaningful distinction.
+When a representation changes but the concept does not,
+retain the domain term or make the transformation explicit.
 
-Do not alternate synonyms for variety or rename a concept as it passes through layers.
-When a representation changes but the domain concept does not,
-retain the stable domain term or make the transformation explicit.
+Share behavior when several sites enforce one invariant, policy,
+or source of truth and must change together;
+make them depend on its one owner.
+Keep rules separate when only their syntax or current values match
+and their reasons or evolution differ.
+Make consequential implicit behavior discoverable
+at the boundary where a maintainer must reason about it.
 
-**Why**: Each term becomes an entry in the reader's mental model.
-Synonyms force the reader to determine whether two names mean the same thing.
-They can also hide relationships between code that belongs together.
+## Make boundaries reduce what the reader must know
 
-When an established term must change,
-update the coherent scope together or make the compatibility boundary explicit.
-Do not leave old and new terms interleaved without explaining their distinction.
+Every helper, type, class, module, or service boundary introduces a name
+and a relationship the reader may need to understand.
+A boundary earns its place when its contract replaces implementation knowledge
+and lets the reader stop.
+A complete domain operation, invariant, or shared policy
+can provide such a contract.
+Function length alone cannot.
 
-## Make helpers and indirection earn their place
+When understanding the caller still requires reading the boundary's body,
+or when coordination remains distributed across both sides,
+the boundary has moved complexity rather than contained it.
 
-A new helper or abstraction introduces another name and relationship
-that the reader may need to understand.
-This cost applies at every scale, from a private helper to a class or module.
-Do not extract code only to shorten a function or meet a size target.
+For example, a private `isReady` helper that only holds the prerequisites
+for one nearby `submit` call makes a maintainer inspect two places
+to change one decision.
+An atomic `ledger.post(entry)` operation instead lets the caller rely
+on an all-or-nothing contract without learning its locking and storage work.
+The useful distinction is whether the contract replaces details
+for the reader's task, not the number of lines behind it.
 
-Keep straightforward single-use logic inline when it is clearest in context.
-A visible sequence is often easier to understand
-than a series of calls whose implementations the reader must inspect.
+When this diagnosis calls for inlining, deepening a boundary,
+changing ownership, or reorganizing dependencies,
+read and apply `~/.agents/docs/code-design.md`.
+Use this guide to identify the cognitive cost
+and design guidance to choose the remedy.
 
-A descriptive name does not by itself reduce cognitive load.
-A helper or abstraction earns its place only when its boundary removes information
-that the reader would otherwise need to track.
-For example, it may:
+## Use comments to supply a better representation
 
-- hide substantial complexity behind a narrow contract
-- own a complete domain operation and its coordination
-- protect an invariant or centralize policy used by several paths
-- enable genuine reuse without coupling unrelated code
+Comments improve readability when they give the reader a cheaper representation
+for the current task.
+They may expose context the code cannot express
+or reorganize visible detail into a larger-scale model
+that requires less reconstruction, navigation, or working memory.
 
-When understanding the caller requires reading a helper's implementation,
-the boundary may have moved complexity rather than hidden it.
-Prefer to deepen the boundary or return the logic to the call site.
-
-## Use comments to reduce cognitive load
-
-Comments improve readability
-when they reduce context the reader must reconstruct or navigation the reader must perform.
-
-Use implementation comments to:
-
-- explain purpose, invariants, ordering, or domain facts not encoded in the code
-- introduce the stages of a long operation and provide landmarks
-- summarize a call or block
-  when that lets the reader follow the primary path without opening another implementation
-- record obligations that nearby code must preserve when it changes
-
-A comment may overlap with the visible operation
-when it gives the reader useful structure or confirms the role of a larger block.
-
-Trivial comments are forbidden.
-A comment is trivial
-when reading it costs as much as reading the code and provides no additional orientation.
+A same-scale translation of an obvious statement is trivial.
+Visible information is not automatically redundant:
+a hidden-state annotation, maintenance region, callee summary,
+or local domain explanation may let the reader reason at a useful scale.
 
 Comments cannot compensate for design or organization
 that the code can reasonably improve.
 Read and apply `~/.agents/docs/code-comments.md`
-when deciding which comments to add, keep, revise, or remove.
-
-## Use architecture to contain cognitive load
-
-Readable code depends partly on the boundaries around it.
-A well-designed module owns a meaningful operation from input to outcome.
-It hides coordination and infrastructure the caller does not need
-behind a narrow contract.
-
-A useful boundary lets the reader stop at its contract.
-A boundary that only forwards calls or redistributes the same sequence
-adds navigation instead of hiding complexity.
-
-Local cleanup cannot make a system readable
-when multiple callers must coordinate the same policy or reconstruct the same state transition.
-That loss of locality is architectural.
-Difficulty organizing code into coherent local units may also indicate
-that the current responsibilities are not cohesive.
-
-When a readability problem requires changing ownership, dependencies, or boundaries,
-read and apply `~/.agents/docs/code-design.md`.
-Use readability guidance to identify the cognitive cost and design guidance to choose the remedy.
+for comment selection, interface documentation,
+teacher comments, examples, and formatting.

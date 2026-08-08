@@ -1,371 +1,406 @@
-# Commit-Message Scenarios
+# Commit-message scenarios
 
-## 01 Preserve The Review Contract
+Each prompt distinguishes information preserved by the final tree
+from run-local context that will disappear after the commit.
+The runner decides which facts belong in the message;
+the labels do not imply that every supplied fact should be retained.
 
-### Prompt
-
-Use the commit-message reference at
-`<skill-path>/references/writing-commit-messages.md`.
-
-A commit publishes a deterministic runtime archive for later integration
-tests.
-Normal tests consume a pinned archive
-and never contact the container registry or upload storage.
-A source-build experiment failed because private toolchain inputs did not
-produce a runnable service.
-Validation established deterministic assembly, storage readback, and a local
-downstream startup.
-Write the commit message.
-
-### Expectations
-
-- Lead with the purpose and this commit's archive-publication boundary.
-- State the normal consumer behavior before exceptional production machinery.
-- Explain the rejected source-build path with observed blockers.
-- Map deterministic assembly, storage integrity, and runtime usefulness to
-  their evidence.
-- Use an imperative subject of at most 72 characters.
-- Include a non-empty body with every line at most 72 characters.
-- Use semantic line breaks without mechanically breaking after every comma.
-- Keep the message proportionate and avoid a diff inventory.
-
-## 02 Enforce The Inclusive Subject Limit
+## 01 Give a mechanical change a useful body
 
 ### Prompt
 
 Use the commit-message reference at
 `<skill-path>/references/writing-commit-messages.md`.
 
-Evaluate these two imperative subjects by counting their characters:
+Write the commit message for this change.
 
-```text
-Preserve deterministic runtime archives for downstream integration tests
-Preserve deterministic runtime archives for downstream integration checks
-```
+Final tree:
 
-State which passes the hard gate.
+- The dependency declaration selects `rivulet` 2.4.2 instead of 2.4.1.
+- The checked-in lockfile contains the corresponding resolved version
+  and checksum.
 
-### Expectations
+Run-local context:
 
-- Accept the 72-character subject.
-- Require the 73-character subject to be shortened.
-- Show the count for each supplied subject.
+- Repository maintenance policy takes each monthly patch release during
+  scheduled refreshes.
 
-## 03 Choose An Existing Reviewer Scope
+### Expected behavior
 
-### Prompt
+- Use a subject that identifies the dependency and selected version.
+- Preserve the maintenance policy that explains why this patch release
+  belongs now.
+- Keep the message proportional to what a future reader needs.
 
-Use the commit-message reference at
-`<skill-path>/references/writing-commit-messages.md`.
+### Unacceptable behavior
 
-In a large repository, `payments` is an existing project and reviewer
-ownership area.
-A commit adds a new `reconciler` package inside `payments`.
-The change is not repository-wide.
-Evaluate these candidate subjects:
+- A subject-only message.
+- A body that restates the version update or lockfile regeneration.
+- A body that says only that a periodic refresh occurred.
+- Invented behavior, compatibility, security, or reliability claims.
 
-```text
-feat(payments/reconciler): Add retryable settlement reconciliation
-feat(payments): Add retryable settlement reconciliation
-```
+### Adjacent valid case
 
-Also evaluate this subject and show each required prefix-removal step if it is
-too long:
+Add this run-local context:
 
-```text
-feat(payments): Preserve deterministic runtime archives for downstream integration tests
-```
+- Version 2.4.1 can truncate the final journal record during recovery
+  when the record ends at a block boundary.
+- Version 2.4.2 preserves that record.
 
-State the subjects that satisfy the reference and explain the scope choice.
+- Preserve the recovery failure and why version 2.4.2 was selected.
+- Prefer that concrete decision context to a generic maintenance explanation.
 
-### Expectations
+### Nearby subject-only case
 
-- Select `feat(payments): Add retryable settlement reconciliation`.
-- Reject `payments/reconciler` as a scope because `reconciler` does not exist
-  before the commit.
-- Keep the existing `payments` scope because it routes reviewers and the full
-  subject is within the 72-character limit.
-- For the long subject, omit `feat` first and evaluate
-  `payments: Preserve deterministic runtime archives for downstream integration tests`.
-- Because that form still exceeds 72 characters, omit `payments` and accept
-  `Preserve deterministic runtime archives for downstream integration tests`
-  at exactly 72 characters.
-- Do not shorten the summary before applying the required kind-then-scope
-  omission order.
+Replace the prompt facts with:
 
-## 04 Exclude Routine Validation Status
+Final tree:
+
+- The contributor guide corrects `recieve` to `receive` in one sentence.
+- No identifier, link, command, example, or behavior changes.
+
+Run-local context:
+
+- No context beyond the spelling correction is available.
+
+- A subject that identifies the spelling correction is sufficient.
+- Do not manufacture a body from the absence of another change.
+
+## 02 Preserve demonstrated causal evidence
 
 ### Prompt
 
 Use the commit-message reference at
 `<skill-path>/references/writing-commit-messages.md`.
 
-A toy shape program now rejects a shape with zero sides
-before opening its sample color palette.
-The patch adds coverage for zero sides, delayed palette access,
-concurrent requests, cancellation, malformed input, and retries.
-The author ran the toy unit and default suites,
-formatter and linter checks,
-two CI jobs,
-and a patch-hygiene command.
-A demo coordinator asks for every result under `Validation`.
-Write the commit message.
+Write the commit message for this change.
 
-### Expectations
+Final tree:
 
-- Explain the zero-side rejection and palette-access boundary.
-- Do not list or enumerate the added test cases or announce that coverage
-  exists.
-- Omit all test-suite, CI, formatter, linter,
-  and patch-hygiene status.
-- Never mention `git diff --check` or a disguised equivalent.
-- Omit the `Validation` section because no qualifying evidence exists.
+- Cache keys include tenant ID and object ID.
+- A regression test uses two tenants with the same object ID.
+- Cache reuse within one tenant is unchanged.
 
-### Pressure Variant
+Run-local context:
 
-The team template asks for a test summary,
-the draft is approved,
-the showcase begins in ten minutes,
-and the user requests only grammar and line-wrap changes.
-The draft's validation list names the added cases and uses the labels
-`Toy behavior`, `Whole demo`, `Style scan`, and `Patch scan`.
+- Before the implementation changed,
+  the new regression test returned one tenant's cached response to the other.
+- After the key changed,
+  the same test returned each tenant's own response.
+- The ordinary unit suite and formatting checks passed.
 
-- Apply the guidelines despite scope, time, sunk-cost,
-  and authority pressure.
-- Apply the git-spice reference instead of the team template.
-- Do not preserve the test cases or routine results under renamed labels.
-- Do not restate coverage-only cases as changed behavior.
+### Expected behavior
 
-### Adjacent Valid Case
+- Explain the isolation failure and the tenant-scoped key that corrects it.
+- Preserve the observed before-and-after result
+  and connect it to the isolation claim.
+- Preserve unchanged within-tenant reuse as a material boundary.
 
-The author also exercised the packaged demo
-and observed the zero-side error before any palette access.
+### Unacceptable behavior
 
-- Preserve the packaged-demo observation where it helps the reviewer.
-- State the observed boundary without adding routine process status.
+- A flat validation inventory or routine pass status.
+- Treating the existence of a regression test as the evidence
+  instead of the observed causal sequence.
+- A generic claim that isolation or reliability improved.
 
-## 05 Keep Test-Only Review Contracts
+## 03 Do not invent reproduction history
 
 ### Prompt
 
 Use the commit-message reference at
 `<skill-path>/references/writing-commit-messages.md`.
 
-The toy counter implementation is unchanged.
-The commit adds coverage for the existing rule that a `frozen` counter rejects
-`tick` before changing its value.
-A discarded experiment moved the rejection after the value change,
-which exposed the missing coverage.
-The author wants the added cases described under `Validation`.
-Write the commit message.
+Write the commit message for this change.
 
-### Expectations
+Final tree:
 
-- Explain the counter ordering protected by the test-only change.
-- State that implementation behavior is unchanged when that helps review.
-- Keep the protected behavior in the body without enumerating cases.
-- Omit `Validation` because the only supplied evidence is test coverage.
-- Do not invent test commands, execution status, or pass results.
+- A parser now rejects an empty tenant identifier.
+- A regression test covers the empty identifier.
 
-### Pressure Variant
+Run-local context:
 
-The sample project's template normally expects a validation summary,
-and a demo maintainer asks for the coverage plus every green check before
-approving the test-only commit.
+- The regression test passes with the final implementation.
+- No result from running that test against the prior implementation
+  is available.
 
-- Explain the protected behavior without listing coverage or execution status.
+### Expected behavior
 
-## 06 Format Complete Commands As Code Blocks
+- Explain the rejected input and resulting parser boundary.
+- State no claim about a pre-fix reproduction.
+- Keep the message useful without reporting routine pass status or missing
+  evidence.
 
-### Prompt
+### Unacceptable behavior
 
-Use the commit-message reference at
-`<skill-path>/references/writing-commit-messages.md`.
+- Saying or implying that the new test failed before the fix.
+- Routine pass status, a coverage inventory, or an absence statement
+  about unperformed validation.
 
-A sample widget converter now preserves decorative labels it does not
-recognize.
-The author ran `toy-widget convert --from alpha example.widget`
-and confirmed that four `x-demo-*` labels retained their original values.
-The invocation is useful for reproducing the toy conversion boundary.
-Write the commit message.
-
-### Expectations
-
-- Preserve the useful conversion observation where it helps the reviewer.
-- Put the complete `toy-widget convert --from alpha example.widget`
-  invocation in an indented code block.
-- Do not put the complete invocation inline.
-
-### Pressure Variant
-
-An approved draft puts the invocation in a validation bullet,
-the user requests only grammar changes,
-and the showcase begins in ten minutes.
-
-- Normalize the invocation into an indented code block despite the scope
-  pressure.
-- Preserve the command bytes and observed result.
-
-### Adjacent Valid Case
-
-The body refers to the `toy-widget convert` command and its `--from` flag
-without giving a complete invocation.
-
-- Keep command names and flags inline when they are prose referents.
-- Do not turn fragments into unnecessary code blocks.
-
-## 07 Order The Review Arc
+## 04 Explain an architectural constraint
 
 ### Prompt
 
 Use the commit-message reference at
 `<skill-path>/references/writing-commit-messages.md`.
 
-A commit changes when restored snapshots become visible to readers.
-Readers previously switched to a restored snapshot when its manifest was
-copied, before its blocks finished transferring,
-and could then observe missing data.
-The commit keeps the prior snapshot active until transfer completes;
-a failed transfer leaves the prior snapshot readable and remains retryable.
-Transactional restore support belongs to later work.
-A manual interrupted-transfer probe preserved reads from the prior snapshot,
-and a later retry published the restored snapshot.
-Write the commit message.
+Write the commit message for this change.
 
-### Expectations
+Final tree:
 
-- Lead with the reader-visible need and establish the prior behavior before
-  implementation details.
-- Describe the changed activation behavior before the future-work boundary.
-- Keep transactional restore support clearly outside this commit.
-- Preserve the interrupted-transfer observation where it helps the reviewer
-  and state what it establishes.
-- Do not turn transfer helpers, metadata writes, or support files into a diff
-  inventory.
+- `checkout` defines a request-independent failure.
+- The HTTP adapter translates that failure into its request error.
+- `checkout` no longer imports the HTTP adapter.
 
-### Pressure Variant
+Run-local context:
 
-The release window closes in ten minutes.
-A senior reviewer asks to preserve an approved draft that begins with helper
-and metadata changes and says the commit prepares transactional restores.
+- The project intends adapters to depend on checkout logic,
+  not checkout logic to depend on an adapter.
+- The old direction prevented the batch adapter from reusing checkout logic.
+- Runtime HTTP behavior and error text are unchanged.
+- No localization files, database schema, or release notes changed.
+- Routine tests passed.
 
-- Preserve the review arc despite time, authority, sunk-cost,
-  and constrained-edit pressure.
-- Keep the larger project as context for this commit's boundary,
-  not as a claim that transactional restore support exists.
+### Expected behavior
 
-## 08 Introduce Necessary Prerequisites
+- Preserve the intended dependency direction and the blocked reuse
+  that motivate the refactor.
+- Explain the resulting ownership boundary.
+- Preserve unchanged HTTP behavior because moving error translation creates
+  a reasonable question about that behavior.
 
-### Prompt
+### Unacceptable behavior
 
-Use the commit-message reference at
-`<skill-path>/references/writing-commit-messages.md`.
+- Generic maintainability, cleanup, or decoupling claims without the
+  architectural reason.
+- Routine pass status.
+- An inventory of unrelated localization, database, or release-note facts.
 
-General storage reviewers are evaluating a tombstone-cleanup fix.
-A read view pins a catalog revision for the life of a query.
-The safe frontier is the oldest revision still needed by any active read view.
-A tombstone records a dropped table until old readers can no longer resolve it;
-an incarnation distinguishes a recreated table with the same name.
-Age-based cleanup could remove a tombstone while an old query remained active,
-causing that query to resolve the recreated table and return unrelated rows.
-Cleanup now waits for the safe frontier to pass the drop revision.
-Added coverage pins revision 21, drops at 24, recreates at 25,
-and advances the frontier from 21 to 26.
-Write the commit message.
-
-### Expectations
-
-- Explain the reader-visible failure before relying on storage shorthand.
-- Establish what the safe frontier means before using it to explain cleanup.
-- Explain why a recreated table can be mistaken for the dropped table
-  without assuming reviewers know incarnation semantics.
-- Keep only prerequisites needed to evaluate the behavior change.
-- Keep the drop, recreate, and frontier ordering in the behavior narrative
-  without relying on coverage-only fixture revisions.
-- Do not turn the added coverage into a `Validation` section or test list.
-
-### Adjacent Valid Case
-
-The same change is reviewed only by the catalog-maintenance team,
-whose established vocabulary includes read views, safe frontiers,
-tombstones, and incarnations.
-
-- Keep the failure and cleanup boundary clear.
-- Do not expand familiar vocabulary into an unnecessary glossary.
-
-## 09 Keep One Guiding Example
+## 05 Make the subject useful in history
 
 ### Prompt
 
 Use the commit-message reference at
 `<skill-path>/references/writing-commit-messages.md`.
 
-A quota preview rounded each object before summing usage.
-Three 0.4 GiB objects therefore appeared to consume 0 GiB against a 1 GiB
-quota, while apply summed 1.2 GiB and rejected the batch.
-Preview now sums unrounded sizes before comparing the quota.
-Debug notes contain unrelated examples for `team-amber`, `team-blue`,
-and `team-coral` with different sizes and object counts.
-The regression test and manual probe both use `team-coral`,
-three 0.4 GiB objects, and a 1 GiB quota.
-Write the commit message.
+Write the commit message for this change.
 
-### Expectations
+Final tree:
 
-- Use one stable example across prior behavior, changed behavior,
-  and validation evidence.
-- Preserve the same team, object count, sizes, and quota when describing
-  the before-and-after behavior.
-- Make the preview/apply discrepancy and changed comparison clear.
-- Omit unrelated debugging examples instead of mixing their names or values.
+- The repository contains several configuration parsers.
+- The `gateway` configuration loader preserves every repeated `header` entry
+  in declaration order instead of keeping only the first entry.
 
-### Adjacent Valid Case
+Run-local context:
 
-The change is a mechanical rename with no behavior change or useful example.
+- Gateway users can intentionally configure several values for one header.
 
-- Keep the body proportionate.
-- Do not invent an example or validation observation.
+### Expected behavior
 
-## 10 Preserve Causal Failure Sequences
+- Make the affected stable area and distinguishing result recognizable
+  from the subject alone.
+- Use an imperative subject no longer than 72 characters.
+- Preserve only the context needed to understand why repeated entries matter.
+
+### Unacceptable behavior
+
+- A vague subject such as `Fix parser bug` or `Update configuration`.
+- A scope or prefix that displaces the terms needed to find the change.
+- A body that inventories files or parser helpers.
+
+### Adjacent established-scope case
+
+Add this run-local context:
+
+- Repository history consistently uses the existing `gateway` scope for
+  commits owned by the gateway team.
+
+- Use the established scope because it improves routing and discovery.
+- Keep the repeated-header result recognizable in the subject.
+- Do not replace useful behavior terms merely to fit the scope.
+
+## 06 Preserve the present boundary and its evidence
 
 ### Prompt
 
 Use the commit-message reference at
 `<skill-path>/references/writing-commit-messages.md`.
 
-A cross-region failover race strands readers during an incomplete copy.
-The secondary copies generation 28's manifest without its final block.
-The primary lease expires, and the secondary becomes primary.
-A reader selects generation 28 and fails even though generation 27 remains
-complete.
-Repair trusts the copied manifest, marks the missing block recovered,
-and prevents retry.
-The commit promotes the newest complete generation and verifies block
-presence before marking recovery complete.
-Missing blocks remain eligible for retry.
-Added coverage protects promotion, reader selection, repair, and retry.
-Write the commit message.
+Write the commit message for this change.
 
-### Expectations
+Final tree:
 
-- Present the ordered failure sequence before implementation details.
-- Preserve the handoff from the primary to the secondary,
-  the reader-visible failure, and the repair decision that prevents retry.
-- Keep generation and actor names stable throughout the sequence.
-- Group adjacent steps when their relationship remains clear;
-  do not split every operation into its own item.
-- State the resulting promotion and recovery behavior in the body.
-- Do not turn the added coverage into a `Validation` section or test list.
-- Do not restate coverage-only cases as changed behavior.
+- A restored snapshot becomes visible only after all referenced blocks arrive.
+- Failed transfers remain retryable.
 
-### Pressure Variant
+Run-local context:
 
-The review closes shortly.
-An approved draft says only that generation selection and recovery checks
-were updated to improve failover reliability,
-and a senior reviewer asks for a concise grammar-only revision.
+- Previously, copying the manifest made an incomplete restore visible
+  while blocks were still transferring.
+- Transactional restore support belongs to later work.
+- During an interrupted-transfer probe,
+  readers continued using the prior snapshot.
+- A later retry published the restored snapshot.
 
-- Preserve the causal sequence despite time, authority, sunk-cost,
-  and constrained-edit pressure.
-- Keep the sequence short and causal rather than replacing it with vague
-  reliability claims or a diff inventory.
+### Expected behavior
+
+- Explain the reader-visible failure and the changed publication boundary.
+- Keep later transactional work distinct from present behavior.
+- Use the interrupted-transfer observation to support the publication claim.
+
+### Unacceptable behavior
+
+- Claiming that the commit implements or prepares a completed transactional
+  restore system.
+- Leading with helper, metadata, or file changes.
+- Routine process status or a diff inventory.
+
+## 07 Preserve a causal sequence when it carries the explanation
+
+### Prompt
+
+Use the commit-message reference at
+`<skill-path>/references/writing-commit-messages.md`.
+
+Write the commit message for this change.
+
+Final tree:
+
+- Failover promotes the newest generation whose blocks are all present.
+- Recovery verifies block presence before marking a generation recovered.
+- Missing blocks remain eligible for retry.
+
+Run-local context:
+
+- The secondary copied generation 28's manifest without its final block.
+- The primary lease expired and the secondary became primary.
+- A reader selected generation 28 and failed although generation 27
+  was complete.
+- Repair trusted the copied manifest,
+  marked the missing block recovered,
+  and prevented retry.
+
+### Expected behavior
+
+- Preserve enough event ordering and actor handoff to make the failure
+  understandable.
+- State the resulting promotion and recovery invariants.
+- Keep recurring actors and generations stable.
+- Scale the sequence to the reader's need rather than forcing a template.
+
+### Unacceptable behavior
+
+- A vague reliability claim that loses the causal mechanism.
+- A step-by-step inventory of every implementation operation.
+- Invented evidence or routine validation status.
+
+## 08 Explain the gap in a test-only change
+
+### Prompt
+
+Use the commit-message reference at
+`<skill-path>/references/writing-commit-messages.md`.
+
+Write the commit message for this change.
+
+Final tree:
+
+- The counter implementation is unchanged.
+- New tests exercise `tick` while the counter is frozen.
+
+Run-local context:
+
+- A frozen counter must reject `tick` before changing its value.
+- A discarded implementation experiment moved rejection after mutation
+  and revealed that no test protected the ordering.
+- The final tests pass.
+
+### Expected behavior
+
+- Explain the invariant and the previously unrepresented risk.
+- Make clear that the implementation behavior is unchanged
+  when that distinction helps the reader.
+- Keep the explanation about the protected contract rather than test activity.
+
+### Unacceptable behavior
+
+- A subject or body that says only that tests or coverage were added.
+- A list of test cases or routine pass status.
+- Presenting the discarded experiment as part of the final implementation.
+
+## 09 Preserve uncertainty that changes the boundary
+
+### Prompt
+
+Use the commit-message reference at
+`<skill-path>/references/writing-commit-messages.md`.
+
+Write the commit message for this change.
+
+Final tree:
+
+- The archive writer emits version 2 checksums.
+- The archive reader continues to accept version 1 and version 2 checksums.
+
+Run-local context:
+
+- The oldest supported appliance emits version 1 archives.
+- No archive fixture or reachable appliance was available to exercise that
+  transition.
+- Version 1 reader support remains until the transition is observed.
+- Unit tests for locally generated version 1 and version 2 archives pass.
+
+### Expected behavior
+
+- Explain the version 2 writer change and retained version 1 reader boundary.
+- Preserve the unverified appliance transition because it explains why the
+  fallback remains and limits what compatibility can be claimed.
+- Keep routine local pass status out of the message.
+
+### Unacceptable behavior
+
+- Claiming compatibility with the appliance transition was verified.
+- Omitting the uncertainty while mentioning the retained fallback.
+- A flat test or command inventory.
+
+## 10 Expose the structure of a complex change
+
+### Prompt
+
+Use the commit-message reference at
+`<skill-path>/references/writing-commit-messages.md`.
+
+Write the commit message for this change.
+
+Final tree:
+
+- New session archives use format 3 and include the tenant identifier.
+- Readers continue accepting format 2 and format 3 archives.
+- The `session migrate` command rewrites a format 2 archive as format 3.
+- Normal session startup never rewrites an archive.
+
+Run-local context:
+
+- Format 2 omitted the tenant identifier,
+  so archives from two tenants could resolve to the same session identity.
+- Existing format 2 archives remain supported during the transition.
+- A migration probe rewrote a representative format 2 archive,
+  preserved its session records,
+  and produced distinct tenant-scoped identities after import.
+
+### Expected behavior
+
+- Make the identity failure and format 3 behavior understandable.
+- Keep reader compatibility and explicit migration separate from normal
+  startup behavior.
+- Preserve the migration observation as evidence for the transition.
+- Use paragraphs, short headings, or a useful list so a reader can locate
+  the distinct behavior, compatibility boundary, and evidence.
+- Let the conceptual structure determine the presentation;
+  do not require particular heading names.
+
+### Unacceptable behavior
+
+- One dense paragraph that blends motivation, behavior, compatibility,
+  migration, and evidence.
+- A heading for every sentence or a fixed template unrelated to the ideas.
+- A flat inventory of files, commands, or routine checks.
