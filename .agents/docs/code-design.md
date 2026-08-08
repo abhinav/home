@@ -22,6 +22,7 @@ not abstractions that merely redistribute the same coordination work.
   - [Group cohesive operations](#group-cohesive-operations)
   - [Organize modules by domain responsibility](#organize-modules-by-domain-responsibility)
   - [Design for change locality](#design-for-change-locality)
+  - [Repository precedent is evidence, not authority](#repository-precedent-is-evidence-not-authority)
   - [Design abstractions from the outside in](#design-abstractions-from-the-outside-in)
   - [Extract helper functions only when they earn a boundary](#extract-helper-functions-only-when-they-earn-a-boundary)
   - [Prefer narrow, deep business packages](#prefer-narrow-deep-business-packages)
@@ -380,6 +381,30 @@ Do not add options, indirection, or extension points
 only because an abstraction might change someday.
 Use change locality to respond to credible evolution
 revealed by the current workflow, requirements, or repository history.
+
+### Repository precedent is evidence, not authority
+
+Existing code contains both local engineering knowledge and historical mistakes.
+Judge a precedent against current requirements, behavioral contracts,
+ownership boundaries, and accepted design decisions,
+not merely by how often it appears.
+
+A better pattern can be used locally when its boundary is clear
+and it does not duplicate ownership.
+Leaving old code unchanged may be the correct scoped choice.
+When the difference would create ambiguous precedent,
+following a poor but behaviorally valid pattern may be safer
+than beginning an unrequested redesign.
+If that pattern prevents correctness, safety, or the requested outcome,
+treat the repair as prerequisite work
+and obtain approval before materially expanding the task.
+
+A migration begins only with an accepted destination
+and an intention to move the existing population.
+Then contain new uses of the retiring pattern
+and preserve the destination with the smallest useful ratchet.
+Before that decision,
+do not turn a local improvement into repository-wide policy.
 
 ### Design abstractions from the outside in
 

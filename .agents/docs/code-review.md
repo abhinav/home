@@ -67,6 +67,8 @@ For each caller and boundary, ask:
   or merely moves calls behind another name
 - whether dependency direction and lifetime match the component that owns them
 - whether infrastructure details remain at system boundaries
+- what the resulting patterns will teach the next contributor
+  about the intended design
 
 Treat repeated boundary crossings,
 callers coordinating another module's internal sequence, generic runners,
