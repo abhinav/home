@@ -43,6 +43,35 @@ Keep rendering decisions at the command boundary
 so application operations do not need to know
 whether a result will be printed as text, JSON, or another representation.
 
+## Make outcomes interpretable
+
+A command result should let the caller determine what happened,
+what changed, and which action is available next.
+Design output for the decision it supports,
+not as an unbounded transcript of the command's internal work.
+
+Useful result behavior includes:
+
+- quiet success when the requested result already establishes completion
+- a bounded, stable structure for results consumed mechanically
+- the violated invariant and affected target when an operation fails
+- a known recovery action when one exists
+- a stable retrieval path for details omitted from the primary result
+- an inspection or dry-run mode before consequential effects
+- a receipt or postcondition query after a state-changing operation
+
+Output suppression belongs at the command boundary.
+The command should run the complete operation,
+preserve the full output and true exit status,
+return the information needed for the next decision,
+and provide a stable route to any omitted evidence.
+
+Do not require callers to truncate a command with `head` or `tail`
+to obtain a manageable result.
+Early-closing consumers can terminate the command before completion,
+discarded output can remove necessary context,
+and pipelines can hide the command's exit status.
+
 ## Test the boundary and the behavior separately
 
 Test parser behavior for public syntax, defaults, conflicts, and error messages.
@@ -50,3 +79,9 @@ Test application behavior through typed requests
 without going through the parser.
 Use focused end-to-end tests for contracts
 that depend on real process streams, exit status, or shell behavior.
+When output is intentionally bounded,
+test that the complete operation still runs,
+the original exit status is preserved,
+and omitted evidence remains retrievable.
+For consequential operations,
+test the preview, receipt, or postcondition behavior promised by the command.
