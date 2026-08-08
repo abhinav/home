@@ -10,263 +10,117 @@ description: >
 
 # Recording CLI GIFs
 
-## Scope
+Treat a demo GIF as a glanceable loop,
+not as a narrated lesson or proof that a command can run.
+Reason across four boundaries:
+what the viewer knows and should notice,
+what stays stable and visibly changes,
+who drives each action after capture begins,
+and what evidence supports the recording's claims.
 
-Use this skill for local CLI and TUI demo GIFs recorded with
-asciinema+agg or VHS.
 Keep recordings local.
 Do not publish recordings to hosted services.
 
-## Required Operating Rules
+## Model the viewer
 
-Choose the recorder from the demo's interaction model
-before writing commands.
-Use asciinema+agg for scripted,
-non-interactive recordings.
-Use VHS when the demo needs typed input,
-TUI navigation,
-recorder-observed waits,
-or other tape choreography.
+Set an internal brief with the audience, one takeaway, and the boundary.
+Use the brief to remove material,
+not as content for the GIF.
 
-Run recorder commands with escalated privileges
-using the forms in [Running Recorders](#running-recorders).
-Recorders open PTY,
-terminal capture,
-or rendering resources,
-and sandboxed execution can fail before the recording starts.
+Show one command, interaction, transition, or before-and-after result.
+If that requires several definitions, examples, exceptions, or an argument,
+narrow the takeaway or use documentation or video.
 
-Do not request escalated privileges for informational,
-syntax-check,
-or inspection commands such as `vhs validate`,
-`vhs themes`, `vhs manual`,
-`asciinema --help`, or `agg --help`.
+Assume little reading time.
+Let the real terminal state and motion carry the meaning.
+Use a short cue only when the visible states cannot show where to look.
+Skip title cards, glossaries, and prose recaps by default.
 
-Before rendering,
-use the selected recorder's syntax checks when they exist.
-For tapes,
-use `vhs validate`.
-For asciinema+agg,
-inspect the script or command that asciinema will run.
-Validation does not replace recording,
-rendering,
-and visual inspection.
+If the viewer only needs to notice that an unfamiliar field changed,
+show the change without defining or interpreting the field.
+When meaning is essential,
+verify it and narrow the GIF until it can be shown briefly.
 
-After rendering,
-verify the artifact exists and is the expected file type.
-Use `file`, `ls -lh`, or a visual check when the output is a GIF.
+## Design the visible argument
 
-Before choosing tape commands,
-check whether `vhs` is installed.
+Use one small example and the shortest visible sequence that proves the takeaway:
 
-## Recorder Selection
+1. Start at the useful initial state.
+2. Show the representative command or interaction.
+3. Change one relevant thing while keeping identity and context stable.
+4. Hold the result long enough to inspect.
+5. Return to the opening state without implying a false reverse transition.
 
-Use asciinema+agg when the whole recording can be driven by one finite
-command,
-script,
-or child shell.
-The asciinema recorder command should usually use the `env -u NO_COLOR`
-wrapper shown in [Running Recorders](#running-recorders).
-For asciinema+agg recordings,
-set `TERM=xterm-256color` at the recorder process boundary
-so child commands that inspect terminal capabilities emit ANSI color.
-Good fits include showing a command running,
-printing staged messages for the viewer,
-running a shell script that sleeps between visible states,
-capturing real command output,
-or recording terminal animation produced by a script.
+Hide setup, cleanup, and unrelated output unless they are the subject.
+Keep visible commands representative of real use,
+with recording-only environment configuration at the recorder boundary.
+Preserve identity through stable position, naming, color, and notation.
+Reserve motion for the relevant change,
+and let the final visible state embody the takeaway.
 
-Use VHS when the recording needs interactive input
-after the recorder starts.
-Good fits include visible typing,
-arrow-key navigation,
-interactive prompts,
-TUI selection movement,
-recorder-observed waits,
-screenshots,
-or precise tape-controlled pacing.
-If the recorder must deliver keys to the program,
-choose VHS.
+Treat time as part of the explanation:
 
-For asciinema+agg,
-do not start an interactive `asciinema record <file>` session.
-Use the escalated recorder form with a finite command or script:
-`env -u NO_COLOR TERM=xterm-256color asciinema record --headless --return --command ...`.
-The command may start a child shell,
-such as `bash demo.sh` or `bash -lc '...'`,
-as long as that shell exits by itself.
-Do not treat "the keys are known" as enough reason to use asciinema
-when the recorder would still need to send those keys.
-Use asciinema+agg only if the program or script drives that behavior
-and exits by itself.
+- Wait for uncertain program state instead of guessing its duration.
+- Pause only for comparison, reading, or final inspection.
+- Spend little or no time on prose that delays the behavior.
 
-If either recorder family could work,
-prefer asciinema+agg for a naturally scripted command demo
-and prefer VHS for a viewer-facing interaction demo.
+## Choose the recorder by control model
 
-## Demo Design Workflow
+Use asciinema+agg when a finite command, script, or child shell
+drives the complete visible behavior and exits by itself.
 
-Start from the viewer's task,
-then design the whole demo around the viewer's experience:
-what should the viewer notice,
-what should the viewer be able to read,
-what can the viewer infer from motion or terminal state,
-and what should be clear before the GIF restarts?
-Script the minimum terminal path that makes those points legible.
+Use VHS when the recorder must deliver visible typing, navigation keys,
+interactive responses, terminal-state waits, screenshots,
+or other choreography after recording begins.
 
-1. Choose the output path and terminal dimensions.
-2. Decide which terminal states,
-   commands,
-   motion,
-   and pauses should be visible to the viewer.
-3. Keep setup or cleanup out of the visible demo.
-   For VHS,
-   use `Hide`,
-   `clear`,
-   and `Show`.
-   For asciinema+agg,
-   run setup before the first visible output in the child command.
-4. Use a prepared fixture, existing example directory,
-   temporary directory, or setup script according to the demo's needs.
-5. Show only the commands,
-   output,
-   or TUI interactions
-   the viewer needs to understand.
-6. Use recorder-observed waits for tape-controlled terminal state.
-   Use script-side waits for asciinema+agg.
-   Use fixed sleeps for viewer pacing or animation capture.
-7. Add final dwell time only when the viewer needs time
-   before the GIF restarts.
+Known keystrokes do not make an interactive asciinema session controllable.
+If the recorder must send those keys, use VHS.
+If a program's deterministic demo mode performs the same movement itself,
+asciinema+agg remains appropriate.
 
-For VHS,
-put `Require`,
-`Output`,
-and most `Set` commands at the top of the tape.
-Use `Hide`,
-setup commands or a setup script,
-`clear`,
-and `Show`
-for setup that should not appear in the GIF.
-Read [references/tape-reference.md](references/tape-reference.md)
-for tape command details.
+Once the control model is known,
+read only the matching operational reference:
 
-For asciinema+agg,
-put setup and visible motion in the finite command or script.
-The script can print messages,
-sleep between states,
-clear or redraw the terminal,
-run the demonstrated command,
-and leave a readable final state before exiting.
-Read [references/asciinema-agg-reference.md](references/asciinema-agg-reference.md)
-for scripted recording details.
+- Read [references/tape-reference.md](references/tape-reference.md)
+  before writing or rendering a VHS tape.
+- Read [references/asciinema-agg-reference.md](references/asciinema-agg-reference.md)
+  before writing, recording, rendering, or debugging an asciinema pipeline.
 
-## Writing Visible Interactions
+Treat the selected reference as the specification for the operation,
+not as optional background.
+Any concrete command or operational plan must preserve its required
+recorder-boundary settings, flags, ordering, and escalation boundary.
+Do not reconstruct those details from memory.
 
-Prefer visible commands that teach the user the workflow.
-Avoid showing setup,
-fixture generation,
-dependency builds,
-or cleanup unless those are the point of the demo.
-Keep the demonstrated command representative of how a user would run it.
-Do not prefix the demonstrated command with `TERM=...`
-unless the demo is specifically about terminal-type behavior.
-Let the recorder provide the terminal environment for the recording.
+Use installed manuals and `--help` output as the source of truth
+when local tool behavior may differ from a reference.
 
-For TUI prompts,
-script realistic key presses:
-`Down`, `Up`, `Enter`, `Tab`, `Backspace`, `Ctrl+C`, and similar commands.
-Add small sleeps between navigation keys
-so the resulting GIF shows movement instead of a jump cut.
+## Preserve operational boundaries
 
-For terminal output that can vary in timing,
-prefer `Wait`, `Wait+Screen`, or `Wait+Line`
-over fixed sleeps.
-Use fixed `Sleep` for pacing or animation capture.
+Check that the selected recorder is installed before depending on it.
 
-For asciinema+agg recordings,
-the visible interaction is the output produced by the child command.
-Make the child command representative of how the user would run it,
-or use a small demo script when the recording needs staged narration,
-delays,
-or terminal redrawing.
-Do not rely on sending input after asciinema starts.
+Request escalation for recorder operations that open PTY,
+terminal-capture, or rendering resources.
+Run informational, syntax-check, and read-only inspection commands normally.
+Use the matching reference for the supported command forms and exceptions.
 
-## Running Recorders
+Keep asciinema recordings finite and headless.
+Do not start a session that depends on later human input.
 
-Request escalation for recorder commands.
-By default,
-remove `NO_COLOR` at the recorder process boundary.
-This lets color-aware commands emit color inside the recording.
-Keep `NO_COLOR` only when colorless output or `NO_COLOR` behavior
-is the subject of the demo.
-For asciinema recordings,
-also set `TERM=xterm-256color` at the recorder process boundary by default.
+Validate each boundary separately:
 
-For asciinema recording,
-request escalation for the `asciinema record` command:
+1. Inspect or syntax-check the tape, script, or finite command.
+2. Record the real terminal behavior.
+3. Render the local artifact.
+4. Verify the artifact type and inspect the visible result.
+5. Confirm that the GIF proves the learning outcome without hidden context.
 
-```bash
-env -u NO_COLOR TERM=xterm-256color \
-  asciinema record --headless --overwrite --return \
-  --window-size 80x24 \
-  --command "bash demo.sh" \
-  demo.cast
-```
-
-Run `agg` normally after the cast exists,
-unless sandboxing blocks conversion:
-
-```bash
-agg --theme github-dark --font-size 16 --idle-time-limit 1 \
-  demo.cast demo.gif
-```
-
-For tape rendering:
-
-```bash
-env -u NO_COLOR vhs demo.tape
-```
-
-Do not add `TERM=...` to tape recorder invocations or visible demo commands
-for ordinary color stability.
-Use `TERM=xterm-256color` only on the asciinema recorder invocation.
-
-Do not rationalize a normal sandboxed recorder run as faster,
-temporary,
-or acceptable because a fallback is possible.
-Escalation is the starting condition for recording,
-not a retry strategy.
-
-Run syntax and reference commands normally:
-
-```bash
-vhs validate demo.tape
-vhs themes
-vhs manual
-
-asciinema --help
-asciinema record --help
-agg --help
-```
-
-## References
-
-Read [references/tape-reference.md](references/tape-reference.md)
-when writing unfamiliar tape commands,
-checking command ordering,
-or deciding between `Wait`, `Sleep`, `Hide`, `Show`, and key commands.
-
-Use `vhs manual` as the local source of truth
-when installed VHS behavior may differ from the reference.
-
-Read [references/asciinema-agg-reference.md](references/asciinema-agg-reference.md)
-when choosing asciinema+agg,
-writing a scripted recording,
-debugging cast output,
-or deciding whether the demo needs tape-controlled interactivity.
+Syntax validity does not establish recorder success.
+Recorder success does not establish render success.
+A valid GIF does not establish that the viewer can follow the explanation.
 
 ## Tests
 
 When changing this skill,
 read [tests/README.md](tests/README.md).
-Run the relevant scenarios with fresh subagents
-that have empty context windows.
+Run the relevant scenarios with fresh subagents that have empty context windows.

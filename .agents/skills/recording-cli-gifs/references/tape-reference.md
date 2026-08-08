@@ -1,9 +1,9 @@
-# Tape Reference
+# Tape reference
 
 This reference summarizes common `.tape` commands for VHS.
 Use `vhs manual` for installed VHS behavior.
 
-## Command-Line Commands
+## Command-line commands
 
 - `vhs <file>.tape` renders a tape and writes its declared outputs.
 - `vhs validate <file>...` parses tape files without running them.
@@ -17,7 +17,7 @@ is the subject of the demo.
 Run informational and syntax-check commands such as `vhs validate`,
 `vhs themes`, and `vhs manual` normally.
 
-## Tape Command Ordering
+## Tape command ordering
 
 Put `Require`, `Output`, and most `Set` commands at the top of the tape.
 VHS expects requirements before non-setting work.
@@ -99,7 +99,7 @@ Enter
 Use `Type@<time> "<text>"` for per-command typing speed
 when a command should be visibly typed more slowly.
 
-## Keys And Navigation
+## Keys and navigation
 
 Use key commands for prompts and TUIs:
 
@@ -157,7 +157,7 @@ Sleep 2s
 Use `Wait` for uncertain completion.
 Use `Sleep` when the pause itself is part of the viewing experience.
 
-## Hide And Show
+## Hide and Show
 
 `Hide` stops capturing frames.
 Commands still execute in the fake terminal.
@@ -189,7 +189,7 @@ use a script and invoke the script while hidden.
 Use it when a static image is useful alongside the GIF
 or when verifying one important state.
 
-## Copy And Paste
+## Copy and Paste
 
 `Copy "<text>"` sets the clipboard.
 `Paste` pastes it into the terminal.

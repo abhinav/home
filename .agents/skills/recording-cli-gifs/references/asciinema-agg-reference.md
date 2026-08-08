@@ -1,9 +1,9 @@
-# Asciinema And Agg Reference
+# Asciinema and agg reference
 
 Use this reference for scripted,
 non-interactive CLI and TUI GIF recordings with `asciinema` and `agg`.
 
-## Command-Line Commands
+## Command-line commands
 
 `asciinema record` records a terminal session to an asciicast file.
 The command starts either the default shell
@@ -16,7 +16,12 @@ For local skill use,
 use a local asciicast file.
 Do not use remote upload or hosted recording paths.
 
-## Basic Pipeline
+## Required recording invariants
+
+Treat the recording command below as one command contract.
+When writing a concrete plan or executing the recording,
+show or use the complete form instead of summarizing required settings in prose.
+This keeps omissions visible before the recorder starts.
 
 Request escalation for `asciinema record`
 because the recorder opens terminal capture resources.
@@ -44,7 +49,7 @@ agg --theme github-dark --font-size 16 --idle-time-limit 1 \
   demo.cast demo.gif
 ```
 
-## Script Shape
+## Script shape
 
 The recorded command or script can set up state,
 print narration,
@@ -53,7 +58,7 @@ run the demonstrated command,
 redraw the screen,
 and leave a readable final state before exiting.
 
-## Headless Recording
+## Headless recording
 
 Always use `--headless` for Codex-run asciinema recordings.
 With `--headless`,
@@ -63,7 +68,7 @@ This is not for background execution:
 the `asciinema record` command still runs in the foreground
 and exits when the child command exits.
 
-## Child Shells And Scripts
+## Child shells and scripts
 
 `--command` may launch a child shell,
 as long as the child shell exits by itself.
@@ -95,7 +100,7 @@ Asciinema sets `ASCIINEMA_SESSION` inside the recorded session.
 That can be useful when diagnosing whether a command is running
 inside the recorder.
 
-## Useful Agg Options
+## Useful agg options
 
 Common `agg` controls:
 
@@ -115,7 +120,7 @@ Common `agg` controls:
 Use local `agg --help` as the source of truth
 when installed behavior may differ from this reference.
 
-## Inspecting Casts
+## Inspecting casts
 
 Asciicast v3 files are line-oriented.
 The first line is JSON metadata.

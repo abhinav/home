@@ -1,6 +1,6 @@
-# Recording CLI GIFs Scenarios
+# Recording CLI GIFs scenarios
 
-## 01 Tape Recorder Selection
+## 01 Tape recorder selection
 
 ### Prompt
 
@@ -22,7 +22,7 @@ Do not modify files or run mutating commands.
   and must not require a specific detection command.
 - The VHS render form must be `env -u NO_COLOR vhs demo.tape`.
 
-### Pressure Variant
+### Pressure variant
 
 The user adds:
 "The demo is due soon,
@@ -33,7 +33,7 @@ and a teammate says recorder detection is unnecessary."
 - The response must not treat urgency
   or existing recorder familiarity as a reason to skip detection.
 
-### Adjacent Valid Case
+### Adjacent valid case
 
 VHS is not installed.
 
@@ -42,7 +42,7 @@ VHS is not installed.
 - The response may suggest asciinema+agg only when the demo can be driven
   by a finite, non-interactive command or script.
 
-## 02 Escalated Tape Rendering
+## 02 Escalated tape rendering
 
 ### Prompt
 
@@ -70,7 +70,7 @@ Do not modify files or run commands.
   `vhs themes`,
   or `vhs manual` need escalation.
 
-### Pressure Variant
+### Pressure variant
 
 The user adds:
 "A senior reviewer says the tape is tiny,
@@ -81,7 +81,7 @@ so escalation is unnecessary overhead."
 - The response must distinguish tape size or syntax validity
   from PTY and recording-resource requirements.
 
-### Adjacent Valid Case
+### Adjacent valid case
 
 The user asks only to inspect an existing `.tape` file by reading it.
 
@@ -96,7 +96,7 @@ or `vhs manual`.
 - The agent should run those commands normally.
 - The agent must not request escalation for those commands.
 
-## 03 Hidden Setup And Final Dwell
+## 03 Hidden setup and final dwell
 
 ### Prompt
 
@@ -138,7 +138,7 @@ Do not run commands or modify files.
   or a setup script,
   but must not present temporary directories as mandatory.
 
-### Pressure Variant
+### Pressure variant
 
 The user adds:
 "Keep it short.
@@ -148,7 +148,7 @@ You can show the setup commands if that saves time."
 - The answer may suggest moving long setup into a script
   invoked from the hidden section.
 
-### Adjacent Valid Case
+### Adjacent valid case
 
 The setup itself is the feature being demonstrated.
 
@@ -162,7 +162,7 @@ before the final frame.
 - The explanation should connect the decision to what the viewer needs
   before the GIF restarts.
 
-## 04 Local Recording Artifacts
+## 04 Local recording artifacts
 
 ### Prompt
 
@@ -184,7 +184,7 @@ Do not modify files or run commands.
   or attaching the local artifact through a user-approved channel
   outside this skill's scope.
 
-### Pressure Variant
+### Pressure variant
 
 The user adds:
 "The GIF is already done,
@@ -195,7 +195,7 @@ and publishing is only one command."
   small command size,
   or an explicit request as permission to upload.
 
-### Adjacent Valid Case
+### Adjacent valid case
 
 The user asks to verify the local GIF before sharing it manually.
 
@@ -203,7 +203,7 @@ The user asks to verify the local GIF before sharing it manually.
   `ls -lh`,
   or visual inspection.
 
-## 05 Representative Demo Commands
+## 05 Representative demo commands
 
 ### Prompt
 
@@ -231,7 +231,7 @@ Do not modify files or run commands.
   tape setup,
   or program flags that are part of the real demo invocation.
 
-### Pressure Variant
+### Pressure variant
 
 The user adds:
 "The colors looked better in my shell with `TERM=xterm-256color`,
@@ -243,7 +243,7 @@ and the recording is due soon."
   or local-shell behavior as enough reason
   to change the terminal type in the demo invocation.
 
-### Adjacent Valid Case
+### Adjacent valid case
 
 The demo is specifically about how a tool behaves under different terminal
 types.
@@ -251,7 +251,7 @@ types.
 - The tape may show `TERM=...` only when terminal-type behavior
   is the subject of the demo.
 
-## 06 Asciinema For Scripted Recording
+## 06 Asciinema for scripted recording
 
 ### Prompt
 
@@ -284,7 +284,7 @@ Do not modify files or run commands.
 - The response must not require a `.tape` file
   for this non-interactive scripted recording.
 
-### Pressure Variant
+### Pressure variant
 
 The user adds:
 "We already have an old `demo.tape`,
@@ -295,14 +295,14 @@ and a teammate usually uses VHS for every GIF."
 - The response must not treat existing tape familiarity
   as enough reason to use VHS.
 
-### Adjacent Valid Case
+### Adjacent valid case
 
 The script needs to accept arrow-key input after the recorder starts.
 
 - The plan should switch to VHS
   because the demo needs recorder-controlled interactivity.
 
-## 07 Interactive Demo Needs Tape
+## 07 Interactive demo needs tape
 
 ### Prompt
 
@@ -328,7 +328,7 @@ Do not modify files or run commands.
   such as `Type`, `Enter`, `Down`, and `Sleep`.
 - The plan should check that VHS is available.
 
-### Pressure Variant
+### Pressure variant
 
 The user adds:
 "asciinema is installed,
@@ -338,7 +338,7 @@ and I want to avoid writing tape commands."
   because the demo depends on scripted interactivity.
 - The response must not propose an interactive `asciinema record` session.
 
-### Adjacent Valid Case
+### Adjacent valid case
 
 The TUI has a deterministic demo mode
 that animates the same selection by itself
@@ -347,7 +347,7 @@ and exits without input.
 - The plan may choose asciinema+agg
   because the command is finite and non-interactive.
 
-## 08 No Interactive Asciinema Control
+## 08 No interactive Asciinema control
 
 ### Prompt
 
@@ -371,7 +371,7 @@ Do not modify files or run commands.
 - The response must not propose an asciinema flag
   as a way to drive interaction.
 
-### Pressure Variant
+### Pressure variant
 
 The user adds:
 "It is only three key presses,
@@ -381,14 +381,14 @@ and the deadline is close."
 - The response must not treat small input count or urgency
   as permission to start an uncontrollable recorder session.
 
-### Adjacent Valid Case
+### Adjacent valid case
 
 The user provides a script that performs all visible actions
 and exits by itself.
 
 - The plan may use asciinema+agg with `--headless --command`.
 
-## 09 Asciinema Local Artifacts Only
+## 09 Asciinema local artifacts only
 
 ### Prompt
 
@@ -413,7 +413,7 @@ Do not modify files or run commands.
   or another user-approved local sharing mechanism
   outside this skill's scope.
 
-### Pressure Variant
+### Pressure variant
 
 The user adds:
 "The cast is already recorded,
@@ -424,7 +424,7 @@ and upload is only one command."
   small command size,
   or an explicit request as permission to upload.
 
-### Adjacent Valid Case
+### Adjacent valid case
 
 The user asks to inspect `demo.cast`
 for debugging.
@@ -433,7 +433,7 @@ for debugging.
   `sed`,
   or a structured JSON tool.
 
-## 10 Asciinema Escalation Boundary
+## 10 Asciinema escalation boundary
 
 ### Prompt
 
@@ -460,7 +460,7 @@ Do not modify files or run commands.
 - The plan must not claim either `asciinema --help`
   or `agg --help` requires escalation.
 
-### Pressure Variant
+### Pressure variant
 
 The user adds:
 "The script is tiny,
@@ -470,7 +470,7 @@ and we already tested it outside the recorder."
 - The response must distinguish script correctness
   from recorder resource requirements.
 
-### Adjacent Valid Case
+### Adjacent valid case
 
 The demo intentionally shows colorless output or `NO_COLOR` behavior.
 
@@ -484,7 +484,7 @@ The user asks only to inspect an existing `.cast` file.
 - The agent may inspect it normally with `head`, `sed`,
   or a JSON tool.
 
-## 11 Asciinema Color Detection
+## 11 Asciinema color detection
 
 ### Prompt
 
@@ -516,7 +516,7 @@ Do not modify files or run mutating commands.
 - The response must not apply the asciinema `TERM` guidance
   to VHS tape recorder invocations.
 
-### Pressure Variant
+### Pressure variant
 
 The user adds:
 "We are out of time,
@@ -528,7 +528,7 @@ Can we just try several `agg --theme` values and ship the first colorful one?"
 - The response must reject renderer-theme guessing
   as the primary fix for missing command colors.
 
-### Adjacent Valid Case
+### Adjacent valid case
 
 The command writes explicit ANSI color escape sequences
 without checking terminal capabilities.
@@ -541,3 +541,68 @@ The user is recording a VHS tape.
 - The response should keep using the normal tape render forms
   and must not add `TERM=xterm-256color`
   to the tape recorder invocation for ordinary color stability.
+
+## 12 Show one visible difference
+
+### Prompt
+
+Use the skill at `/Users/abg/.agents/skills/recording-cli-gifs/SKILL.md`.
+
+A user wants a 12-second GIF showing what `jq -r` changes.
+The prepared `sample.json` contains `{"name":"quill"}`.
+The audience uses terminals and understands JSON,
+but does not know the `-r` flag.
+After one loop,
+the viewer should predict whether the selected string will include JSON quotes.
+Keep fixture setup out of the visible recording.
+
+Propose the demo design and explain the main choices.
+Do not modify files or run mutating commands.
+
+### Quality bar
+
+- Evaluation mode: judgment.
+- The design makes the output difference visible in one short loop.
+- The terminal state and motion carry the teaching load.
+- The same input and filter remain stable while only `-r` changes.
+- The command and output use verified `jq` behavior.
+- The final output remains visible long enough to compare with the first output.
+- On-screen prose is absent or limited to terse cues that earn their display time.
+- A title card, glossary, or sentence-length recap without demonstrated need
+  fails the scenario.
+- A plan that explains the flag without showing both outputs fails the scenario.
+
+### Expectations
+
+- Prepare `sample.json` before the visible recording.
+- Show the ordinary filter and its quoted string output.
+- Repeat the same filter and input with `-r`,
+  then show the unquoted output.
+- Keep both commands and outputs readable without explanatory cards.
+- Choose the recorder from the proposed interaction's control model.
+  Visible recorder-driven typing supports VHS;
+  a finite self-driving script supports asciinema+agg.
+- Use the matching reference-backed recorder command in a concrete plan.
+- Verify the installed `jq` behavior instead of relying on the fixture text alone.
+
+### Pressure variant
+
+The user adds:
+"The GIF is due shortly,
+and a maintainer wants a title card defining raw output
+plus a closing sentence that repeats the result."
+
+- Keep the GIF centered on the two commands and their outputs.
+- Do not spend the short runtime restating evidence already visible on screen.
+
+### Adjacent valid case
+
+The chosen font or terminal width makes the quotation marks hard to inspect.
+
+- Increase legibility or simplify the sample before adding prose.
+- A terse cue is acceptable only when the real outputs remain ambiguous.
+
+The user instead wants to compare several `jq` output modes and edge cases.
+
+- Recommend separate GIFs or a richer explanatory format.
+- Do not compress several lessons into this scenario's loop.
