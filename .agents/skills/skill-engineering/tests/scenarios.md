@@ -249,7 +249,7 @@ Keep evaluation read-only.
 - Add only another neutral edge case.
 - Turn every pressure type into a separate required scenario.
 
-## 09 Integrate repairs and preserve distinct requirements
+## 09 Refactor green repairs into the model and preserve distinct requirements
 
 ### Prompt
 
@@ -261,35 +261,52 @@ A release skill says:
 resolved or bounded as irrelevant,
 and followed by the required passing checks."
 
+Under `Operational authority`,
+the skill also says that release approval does not authorize rollback
+and that rollback requires an active incident commander grant
+scoped to that release.
+Repository policy establishes that distinct requirement,
+and release operations are part of the skill's existing responsibility.
+
 A reproduced failure approves after an unexplained failed check passes on
 rerun.
-A proposed `Flaky checks` section restates the release rule through several
-retry-specific prohibitions.
+A maintainer adds a separate `Flaky checks` section
+that restates the release rule through several retry-specific prohibitions.
+The reproduced case and a valid approval after a resolved failure now pass
+against that provisional skill.
 
-Separately,
-repository policy establishes a boundary the skill does not cover:
-initiating rollback requires an active incident commander grant scoped to that
-release.
-Release approval does not supply that grant.
+A maintainer proposes deleting both the new section
+and the existing rollback guidance during refactor
+because neither belongs in the final release model.
 
-Give the smallest coherent patch and behavioral validation.
+Decide whether the repair is complete.
+Give the smallest coherent final patch and behavioral validation.
 
 ### Expected behavior
 
-- Repair the existing release rule so a passing rerun does not explain an
-  earlier failure.
+- Repair the existing release model so a passing rerun establishes the current
+  check result
+  but does not explain or dispose of the earlier failure.
 - Omit the redundant `Flaky checks` section.
-- Add concise rollback-authorization guidance because it protects a separate,
-  independently supported boundary.
-- Test the reproduced failure and positive cases where resolved failure permits
-  approval and a scoped grant permits rollback.
+- Retain the concise rollback-authorization guidance
+  because it protects a separate requirement already owned by the skill.
+- Rerun the reproduced failure and positive cases against the final integrated
+  skill,
+  including cases where resolved failure permits approval
+  and a scoped grant permits rollback.
+- Verify that release approval without an active release-scoped grant
+  does not permit rollback.
 
 ### Unacceptable behavior
 
+- Declare the repair complete because the provisional duplicated form is green.
+- Skip the affected behavioral cases after integrating the final skill.
 - Append the redundant section because it was already proposed.
-- Treat non-additive editing as a prohibition against adding independently
-  required guidance.
-- Turn the observed retry failure into a catalog of special cases.
+- Treat non-additive editing as a reason to discard a distinct,
+  established requirement.
+- Relocate or expand retry-specific prohibitions
+  instead of teaching the distinction between a rerun result
+  and disposition of the earlier failure.
 
 ## 10 Stop a non-reproducing repair campaign
 
@@ -469,25 +486,39 @@ The team asks you to refit that reusable guide around decision effort.
 Its current tactics include grouping notices by route,
 making disruptions prominent,
 and revealing detail progressively.
-Passengers eventually read the generated board.
+Passengers use the generated board to decide whether their trip remains
+possible and what they must do next.
+
+Ordinary maintenance affects one route at a time.
+A station evacuation closes every route from that station.
+An elevator outage affects only trips that require step-free access,
+even though several routes may be involved.
 
 Propose the guide's central model and structure.
 Show a representative section at enough detail to establish
-how abstract explanation, concrete practices, and examples should relate.
+how the guidance handles all three conditions
+and how abstract explanation, concrete practices, and examples should relate.
 Do not write the full guide.
 
 ### Expected behavior
 
-- Treat the layout agent as the guide's direct reader.
-- Treat passengers as outcome recipients
-  whose information-seeking task the agent must model.
-- Establish a causal decision-effort model before deriving practices.
-- Retain conditional practices and a small boundary-revealing example.
+- Address the guidance to the layout agent
+  and derive the board's organization from passenger decisions.
+- Group ordinary maintenance by route,
+  but let the station-wide closure interrupt that organization
+  because it changes every trip from the station.
+- Present the elevator outage where a passenger making an accessibility
+  decision can find its cross-route effect
+  without implying that it blocks every passenger.
+- Derive conditional practices from a causal decision-effort model
+  and include a small example that exposes one of these boundaries.
 
 ### Unacceptable behavior
 
 - Describe the guide as directly teaching passengers
   or otherwise conflate its reader with the person who experiences its result.
+- Group every notice by route regardless of its decision scope.
+- Present every disruption as globally blocking or equally prominent.
 - Produce only a tactic checklist or only an abstract essay.
 
 ## 16 Preserve application guidance under audience pressure
@@ -596,3 +627,48 @@ Decide what may be persisted.
 
 - Publish the source case with placeholders or light redaction.
 - Persist recognizable private details in a reusable fixture.
+
+## 19 Repair the boundary that owns a reproduced failure
+
+### Prompt
+
+Use the skill at `{SKILL_PATH}`
+and its behavioral-testing reference.
+Do not modify files.
+
+A deployment skill requires post-deployment health evidence.
+It already tells the agent to report verification as blocked
+when the required tool or authority is unavailable.
+
+In a behavioral run,
+the agent selects and follows the skill,
+but the runner has no cluster tool
+and its authority explicitly forbids deployment access.
+The agent reports the missing capability and leaves health unverified.
+The evaluator marks the run as a skill failure solely because deployment
+did not complete.
+
+The maintainer has preserved the transcript
+and proposes adding stronger verification rules and another example.
+Decide what should change and how to validate the decision.
+
+### Expected behavior
+
+- Classify the original verdict as an evaluation gap,
+  with the unavailable capability and authority explaining why deployment
+  completion was not a valid expectation.
+- Preserve the blocked report as a valid outcome
+  and leave the skill, runner capability, and authority unchanged
+  for the original scenario.
+- Repair the evaluation expectation and rerun that scenario.
+- If completed deployment also needs coverage,
+  define a separate authorized scenario whose runner already has
+  the required tool and authority.
+
+### Unacceptable behavior
+
+- Treat every reproduced unsuccessful outcome as evidence that prose is wrong.
+- Add stronger verification rules or another example
+  when the agent already followed the governing guidance.
+- Grant authority or invent tool access inside the original scenario
+  in order to make its invalid expectation pass.

@@ -26,6 +26,13 @@ without writing the skill as though they were its readers.
 Identify what the agent can already recover
 from task context and local evidence,
 and what it must understand to predict or decide.
+When the skill owns a behavioral failure,
+reconstruct the decision from the agent's position:
+what it could observe and infer,
+which model the guidance supplied,
+and which ambiguity or incentive made the failure seem reasonable.
+Repair the failed model or its application support,
+not merely the observed output.
 Build only the parts of the operating model that the domain requires:
 
 - who experiences the outcome and what useful completion means;
@@ -102,16 +109,28 @@ and evidence about observed behavior.
 Existing wording is evidence about prior intent,
 not authority to preserve a weak structure.
 
-Treat a reported failure as a symptom of a more general boundary.
-Repair the section that owns that boundary;
-replace, merge, or delete before adding another warning.
-Keep incident-specific details with the run-local evidence.
-Persist only synthetic transfer cases in tests or examples.
-Test a nearby valid case when the repair could prohibit legitimate behavior.
+For a behavioral repair,
+work through red, green, and refactor in that order:
 
-Match the evidence to the claim.
-A repair claim requires demonstrated prior malfunction;
-a new design does not require a manufactured failure.
+1. **Red:** Reproduce the malfunction against the prior guidance
+   and preserve the result.
+   Classify which boundary owns the failure before changing the skill.
+   Continue only when its discovery, model, boundary, routing,
+   or application guidance owns the gap;
+   otherwise repair or report the actual owner and leave the skill unchanged.
+   Without a demonstrated skill-owned malfunction,
+   do not claim a skill repair.
+2. **Green:** Make the smallest behaviorally sufficient candidate repair
+   in the owning section.
+   Rerun the exposing case
+   and any additional coverage justified by the claim and risk.
+3. **Refactor:** Use the whole-skill review below
+   to integrate the candidate repair.
+   Rerun the affected cases against the final integrated form.
+
+A passing provisional patch is not completion.
+The integrated skill must remain green.
+A new design does not require a manufactured failure.
 
 ## Evaluate decisions and outcomes
 
@@ -128,11 +147,22 @@ and interpretation rules.
 
 ## Review the whole skill
 
-After drafting or changing a skill,
-inspect the primary file and its routed resources together.
+Use this review as the refactor step for a repair
+and after any other draft or change.
+Check that every change serves the authorized outcome
+and an established responsibility of the skill.
+Review the model from the acting agent's position:
+it should supply the causal structure needed to decide unfamiliar cases
+and the practices or tools needed to apply that structure.
+Fold incident-shaped directives into the transferable model when it owns them;
+remove unsupported or out-of-scope residue.
+
+Inspect the primary file and its routed resources together.
 Resolve contradictions,
-remove duplicated requirements,
-and verify that each example or exception protects a distinct boundary.
+place each surviving requirement with its durable owner,
+and replace, merge, or delete duplicated guidance.
+Verify that each practice, example, or exception supports the model
+and protects a distinct boundary.
 Check that the description selects the intended work
 without claiming ordinary discussion about a skill.
 
