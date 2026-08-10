@@ -136,6 +136,10 @@ After each review round,
 check the cumulative change against the outcome, constraints, and non-goals,
 not just the latest finding.
 
+Use a tool's default cache.
+Do not override `HOME` or configure another cache
+unless the user requests it.
+
 Fix findings that affect retained behavior.
 If a finding results from an unnecessary design introduced during the task,
 prefer removing that design
