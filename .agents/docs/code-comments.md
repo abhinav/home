@@ -52,19 +52,56 @@ to compensate for unrelated responsibilities sharing a file or block.
 ## Document interface contracts
 
 Documentation should let a user treat a symbol as a black box.
-Include the parts needed to answer, as applicable:
+Treat the name, signature, and types as information the reader already has.
+A useful comment resolves a material uncertainty
+so the user can predict or decide something
+without opening the implementation.
 
-- What responsibility or concept does this interface own?
-- What must the caller supply, establish, or preserve?
-- What result, state transition, side effect, or error does it produce?
-- Which units, valid values, ownership, lifetime, ordering,
-  or concurrency rules constrain its use?
-- Which limit or exceptional case changes how it should be used?
+Establish the contract from repository evidence:
+the implementation, types, callers, tests, specifications,
+and accepted design decisions.
+Documentation and any rationale for its scope make evidence claims.
+If the evidence does not establish a useful claim,
+investigate or report the gap instead of writing plausible prose.
+Do not strengthen a name or implementation observation
+into a broader compatibility, safety, or lifecycle guarantee.
 
-Do not include an implementation algorithm
-unless users must rely on that behavior.
-Do not duplicate a clear name, signature, or type
-merely to produce documentation.
+Describe the evidence-backed transitions that affect use:
+
+- Connect each input or precondition to the success or failure it selects,
+  including recognizable errors and unchanged state.
+- Connect success to what the returned value represents
+  and which effects become visible.
+- State how ownership, mutation, lifetime, ordering, concurrency,
+  units, valid values, or limits change the caller's choices.
+
+Keep each condition joined to its consequence.
+A list of correct facts still leaves the user to reconstruct the contract
+when it does not explain which situation produces which outcome.
+
+Relationships often carry the contract.
+`SaveOrder atomically saves an order` does not identify the atomic unit.
+If the order and its dispatch record are all-or-nothing,
+say that they commit together
+or that failure of either write leaves neither visible.
+The relationship a caller can rely on matters;
+the qualifier or implementation mechanism does not.
+
+When space is constrained,
+preserve the transitions that change a caller's decision:
+conditions and outcomes,
+success and committed effects,
+failure and recognizable errors or unchanged state.
+Drop an obvious operation summary or implementation detail first.
+Compress by removing lower-value detail,
+not by replacing an exact condition with familiar shorthand
+whose meaning is broader or narrower.
+If the material contract does not fit clearly,
+use more space rather than erase part of it.
+When repository policy requires documentation for every exported symbol,
+use a short orienting comment for a self-explanatory boundary
+rather than inventing a larger contract.
+An operation summary is not sufficient when material behavior exists.
 
 Apply the same boundary test to public and private symbols.
 Visibility, caller count, and body length do not decide the need.
@@ -280,7 +317,8 @@ Delete or rewrite a comment when:
 - it translates one obvious statement at the same scale;
 - its label costs as much to read as the covered code
   and adds no orientation;
-- it duplicates a clear name, type, or nearby contract;
+- it duplicates a clear name, type, or nearby contract
+  without serving a required discovery or orientation role;
 - it is stale, incorrect, or broader than the code it describes;
 - it exposes implementation detail in interface documentation; or
 - it compensates for structure that should reasonably be made local or cohesive.

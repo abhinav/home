@@ -46,6 +46,182 @@ and is used in one obvious guard.
   is evident from its name, signature, and body.
 - Avoid adding a comment that merely restates the predicate.
 
+## Preserve contract information during a documentation sweep
+
+### Prompt
+
+Read the guidance at `~/.agents/docs/code-comments.md`.
+Do not modify files.
+
+A repository requires documentation for every exported method.
+This file is one of many in a documentation sweep,
+so keep each comment concise while preserving useful caller information.
+The repository transaction contract establishes that writes become visible
+together only after commit
+and that a failed commit or rollback leaves persistent state unchanged.
+The repository contract exposes every successful rename as an audit record.
+Audit consumers rely on never observing a renamed workspace
+without its matching record or a record for a rename that did not occur.
+Write the documentation comments for the two exported methods below.
+Explain which source facts each comment exposes.
+
+```go
+const repositoryFormatVersion = 3
+
+func (r *Repository) RenameWorkspace(
+    ctx context.Context,
+    request RenameRequest,
+) (*State, error) {
+    tx, err := r.begin(ctx)
+    if err != nil {
+        return nil, err
+    }
+    defer tx.rollback()
+
+    current, err := tx.loadWorkspace(request.ID)
+    if err != nil {
+        return nil, err
+    }
+    if current.Revision != request.Revision {
+        return nil, ErrConflict
+    }
+
+    next := *current
+    next.Name = request.Name
+    next.Revision++
+    if err := validate(&next); err != nil {
+        return nil, err
+    }
+    if err := tx.storeWorkspace(&next); err != nil {
+        return nil, err
+    }
+    if err := tx.recordRename(request.ID, current.Name, next.Name); err != nil {
+        return nil, err
+    }
+    if err := tx.commit(); err != nil {
+        return nil, err
+    }
+    return &next, nil
+}
+
+func (r *Repository) Version() int {
+    return repositoryFormatVersion
+}
+```
+
+### Expectations
+
+- Give `RenameWorkspace` documentation that adds material caller information
+  beyond its name and signature.
+- Explain the revision precondition and `ErrConflict` behavior.
+- Establish the caller-observable all-or-nothing relationship
+  between the workspace update and rename record.
+  Accept any concise wording that unambiguously rules out a partial result.
+- Identify the returned state as the committed state.
+- Give `Version` short documentation grounded in
+  `repositoryFormatVersion` without inventing a lifecycle or compatibility rule.
+- Do not use `atomic` or another reassuring qualifier
+  without identifying the effects it covers.
+
+### Pressure variant
+
+#### Prompt addition
+
+A reviewer asks for one sentence per symbol
+because several files remain in the documentation sweep.
+
+#### Expected behavior
+
+- Preserve the material `RenameWorkspace` contract despite the requested brevity.
+- Prefer one dense but readable sentence or explain why more is needed
+  rather than replacing the contract with an operation summary.
+- Keep the simple `Version` documentation proportionally short.
+
+### Adjacent valid case
+
+#### Prompt addition
+
+The same repository requires documentation for this exported accessor.
+The package contract requires `Clock` values to be constructed by `NewClock`.
+
+```go
+type Clock struct {
+    startedAt time.Time
+}
+
+func NewClock(now time.Time) *Clock {
+    return &Clock{startedAt: now}
+}
+
+func (c *Clock) StartedAt() time.Time {
+    return c.startedAt
+}
+```
+
+#### Expected behavior
+
+- Use a short documentation comment that identifies `startedAt`
+  as the time supplied when the clock was constructed.
+- Do not inflate the accessor into a lifecycle explanation
+  or invent clock, timezone, or synchronization behavior.
+
+## Document ownership at a returned boundary
+
+### Prompt
+
+Read the guidance at `~/.agents/docs/code-comments.md`.
+Do not modify files.
+
+Write documentation for `Snapshot` from the source below.
+The comment should help a caller use the method
+without exposing private helper names or implementation steps.
+
+```go
+type Entry struct {
+    Key   string
+    Value string
+}
+
+type Snapshot struct {
+    Entries []Entry
+    Labels  map[string]string
+}
+
+func (c *Catalog) Snapshot(
+    ctx context.Context,
+    generation uint64,
+) (*Snapshot, error) {
+    stored, err := c.history.load(ctx, generation)
+    if errors.Is(err, errPruned) {
+        return nil, ErrGenerationUnavailable
+    }
+    if err != nil {
+        return nil, err
+    }
+    return cloneSnapshot(stored), nil
+}
+
+func cloneSnapshot(stored *Snapshot) *Snapshot {
+    cloned := *stored
+    cloned.Entries = slices.Clone(stored.Entries)
+    cloned.Labels = maps.Clone(stored.Labels)
+    return &cloned
+}
+```
+
+### Expectations
+
+- Identify that the method returns the catalog snapshot
+  for the requested generation.
+- Explain `ErrGenerationUnavailable` when history no longer retains that generation.
+- Establish that the returned snapshot is detached rather than a live view.
+  Wording that gives the caller ownership of independent containers
+  is sufficient when it makes isolation from catalog state clear.
+- Describe the ownership contract without naming `cloneSnapshot`,
+  `slices.Clone`, or `maps.Clone`.
+- Do not replace the contract with a generic statement
+  that the method gets or returns a snapshot.
+
 ## Preserve a compatibility constraint
 
 ### Prompt
@@ -593,4 +769,3 @@ No node or ownership relationship is involved.
 
 - Use clear names and contract documentation if needed.
 - Omit a structural diagram that would merely redraw two slice operations.
-
