@@ -23,58 +23,46 @@ Retrieve specialized guidance when the task reaches the decision it governs.
 
 ## Context routing
 
-Before editing code, tests, documentation, or command behavior,
-identify the guidance that can govern the work.
-Read each applicable guide before the first decision or artifact it governs.
-Do not preload every guide merely because it exists.
-A deadline, small patch, familiar repository, or existing draft
-does not remove an applicable route.
-Before returning,
-verify the completed work against the guidance that applied.
+Route from the work in front of you,
+not only from the wording of the original request.
+Before creating, changing, or reviewing an artifact,
+or making a decision listed below,
+load every matching guide.
+Recheck the map when the work reaches a new artifact or decision.
 
-- **Prose writing** (`~/.agents/docs/prose-writing.md`):
-  Read when writing or substantially revising external prose
-  such as documentation, design documents, incident reports,
-  pull request descriptions, release notes, commit messages,
-  or substantive multi-line comments.
-  It governs reader context, causal explanation, stable referents,
-  evidence, examples, and explanatory scale.
-- **Prose formatting** (`~/.agents/docs/prose-formatting.md`):
-  Read when writing or editing durable prose artifacts.
-  It governs semantic line breaks, source representation, and line width.
-  Ordinary conversational replies do not trigger it
-  unless the user requests source-style prose.
-- **Code readability** (`~/.agents/docs/code-readability.md`):
-  Read before writing or changing non-generated code
-  when the work changes control flow, names, helpers, test setup,
-  locality, organization, or comments.
-- **Code design** (`~/.agents/docs/code-design.md`):
-  Read when designing new code or refactoring.
-  It governs abstraction boundaries, domain modeling,
-  representations, compatibility, evolution, and scoped improvement.
-- **Code comments** (`~/.agents/docs/code-comments.md`):
-  Read before writing or reviewing comments;
-  introducing or reshaping named concepts or fields;
-  changing non-obvious contracts, invariants, or representation boundaries;
-  or changing blocks whose readers must track several facts at once.
-  Make the routing decision before drafting.
-  A small patch, private symbol, or code-only request does not waive the route.
-  Before returning,
-  inspect changed concepts, fields, and cognitively dense blocks
-  against the guide's documentation and comment-selection model.
-- **Code testing** (`~/.agents/docs/code-testing.md`):
-  Read when adding, deleting, or reviewing tests.
-- **Code review** (`~/.agents/docs/code-review.md`):
-  Read whenever reviewing code or a code change.
-  Choose behavioral, architecture, readability,
-  and documentation lenses from the risks.
-- **Go** (`~/.agents/docs/go.md`):
-  Read when working with Go code.
-- **Command-line interfaces** (`~/.agents/docs/cli.md`):
-  Read when designing or changing a command-line program.
-- **Commits** (`~/.agents/skills/commit/SKILL.md`):
-  Use the commit skill when writing a commit message or committing changes.
-  Never use raw `git commit`.
+The guides below live in `~/.agents/docs/`.
+
+- `prose-writing.md`: Writing or revising prose.
+- `prose-formatting.md`:
+  Writing or editing prose other than conversational chat.
+- `code-readability.md`:
+  Writing, changing, or reviewing non-generated code.
+- `code-design.md`:
+  Designing or changing ownership, boundaries, contracts, or representations,
+  including while adding code or refactoring.
+- `code-comments.md`:
+  Writing or reviewing comments;
+  introducing or changing domain concepts, non-obvious contracts, invariants,
+  or representation boundaries;
+  or changing code whose local model is not clear from its structure.
+- `code-testing.md`:
+  Writing, changing, deleting, or reviewing tests
+  or their supporting infrastructure.
+- `code-review.md`: Reviewing code or a code change.
+- `go.md`: Working with Go code.
+- `cli.md`:
+  Designing or changing a command-line interface
+  or its boundary with application behavior.
+- `~/.agents/skills/commit/SKILL.md`:
+  Writing a commit message
+  or changing commit, branch, or stack state.
+
+Routes combine.
+For example, reviewing a Go test loads the readability,
+testing, review, and Go guides.
+
+Before returning,
+verify the completed work against every guide that applied.
 
 ## Communication
 
@@ -210,8 +198,6 @@ state the gap when it matters or omit the field;
 do not invent content to complete a structure.
 
 Make the artifact understandable on its own.
-Use `~/.agents/docs/prose-writing.md`
-for the techniques needed to apply this reader model.
 
 ## Repository state
 

@@ -3,6 +3,8 @@
 Use this guide when writing, reviewing, or revising comments
 and in-code documentation.
 
+This guide governs what comments communicate and where they belong.
+
 Documentation and implementation comments serve different readers.
 Documentation is attached to a symbol, type, field, module, package, or API
 and helps users of that interface use it without reading its implementation.
@@ -296,13 +298,9 @@ and reuse the code's names in the diagram and explanation.
 return token <= end || token > start
 ```
 
-Substantive multi-line comments are prose artifacts.
-Apply `~/.agents/docs/prose-writing.md`
-to establish prerequisites, causal relationships, examples, and boundaries.
-Apply `~/.agents/docs/prose-formatting.md`
-for scannable paragraphs, sectioning, semantic line breaks,
-and comment width.
-Use section labels when they help navigate a long explanation,
+In a teacher comment,
+use paragraphs or section labels only when they separate distinct parts
+of the model the reader must learn,
 not as a fixed template.
 
 If the full lesson applies to several implementations,

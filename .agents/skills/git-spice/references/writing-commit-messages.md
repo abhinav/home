@@ -155,11 +155,9 @@ Generic benefits such as reliability, cleanup, or maintainability add no
 meaning when the message cannot identify the concrete behavior or constraint
 they name.
 
+## Format stored messages
+
 Separate a body from the subject with a blank line.
-Keep body prose at or below 72 characters and use semantic line breaks.
-URLs, indivisible code lines or block content,
-and other evidence or markup may exceed that limit when breaking them would
-make them invalid or less useful.
 Use inline code for identifiers, paths, flags, fields, and command names.
 Put a complete command invocation in a code block when the invocation itself
 is evidence the reader may need to reproduce.

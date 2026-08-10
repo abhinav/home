@@ -3,7 +3,7 @@
 Use this guide when writing or editing durable prose artifacts,
 including Markdown, documentation, design documents, commit messages,
 pull request descriptions, changelogs, issues, release notes,
-multi-line comments, and generated prose artifacts.
+code comments, and generated prose artifacts.
 
 Conversational chat is read on the chat surface rather than maintained as a
 source artifact.
@@ -64,11 +64,11 @@ This ordering describes the value of a boundary,
 not permission to wait past the width limit for an ideal one.
 When the next strong boundary would exceed the limit,
 break earlier at the best available weaker boundary.
-An earlier strong boundary is also preferable to filling the line mechanically.
-Evaluate both sides of a proposed break.
-A boundary that fills the current line but strands a dependent fragment on the
-next line is weaker than an earlier boundary that gives both lines coherent
-roles in the sentence.
+The width limit is a ceiling, not a target.
+Choose the break that gives both resulting lines coherent roles.
+When a compact unit near the end would not fit intact,
+move it to the next line by breaking at an earlier boundary;
+do not strand part of it merely to fill the current line.
 
 Keep a compact grammatical unit together when it fits:
 a short introductory or transitional phrase with the clause it frames,

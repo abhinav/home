@@ -5,6 +5,13 @@ from run-local context that will disappear after the commit.
 The runner decides which facts belong in the message;
 the labels do not imply that every supplied fact should be retained.
 
+Apply these formatting expectations to every scenario:
+
+- Start each complete body sentence on a new physical line.
+- Keep divisible body prose at or below 72 characters.
+- Break longer sentences at meaningful grammatical or structural boundaries
+  rather than filling lines mechanically.
+
 ## 01 Give a mechanical change a useful body
 
 ### Prompt
@@ -404,3 +411,40 @@ Run-local context:
   migration, and evidence.
 - A heading for every sentence or a fixed template unrelated to the ideas.
 - A flat inventory of files, commands, or routine checks.
+
+## 11 Format added context in a replacement message
+
+### Prompt
+
+Use the commit-message reference at
+`<skill-path>/references/writing-commit-messages.md`
+and the git-spice skill at `<skill-path>/SKILL.md`.
+
+An existing commit message is:
+
+```text
+Preserve tenant archive identity
+
+Format 2 archives omit tenant identifiers,
+so archives from different tenants can share one session identity.
+```
+
+The user asks to append this established context to the commit message:
+
+- Format 3 stores the tenant identifier.
+- Readers continue to accept format 2 during the transition.
+
+Write the full replacement commit message only.
+Do not propose or run commands.
+
+### Expected behavior
+
+- Preserve the original explanation and the added transition context.
+- Keep the existing semantic line break.
+- Start each added sentence on a new physical line.
+
+### Unacceptable behavior
+
+- Joining the added sentences on one physical line.
+- Dropping or paraphrasing away the established explanation.
+- Treating an append request as permission to replace only the added text.

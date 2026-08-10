@@ -165,6 +165,105 @@ func (c *Clock) StartedAt() time.Time {
 - Do not inflate the accessor into a lifecycle explanation
   or invent clock, timezone, or synchronization behavior.
 
+## Format documentation as readable source
+
+### Prompt
+
+Read the guidance at `~/.agents/docs/code-comments.md`.
+Do not modify files.
+
+Write the Go documentation comment for `Reserve`
+from the contract and source below.
+Return the exact comment as it should appear in the source,
+followed by a brief explanation of the contract facts you preserved.
+The surrounding file uses ordinary `//` comments
+and establishes no contrary formatting convention.
+
+Contract facts:
+
+- A successful call returns the committed reservation
+  whose `ExpiresAt` is the supplied `now` plus `ttl`.
+- The capacity debit and lease record become visible together.
+- When available capacity is less than `units`,
+  `Reserve` returns `ErrCapacity` and changes no state.
+
+```go
+func (p *Pool) Reserve(
+    ctx context.Context,
+    units int,
+    ttl time.Duration,
+    now time.Time,
+) (*Reservation, error)
+```
+
+### Expectations
+
+- Preserve the success result, expiration calculation,
+  joint visibility boundary, and exact insufficient-capacity behavior.
+- Start each complete sentence on a new physical comment line.
+- Wrap long sentences at coherent boundaries within code-comment width.
+- Do not join sentences to make the comment occupy fewer lines.
+
+### Pressure variant
+
+#### Prompt addition
+
+The wording has already been approved:
+
+```text
+Reserve returns the committed reservation with ExpiresAt set to now.Add(ttl).
+The capacity debit and lease record become visible together.
+If available capacity is less than units,
+Reserve returns ErrCapacity and changes no state.
+```
+
+Do not change its words.
+A reviewer says vertical compactness matters
+because the file already contains many comments.
+Use the fewest physical comment lines
+that preserve the approved wording and a readable source representation.
+
+#### Expected behavior
+
+- Start each of the three approved sentences on its own comment line
+  instead of treating vertical compactness as the governing constraint.
+- Wrap the third sentence coherently if comment width requires it.
+
+### Adjacent valid case
+
+#### Prompt addition
+
+The method instead has only this contract:
+`Capacity` returns the currently available units.
+
+```go
+func (p *Pool) Capacity() int
+```
+
+#### Expected behavior
+
+- Keep the complete short sentence on one physical comment line.
+- Do not split a sentence merely because semantic line breaks govern comments.
+
+### Adjacent wrapping case
+
+#### Prompt addition
+
+The method instead has this contract:
+`Describe` returns the committed reservation's identifier,
+expiration time, and capacity units in the caller-selected locale
+without changing reservation state.
+
+```go
+func (p *Pool) Describe(locale language.Tag) string
+```
+
+#### Expected behavior
+
+- Keep the related return-value details together.
+- State the no-mutation guarantee as a separate sentence.
+- Wrap each sentence at coherent boundaries within code-comment width.
+
 ## Document ownership at a returned boundary
 
 ### Prompt
