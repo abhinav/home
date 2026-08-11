@@ -79,6 +79,16 @@ At the system root,
 retain only coordination whose scope is genuinely global;
 let cohesive components own the state and behavior they govern.
 
+Ownership can be nested.
+An owner may divide a larger responsibility
+into cohesive sub-responsibilities owned by private components.
+The outer owner retains the larger outcome,
+but supplies each sub-owner with the required inputs and capabilities
+and depends on its result
+without coordinating its internal policy or sequence.
+If that knowledge remains on both sides,
+the new boundary is a helper, not an owner.
+
 Place each value where its lifetime and rate of change match the abstraction.
 Application-wide or object-wide values usually belong at construction.
 Per-operation values belong on the operation.
