@@ -102,6 +102,16 @@ change cannot show and materially changes how a reader evaluates the claim.
 The useful question is not what commands ran,
 but what the investigation established that would otherwise be lost.
 
+Preserve evidence at the fidelity needed to carry that durable context.
+When compact observed input or output motivated the change,
+preserve it verbatim instead of reducing it to a summary.
+Its original form retains authoritative wording and searchable evidence
+that the final tree cannot provide.
+When raw evidence is long, noisy, or sensitive,
+keep the smallest safe, self-contained portion that preserves material
+wording, structure, thresholds, and search terms.
+Paraphrase when the evidence's exact form adds nothing to the conclusion.
+
 A final regression test shows that coverage exists.
 It does not show that the test reproduced the original failure before the fix.
 When that before-and-after sequence establishes the causal connection,
@@ -161,4 +171,6 @@ Separate a body from the subject with a blank line.
 Use inline code for identifiers, paths, flags, fields, and command names.
 Put a complete command invocation in a code block when the invocation itself
 is evidence the reader may need to reproduce.
+Put multi-line output in a fenced code block when its exact text is durable
+evidence for the problem or result.
 Place issue references and trailers after the explanatory body.

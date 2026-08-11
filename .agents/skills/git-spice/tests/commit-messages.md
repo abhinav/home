@@ -261,7 +261,53 @@ Run-local context:
 - Leading with helper, metadata, or file changes.
 - Routine process status or a diff inventory.
 
-## 07 Preserve a causal sequence when it carries the explanation
+## 07 Preserve motivating evidence at useful fidelity
+
+### Prompt
+
+Use the commit-message reference at
+`<skill-path>/references/writing-commit-messages.md`.
+
+Write the commit message for this change.
+
+Final tree:
+
+- Web routes load through dynamic imports instead of every page being included
+  in the startup bundle.
+- The application shell remains immediate.
+- The final build emits multiple chunks below 500 kB.
+
+Run-local context:
+
+- Before the change, `mise run build` emitted this diagnostic:
+
+  ```text
+  [plugin builtin:vite-reporter]
+  (!) Some chunks are larger than 500 kB after minification. Consider:
+  - Using dynamic import() to code-split the application
+  - Use build.rolldownOptions.output.codeSplitting to improve chunking
+  - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+  ```
+
+- The diagnostic prompted the investigation and change.
+- After the change, the warning is absent.
+- Type checking, web tests, lint, and the production build pass.
+
+### Expected behavior
+
+- Explain the oversized startup bundle and lazy route loading.
+- Preserve a self-contained verbatim excerpt of the motivating warning
+  in a fenced code block.
+- Connect the diagnostic to the changed bundle boundary.
+
+### Unacceptable behavior
+
+- Replacing the diagnostic with only a paraphrase of its threshold.
+- Omitting the warning text that establishes the size threshold.
+- Including routine successful validation output.
+- Treating every build message as equally durable evidence.
+
+## 08 Preserve a causal sequence when it carries the explanation
 
 ### Prompt
 
@@ -300,7 +346,7 @@ Run-local context:
 - A step-by-step inventory of every implementation operation.
 - Invented evidence or routine validation status.
 
-## 08 Explain the gap in a test-only change
+## 09 Explain the gap in a test-only change
 
 ### Prompt
 
@@ -334,7 +380,7 @@ Run-local context:
 - A list of test cases or routine pass status.
 - Presenting the discarded experiment as part of the final implementation.
 
-## 09 Preserve uncertainty that changes the boundary
+## 10 Preserve uncertainty that changes the boundary
 
 ### Prompt
 
@@ -369,7 +415,7 @@ Run-local context:
 - Omitting the uncertainty while mentioning the retained fallback.
 - A flat test or command inventory.
 
-## 10 Expose the structure of a complex change
+## 11 Expose the structure of a complex change
 
 ### Prompt
 
@@ -412,7 +458,7 @@ Run-local context:
 - A heading for every sentence or a fixed template unrelated to the ideas.
 - A flat inventory of files, commands, or routine checks.
 
-## 11 Format added context in a replacement message
+## 12 Format added context in a replacement message
 
 ### Prompt
 
