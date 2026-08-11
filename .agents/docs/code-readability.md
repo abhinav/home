@@ -93,13 +93,13 @@ Arrange code around coherent operations and in the order a reader needs it,
 not by declaration kind or arbitrary size.
 
 Physical organization is part of the code's representation.
-Optimize file and module boundaries for coherent changes,
-not declaration lookup:
-search can locate a symbol,
-but it cannot recover ownership scattered across boundaries.
-Layout conventions are evidence about discoverability,
-not authority over ownership.
-Apply them within meaningful boundaries.
+Optimize file and module boundaries primarily for coherent ownership
+and the changes that ownership should localize.
+Declaration-kind and lookup conventions can improve discovery
+within those meaningful boundaries,
+but they should not fragment one operation or policy across several owners.
+Search can locate a symbol;
+it cannot recover ownership scattered across boundaries.
 When a representative change repeatedly crosses boundaries
 that replace no knowledge,
 regroup the code or deepen the owner.
@@ -111,6 +111,11 @@ across names, types, comments, and neighboring modules.
 Introduce another term only for a meaningful distinction.
 When a representation changes but the concept does not,
 retain the domain term or make the transformation explicit.
+Treat a change to an established term as a scoped migration:
+update one coherent internal scope together,
+keep the old term only where compatibility requires it,
+and make the old-to-new transformation explicit at that boundary.
+Do not alternate the terms for one unchanged concept within a scope.
 
 Share behavior when several sites enforce one invariant, policy,
 or source of truth and must change together;

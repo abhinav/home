@@ -494,3 +494,141 @@ Do not propose or run commands.
 - Joining the added sentences on one physical line.
 - Dropping or paraphrasing away the established explanation.
 - Treating an append request as permission to replace only the added text.
+## Omit process-only validation narration
+
+### Prompt
+
+Draft a commit message for this change:
+
+- added a failing unit test for empty region identifiers;
+- changed the parser to reject empty region identifiers;
+- ran the focused test successfully; and
+- observed no pre-change runtime failure, external symptom, or other evidence
+  beyond the test-first development sequence.
+
+### Expectations
+
+- Explain the parser contract and why rejection belongs at that boundary.
+- Omit the test-first chronology.
+- Omit a `Validation` section.
+- Do not treat writing or running routine tests
+  as claim-bearing commit-message evidence.
+
+### Pressure variant
+
+The author asks for a `Validation` section
+to prove that the work followed TDD.
+
+- Still omit the section.
+- Reject development-process narration
+  that gives a future maintainer no evidence about the claimed behavior.
+
+### Adjacent valid case
+
+Before the change, a supported command with an empty region identifier
+was observed to enqueue work in the default region.
+After the change, the same command is rejected before enqueueing,
+and the observed result directly supports the message's boundary claim.
+
+- Include the pre-change failure and post-change observation
+  when they materially support the causal explanation.
+- A `Validation` section is optional;
+  if used, include only the claim-bearing evidence and any material gap.
+- Do not add routine test-writing chronology.
+
+## Name the public surface needed to use and observe the change
+
+### Prompt
+
+Draft a commit message for a new archive recovery policy.
+
+Callers select it with:
+
+```rust
+ArchiveReader::open_with_policy(RecoveryPolicy::CompleteBlocks)
+```
+
+They observe an incomplete archive through:
+
+```rust
+ArchiveStatus::WaitingForBlocks
+```
+
+The implementation uses private helpers
+`scanRecoveryBlocks` and `markArchivePending`.
+
+### Expectations
+
+- Name the exact supported constructor syntax and observable status
+  because readers need them to invoke and recognize the behavior.
+- Explain the caller-visible contract those public surface areas establish.
+- Omit private helper names and internal call sequencing.
+- Do not replace actionable public syntax
+  with a generic statement that recovery behavior changed.
+
+### Pressure variant
+
+The author asks to list every modified function
+so reviewers can see the implementation work.
+
+- Keep the message focused on the supported public surface.
+- Omit private implementation inventory
+  that does not help a reader use, observe, maintain, or recover the change.
+
+### Adjacent valid case
+
+The commit repairs only an internal recovery-index corruption
+and changes no supported invocation, configuration, output, or status.
+
+- Explain the internal ownership and failure mechanism
+  needed by maintainers.
+- Do not invent or force a public API name
+  when no public surface changed.
+
+## Reevaluate the complete message during revision
+
+### Prompt
+
+Revise this existing commit message after the implementation changed:
+
+```text
+Cache parsed policies globally
+
+Build one process-wide policy cache so every client reuses parsed entries.
+
+Validate policy syntax lazily on the first request.
+```
+
+The final implementation instead gives each client an owned cache
+and validates all configured policies during client construction.
+No process-wide cache or lazy request-time validation remains.
+
+Return the complete revised commit message.
+
+### Expectations
+
+- Reevaluate the subject and every body claim against the final change.
+- Replace the global-cache and lazy-validation explanation coherently.
+- Explain client ownership and construction-time validation
+  when those facts are supported and material.
+- Preserve existing text only when it remains accurate and useful.
+- Return one complete message,
+  not local edits or an appended correction.
+
+### Pressure variant
+
+The author says only the final sentence is stale
+and asks for the smallest textual edit.
+
+- Rewrite the subject and body as needed
+  so the complete message describes one coherent final design.
+- Reject patch-like copyediting when earlier claims also became false.
+
+### Adjacent valid case
+
+A revision changes only the name of one supported configuration key.
+The existing causal explanation and all other claims remain accurate.
+
+- Update the affected public name wherever needed.
+- Preserve supported, still-useful explanation.
+- Do not rewrite unrelated parts merely because the message is being revised.

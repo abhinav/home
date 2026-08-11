@@ -191,3 +191,108 @@ A language feature naturally passes through every phase.
 - Centralize only a semantic decision that is actually duplicated;
   do not reorganize the compiler into feature folders merely to reduce
   the number of crossed modules.
+## Keep staged terminology coherent within each migration boundary
+
+### Prompt
+
+Read the guidance at `~/.agents/docs/code-readability.md`.
+Do not modify files.
+
+A service is migrating the domain term `job` to `operation`.
+Its internal scheduler has already adopted `Operation`,
+but the persisted wire format must continue accepting the field `job_id`
+during a compatibility period.
+
+A patch renames only the public type
+while leaving internal variables, helpers, and error text split
+between `job` and `operation`.
+It also passes `job_id` through several layers
+before converting it near the scheduler.
+
+Recommend the terminology and transformation boundaries.
+
+### Expectations
+
+- Use `operation` coherently throughout the migrated internal scope.
+- Retain `job_id` only at the compatibility boundary that owns the old format.
+- Transform the compatibility representation visibly
+  when it enters the current domain model.
+- Update related names together when they express one concept.
+- Do not leave mixed terminology throughout the implementation
+  merely to reduce the current diff.
+- Preserve old wording only where callers, persisted data,
+  or another established contract still require it.
+
+### Pressure variant
+
+The patch author says renaming private helpers increases review size,
+both terms are understandable,
+and the old wire field will disappear in a later release.
+
+- Keep the internal scope coherent now.
+- Confine the old term to the supported compatibility boundary.
+- Reject temporary mixed vocabulary
+  when one current concept owns the migrated scope.
+
+### Adjacent valid case
+
+Two independently owned subsystems use `job` and `operation`
+for genuinely different domain concepts.
+Their integration boundary maps between them explicitly.
+
+- Preserve both established terms.
+- Keep the conversion visible at the integration boundary.
+- Do not force a repository-wide rename
+  across concepts that are not semantically equivalent.
+
+## Prefer ownership locality without defeating established lookup structure
+
+### Prompt
+
+Read the guidance at `~/.agents/docs/code-readability.md`.
+Do not modify files.
+
+A package convention places exported request types
+next to the operations that own and change them.
+Within each operation,
+the constructor appears before methods
+and validation helpers follow the method they support.
+
+A patch moves every request type into one alphabetized `types.go`
+and every validation helper into one `validation.go`
+so declarations and helpers are easier to find by category.
+
+Recommend the file and declaration organization.
+
+### Expectations
+
+- Keep each request type near the operation that owns and changes it.
+- Keep supporting validation near the behavior it explains.
+- Use established declaration order and search conventions
+  within each meaningful operation boundary.
+- Do not replace change locality
+  with repository-wide grouping by syntactic category.
+- Do not reject conventions merely because ownership locality is primary.
+
+### Pressure variant
+
+A reviewer says category files make names easier to search,
+the repository has used them elsewhere,
+and the move changes no behavior.
+
+- Evaluate whether the moved declarations still change with one owner.
+- Preserve operation locality when category files scatter one responsibility.
+- Apply lookup conventions inside coherent boundaries
+  rather than treating global alphabetical grouping as inherently clearer.
+
+### Adjacent valid case
+
+A package contains generated protocol declarations
+that are consumed by many independent operations
+and change only when the protocol schema changes.
+The repository keeps these declarations in one predictable generated file.
+
+- Keep the shared declarations at their actual schema-owned boundary.
+- Preserve the established generated-file and lookup conventions.
+- Do not colocate them with one arbitrary consumer
+  merely to satisfy a preference for physical proximity.

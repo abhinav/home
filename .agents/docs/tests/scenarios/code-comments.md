@@ -868,3 +868,124 @@ No node or ownership relationship is involved.
 
 - Use clear names and contract documentation if needed.
 - Omit a structural diagram that would merely redraw two slice operations.
+## Keep guide-comment labels accurate across their full span
+
+### Prompt
+
+Read the guidance at `~/.agents/docs/code-comments.md`.
+Do not modify files.
+
+Review the guide comments in this cache-shutdown routine.
+Maintainers scan these regions when adding related cleanup.
+The second region releases both client-held entries
+and the shared notification registration.
+
+```go
+func closeCache(c *cache) {
+    // Release decoded values.
+    clearDecodedEntries(c)
+    clearDecodedMetadata(c)
+
+    // Release client-held entries.
+    clearPendingEntries(c)
+    clearCommittedEntries(c)
+    unregisterEvictionNotifications(c)
+
+    // Close backing storage.
+    flushIndex(c)
+    closeStore(c)
+}
+```
+
+Show which comments you would keep, delete, or rewrite.
+Explain each disposition.
+
+### Expectations
+
+- Keep guide comments that turn several operations
+  into stable maintenance regions.
+- Rewrite the second label so its full span includes
+  both entry cleanup and notification unregistration.
+- Evaluate a label against every operation in its region,
+  not only its first or most common operations.
+- Do not split one coherent maintenance region
+  merely to preserve an inaccurate existing label.
+
+### Pressure variant
+
+A reviewer says the notification call is only one line,
+the current label is already useful for most of the region,
+and changing it would make the comment longer.
+
+- Rewrite the label so it remains accurate across the full span.
+- Reject line count, sunk cost, and majority coverage
+  as substitutes for an accurate reading-scale abstraction.
+
+### Adjacent valid case
+
+A shutdown routine has one region containing only
+subscription and notification-registration cleanup.
+Those operations change together,
+and the label names both responsibilities accurately.
+
+- Keep the guide comment as a stable maintenance boundary.
+- Do not delete an accurate region label
+  merely because each individual call is descriptively named.
+
+## Document dependency meaning and non-obvious local context
+
+### Prompt
+
+Read the guidance at `~/.agents/docs/code-comments.md`.
+Do not modify files.
+
+A package coordinates report delivery.
+Its package comment currently says only that it imports
+a queue, a renderer, and an object store.
+
+In its integration fixture:
+
+- a manual clock keeps retry deadlines deterministic;
+- the fake store exposes completed uploads to callers
+  only after `Publish` succeeds; and
+- a reusable compressed report is retained
+  because constructing it dominates the test runtime.
+
+Write the package documentation and implementation comments
+that materially help readers.
+Explain the role and placement of each comment.
+
+### Expectations
+
+- Describe what each dependency represents
+  at the package boundary rather than merely listing imports.
+- Explain the manual clock where readers need
+  the fixture's deterministic-time model.
+- Document the fake store's externally observable publication behavior
+  at the boundary that establishes it.
+- Explain the retained report's measured or established performance constraint
+  where it governs reuse.
+- Do not narrate setup statements or private helper calls.
+- Do not invent ownership, behavior, or performance claims
+  beyond the supplied evidence.
+
+### Pressure variant
+
+A reviewer says fixture comments are always noise,
+the fake is not production code,
+and performance details belong only in benchmarks.
+
+- Preserve comments needed to understand fixture purpose,
+  observable fake behavior, and the real reuse constraint.
+- Keep each comment at the narrowest boundary that owns its meaning.
+- Do not turn the package comment into an implementation inventory.
+
+### Adjacent valid case
+
+A small unit test constructs ordinary values with descriptive names,
+the fake behaves exactly like the visible interface contract,
+and setup cost is negligible.
+
+- Omit comments that would only narrate setup.
+- Do not add performance or behavioral explanations
+  when names, structure, and the interface carry the complete model.

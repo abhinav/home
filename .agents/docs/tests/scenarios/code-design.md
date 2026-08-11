@@ -471,3 +471,139 @@ several implementations already exist.
 - Permit a narrow input interface owned by the consumer.
 - Do not turn `return structs` into a ban on input interfaces.
 
+## Preserve default behavior and reject invalid options at construction
+
+### Prompt
+
+Read the guidance at `~/.agents/docs/code-design.md`.
+Do not modify files.
+
+A public client accepts this configuration:
+
+```go
+type RetryMode int
+
+const (
+    RetryDefault RetryMode = iota
+    RetryDisabled
+    RetryBounded
+)
+
+type Config struct {
+    RetryMode RetryMode
+    RetryLimit int
+}
+
+func NewClient(cfg Config) *Client
+```
+
+The established zero-value behavior retries transient failures three times.
+`RetryBounded` requires a positive limit.
+Values outside the declared modes are unsupported.
+
+A patch changes `RetryDefault` to mean no retries
+and lets each request path interpret unsupported combinations independently.
+Recommend the design and identify where each decision belongs.
+
+### Expectations
+
+- Preserve the established retry behavior for the zero value
+  unless the public contract is deliberately changed.
+- Resolve `RetryDefault` to the established behavior
+  at construction or the nearest configuration boundary.
+- Reject unsupported modes and invalid bounded limits at that boundary.
+- Do not allow request paths to interpret the same invalid state differently.
+- Prefer a constructor result that can report invalid configuration
+  over deferring failure to unrelated work.
+- Repair the configuration boundary and its representation
+  even when scattered request-path checks would produce a smaller diff.
+
+### Pressure variant
+
+The patch author says only one request path currently uses retries,
+changing the constructor signature touches more callers,
+and treating zero as disabled makes the implementation shorter.
+
+- Preserve compatibility with the established zero-value contract.
+- Keep validation and default resolution at the governing boundary.
+- Evaluate simplicity in the resulting design,
+  not by the number of lines changed in the patch.
+
+### Adjacent valid case
+
+The product intentionally introduces a new major-version constructor
+whose documented contract disables retries by default.
+A migration guide identifies the changed behavior,
+and callers opt into the new constructor explicitly.
+
+- Permit the deliberate default change at the versioned boundary.
+- Keep unsupported choices invalid.
+- Do not preserve the old default inside an explicitly breaking contract.
+
+## Distinguish fixed bindings from transitively immutable state
+
+### Prompt
+
+Read the guidance at `~/.agents/docs/code-design.md`.
+Do not modify files.
+
+A package declares a process-wide registry:
+
+```go
+var handlers = map[string]Handler{
+    "json": jsonHandler,
+    "text": textHandler,
+}
+
+func Register(name string, handler Handler) {
+    handlers[name] = handler
+}
+
+func HandlerFor(name string) (Handler, bool) {
+    handler, ok := handlers[name]
+    return handler, ok
+}
+```
+
+A review describes `handlers` as fixed package configuration
+because the variable is never rebound.
+Concurrent callers can register and look up handlers.
+
+Recommend the final ownership and representation.
+Explain whether the process-wide declaration is immutable.
+
+### Expectations
+
+- Treat the map as writable shared state
+  because its contents can change even when its binding does not.
+- Do not describe the declaration as immutable
+  based only on the absence of rebinding.
+- Establish one owner for mutation and synchronization,
+  or move registration into an explicitly owned registry instance.
+- Keep construction, mutation, lookup, and concurrency policy
+  at the same governing boundary.
+- Prefer the representation whose ownership remains visible to callers
+  over preserving the package global with local patches.
+
+### Pressure variant
+
+A reviewer proposes adding a lock only inside `Register`
+because that is the smallest patch
+and current tests do not perform concurrent lookup.
+
+- Account for every read and write of the shared state.
+- Reject a partial synchronization patch
+  that leaves lookup racing with registration.
+- Repair the ownership boundary rather than optimizing for diff size.
+
+### Adjacent valid case
+
+The supported handlers are compiled into an unexported read-only slice.
+No API returns a writable alias,
+no runtime path mutates its elements,
+and lookup derives results without caching into shared state.
+
+- Permit the process-wide declaration as fixed data.
+- Verify immutability transitively through its reachable contents and aliases.
+- Do not introduce registry ownership or synchronization
+  when no writable shared state exists.

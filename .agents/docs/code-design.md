@@ -106,11 +106,13 @@ and makes dependencies visible.
 
 Stateful collaborators and replaceable policy should be visible
 at a construction or operation boundary.
-Process-wide reachability does not give a mutable global,
-default client, registry, or service locator a meaningful owner.
-Immutable declarations with one clear owner can remain process-wide;
-the problem is hidden behavior and state,
-not global addressability by itself.
+A mutable global, default client, registry, or service locator
+has process-wide reachability but no meaningful owner.
+A process-wide declaration with one clear owner is acceptable only when
+neither it nor anything transitively reachable from it
+exposes writable shared state.
+Global addressability is not itself the problem;
+hidden mutation, replaceable policy, or lifecycle is.
 
 Do not replace visible dependencies with one unrelated application context.
 A broad bag couples every consumer to the shape of the whole application
@@ -204,6 +206,19 @@ when it is meaningful to callers,
 when several values change together,
 or when demonstrated evolution at a stable boundary
 would otherwise force mechanical changes across callers.
+The configuration concept owns the meaning of omission, defaults,
+supported choices, and invalid combinations.
+Normalize and validate those surface states
+at construction or the nearest API boundary,
+then give downstream code a validated representation
+whose meaning it does not have to reinterpret.
+When adding an optional choice to a stable boundary,
+preserve established behavior when that choice is omitted,
+defaulted, or zero-valued where applicable,
+unless the contract deliberately changes.
+Reject unsupported or conflicting choices there
+instead of letting an accidental fallback select behavior
+or making every consumer reinterpret the configuration.
 Do not wrap a small internal signature in a vague object
 only to reserve space for imagined growth.
 
@@ -280,7 +295,13 @@ Before settling on a design:
 6. Remove boundaries that add navigation without replacing knowledge.
 7. Check public behavior and repository scope before expanding the surface.
 
-Prefer the smallest design that gives the important decisions a clear owner.
+Prefer the simplest coherent design
+that gives the important decisions a clear owner.
+Judge simplicity in the resulting ownership model,
+not by the size of the patch.
+When a governing boundary is wrong,
+repair and integrate that boundary
+instead of adding a local exception that creates another owner.
 Complex domains remain complex;
 good design keeps that complexity cohesive
 instead of making every caller carry a fragment of it.

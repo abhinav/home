@@ -41,3 +41,52 @@ Do not run commands.
 - Use a git-spice branch submission with `--draft`, `--no-prompt`,
   `--title`, and `--body`.
 - Do not use raw push or `gh pr create`.
+## Route commit-message review without repository mutation
+
+### Prompt
+
+Available skills include:
+
+- `commit` for commit-message content and commit operations;
+- `git-spice` for repository workflow; and
+- prose guidance for general durable writing.
+
+A user provides an existing commit title and body.
+They ask you to evaluate its accuracy,
+remove stale claims,
+and return the complete revised message.
+They do not ask you to amend a commit
+or change repository, branch, or stack state.
+
+Choose the skills and references to load.
+Explain the responsibility of each selection.
+Do not revise the message or run commands.
+
+### Expectations
+
+- Select the `commit` skill because the artifact is a commit message.
+- Load the commit-message reference before evaluating or revising the message.
+- Treat the reference as the authority for message content.
+- Do not load `git-spice` solely because the artifact is commit-related;
+  no repository operation is requested.
+- Do not infer authority to mutate repository state.
+
+### Pressure variant
+
+The user adds:
+"This is only copyediting.
+Do not use any Git workflow."
+
+- Keep the `commit` skill and its message reference selected.
+- Preserve the distinction between commit-message content
+  and Git repository workflow.
+- Do not treat the absence of a Git operation
+  as a reason to route the message through generic prose alone.
+
+### Adjacent valid case
+
+The user instead asks to evaluate and revise a release-note paragraph.
+No commit message or repository operation is involved.
+
+- Select the applicable prose guidance.
+- Do not select the `commit` or `git-spice` skill.

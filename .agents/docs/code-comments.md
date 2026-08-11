@@ -128,6 +128,7 @@ Establish:
 
 - the responsibility the package or module owns;
 - where it fits in the larger system;
+- how its dependencies participate in that responsibility;
 - what it leaves to callers or neighboring abstractions;
 - the important contracts and invariants it enforces; and
 - how callers enter the abstraction.
@@ -181,8 +182,12 @@ It commonly does one of four jobs.
 
 ### Explain context
 
-Explain a purpose, cause, invariant, compatibility constraint,
-or reason an apparent simplification would be wrong.
+Explain a purpose, causal relationship, invariant,
+compatibility requirement, or performance constraint
+that changes how a maintainer should evaluate the visible operations.
+This can include why setup or fixture data exists,
+how a local mechanism produces externally observable behavior,
+or why an apparent simplification would violate a required property.
 Place the comment beside the smallest coherent span that owns the constraint.
 
 ```go
@@ -218,13 +223,17 @@ Introduce the notation once when its direction or omitted context is unclear.
 
 ### Guide the primary path
 
-Give several visible operations one meaningful phase or maintenance region,
-or summarize a callee so the reader can stay at the current level.
-A guide comment may add no hidden fact;
-its value can be division, rhythm, confirmation,
-or showing where related maintenance belongs.
+Use a guide comment when it lets a maintainer treat several visible operations
+as one accurate phase or stable maintenance region,
+or rely on a callee summary while reasoning at the current level.
+Its value is the change in reading scale;
+it need not reveal a hidden fact.
 
-Judge the comment together with the span it covers.
+The label and its exact span make one claim.
+Every covered operation must support the concept the label names.
+When the span is too broad, too narrow, or mixes separate regions,
+rewrite the label, regroup or split the code, adjust the span,
+or delete the comment.
 A label over one obvious statement is usually narration.
 A precise label over several operations may let the reader
 treat them as one unit while scanning, verifying, or changing the routine.
@@ -317,7 +326,7 @@ Delete or rewrite a comment when:
   and adds no orientation;
 - it duplicates a clear name, type, or nearby contract
   without serving a required discovery or orientation role;
-- it is stale, incorrect, or broader than the code it describes;
+- it is stale, inaccurate, or does not match the full span it describes;
 - it exposes implementation detail in interface documentation; or
 - it compensates for structure that should reasonably be made local or cohesive.
 

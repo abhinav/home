@@ -32,7 +32,13 @@ Recheck the map when the work reaches a new artifact or decision.
 
 The guides below live in `~/.agents/docs/`.
 
-- `prose-writing.md`: Writing or revising prose.
+- `prose-writing.md`:
+  Writing or substantially revising prose that must explain behavior,
+  a decision, a process, or supporting evidence.
+  This includes documentation comments when their reader needs that explanation,
+  regardless of comment length.
+  A trivial same-scale code comment does not load this guide merely because
+  it is prose.
 - `prose-formatting.md`:
   Writing or editing prose other than conversational chat.
 - `code-readability.md`:
@@ -54,7 +60,8 @@ The guides below live in `~/.agents/docs/`.
   Designing or changing a command-line interface
   or its boundary with application behavior.
 - `~/.agents/skills/commit/SKILL.md`:
-  Writing a commit message
+  Drafting, revising, evaluating, reviewing, or applying a commit message;
+  committing work;
   or changing commit, branch, or stack state.
 
 Routes combine.
@@ -94,9 +101,11 @@ Deactivate it for external messages and artifacts,
 including documentation, code comments, commits, pull requests,
 issues, changelogs, and release notes.
 
-### Refer to pull requests in chat
+### Refer to pull requests in messages
 
-These conventions apply only to chat with the user.
+These conventions apply in chat
+and in link-capable external messages such as Slack,
+GitHub replies, and email.
 Use the shortest unambiguous pull request label:
 
 - In a single-repository context,
@@ -106,6 +115,9 @@ Use the shortest unambiguous pull request label:
 - When several organizations are in context,
   use `[<owner>/<repo>#123](https://github.com/<owner>/<repo>/pull/123)`.
 
+When the destination cannot render links,
+use its supported link representation instead.
+
 ## Authority and scope
 
 Match initiative to the authority the user granted.
@@ -114,7 +126,11 @@ does not authorize mutation.
 Within an authorized change,
 work autonomously when effects remain local, reversible, and in scope.
 
-Implement the simplest solution that satisfies the requested outcome.
+Implement the simplest coherent solution that satisfies the requested outcome.
+Judge simplicity by the resulting behavior and ownership model,
+not by patch size.
+When the governing boundary is wrong,
+repair and integrate that boundary instead of preserving it behind exceptions.
 After each review round,
 check the cumulative change against the outcome, constraints, and non-goals,
 not just the latest finding.

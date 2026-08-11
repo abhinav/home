@@ -66,9 +66,10 @@ When the next strong boundary would exceed the limit,
 break earlier at the best available weaker boundary.
 The width limit is a ceiling, not a target.
 Choose the break that gives both resulting lines coherent roles.
-When a compact unit near the end would not fit intact,
-move it to the next line by breaking at an earlier boundary;
-do not strand part of it merely to fill the current line.
+When a compact grammatical unit does not fit on the current line,
+keep it intact on the next line.
+Do not split the unit merely to fill the current line,
+or move earlier material merely to balance the resulting lengths.
 
 Keep a compact grammatical unit together when it fits:
 a short introductory or transitional phrase with the clause it frames,
@@ -77,10 +78,13 @@ When the unit does not fit,
 divide it into the largest readable groups that do.
 An inline list is one coordinated unit.
 When it must span lines,
-group adjacent items so each line carries a meaningful part of that unit;
-an earlier break is better than filling one line and stranding a short final
-item on the next.
-Do not optimize for visually equal line lengths.
+divide it into the largest readable groups of adjacent items.
+An item boundary is a possible weak break,
+not a reason to start every item on a new line.
+A short remaining group, even one item,
+may stand alone when it is a coherent part of the sentence.
+When each item needs its own line for clarity,
+use a real block list instead.
 
 | Target | Preferred upper limit | Absolute upper limit |
 | --- | ---: | ---: |
@@ -115,7 +119,8 @@ then stores those values before dispatch
 so retries can recover the same request identity.
 ```
 
-The first break groups the coordinated list without stranding its final item.
+The first break divides the coordinated list into readable adjacent groups;
+the number of items on each line is not the governing property.
 The next breaks separate the action and its consequence
 without carrying an earlier line past its width.
 The commas inside the compact list do not create separate thoughts.

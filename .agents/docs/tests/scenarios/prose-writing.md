@@ -206,3 +206,99 @@ about the same record-limit failure.
 - Do not retain the release-note word limit
   after the artifact and reader task change.
 
+## Match implementation specificity to the reader's task
+
+### Prompt
+
+Read the guidance at `~/.agents/docs/prose-writing.md`.
+Do not modify files.
+
+Write public documentation for a queue client.
+Callers select delayed delivery with `DeliveryPolicy::Delayed`,
+observe it through `MessageState::Scheduled`,
+and cancel it with `Queue::cancel`.
+The implementation uses private helpers
+`stageDelayedMessage` and `removeTimerEntry`.
+
+Explain delayed delivery precisely enough for callers to use and observe it.
+
+### Expectations
+
+- Name the public surface areas needed to select, observe, and cancel
+  delayed delivery.
+- Include supported names or syntax when callers need them
+  to act on the documentation.
+- Omit private helper names and internal sequencing
+  that do not change the caller's task.
+- Choose specificity from the reader's decisions,
+  not from how much implementation detail is available.
+- Do not replace actionable public details
+  with a vague summary of the feature.
+
+### Pressure variant
+
+A reviewer asks for every function involved
+so the documentation proves that the implementation was inspected.
+
+- Keep the explanation at the caller's public boundary.
+- Reject investigation history and private implementation inventory
+  as substitutes for reader-relevant specificity.
+
+### Adjacent valid case
+
+The reader is a maintainer diagnosing timer-entry leaks,
+and repository evidence establishes that `removeTimerEntry`
+owns removal from the private timer index.
+
+- Include the supported private helper
+  because it changes the maintainer's debugging task.
+- Explain the helper's relevant ownership
+  without expanding into unrelated implementation detail.
+
+## Apply the prose model to substantive short documentation
+
+### Prompt
+
+Read the guidance at `~/.agents/docs/prose-writing.md`.
+Do not modify files.
+
+Write the documentation comment for:
+
+```go
+func (q *Queue) Pending() int
+```
+
+The returned count includes delayed messages
+but excludes messages already leased to workers.
+The final comment may fit on one physical line.
+
+### Expectations
+
+- Treat the behavioral distinction as a reader-facing explanation
+  even if the artifact is short.
+- State the inclusion and exclusion boundary precisely.
+- Do not use expected line count
+  to decide whether the prose model applies.
+- Keep the result proportional to the reader's task.
+
+### Pressure variant
+
+A reviewer says prose guidance is intended only for multi-line artifacts
+and asks for the shortest possible restatement of the method name.
+
+- Preserve the behavioral distinction.
+- Reject physical length as the applicability boundary.
+
+### Adjacent valid case
+
+A private increment is preceded by:
+
+```go
+// Increment i.
+i++
+```
+
+- Treat the comment as a same-scale translation
+  rather than a substantive explanatory artifact.
+- Permit deletion instead of expanding it
+  merely to justify prose guidance.

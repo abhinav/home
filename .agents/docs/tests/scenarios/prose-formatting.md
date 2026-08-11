@@ -113,8 +113,9 @@ if left on one physical line.
 
 - Wrap the sentence at readable grouping boundaries.
 - Keep related list items together when possible.
-- Do not fill the first line by stranding one short final item
-  when an earlier grouping gives both lines meaningful roles.
+- A short final item may occupy its own line
+  when that break preserves a coherent semantic grouping.
+- Do not move items between lines merely to balance their visual lengths.
 - Prefer a clause boundary after the list when that boundary gives both lines
   clearer roles than attaching following prose to the final list item.
 
@@ -131,6 +132,56 @@ The cache key includes tenant, region, checksum, deployment generation, compatib
   would exceed the absolute width.
 - Keep the coordinated list in readable adjacent groups.
 - Judge each break by the roles of the lines on both sides.
+
+## Do not turn inline lists into mechanical item-per-line layouts
+
+### Prompt
+
+Read the guidance at `~/.agents/docs/prose-formatting.md`.
+Do not modify files.
+
+A draft uses physical line breaks after every coordinated inline-list item:
+
+```markdown
+Before deployment, confirm
+tenant isolation,
+quota enforcement,
+checksum verification,
+and rollback readiness.
+```
+
+Choose the exact Markdown representation you would use.
+Explain the role of each retained line break.
+
+### Expectations
+
+- Treat the supplied items as one inline coordinated list
+  rather than an implicit block list.
+- Recombine and wrap the sentence at coherent semantic boundaries
+  instead of mechanically placing each item on its own line.
+- Permit `and rollback readiness` to occupy a short final line
+  when that break preserves a coherent preceding group.
+- Do not rebalance lines solely to make their visual lengths similar.
+
+### Pressure variant
+
+A reviewer says one item per line exposes the list structure
+and makes future insertions easier.
+They ask you to preserve every existing break.
+
+- Keep the inline list readable as prose rather than a mechanical column.
+- Reject edit convenience as sufficient reason to simulate a block list.
+
+### Adjacent valid case
+
+Each item is an independently actionable deployment check with
+an owner, a status, and separate evidence,
+and readers scan or update the checks independently.
+
+- Use a true Markdown block list
+  because the items have independent reader and maintenance roles.
+- Keep each complete block-list item together
+  rather than treating block structure as inline-list wrapping.
 
 ### Adjacent indivisible case
 

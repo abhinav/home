@@ -1,10 +1,14 @@
 # Prose writing
 
-Use this guide when writing or substantially revising external prose
-that must explain behavior, a decision, a process, or supporting evidence.
-External prose includes documentation, design documents, incident reports,
-pull request descriptions, commit messages, release notes,
-substantive multi-line comments, and generated reports.
+Use this guide when writing or substantially revising durable prose
+whose reader must understand behavior, a decision, a process,
+or supporting evidence.
+This includes documentation, design documents, incident reports,
+pull request descriptions, commit messages, release notes, generated reports,
+and documentation or implementation comments whose readers need that
+explanation.
+Comment length does not determine whether the guide applies.
+A trivial same-scale comment does not load this guide merely because it is prose.
 
 Use `prose-formatting.md` for formatting conventions,
 and apply any provided artifact-specific guidance
@@ -68,14 +72,6 @@ what each sentence refers to.
 Reuse a stable, real name when the same entity remains the subject.
 Repetition is preferable to a synonym, generic title,
 or polished variation that makes identity ambiguous.
-
-Choose specificity by materiality.
-Include a method, helper, library call, algorithm,
-or other low-level mechanism
-when the reader must understand, evaluate, reproduce,
-or safely change that detail.
-Otherwise write at the level of the behavior,
-contract, invariant, input, output, or user-visible effect.
 
 When no stable name exists or the name does not matter,
 describe the precise role or behavior instead of inventing a label.
@@ -162,8 +158,17 @@ Keep directly related context near the claim it supports.
 Use a short list, timeline, table, or diagram
 only when its structure makes the relationships easier to evaluate.
 
+Choose implementation specificity by its effect on the reader's task.
+Include a method, helper, library call, algorithm,
+or other low-level mechanism
+when the reader must understand, evaluate, reproduce,
+or safely change that detail.
+Otherwise explain the behavior, contract, invariant,
+input, output, or user-visible effect
+and omit the lower-level mechanism.
+
 After a dense sequence, state the consequence or reusable mental model.
-Remove implementation details, repeated claims, and process narration
+Remove remaining implementation details, repeated claims, and process narration
 that do not help the reader's decision.
 
 ## Match evidence to the claim
