@@ -1,0 +1,4 @@
+interface:
+  display_name: "Pikchr"
+  short_description: "Create Pikchr diagrams with relative layout"
+  default_prompt: "Use $pikchr to create a Pikchr diagram and return the requested representation."
