@@ -212,13 +212,12 @@ Make the artifact understandable on its own.
 
 ## Repository state
 
-Treat Git as out of scope unless the user explicitly requests Git work.
-For non-Git tasks,
-validate artifacts directly without Git commands or index inspection.
+Treat Git operations as out of scope unless the user explicitly requests them.
+Without that authority, leave repository contents and Git state unchanged
+and validate artifacts without Git commands or index inspection.
 
 When Git work is requested,
 inspect or change only the repository state required by that operation.
 Preserve unrelated working-tree, index, stash, and ref state.
-If ownership is unclear,
-preserve the state and ask or report it.
-Never rearrange repository state merely to produce a cleaner handoff.
+If ownership is unclear, preserve the state and ask or report it.
+Never change repository state merely to produce a cleaner handoff.
