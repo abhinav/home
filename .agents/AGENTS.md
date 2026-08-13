@@ -52,7 +52,8 @@ The guides below live in `~/.agents/docs/`.
   or representation boundaries;
   or changing code whose local model is not clear from its structure.
 - `code-testing.md`:
-  Writing, changing, deleting, or reviewing tests
+  Deciding what test evidence a code change needs;
+  writing, changing, deleting, or reviewing tests
   or their supporting infrastructure.
 - `code-review.md`: Reviewing code or a code change.
 - `go.md`: Working with Go code.

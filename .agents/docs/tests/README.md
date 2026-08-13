@@ -46,6 +46,8 @@ Reusable scenarios are grouped by the behavior they primarily protect:
   abstraction depth, change locality, and physical organization.
 - [Code design](scenarios/code-design.md):
   ownership, contracts, representations, compatibility, and evolution.
+- [Code testing](scenarios/code-testing.md):
+  marginal evidence, change-detector avoidance, and detector ownership.
 - [Guidance routing](scenarios/guidance-routing.md):
   selecting the guides required by the artifact and task.
 

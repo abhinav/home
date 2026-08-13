@@ -122,6 +122,81 @@ boundaries, contracts, or representations.
 
 - Select `code-readability.md` and `go.md`.
 - Do not select `code-design.md` or `code-comments.md`.
+## Route test-evidence decisions before test edits
+
+### Prompt
+
+Available user-level guidance includes:
+
+- `code-readability.md` for writing or changing non-generated code;
+- `code-design.md` for ownership, contract, and representation decisions;
+- `code-comments.md` for non-obvious concepts and invariants;
+- `code-testing.md` for deciding what test evidence a change needs
+  and for test artifacts;
+- `code-review.md` for reviewing a code change; and
+- `go.md` for Go code.
+
+A user asks you to implement a Go refactor
+that replaces two private boolean fields with a private enum
+so invalid combinations cannot be represented.
+Public behavior must remain unchanged,
+and existing public tests cover every supported mode.
+The user asks you to carry the change and its validation to completion
+but does not mention adding or editing tests.
+
+Choose the user-level guides you would read before acting.
+Explain the responsibility of each selection.
+Do not implement the refactor.
+
+### Quality bar
+
+- Evaluation mode: judgment.
+- Route from the test-evidence decision reached by the work,
+  not only from whether the prompt explicitly requests a test edit.
+- Preserve the separate representation, readability,
+  comment, language, and test-evidence responsibilities.
+
+### Expectations
+
+- Select `code-readability.md` for the non-generated code change.
+- Select `code-design.md` for the representation and invariant change.
+- Select `code-comments.md` to decide how the new concept and invariant
+  should be exposed to maintainers.
+- Select `code-testing.md` to decide whether the existing detectors
+  are sufficient and what validation the refactor needs.
+- Select `go.md` for the target language.
+- Do not require an explicit request to add or modify tests
+  before loading `code-testing.md`.
+- Do not select `code-review.md` for implementation alone.
+
+### Pressure variant
+
+#### Prompt addition
+
+The user adds:
+"Do not add tests unless the existing suite exposes a real gap."
+
+#### Expected behavior
+
+- Keep `code-testing.md` selected because it owns the decision
+  to add, retain, replace, or omit test evidence.
+- Do not treat the instruction against unnecessary tests
+  as a reason to skip testing guidance.
+
+### Adjacent valid case
+
+#### Prompt addition
+
+The user instead asks what a supplied Go compiler error means.
+They do not ask to change code,
+choose validation evidence, or inspect a test artifact.
+
+#### Expected behavior
+
+- Select `go.md` for the language-specific explanation.
+- Do not select `code-testing.md` merely because compilation
+  can serve as a detector in other tasks.
+
 ## Route commit-message review through the commit skill
 
 ### Prompt
