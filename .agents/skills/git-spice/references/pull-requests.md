@@ -55,7 +55,9 @@ Keep the title at or below 72 characters.
 
 Before preparing a pull request body,
 read and apply `writing-commit-messages.md`.
-A pull request body follows the same guidelines as a commit-message body.
+A pull request body follows the same content and representation guidelines
+as a commit-message body,
+except where a repository template supplies the structure.
 For a single-commit pull request without a repository template,
 normalize the commit body under those guidelines before carrying it over,
 even when its wording or formatting is already approved.
@@ -237,7 +239,11 @@ If the repository has a pull request template:
 
 The template governs structure;
 apply the commit-message guidelines within that structure.
+Preserve the template's heading representation
+rather than converting its headings to the commit-message heading form.
 Reshape field contents as needed to satisfy those guidelines.
+Preserve a complete, claim-bearing validation invocation
+as an indented code block within the template section.
 Placeholder syntax does not create a formatting exception.
 If a required section has neither material evidence nor a supported material
 gap,

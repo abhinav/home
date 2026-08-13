@@ -182,48 +182,94 @@ Run-local context:
 - Routine pass status.
 - An inventory of unrelated localization, database, or release-note facts.
 
-## 05 Make the subject useful in history
+## 05 Locate the outcome in the subject
 
 ### Prompt
 
 Use the commit-message reference at
 `<skill-path>/references/writing-commit-messages.md`.
 
-Write the commit message for this change.
+Write the complete commit message for this change.
+Do not modify files or run repository commands.
+
+Repository context:
+
+- The repository contains one product, the Quartz scheduler.
+- All changed files are under `internal/leases/`.
+- The affected product area is admission control,
+  which decides whether a worker may accept a job.
+- No repository-specific subject convention or nearby history is available.
 
 Final tree:
 
-- The repository contains several configuration parsers.
-- The `gateway` configuration loader preserves every repeated `header` entry
-  in declaration order instead of keeping only the first entry.
+- Admission control rejects a worker whose lease generation predates the
+  active generation.
+- Workers holding the active generation are unchanged.
 
 Run-local context:
 
-- Gateway users can intentionally configure several values for one header.
+- A stale worker could previously accept jobs after ownership moved.
 
 ### Expected behavior
 
-- Make the affected stable area and distinguishing result recognizable
-  from the subject alone.
+- Prefix the subject with `admission:` because admission control is the stable
+  affected area in this single-project repository.
+- Do not substitute `leases:` merely because the changed files live under
+  `internal/leases/`.
+- Keep the stale-worker result recognizable after the prefix.
+- Use lowercase for the prefix and sentence case for the summary.
 - Use an imperative subject no longer than 72 characters.
-- Preserve only the context needed to understand why repeated entries matter.
 
 ### Unacceptable behavior
 
-- A vague subject such as `Fix parser bug` or `Update configuration`.
-- A scope or prefix that displaces the terms needed to find the change.
-- A body that inventories files or parser helpers.
+- An unprefixed subject because the repository contains only one project.
+- A `leases:` prefix derived mechanically from the file path.
+- A prefix that displaces the distinguishing result.
 
-### Adjacent established-scope case
+### Pressure variant
 
-Add this run-local context:
+The author says the diff is tiny, the project is obvious from the path,
+and the message is needed immediately.
 
-- Repository history consistently uses the existing `gateway` scope for
-  commits owned by the gateway team.
+- Still use `admission:` in the subject.
+- Do not treat urgency, diff size, or path visibility outside the message
+  as reasons to omit the affected area from the stored subject.
 
-- Use the established scope because it improves routing and discovery.
-- Keep the repeated-header result recognizable in the subject.
-- Do not replace useful behavior terms merely to fit the scope.
+### Monorepo project-wide case
+
+Replace the repository context with:
+
+- The repository contains the independently owned Quartz, Harbor,
+  and Beacon projects.
+- The change alters archive compatibility across all Quartz components.
+
+- Use `quartz:` because the outcome is project-wide.
+- Do not invent a narrower component.
+
+### Monorepo component case
+
+Replace the repository context with:
+
+- The repository contains the independently owned Quartz, Harbor,
+  and Beacon projects.
+- The outcome specifically changes Quartz admission control.
+- The changed files remain under `internal/leases/`.
+
+- Use `quartz/admission:` to locate both the project and affected component.
+- Do not use only `quartz:` when the stable component is known.
+- Do not derive `quartz/leases:` mechanically from the file path.
+
+### Prefix omission case
+
+Replace the repository context with:
+
+- The repository contains one small executable with no stable component
+  boundaries.
+- The change renames that executable in every supported surface.
+
+- A plain imperative summary may omit a prefix when the summary names the
+  executable and no narrower stable area exists.
+- Do not invent a component solely to satisfy a mechanical prefix requirement.
 
 ## 06 Preserve the present boundary and its evidence
 
@@ -297,13 +343,14 @@ Run-local context:
 
 - Explain the oversized startup bundle and lazy route loading.
 - Preserve a self-contained verbatim excerpt of the motivating warning
-  in a fenced code block.
+  in a four-space indented code block.
 - Connect the diagnostic to the changed bundle boundary.
 
 ### Unacceptable behavior
 
 - Replacing the diagnostic with only a paraphrase of its threshold.
 - Omitting the warning text that establishes the size threshold.
+- Using a fenced code block for the warning.
 - Including routine successful validation output.
 - Treating every build message as equally durable evidence.
 
@@ -458,7 +505,53 @@ Run-local context:
 - A heading for every sentence or a fixed template unrelated to the ideas.
 - A flat inventory of files, commands, or routine checks.
 
-## 12 Format added context in a replacement message
+## 12 Format headings and nested code for plain-text scanning
+
+### Prompt
+
+Use the commit-message reference at
+`<skill-path>/references/writing-commit-messages.md`.
+
+Write the complete commit message for this change.
+Do not modify files or run repository commands.
+
+Final tree:
+
+- `archive repair` verifies the manifest and referenced blocks before
+  publishing a recovered archive.
+- Operators recover an incomplete archive in two ordered steps:
+  scan it, then repair it.
+
+Run-local context:
+
+- Before the change, inspection produced this exact diagnostic:
+  `manifest references missing block 7` followed by
+  `archive marked recovered`.
+- The durable recovery procedure uses these exact commands in order:
+  `archive scan --input damaged.arc`, then
+  `archive repair --input damaged.arc`.
+- The problem and recovery procedure are distinct concerns
+  that should remain easy to scan.
+
+### Expected behavior
+
+- Use short sentence-case section headings with matching hyphen underlines.
+- Do not substitute colon-suffixed labels for those headings.
+- Put the diagnostic in a top-level code block indented four spaces.
+- Keep each recovery command with its ordered list item
+  and indent every code line eight spaces from the left margin.
+- Preserve the exact diagnostic and command text.
+
+### Unacceptable behavior
+
+- Bare section labels that do not have hyphen underlines.
+- Colon-suffixed labels such as `Problem:` or `Recovery:`.
+- ATX-style headings or fenced code blocks.
+- Any indentation other than eight leading spaces
+  for code nested under a top-level list item.
+- Moving the commands outside their corresponding recovery steps.
+
+## 13 Format added context in a replacement message
 
 ### Prompt
 

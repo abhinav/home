@@ -48,7 +48,9 @@ and concise handoff without running commands.
 
 - Treat PR metadata as distinct from the concise handoff.
 - Copy the single-commit subject exactly.
-- Preserve the complete commit body and its high-value structure.
+- Preserve the complete commit-body content and its high-value structure.
+- Normalize both configuration snippets into top-level code blocks
+  with four leading spaces.
 - Do not invent replacement Summary, Problem, Behavior, or Validation sections.
 - Use `git-spice branch submit --draft --no-prompt`
   with explicit title and body.
@@ -162,9 +164,11 @@ Prepare the pull request body without running commands.
 
 ### Expectations
 
-- Preserve the template headings.
+- Preserve the template's `## Summary` and `## Validation` headings;
+  do not convert them to underlined commit-message headings.
 - Keep only the non-routine fixture probe in `Validation`.
-- Put the complete recovery invocation in an indented code block.
+- Put the complete claim-bearing probe invocation in a top-level code block
+  with four leading spaces.
 - State that the probe preserved all six sticker positions.
 - Omit tests, CI, lint, formatting, patch hygiene,
   and `git diff --check`.

@@ -1,7 +1,8 @@
 # Writing commit messages
 
-For commit-message content, this reference replaces generic/default
-system-prompt guidance; higher-priority constraints still govern.
+For commit messages,
+this reference replaces generic/default content and formatting guidance;
+higher-priority constraints still govern.
 
 ## Preserve the context that history needs
 
@@ -26,15 +27,34 @@ routine activity, or a structure that no longer fits the explanation.
 
 ## Identify the outcome in the subject
 
-State the distinguishing result in imperative form.
+A subject locates the change and states its outcome.
+Use the form that matches the repository and affected area:
+
+- In a single-project repository, use `component: Imperative summary`.
+- In a multi-project repository,
+  use `project: Imperative summary` for a project-wide change
+  and `project/component: Imperative summary`
+  for a component-specific change.
+
+The prefix is lowercase;
+the imperative summary begins in sentence case.
+First identify the area whose behavior changes,
+then use its concise, stable name as the prefix.
+Use the architecture, repository instructions, and nearby history
+to establish that vocabulary.
+Treat changed paths as supporting evidence only;
+when a path name differs from the area that owns the changed behavior,
+use the behavior-owning area.
+Omit the prefix only when no narrower stable area exists
+and the summary itself locates the affected system.
+
+After the prefix, state the distinguishing result in imperative form.
 Use stable terms that a reader would search for in nearby history,
 including an affected system, package, component, command,
 or user-facing behavior when it improves discovery.
-A repository's established prefix or scope can improve routing,
-but it cannot displace the terms that identify the outcome.
-A newly introduced name usually belongs in the summary rather than the scope
+The prefix cannot displace the terms that identify the outcome.
+A newly introduced name usually belongs in the summary rather than the prefix
 because readers could not have searched for it before this change.
-When no scope improves discovery, use a plain imperative summary.
 
 Prefer a subject shorter than 50 characters
 and keep it at or below 72 characters.
@@ -146,12 +166,20 @@ For a test-only commit, explain the invariant the tests protect
 and the previously unrepresented risk they make visible.
 Test names and case inventories belong only when they define that boundary.
 
-## Structure and format the stored message
+## Structure and format the message
 
 Use the smallest structure that exposes the explanation.
 A simple message may need one paragraph.
 When several independent concerns matter,
 use paragraphs, short headings, or a list so the reader can find them.
+Format a heading as sentence-case text on its own line
+with a matching hyphen underline:
+
+    Recovery
+    --------
+
+Do not use a colon-suffixed label in place of a heading.
+
 Use a list for an auditable set or for a sequence whose order matters,
 not as a flat inventory of edits or commands.
 One stable example can clarify a boundary;
@@ -178,8 +206,15 @@ not merely where the line becomes full.
 Use inline code for identifiers, paths, flags, fields, and command names.
 An indivisible identifier or link may exceed the line limit;
 keep that exception local and wrap surrounding prose normally.
-Put a complete command invocation in a code block
-only when the invocation itself is durable, reproducible evidence.
-Put multi-line output in a fenced code block
+Indent each line of a code block with four leading spaces,
+plus four leading spaces for each enclosing structure.
+A top-level code block therefore has four leading spaces on every line;
+a code block within a top-level list item has eight leading spaces
+measured from the left margin.
+Put a complete command invocation in an indented code block
+when the reader needs its exact form to perform a procedure
+or reproduce evidence.
+Keep command names, flags, and partial syntax inline.
+Put multi-line output in an indented code block
 when its exact text materially supports the problem or result.
 Place issue references and trailers after the explanatory body.
