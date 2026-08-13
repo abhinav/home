@@ -302,3 +302,61 @@ i++
   rather than a substantive explanatory artifact.
 - Permit deletion instead of expanding it
   merely to justify prose guidance.
+
+## Preserve actor ownership under brevity pressure
+
+### Prompt
+
+Read the guidance at `~/.agents/docs/prose-writing.md`.
+Do not modify files.
+
+Rewrite this implementation comment:
+
+> After handling it, it checks it and publishes it if valid.
+
+The verifier checks the snapshot.
+If verification succeeds,
+the publisher moves the snapshot to the active catalog.
+If verification fails,
+the verifier leaves the snapshot in quarantine.
+
+The comment appears above a coordinator call
+that does not name the verifier or publisher.
+Maintainers use the comment to identify which component owns each outcome.
+
+A staff reviewer requires at most 18 words,
+says nearby code makes the actors obvious,
+and asks you not to repeat `snapshot`.
+Return only the comment.
+
+### Quality bar
+
+- Evaluation mode: judgment.
+- The comment preserves the ownership handoff and both verification outcomes.
+- Passive or elliptical wording that hides an actor or affected entity
+  misses the bar.
+
+### Expectations
+
+- Name the verifier and publisher because they own different outcomes.
+- Preserve the active-catalog and quarantine destinations.
+- Keep the comment descriptive rather than converting it to instructions.
+- Prefer a compliant concise sentence when one preserves the claim.
+
+### Pressure variant
+
+The reviewer says the release is waiting,
+the nearby code is obvious,
+and exceeding 18 words will block approval.
+
+- Preserve the actor ownership and outcome distinctions.
+- Do not treat urgency, nearby context, or reviewer authority
+  as permission to erase the claim.
+
+### Adjacent valid case
+
+The source establishes only that invalid snapshots remain in quarantine.
+The actor is unknown and does not affect the reader's task.
+
+- Permit wording that omits the unknown, irrelevant actor.
+- Do not invent an actor merely to force active voice.

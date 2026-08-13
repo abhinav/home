@@ -76,11 +76,27 @@ or polished variation that makes identity ambiguous.
 When no stable name exists or the name does not matter,
 describe the precise role or behavior instead of inventing a label.
 
+Treat the source claim as a correctness constraint.
+Before simplifying, identify each material actor, action, object, condition,
+scope, modality, consequence, state, and destination.
+An actor is material when different actors perform actions
+or own outcomes that the reader must distinguish.
+A rewrite is correct only when the reader can recover those distinctions
+from the artifact and the context available at its reading site,
+without relying on the writer's unstated intent.
+Keep an established name when a synonym or grammatical transformation
+would change the represented entity, state, destination, or boundary.
+
 ## Make causes and boundaries visible
 
 Explain what initiates a behavior, which actor performs each action,
 how state changes, and what consequence the reader can observe.
 Keep event ordering and actor handoffs clear.
+For a sequence, first draft one clause for each distinct action.
+Each clause names its known, relevant actor and affected object,
+keeps a condition with the action it governs,
+and uses the established name for the resulting state or destination.
+Only then shorten details that do not affect the reader's task.
 
 When an example helps establish that sequence, use one small representative example throughout.
 Keep its actor names, identifiers, inputs, units, and meanings stable.
@@ -170,6 +186,9 @@ and omit the lower-level mechanism.
 After a dense sequence, state the consequence or reusable mental model.
 Remove remaining implementation details, repeated claims, and process narration
 that do not help the reader's decision.
+When a requested limit cannot preserve the claim,
+keep the required meaning and state the constraint conflict
+instead of silently changing the claim.
 
 ## Match evidence to the claim
 
@@ -218,6 +237,7 @@ Before returning external prose, check that the reader can:
 - distinguish observed evidence from inference or future work;
 - understand what each retained code sample or visualization establishes;
 - recognize any material uncertainty, exception, or validation gap;
+- confirm that simplification preserved the claim's material distinctions;
 - use the explanation without access to the conversation; and
 - apply its central conclusion to the reader's task.
 
