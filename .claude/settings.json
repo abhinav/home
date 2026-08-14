@@ -48,6 +48,19 @@
           }
         ]
       }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "startup|resume",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$HOME/.agents/hooks/session-start.sh\"",
+            "timeout": 5,
+            "statusMessage": "Selecting session personality"
+          }
+        ]
+      }
     ]
   },
   "statusLine": {

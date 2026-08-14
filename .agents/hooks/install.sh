@@ -2,7 +2,8 @@
 
 set -euo pipefail
 
-hook_command="$HOME/.agents/hooks/session-start.sh"
+hook_command="\"\$HOME/.agents/hooks/session-start.sh\""
+legacy_hook_command="$HOME/.agents/hooks/session-start.sh"
 
 install_hook() {
 	local hooks_file=$1
@@ -20,7 +21,9 @@ install_hook() {
 	temporary_file=$(mktemp "$settings_directory/.hooks.json.tmp.XXXXXX")
 	trap 'rm -f "$temporary_file"' RETURN
 
-	jq --arg command "$hook_command" '
+	jq \
+		--arg command "$hook_command" \
+		--arg legacy_command "$legacy_hook_command" '
 		{
 			"matcher": "startup|resume",
 			"hooks": [{
@@ -33,7 +36,10 @@ install_hook() {
 		| .hooks //= {}
 		| .hooks.SessionStart //= []
 		| .hooks.SessionStart |= (
-			map(.hooks = [.hooks[]? | select(.command != $command)])
+			map(.hooks = [
+				.hooks[]?
+				| select(.command != $command and .command != $legacy_command)
+			])
 			| map(select(.hooks | length > 0))
 			+ [$hook_group]
 		)
