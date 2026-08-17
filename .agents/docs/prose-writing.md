@@ -111,9 +111,13 @@ do not present it as already implemented or observed.
 
 ## Use code samples and visualizations deliberately
 
-Choose the medium that helps the reader understand,
-verify, or use the behavior.
-A code sample should demonstrate an operation or observable result.
+Choose the medium that preserves the structure
+the reader must understand, verify, or use.
+When an explanation's main work is to communicate branching, looping,
+or state-changing logic,
+preserve that executable shape in code or pseudocode
+rather than translating each step into prose.
+A prose list that restates the branches is still narration.
 A visualization should expose a relationship
 that would be difficult to follow in prose.
 If one clear sentence establishes the same point,
@@ -121,23 +125,41 @@ keep the sentence.
 
 ### Code samples
 
-Use a code sample when the reader needs to see an interface,
-configuration, input, output, failure, or state transformation.
-Choose the smallest representative example
-that demonstrates the behavior under discussion.
+Use concrete code when the reader needs supported syntax,
+a specific interface or configuration,
+or the exact representation of an input, output, or failure.
+Use clearly labeled pseudocode
+when the reader needs to follow executable logic
+but implementation syntax is irrelevant or not established.
 
-Use real names, supported syntax, and evidence-backed results.
+Choose the smallest useful demonstration.
+It may be illustrative, partial, or intentionally incomplete.
+Omit setup, boilerplate, unchanged branches, or other details
+only when they do not affect the demonstration's point.
+Use an obvious elision marker
+when an omission would otherwise be mistaken for complete code.
+Identify non-runnable samples.
+State any limit that affects how the reader can interpret or use the sample.
+
+When a concrete sample makes a claim about actual behavior,
+use real names and evidence-backed results.
 Introduce necessary prerequisites before the sample.
 Keep the same inputs and identifiers as the surrounding explanation.
 Use a before-and-after comparison
 when the changed behavior is otherwise difficult to see.
 
 Place the sample near the claim it establishes.
+A demonstration may continue across nearby code blocks with prose between them
+when that progression helps the reader follow the behavior.
+Preserve identifiers, state, and execution order across those blocks
+so their continuity is apparent.
+Mark skipped steps or discontinuities
+when they materially affect how the fragments relate.
 Explain what the reader should observe
-and why that observation answers the question.
+and why that observation answers the question,
+and what the demonstration does not establish.
 Use a language-tagged fenced block for multi-line code
 and distinguish an invocation from its output.
-Identify an illustrative or incomplete sample as such.
 Include credentials or sensitive values only when independently authorized
 and necessary for the reader's task.
 
@@ -171,7 +193,11 @@ Define an unfamiliar acronym, unit, or term on first material use.
 
 Introduce new information progressively.
 Keep directly related context near the claim it supports.
-Use a short list, timeline, table, or diagram
+Use a short list to group related items
+when their execution relationship is not the point.
+Use code or pseudocode rather than a list
+when the reader must follow branching, looping, or state-changing logic.
+Use a timeline, table, or diagram
 only when its structure makes the relationships easier to evaluate.
 
 Choose implementation specificity by its effect on the reader's task.

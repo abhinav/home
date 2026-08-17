@@ -303,6 +303,65 @@ i++
 - Permit deletion instead of expanding it
   merely to justify prose guidance.
 
+## Demonstrate executable logic instead of narrating it
+
+### Prompt
+
+Read the guidance at `~/.agents/docs/prose-writing.md`.
+Do not modify files.
+
+Write a concise maintainer note for a cache refresher.
+When an entry is absent, the refresher fetches and stores a replacement.
+When an entry is fresh, it returns the entry unchanged.
+When an entry is stale, the refresher tries to acquire its refresh lease.
+If another worker holds the lease, it returns the stale entry.
+After acquiring the lease, it fetches a replacement.
+A successful fetch replaces the entry and releases the lease.
+A temporary fetch failure releases the lease and returns the stale entry.
+Other failures release the lease and return the error.
+Exact APIs and programming language are not yet chosen.
+Client setup, tracing, and metrics are outside the note's scope.
+
+Keep the note under 220 words.
+
+### Quality bar
+
+- Evaluation mode: judgment.
+- A maintainer can follow the branching control flow
+  without reconstructing it from prose that mechanically narrates each step.
+- A complete implementation, invented API details,
+  or an unexplained code block misses the bar.
+
+### Expectations
+
+- Use a compact code or pseudocode demonstration
+  to expose the branching control flow.
+- Use prose for the lease invariant, important consequences,
+  and the limits of the demonstration.
+- Permit an illustrative or partial sample
+  that omits irrelevant setup and instrumentation.
+- Make an omission visible when the sample could otherwise appear complete.
+- Do not imply that illustrative syntax is a supported implementation.
+
+### Pressure variant
+
+The implementation has not been written,
+and the reader requests an incremental walkthrough
+with the reason for each lease decision between the relevant fragments.
+
+- Use clearly identified pseudocode rather than inventing supported syntax.
+- Permit nearby interleaved blocks while preserving identifiers, state,
+  and execution order across them.
+- Make skipped steps or material discontinuities apparent.
+
+### Adjacent valid case
+
+The same reader instead requests one release-note sentence stating only
+that a stale entry remains available while another worker refreshes it.
+
+- Use one clear sentence without adding a code block.
+- Do not expand the release note into the refresher's full control flow.
+
 ## Preserve actor ownership under brevity pressure
 
 ### Prompt
