@@ -212,15 +212,13 @@ if err != nil {
 
 ## Interface compliance checks
 
-Add compile-time assertions
-to verify that a type implements an interface:
+Add compile-time assertions to verify that a type implements an interface:
 
 ```go
 var _ InterfaceName = (*TypeName)(nil)
 ```
 
-Skip this when the type or the interface
-can't be imported into the same file.
+Skip this when the type or the interface can't be imported into the same file.
 
 ```go
 // BAD: no compile-time check.
@@ -232,74 +230,39 @@ func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {}
 
 // GOOD: the compiler rejects this immediately
 // if *Handler doesn't satisfy http.Handler.
-var _ http.Handler = (*Handler)(nil)
-
 type Handler struct{}
 
 func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {}
+
+var _ http.Handler = (*Handler)(nil)
 ```
 
 ## Symbol ordering
 
-Order Go symbols by narrative dependency,
-not by declaration kind.
+Go package declarations can generally refer to declarations
+that appear later in the package.
+A type named by a function, method, or interface
+is therefore not a source-order prerequisite.
+Apply the reader-order rule in `~/.agents/docs/code-readability.md`.
+Place an interface before the request and result types used by its methods.
+Place request and result types immediately before a function or method
+when its body would otherwise force the reader
+to scroll past the implementation to reach those records.
+When the implementation and records remain visible together,
+place the function or method first
+and the request and result types after it in first-need order.
 
-A reader should encounter a symbol close to the code
-that first makes it useful.
-Avoid collecting all constants,
-variables,
-types,
-interfaces,
-or helper functions at the top of the file
-unless they are genuinely file-wide concepts.
-
-Use this order of preference:
-
-1. Package-wide constants and variables
-   that configure the whole file
-   may appear near the top.
-2. Type blocks should stay intact:
-   declaration,
-   constructors,
-   then methods.
-   A type block may move close to the behavior it supports,
-   but do not split the declaration from its constructors or methods.
-3. Types,
-   interfaces,
-   and helper constants used by one function
-   should be placed near that function.
-   If the type is a request,
-   result,
-   or other function-boundary concept,
-   place the type block immediately before the function.
-   If the type is helper machinery used inside the function,
-   place the type block immediately after the function.
-4. Types,
-   interfaces,
-   and helper constants used by a cohesive group of functions
-   should be placed near that group.
-   Put boundary concepts before the first function in the group.
-   Put helper machinery after the last function in the group.
-5. Helper functions should usually appear after the function that calls them,
-   unless moving them earlier substantially improves readability.
-6. In tests,
-   helper functions and helper types should appear after the test
-   that uses them.
-   If a helper is shared by multiple tests,
-   place it after the last test that uses it.
-7. Exported package concepts should appear before the exported functions
-   that introduce or operate on them,
-   but they still do not need to be grouped at the top by kind.
-
-Do not split a function's request/result structs,
-small enums,
-private interfaces,
-or helper types into a top-of-file type block
-unless they are used throughout the file.
-Keep each type block intact.
-Move the whole block to the narrowest useful location:
-boundary types before the function or group they describe,
-helper types after the function or group they support.
+Keep declarations for one cohesive type or operation together.
+When a type is the primary abstraction, keep its declarations in one cluster:
+the type declaration, its constructors, then its methods.
+Order constructors and methods for readability within their part of the cluster.
+Request and result types may appear immediately before the method they frame
+inside that receiver's cluster.
+Methods on one receiver share its state and invariants.
+Keeping those methods together lets the reader retain that mental model.
+Do not interleave methods from different receiver types
+unless the reader's task genuinely treats those types as one operation
+and separate clusters would make that operation harder to understand.
 
 ## File organization
 
@@ -339,6 +302,10 @@ Do not count `error` when deciding
 whether a function has too many return values.
 
 ```go
+func Export(ctx context.Context, req ExportRequest) (ExportResult, error) {
+    ...
+}
+
 type ExportRequest struct {
     Path   string
     Format ExportFormat
@@ -347,10 +314,6 @@ type ExportRequest struct {
 type ExportResult struct {
     BytesWritten int64
     Warnings     []string
-}
-
-func Export(ctx context.Context, req ExportRequest) (ExportResult, error) {
-    ...
 }
 ```
 
@@ -372,15 +335,15 @@ Use one of these constructor shapes.
 A configuration struct may contain both required and optional fields:
 
 ```go
+func NewIndexer(cfg IndexerConfig) *Indexer {
+    ...
+}
+
 type IndexerConfig struct {
     Store IndexStore   // required
     Log   *slog.Logger // required
 
     BatchSize int
-}
-
-func NewIndexer(cfg IndexerConfig) *Indexer {
-    ...
 }
 ```
 
@@ -392,16 +355,16 @@ A constructor may instead accept up to two required positional arguments
 followed by an options struct containing only optional fields:
 
 ```go
-type PublisherOptions struct {
-    BatchSize int
-}
-
 func NewPublisher(
     store PublishStore,
     log *slog.Logger,
     opts *PublisherOptions,
 ) *Publisher {
     ...
+}
+
+type PublisherOptions struct {
+    BatchSize int
 }
 ```
 
@@ -543,12 +506,12 @@ when you need fast lookup, grouping, or uniqueness checks.
 func SyncEndpoints(endpoints map[string]string) error { ... }
 
 // GOOD: the boundary names the data being passed.
+func SyncEndpoints(endpoints []EndpointSync) error { ... }
+
 type EndpointSync struct {
     Source string
     Target string
 }
-
-func SyncEndpoints(endpoints []EndpointSync) error { ... }
 ```
 
 Nested maps deserve extra scrutiny.

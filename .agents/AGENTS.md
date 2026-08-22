@@ -75,6 +75,11 @@ Routes combine.
 For example, reviewing a Go test loads the readability,
 testing, review, and Go guides.
 
+Source declaration ordering is a user-wide preference
+owned by `code-readability.md`.
+Target-local declaration-category conventions do not override that preference;
+its reader-order criteria and actual language or tool constraints govern.
+
 Before returning,
 verify the completed work against every guide that applied.
 
