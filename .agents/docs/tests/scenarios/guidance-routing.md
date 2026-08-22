@@ -305,6 +305,114 @@ i++
 - Do not select prose-writing merely because the artifact contains prose.
 - Permit deletion when the comment is only a same-scale translation.
 
+## Route conversational explanations through prose writing
+
+### Prompt
+
+Available user-level guidance includes:
+
+- `prose-writing.md` for prose artifacts read outside the current conversation
+  and for conversational explanations the user is trying to understand;
+- `prose-formatting.md` for durable prose source representation;
+- `code-design.md` for designing or changing ownership and contracts; and
+- `go.md` for Go-specific work.
+
+A user asks in conversational chat:
+"Help me understand why a Go constructor owns `RetryPolicy`
+instead of receiving retry settings on every method call."
+They do not request a durable artifact or a design change.
+
+Choose the user-level guides you would read before answering.
+Explain the responsibility of each selection.
+Do not answer the Go question itself.
+
+### Quality bar
+
+- Evaluation mode: judgment.
+- Select guidance for the requested explanation and its language
+  without treating chat as a durable source artifact or a design change.
+- Skipping explanatory guidance merely because the answer is conversational
+  misses the bar.
+
+### Expectations
+
+- Select `prose-writing.md`
+  for the explanation the user is trying to understand.
+- Select `go.md` for the language-specific subject.
+- Do not select `prose-formatting.md` for ordinary conversational chat.
+- Do not select `code-design.md` when the user asks only to understand
+  an established ownership decision.
+
+### Adjacent valid case
+
+#### Prompt addition
+
+The user instead says:
+"The configured retry limit is `5`.
+Return only the value."
+
+#### Expected behavior
+
+- Do not select `prose-writing.md` for the fact-only response.
+- Do not select `prose-writing.md` merely because the answer is written text.
+
+## Route prose artifacts by artifact
+
+### Prompt
+
+Available user-level guidance includes:
+
+- `prose-writing.md` for prose artifacts and conversational explanations;
+- `prose-formatting.md` for durable prose source representation.
+
+Choose the applicable guidance for each task
+and explain the responsibility of each selection.
+Do not perform the tasks.
+
+1. Write a one-sentence public release note saying
+   that policy names may no longer be blank.
+2. Write the user-facing validation message displayed
+   when a policy name is blank.
+
+### Quality bar
+
+- Evaluation mode: judgment.
+- Select prose guidance from the reader-facing artifact,
+  not from whether the artifact needs a causal explanation.
+- Treating a short release note or application copy
+  as too simple for prose guidance misses the bar.
+
+### Expectations
+
+- Select `prose-writing.md` for both prose artifacts.
+- Select `prose-formatting.md` for both durable source artifacts.
+- Let artifact scale control the amount of prose,
+  not whether `prose-writing.md` applies.
+
+### Pressure variant
+
+#### Prompt addition
+
+The release note and validation message must each be one sentence,
+and neither needs to explain a cause or cite evidence.
+
+#### Expected behavior
+
+- Keep `prose-writing.md` selected for both artifacts.
+- Do not use explanatory complexity as the selection gate.
+
+### Adjacent valid case
+
+#### Prompt addition
+
+The user instead asks only to repair line wrapping
+in an existing design document without changing any words.
+
+#### Expected behavior
+
+- Select `prose-formatting.md` for the source-only edit.
+- Do not invent a prose-writing task when the explanation is unchanged.
+
 ## Format pull request references for the message surface
 
 ### Prompt

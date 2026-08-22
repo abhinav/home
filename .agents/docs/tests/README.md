@@ -39,7 +39,8 @@ Reusable scenarios are grouped by the behavior they primarily protect:
 - [Prose formatting](scenarios/prose-formatting.md):
   source representation, semantic line breaks, and line width.
 - [Prose writing](scenarios/prose-writing.md):
-  causal explanation, prerequisites, evidence, and explanatory scale.
+  reader contracts, causal explanation, medium selection,
+  evidence, and explanatory scale.
 - [Code comments](scenarios/code-comments.md):
   documentation comments, implementation comments, and teaching structure.
 - [Code readability](scenarios/code-readability.md):
@@ -50,6 +51,8 @@ Reusable scenarios are grouped by the behavior they primarily protect:
   marginal evidence, change-detector avoidance, and detector ownership.
 - [Guidance routing](scenarios/guidance-routing.md):
   selecting the guides required by the artifact and task.
+- [Global communication](scenarios/global-communication.md):
+  applying response rules owned directly by `AGENTS.md`.
 
 A scenario may exercise several guides.
 Keep it with the owner of the behavior it primarily protects

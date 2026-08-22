@@ -33,10 +33,16 @@ Recheck the map when the work reaches a new artifact or decision.
 The guides below live in `~/.agents/docs/`.
 
 - `prose-writing.md`:
-  Writing or substantially revising prose that must explain behavior,
-  a decision, a process, or supporting evidence.
-  This includes documentation comments when their reader needs that explanation,
-  regardless of comment length.
+  Writing or substantially revising a prose artifact
+  for readers outside the current conversation.
+  This includes documentation, design documents, incident reports,
+  pull request descriptions, commit messages, release notes,
+  application copy, generated reports,
+  and substantive documentation or implementation comments.
+  Also use it for a conversational explanation
+  when the user is trying to understand how or why something works,
+  happened, changed, or follows from the available evidence.
+  A formatting-only edit does not require this guide.
   A trivial same-scale code comment does not load this guide merely because
   it is prose.
 - `prose-formatting.md`:
@@ -87,6 +93,24 @@ Do not append a restatement that adds no new information.
 Keep referents stable.
 Reuse a real name rather than a synonym, metaphor, or generic label
 when variation could obscure identity.
+
+### Show code shapes directly
+
+When explaining, recommending, or comparing a named code entity,
+and established syntax conveys structure relevant to the discussion,
+lead with the smallest faithful code shape.
+Treat established names, types, parameters, results, fields,
+and their relationships as code structure
+when the reader must distinguish them.
+Retain that relevant structure,
+and visibly elide unrelated parts with a language-native comment.
+When this condition holds, prose alone is incomplete;
+shorten the shape by eliding unrelated parts
+rather than replacing it with a prose enumeration.
+Use prose for semantics, constraints, rationale, and consequences
+that the syntax does not express.
+Use prose alone only when syntax would expose
+no relationship relevant to the reader.
 
 ### Refer to pull requests in messages
 

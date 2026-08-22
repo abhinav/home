@@ -1,12 +1,14 @@
 # Prose writing
 
-Use this guide when writing or substantially revising durable prose
-whose reader must understand behavior, a decision, a process,
-or supporting evidence.
+Use this guide when writing or substantially revising a prose artifact
+for readers outside the current conversation.
 This includes documentation, design documents, incident reports,
-pull request descriptions, commit messages, release notes, generated reports,
-and documentation or implementation comments whose readers need that
-explanation.
+pull request descriptions, commit messages, release notes,
+application copy, generated reports,
+and substantive documentation or implementation comments.
+Also use it for a conversational explanation
+when the user is trying to understand how or why something works,
+happened, changed, or follows from the available evidence.
 Comment length does not determine whether the guide applies.
 A trivial same-scale comment does not load this guide merely because it is prose.
 
@@ -14,7 +16,7 @@ Use `prose-formatting.md` for formatting conventions,
 and apply any provided artifact-specific guidance
 for the type of prose you are writing.
 
-A formatting-only edit does not require inventing a new explanation.
+A formatting-only edit does not require this guide.
 
 ## Establish the reader's contract
 
@@ -109,25 +111,54 @@ when the distinction affects the reader's decision.
 Describe a proposed or future behavior as such;
 do not present it as already implemented or observed.
 
-## Use code samples and visualizations deliberately
+## Match the medium to the structure
 
 Choose the medium that preserves the structure
 the reader must understand, verify, or use.
-When an explanation's main work is to communicate branching, looping,
-or state-changing logic,
-preserve that executable shape in code or pseudocode
-rather than translating each step into prose.
-A prose list that restates the branches is still narration.
-A visualization should expose a relationship
-that would be difficult to follow in prose.
-If one clear sentence establishes the same point,
-keep the sentence.
 
-### Code samples
+### Code shapes
 
-Use concrete code when the reader needs supported syntax,
-a specific interface or configuration,
-or the exact representation of an input, output, or failure.
+When a named code entity is a material subject
+of an explanation, recommendation, or comparison,
+and established syntax conveys structure relevant to the reader,
+lead with the smallest faithful code shape.
+Treat established names, types, parameters, results, fields,
+and their relationships as code structure
+when the reader must distinguish them.
+In that case, retain the relevant structure
+and visibly elide unrelated or unestablished parts.
+When this condition holds, prose alone is incomplete;
+under brevity pressure, shorten the shape by eliding more
+rather than replacing it with a prose enumeration.
+Use prose alone only when syntax would expose
+no relationship relevant to the reader.
+
+Use a declaration, type fragment, call site,
+or configuration fragment in the established language and syntax.
+Retain relevant ownership boundaries.
+Use real, evidence-backed names when describing existing code.
+Preserve the source spelling and types of retained elements;
+do not replace them with invented aliases or pseudocode.
+When only part of a shape is established,
+show the evidence-backed fragment
+and mark the unknown or unrelated remainder with a language-native comment.
+Introduce a proposed or illustrative fragment with a short label,
+such as `Proposed shape:`, immediately before it.
+Do not invent syntax for a language or API that is not established.
+
+Use prose with the shape to explain semantics, constraints,
+rationale, consequences, and other behavior the syntax does not express.
+Do not expose a lower-level mechanism merely because code exists for it.
+When the reader needs the contract rather than the mechanism,
+state the contract in prose.
+
+### Executable demonstrations
+
+Use an executable demonstration when the reader needs to follow usage,
+branching, looping, or state-changing logic,
+or see the exact representation of an input, output, or failure.
+Preserve that executable shape instead of narrating each step in prose.
+Use concrete code when the implementation syntax is established.
 Use clearly labeled pseudocode
 when the reader needs to follow executable logic
 but implementation syntax is irrelevant or not established.
@@ -138,17 +169,18 @@ Omit setup, boilerplate, unchanged branches, or other details
 only when they do not affect the demonstration's point.
 Use an obvious elision marker
 when an omission would otherwise be mistaken for complete code.
-Identify non-runnable samples.
-State any limit that affects how the reader can interpret or use the sample.
+Identify non-runnable demonstrations.
+State any limit that affects
+how the reader can interpret or use the demonstration.
 
-When a concrete sample makes a claim about actual behavior,
+When a concrete demonstration makes a claim about actual behavior,
 use real names and evidence-backed results.
-Introduce necessary prerequisites before the sample.
+Introduce necessary prerequisites before the demonstration.
 Keep the same inputs and identifiers as the surrounding explanation.
 Use a before-and-after comparison
 when the changed behavior is otherwise difficult to see.
 
-Place the sample near the claim it establishes.
+Place the demonstration near the claim it establishes.
 A demonstration may continue across nearby code blocks with prose between them
 when that progression helps the reader follow the behavior.
 Preserve identifiers, state, and execution order across those blocks
@@ -195,8 +227,6 @@ Introduce new information progressively.
 Keep directly related context near the claim it supports.
 Use a short list to group related items
 when their execution relationship is not the point.
-Use code or pseudocode rather than a list
-when the reader must follow branching, looping, or state-changing logic.
 Use a timeline, table, or diagram
 only when its structure makes the relationships easier to evaluate.
 
@@ -261,7 +291,8 @@ Before returning external prose, check that the reader can:
 - follow important causes, actor handoffs, and state transitions;
 - identify which behavior changed and which relevant behavior did not;
 - distinguish observed evidence from inference or future work;
-- understand what each retained code sample or visualization establishes;
+- understand what each retained code shape, executable demonstration,
+  or visualization establishes;
 - recognize any material uncertainty, exception, or validation gap;
 - confirm that simplification preserved the claim's material distinctions;
 - use the explanation without access to the conversation; and

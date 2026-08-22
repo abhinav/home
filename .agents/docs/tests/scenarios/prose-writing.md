@@ -303,6 +303,92 @@ i++
 - Permit deletion instead of expanding it
   merely to justify prose guidance.
 
+## Show a source-backed partial code shape
+
+### Prompt
+
+Read the guidance at `~/.agents/docs/prose-writing.md`.
+Do not modify files.
+
+Write a concise reviewer-facing explanation
+of this proposed TypeScript boundary:
+
+```typescript
+interface Subscription {
+  id: SubscriptionID;
+  createdAt: Date;
+  close(): Promise<void>;
+}
+
+function subscribe(
+  client: Client,
+  metrics: Metrics,
+  topic: Topic,
+  handler: (event: Event) => Promise<void>,
+): Promise<Subscription>;
+```
+
+The discussion concerns the `topic`, `handler`, returned `Subscription`,
+and its `close` method.
+The client, metrics, identifier, and creation time are unchanged
+and irrelevant to this discussion.
+The handler is fixed for the subscription's lifetime,
+and the returned `Subscription` owns cancellation through `close`.
+The team is considering an error callback,
+but its name, type, and placement are not established.
+Do not invent that API.
+
+### Quality bar
+
+- Evaluation mode: judgment.
+- A reviewer can see the relevant public shape directly,
+  then understand handler lifetime and cancellation ownership.
+- Narrating the API only in prose,
+  reproducing every irrelevant member and dependency,
+  or inventing the unresolved error callback misses the bar.
+
+### Expectations
+
+- Lead with partial TypeScript declarations
+  that preserve `topic`, `handler`, `Subscription`, and `close`.
+- Preserve the supplied parameter, callback, and return types;
+  do not replace them with invented aliases or pseudocode.
+- Mark omitted members and parameters with TypeScript comments
+  when the fragments could otherwise appear complete.
+- Use prose to explain the handler lifetime
+  and the returned subscription's cancellation ownership.
+- Identify the shape as proposed.
+- Do not invent the unresolved error-callback API.
+
+### Pressure variant
+
+#### Prompt addition
+
+A reviewer requires an answer under 100 words
+and warns that reproducing the complete declarations
+would obscure the boundary under discussion.
+
+#### Expected behavior
+
+- Keep a labeled, source-backed partial shape within the limit.
+- Elide irrelevant members and parameters
+  instead of reproducing the complete declarations.
+- Keep the unresolved error callback out of the shape.
+
+### Adjacent valid case
+
+#### Prompt addition
+
+The user instead requests one release-note sentence saying
+that uploads with expired credentials are now rejected.
+The implementation uses a private `isExpired` helper.
+
+#### Expected behavior
+
+- State the observable upload behavior in prose.
+- Do not add a code shape or expose the private helper
+  when neither reveals a relevant relationship.
+
 ## Demonstrate executable logic instead of narrating it
 
 ### Prompt
