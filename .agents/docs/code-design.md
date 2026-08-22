@@ -18,16 +18,43 @@ the design has probably leaked knowledge.
 If a boundary merely moves the same coordination behind another name,
 the boundary has not reduced the load.
 
-## Start from the change and the caller
+## Design from the outside in
 
 Begin with the outcome the caller needs,
 not the classes, functions, or framework pieces already available.
-Sketch representative use before choosing the implementation shape.
-State the operation's inputs, result, ownership, and failure behavior,
-then check that contract against real call sites.
+Design the public or inter-component surface from the calling code inward.
+Sketch representative calls before choosing the implementation shape.
+From those calls, draft the smallest useful boundary:
+name its operations and define their inputs, results, ownership,
+failure behavior, mutation, and ordering.
+Check that contract against real call sites and representative examples
+before implementing the production boundary.
+
+Treat implementation mechanisms as candidates for satisfying the contract,
+not as the source of the caller-facing design.
+A selected library, framework, schema, protocol, or existing helper
+should not leak into the boundary merely because implementation starts there.
+When feasibility is uncertain, use a private spike to test the mechanism,
+then revise either the contract or the implementation from what the spike proves.
+Do not let exploratory implementation become the public contract by accident.
+
+Outside-in design does not require freezing an early guess.
+When the domain or workflow is still uncertain,
+keep the initial structure easy to change
+and use working implementations to learn its shape.
+Do not stabilize an abstraction before representative behavior
+and real callers reveal a cohesive responsibility and narrow contract.
+Refactor toward that boundary when the evidence appears.
 
 Use current requirements, callers, and repository history
 as evidence about likely change.
+When a boundary wraps, extends, or replaces existing behavior,
+establish the supported behavior, constraints,
+and compatibility commitments before stabilizing its contract.
+Inspect callers, tests, repository history, and operational evidence.
+Preserve supported behavior rather than accidental implementation structure,
+but do not infer that an incumbent mechanism has no purpose
+merely because its purpose is not immediately visible.
 Do not add options, extension points, or indirection
 only because something could change someday.
 Stable public boundaries deserve more caution:
@@ -35,6 +62,11 @@ their names, inputs, outputs, mutation behavior, ordering,
 and partial-failure behavior can all become compatibility commitments.
 Expose only the operations callers need,
 and make observable behavior deliberate.
+Make the representative operation direct.
+When demonstrated callers need materially different levels of control,
+provide an advanced contract without forcing common callers
+to coordinate its additional concepts.
+Do not add parallel API layers for hypothetical callers.
 
 A boundary earns its place when its contract replaces knowledge:
 callers can ask for a useful outcome
@@ -153,6 +185,13 @@ not reconstruct the external protocol.
 Do not create a service boundary for a small local probe
 whose result and mechanism have no domain policy;
 the boundary must remove real knowledge, not anticipate hypothetical reuse.
+
+Establish cohesive ownership before introducing a process or network boundary.
+Distribution does not create a meaningful domain boundary;
+it adds latency, partial failure, versioning, observability,
+deployment, and operational ownership.
+Introduce it only when demonstrated needs such as independent lifecycle,
+scaling, security, or failure isolation justify those costs.
 
 Parse less-structured input into a representation
 that carries what the program has learned.
@@ -285,15 +324,19 @@ Before that decision, a local improvement is not repository-wide policy.
 
 ## Apply the model
 
-Before settling on a design:
+Before implementing or settling on a design:
 
-1. Describe the caller's useful outcome and observable contract.
-2. Identify the decision, invariant, state, and external knowledge involved.
-3. Assign each one to the concept whose behavior it determines.
-4. Match dependencies and values to their real lifetime.
-5. Trace a representative future change through callers and owners.
-6. Remove boundaries that add navigation without replacing knowledge.
-7. Check public behavior and repository scope before expanding the surface.
+1. Describe the caller's useful outcome and sketch representative calls.
+2. Establish any supported existing behavior and compatibility commitments.
+3. Draft the observable contract and validate it against real callers.
+4. Identify the decision, invariant, state, and external knowledge involved.
+5. Assign each one to the concept whose behavior it determines.
+6. Match dependencies and values to their real lifetime.
+7. Probe implementation feasibility without exposing the mechanism.
+8. Revise and stabilize the contract from caller and feasibility evidence.
+9. Trace a representative future change through callers and owners.
+10. Remove boundaries that add navigation without replacing knowledge.
+11. Check public behavior and repository scope before expanding the surface.
 
 Prefer the simplest coherent design
 that gives the important decisions a clear owner.
