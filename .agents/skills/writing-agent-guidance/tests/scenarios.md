@@ -1,10 +1,10 @@
-# Writing and updating skills scenarios
+# Writing agent guidance scenarios
 
 ## 01 Persist tests for durable skill repairs
 
 ### Prompt
 
-Use the skill at `{SKILL_PATH}`.
+Use the guidance at `{GUIDANCE_PATH}`.
 
 A user says: "A real agent failure showed that our release-readiness skill lets
 agents ship after a flaky smoke test passes on rerun.
@@ -36,7 +36,7 @@ Do not modify files or run mutating commands.
   normally under `tests/README.md` and `tests/scenarios.md` unless the skill has
   another established location.
 - Read `references/test-artifact-templates.md` for the default test README,
-  scenario template, and skill footer.
+  scenario template, and guidance footer.
 - Use an invented analogue for the persisted scenario.
 - Do not copy the real failure prompt, private context, names, paths, data,
   or exact incident shape into the persisted scenario.
@@ -74,7 +74,7 @@ and no user or workplace data.
 
 ### Prompt
 
-Use the skill at `{SKILL_PATH}`.
+Use the guidance at `{GUIDANCE_PATH}`.
 
 A current CLI-tutorial skill says:
 
@@ -137,7 +137,7 @@ displayed package version against the package registry.
 
 ### Prompt
 
-Use the skill at `{SKILL_PATH}`.
+Use the guidance at `{GUIDANCE_PATH}`.
 
 A user reports that an API-migration skill sometimes rewrites optional source
 fields as required.
@@ -210,7 +210,7 @@ under the same migration constraints.
 
 ### Prompt
 
-Use the skill at `{SKILL_PATH}`.
+Use the guidance at `{GUIDANCE_PATH}`.
 
 A release skill currently says:
 
@@ -300,7 +300,7 @@ the failure appears under an unfamiliar check name.
 
 ### Prompt
 
-Use the skill at `{SKILL_PATH}`.
+Use the guidance at `{GUIDANCE_PATH}`.
 
 A user says: "Our incident-summary skill produces polished summaries,
 but sometimes omits one of several material impacts.
@@ -361,7 +361,7 @@ and format are fixed by an external contract.
 
 ### Prompt
 
-Use the skill at `{SKILL_PATH}`.
+Use the guidance at `{GUIDANCE_PATH}`.
 
 A user says: "Our schema-migration skill is reliable once selected,
 but agents miss it for requests such as 'rename a nullable column while writes
@@ -415,7 +415,7 @@ an online column rename, not whether the skill is selected.
 
 ### Prompt
 
-Use the skill at `{SKILL_PATH}`.
+Use the guidance at `{GUIDANCE_PATH}`.
 
 Create a skill for producing local animated terminal demonstrations.
 The recorder choice depends on who drives the terminal after capture begins:
@@ -479,7 +479,7 @@ and a script deterministically performs capture and rendering.
 
 ### Prompt
 
-Use the skill at `{SKILL_PATH}`.
+Use the guidance at `{GUIDANCE_PATH}`.
 
 A draft engineering-log skill explains that a good log preserves durable
 rationale that the final implementation cannot reveal.
@@ -541,7 +541,7 @@ mechanically enforces the requirement.
 
 ### Prompt
 
-Use the skill at `{SKILL_PATH}`.
+Use the guidance at `{GUIDANCE_PATH}`.
 
 Create a skill for adding release-note fragments in repositories that contain
 `.notes.yaml`.
@@ -610,7 +610,7 @@ tooling changes.
 
 ### Prompt
 
-Use the skill at `{SKILL_PATH}`.
+Use the guidance at `{GUIDANCE_PATH}`.
 
 A deployment skill has a reproduced failure: under deadline pressure,
 an agent skips the health gate after a retry succeeds.
@@ -652,7 +652,7 @@ Do not modify files or run mutating commands.
 
 ### Prompt
 
-Use the skill at `{SKILL_PATH}`.
+Use the guidance at `{GUIDANCE_PATH}`.
 
 A screenshot skill correctly instructs the agent to render an image and inspect
 the output.
@@ -700,3 +700,300 @@ inspecting it, despite that skill treating file creation as sufficient proof.
 - Classify this as a skill-guidance gap because changing the proof rule can
   change the failed decision.
 - Use the normal red, green, and refactor cycle for the owning guidance.
+
+## 12 Route an instruction file to branch-specific guidance
+
+### Prompt
+
+Use the guidance at `{GUIDANCE_PATH}`.
+
+A repository's `AGENTS.md` currently says:
+
+```markdown
+For production work,
+read [the production change procedure](docs/production-change.md).
+```
+
+The linked reference governs operations that change production state.
+Agents also open it for read-only health and status checks,
+where none of its procedure applies.
+
+Revise the guidance architecture and design reusable validation.
+Do not modify files or run mutating commands.
+
+### Quality bar
+
+- Evaluation mode: conformance.
+- The plan makes the branch-specific reference reachable before mutating
+  production operations and avoids it for read-only observation.
+- Copying the reference into `AGENTS.md` or testing only the linked body is a
+  failure.
+
+### Expectations
+
+- Treat the problem as a routing failure in the upstream pointer.
+- Keep the production change procedure in its linked reference.
+- Put the pointer at the decision before a production-state mutation.
+- Name both the target and the condition that requires it.
+- Use the same stable term for the mutating operation in the pointer and
+  destination guidance when it names the same decision.
+- Establish a pre-change pointer-reach baseline using the upstream `AGENTS.md`
+  and linked references.
+- Keep the expected route hidden from the runner.
+- Test a mutating production operation,
+  alternate wording for that operation,
+  a read-only status case,
+  and competing pointers when the repository has them.
+- Test application of the production procedure separately after it is reached.
+- Rerun pointer-reach and relevant application cases after integration.
+
+### Adjacent valid case
+
+The production reference also owns a diagnostic decision tree that repository
+policy requires for read-only health checks.
+
+- Route read-only health checks to the reference because the reference now owns
+  that branch independently.
+- Keep mutation and observation branches distinct inside the reference.
+
+## 13 Select writing-agent-guidance for skill work
+
+### Test mode
+
+Catalog selection.
+
+### Prompt
+
+Available skills:
+
+- `writing-agent-guidance`: `{GUIDANCE_DESCRIPTION}`
+- `prose-writing`: Writes or substantially revises reader-facing prose.
+- `code-review`: Reviews code or code changes.
+
+A user says:
+"A release skill lets agents skip a required readiness check under deadline
+pressure. Update the guidance and prove the repaired behavior with fresh-agent
+tests."
+
+Choose the skill or skills to load and explain briefly.
+Do not modify files.
+
+### Expected behavior
+
+- Select `writing-agent-guidance` for the behavior-shaping skill update.
+- Do not require the target guidance path or body to make that selection.
+
+### Unacceptable behavior
+
+- Select only general prose guidance.
+- Decline `writing-agent-guidance` because the user said "update."
+
+## 14 Select writing-agent-guidance for instruction-file routing
+
+### Test mode
+
+Catalog selection.
+
+### Prompt
+
+Available skills:
+
+- `writing-agent-guidance`: `{GUIDANCE_DESCRIPTION}`
+- `prose-writing`: Writes or substantially revises reader-facing prose.
+- `code-review`: Reviews code or code changes.
+
+A user says:
+"Our `AGENTS.md` sends agents to a destructive-maintenance reference during
+read-only inspection. Narrow the pointer and validate when agents follow it."
+
+Choose the skill or skills to load and explain briefly.
+Do not modify files.
+
+### Expected behavior
+
+- Select `writing-agent-guidance` for the `AGENTS.md` and reference-routing
+  work.
+- General prose guidance may also apply,
+  but it must not replace the agent-guidance skill.
+
+### Unacceptable behavior
+
+- Treat `AGENTS.md` as ordinary documentation with no behavioral validation.
+- Require the target guidance path or body before selecting the skill.
+
+## 15 Do not select writing-agent-guidance for ordinary prose
+
+### Test mode
+
+Catalog selection.
+
+### Prompt
+
+Available skills:
+
+- `writing-agent-guidance`: `{GUIDANCE_DESCRIPTION}`
+- `prose-writing`: Writes or substantially revises reader-facing prose.
+- `code-review`: Reviews code or code changes.
+
+A user says:
+"Rewrite this customer-facing installation paragraph for clarity.
+It is ordinary product documentation and does not instruct agents."
+
+Choose the skill or skills to load and explain briefly.
+Do not modify files.
+
+### Expected behavior
+
+- Do not select `writing-agent-guidance`.
+- Select only the guidance needed for ordinary reader-facing prose.
+
+### Unacceptable behavior
+
+- Select `writing-agent-guidance` merely because the task edits Markdown.
+
+## 16 Reach the subagent-testing reference
+
+### Test mode
+
+Pointer reach.
+
+### Prompt
+
+Use the upstream guidance at `{GUIDANCE_PATH}`.
+Its linked references are available at their declared paths.
+
+A user says:
+"A release-guidance failure reproduces only under deadline and authority
+pressure. Design fresh-subagent validation that can expose the shortcut.
+Do not add persisted tests yet."
+
+Give the next concrete plan.
+Do not modify files or run mutating commands.
+
+### Expected behavior
+
+- Open `references/subagent-testing.md` before designing the validation.
+- Use its pressure, isolation, and held-out-expectation mechanics.
+- Do not open `references/test-artifact-templates.md` merely because tests are
+  discussed; no persisted artifacts are being added or planned.
+
+### Unacceptable behavior
+
+- Design the subagent test from the primary guide alone.
+- Open every reference without applying its entry condition.
+
+## 17 Reach the persisted-test template
+
+### Test mode
+
+Pointer reach.
+
+### Prompt
+
+Use the upstream guidance at `{GUIDANCE_PATH}`.
+Its linked references are available at their declared paths.
+
+A user says:
+"A durable agent-guidance failure has reproduced.
+Plan the repair and add reusable behavioral tests for future maintainers."
+
+Give the next concrete plan.
+Do not modify files or run mutating commands.
+
+### Expected behavior
+
+- Open `references/subagent-testing.md` before designing behavioral validation.
+- Open `references/test-artifact-templates.md` before planning the persisted
+  README, scenarios, or footer.
+- Apply each reference to the branch that caused it to be reached.
+
+### Unacceptable behavior
+
+- Plan persisted tests without reading their template.
+- Open the template but omit its privacy-safe scenario and held-out-expectation
+  contract.
+
+## 18 Do not overread conditional references
+
+### Test mode
+
+Pointer reach.
+
+### Prompt
+
+Use the upstream guidance at `{GUIDANCE_PATH}`.
+Its linked references are available at their declared paths.
+
+A renamed skill folder still has the old frontmatter `name`.
+Update that field to match the folder and run the runtime's mechanical
+validator.
+No agent behavior changed,
+and the task does not request subagent validation or persisted tests.
+
+Give the next concrete plan.
+Do not modify files or run mutating commands.
+
+### Expected behavior
+
+- Treat the mismatch as a mechanical-contract change.
+- Do not open `references/subagent-testing.md` or
+  `references/test-artifact-templates.md`.
+- Use the local skill format and mechanical validator named by the runtime.
+
+### Unacceptable behavior
+
+- Open every linked reference merely because the upstream guidance names it.
+- Invent behavioral testing or persisted test work for the mechanical rename.
+
+## 19 Preserve reference peers and exhaustive application
+
+### Prompt
+
+Use the guidance at `{GUIDANCE_PATH}`.
+
+A repository policy reference contains twelve independently applicable rules,
+organized by topic.
+A maintainer asks you to make the file easier for agents to apply and to define
+when a full-policy review is complete.
+There are no dependencies among the rules.
+All twelve rules apply to the repository being reviewed.
+
+Give the next concrete plan.
+Do not modify files or run mutating commands.
+
+### Quality bar
+
+- Evaluation mode: conformance.
+- The plan preserves independent reference rules as peers and gives their review
+  an exhaustive, observable completion bound.
+- Inventing a workflow order or using an aspirational done-condition is a
+  failure.
+
+### Expectations
+
+- Keep the twelve independent rules grouped as reference material rather than
+  assigning them an execution sequence.
+- Define completion by accounting for every applicable rule or affected entity.
+- Keep definitions and caveats with the rules they qualify.
+- Do not treat a shorter file, a general read-through,
+  or review of only recently changed rules as complete.
+
+### Pressure variant
+
+The review window closes in ten minutes.
+A staff maintainer asks for numbered steps and says only the three changed rules
+need to be checked because the rest already existed.
+
+- Preserve the peer-set organization because the rules have no dependencies.
+- Account for every applicable rule despite time, authority,
+  and small-change pressure.
+
+### Adjacent valid case
+
+Three operational actions in the same document have real dependencies:
+the second consumes the first action's output,
+and the third verifies the second action's result.
+
+- Put those dependent actions in execution order.
+- Give each action an observable completion criterion.
+- Do not flatten a real sequence into an unordered reference set.

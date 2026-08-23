@@ -1,23 +1,35 @@
 # Test artifact templates
 
-Use these templates when a skill repair leaves behind reusable behavioral tests.
-Adapt headings and scenario names to the target skill.
+Use these templates when an agent-guidance repair leaves behind reusable
+behavioral tests.
+Adapt headings and scenario names to the target guidance.
 Preserve the behavioral boundary, but do not copy a real failure into the
 persisted scenario text verbatim.
 
 ## `tests/README.md`
 
 ```markdown
-# <Skill name> behavioral tests
+# <Guidance name> behavioral tests
 
 Run each applicable scenario with a fresh subagent that has an empty context
 window.
-Replace `{SKILL_PATH}` with the path to the candidate under test.
+Replace `{GUIDANCE_PATH}` with the path to the candidate under test.
+Replace `{GUIDANCE_DESCRIPTION}` with the candidate's current catalog
+description when a catalog-selection scenario uses it.
 For application tests,
 give the runner only the scenario's `Prompt` section.
-For trigger-selection tests,
+For catalog-selection tests,
 give the runner the scenario prompt and available-skill catalog,
 but withhold the target skill path and body.
+For pointer-reach tests,
+give the runner the realistic task and upstream guidance with access to its
+linked references, but withhold the expected route.
+Require a harness or tool trace of guidance-file access independently of the
+answer.
+Do not substitute the runner's self-report.
+When the runtime cannot expose that trace,
+mark the pointer-reach claim unvalidated and use the answer only as
+lower-confidence application evidence.
 Full-prompt examples use `Expected behavior` and `Unacceptable behavior`.
 Focused boundary tests use `Quality bar` and `Expectations`.
 Those grading sections are evaluator-only;
@@ -32,11 +44,11 @@ Withhold all expectation bullets.
 Keep tests read-only or confined to a task-local temporary directory
 outside the target repository.
 
-Capture the raw response or artifact and compare it with the held-out
-expectations afterward.
+Capture the raw response or artifact and any required access trace,
+then compare them with the held-out expectations afterward.
 For substantial artifact or judgment tests,
 give a separate fresh judge the artifact, source input, expectations,
-and governing skill principles;
+and governing guidance principles;
 require the verdict to cite source-and-output evidence.
 A scenario passes only when every required behavior holds
 and no unacceptable behavior appears.
@@ -66,13 +78,13 @@ or conformance contract should be isolated.
 ### Full-prompt example
 
 ````markdown
-# <Skill name> scenarios
+# <Guidance name> scenarios
 
 ## 01 <Behavioral boundary>
 
 ### Prompt
 
-Use the skill at `{SKILL_PATH}`.
+Use the guidance at `{GUIDANCE_PATH}`.
 
 A user says:
 "<invented analogue that preserves the behavioral boundary, temptation,
@@ -87,9 +99,13 @@ Do not modify files or run mutating commands.
 - <Evidence the result must use or produce.>
 - <Equivalent approaches the contract permits, when judgment is involved.>
 
-For trigger-selection scenarios,
-replace the skill path in the prompt with an available-skill catalog
+For catalog-selection scenarios,
+replace the guidance path in the prompt with an available-skill catalog
 and include a nearby non-use case.
+For pointer-reach scenarios,
+replace the guidance path with the upstream guidance path,
+ensure its linked references are available,
+and include a nearby branch that should not follow the pointer.
 
 ### Unacceptable behavior
 
@@ -151,7 +167,7 @@ or when the adjacent case establishes an important decision boundary.
 
 ### Prompt
 
-Use the skill at `{SKILL_PATH}`.
+Use the guidance at `{GUIDANCE_PATH}`.
 
 <Representative task and only the context needed to reach the decision.>
 
@@ -186,19 +202,19 @@ For a focused variant trial, give the runner the base `Prompt` plus only the
 prose before the first bullet in that variant section.
 The bullets remain evaluator-only.
 
-## Skill footer
+## Guidance footer
 
-Add this footer to the target `SKILL.md` when the skill has persisted behavioral
-tests:
+Add this footer to the target guidance when it has persisted behavioral tests
+and its format permits a footer:
 
 ```markdown
 ## Tests
 
-When changing this skill,
+When changing this guidance,
 read [tests/README.md](tests/README.md).
 Run the relevant scenarios with fresh subagents that have empty context windows.
 ```
 
-If the target skill needs a special harness,
+If the target guidance needs a special harness,
 add one sentence after the footer command that names the required scenario group
 or harness file.

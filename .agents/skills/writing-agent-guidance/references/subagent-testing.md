@@ -1,32 +1,32 @@
-# Subagent testing for skills
+# Subagent testing for agent guidance
 
-Use this reference before validating skill behavior with subagents,
+Use this reference before validating agent-guidance behavior with subagents,
 designing pressure tests, or repairing loopholes discovered during testing.
 
 ## When to test
 
-Use subagent tests for skills that enforce discipline, have compliance costs,
+Use subagent tests for guidance that enforces discipline, has compliance costs,
 can be rationalized away, or contradict immediate pressure.
 
-Do not pressure-test pure reference skills, skills without rules to violate,
-or skills agents have no incentive to bypass.
+Do not pressure-test pure reference guidance, guidance without rules to violate,
+or guidance agents have no incentive to bypass.
 For those, use retrieval, gap, or written application checks instead.
 
 ## Test shapes
 
 Baseline tests show what agents naturally do before the new guidance exists.
-For a new skill, run them without the skill.
-For an update, run them against the current skill before drafting the
+For new guidance, run them without the candidate.
+For an update, run them against the current guidance before drafting the
 behavior-changing edit.
 A baseline is red only when it produces the behavior the repair must prevent.
 A passing baseline does not show that a proposed repair addresses the report.
 
-Pressure tests show whether the skill holds when the agent has a reason to skip,
-reinterpret, or minimize the guidance.
-Run them after the skill or update exists.
+Pressure tests show whether the guidance holds when the agent has a reason to
+skip, reinterpret, or minimize it.
+Run them after the guidance or update exists.
 
 Subagent tests should be isolated.
-They test choices, rationalizations, and expected use of the skill;
+They test choices, rationalizations, and expected use of the guidance;
 they should not mutate shared files, create commits, publish artifacts,
 deploy systems, or modify external state.
 If tool use is necessary, limit it to read-only inspection or artifacts under a
@@ -34,7 +34,7 @@ task-local temporary directory outside the target repository.
 
 ## Prepare the evaluation
 
-Before spending subagent runs, resolve the target skill and a representative
+Before spending subagent runs, resolve the target guidance and a representative
 input, then define the quality bar a useful result must clear.
 The bar should state the observable outcome and the smells that demonstrate
 failure.
@@ -73,7 +73,7 @@ the evaluator or judge applies them afterward.
 Use a full-prompt example when the claim depends on the complete task context.
 Persist the complete runner-visible request under `Prompt`,
 then keep `Expected behavior` and `Unacceptable behavior` evaluator-only.
-This shape is strongest for trigger selection, end-to-end application,
+This shape is strongest for entry routing, end-to-end application,
 substantial artifact production, and interactions among several rules.
 
 Use a focused boundary test when one decision must be isolated.
@@ -99,30 +99,41 @@ Convergence on the intended decision is evidence about wording quality;
 the comparison chooses a green candidate and does not replace final-form
 refactor or end-to-end testing.
 
-## Skill kinds and test shapes
+## Guidance kinds and test shapes
 
-Use the test shape that matches the skill kind.
-Many skills mix kinds; test the behavior that carries the highest risk.
+Use the test shape that matches the guidance kind.
+Many guidance systems mix kinds;
+test the behavior that carries the highest risk.
 
-- Discipline skills: force a concrete choice under pressure.
+- Discipline guidance: force a concrete choice under pressure.
   Examples: test-first development, release readiness,
   verification-before-completion, safety reviews, and approval gates.
-- Technique and pattern skills: ask for the plan, diagnosis,
-  transformed snippet, or patch sketch the skill would produce.
+- Technique and pattern guidance: ask for the plan, diagnosis,
+  transformed snippet, or patch sketch the guidance would produce.
   Examples: condition-based waiting, root-cause tracing, reducing complexity,
   defensive programming, and dependency upgrade triage.
-- Reference skills: ask the subagent to retrieve and apply the relevant
+- Reference guidance: ask the subagent to retrieve and apply the relevant
   information in a written answer.
   Observe which references it opens and in what order;
   repeatedly ignored or overread files are evidence about routing and
   information architecture.
   Examples: command references, API guides, file-format notes,
   schema references, and style guides.
-- Trigger-selection tests: present the task and an available-skill catalog,
+- Catalog-selection tests: present the task and an available-skill catalog,
   but withhold the target skill path and body.
   Test positive triggers, alternate user wording, competing skill descriptions,
   and nearby non-use cases.
-- Artifact-producing skills: ask a runner to produce the artifact,
+- Pointer-reach tests: present the realistic task and upstream guidance with
+  access to its linked references, but withhold the expected route.
+  Test the branch that should follow the pointer,
+  a nearby branch that should not, alternate condition wording,
+  and competing pointers when they exist.
+  Require a harness or tool trace of guidance-file access;
+  do not infer pointer use from the final answer or the runner's self-report.
+  When the runtime cannot expose that trace,
+  mark the pointer-reach claim unvalidated and use the answer only as
+  lower-confidence application evidence.
+- Artifact-producing guidance: ask a runner to produce the artifact,
   then grade that artifact against the quality bar.
   A convincing rationale does not establish that the artifact is useful.
 
@@ -154,7 +165,7 @@ Review this flaky-test skill and confirm whether it should mention
 shared-state pollution.
 ```
 
-For trigger-selection tests, passing the target skill path is an answer leak:
+For catalog-selection tests, passing the target skill path is an answer leak:
 
 ```text
 Available skills:
@@ -169,38 +180,35 @@ Choose the skill or skills you would load and explain briefly.
 
 ## Classify the failure owner
 
-A reproduced failure establishes what went wrong, not what owns the repair.
-Before changing skill prose, classify the failed boundary:
+Use the failure-owner gate in the core workflow.
+For a subagent test, inspect the runner-visible setup before assigning the gap to
+guidance:
 
-- Skill guidance: the loaded skill does not make the right decision or action
-  usable.
-- Test or evaluator: the setup leaks an answer, omits required input,
-  or grades outside the stated contract.
-- Routing: the right skill is not discovered or selected.
-- Application support: the skill is sound but required local context,
-  tooling instructions, or execution support is missing.
-- Capability: the runtime cannot perform the required action.
-- Authority: the runner lacks permission for the required action.
+- A leaked answer, missing input, or expectation outside the stated contract is
+  a test or evaluator gap.
+- Failure to discover a skill or follow a pointer is a routing gap.
+- Missing local context or tooling instructions are application-support gaps.
+- An unavailable operation or missing permission is a capability or authority
+  gap.
 
-Change skill guidance only when that change can affect the failed decision.
-Otherwise repair the test, evaluator, routing, or support boundary,
-or report the capability or authority gap, then rerun the evidence at its owner.
+Assign the gap to guidance only when changing the loaded guidance can change the
+failed decision.
 
 ## Grade artifacts independently
 
-When the skill produces an artifact, use separate runner and judge roles:
+When the guidance produces an artifact, use separate runner and judge roles:
 
-1. Give a fresh runner the skill path and representative input.
+1. Give a fresh runner the target guidance and representative input.
    Withhold the quality bar, expectations, other cases, and proposed repair.
    Capture the artifact without modifying shared state.
 2. Give a separate fresh judge the artifact, source input, quality bar,
-   and the target skill's governing principles.
+   and the target guidance's governing principles.
    Withhold any expected artifact and do not ask the judge to make the run pass.
 3. Require the judge to cite the source-and-output evidence behind each verdict.
    A numeric score alone can hide which part of the bar failed.
 4. Classify a failing verdict using `Classify the failure owner`.
    If the bar punishes a defensible choice or requires behavior outside the
-   skill's purpose, repair the case instead of bending the skill to pass it.
+   guidance's purpose, repair the case instead of bending the guidance to pass.
 
 For a simple decision test, the parent evaluator can apply the stated
 expectations directly.
@@ -213,17 +221,17 @@ Run important or borderline cases two or three times with fresh subagents,
 record the observed pass rate, and retain the raw failures.
 A case that passes once and fails twice remains a failure.
 
-After repairing a skill, rerun the failing case, applicable variants,
+After repairing guidance, rerun the failing case, applicable variants,
 and relevant previously passing cases.
 The regression sweep should exercise every retained behavior the repair could
 plausibly affect, not every unrelated scenario in the folder.
-Run that sweep against the final integrated skill,
+Run that sweep against the final integrated guidance,
 not only the provisional green patch.
 
 ## Baseline prompt pattern
 
-For a new skill, use no skill path for baseline tests.
-For an update, use the current skill before the proposed change.
+For new guidance, omit the candidate from baseline tests.
+For an update, use the current guidance before the proposed change.
 Give only the realistic task, constraints, and raw artifacts.
 
 ```text
@@ -253,9 +261,9 @@ agent behavior varies between isolated runs,
 and a weak scenario can hide the reported decision.
 Strengthen the reproduction campaign first:
 
-1. Recover the failed prompt, skill revision, task inputs, tool availability,
+1. Recover the failed prompt, guidance revision, task inputs, tool availability,
    and relevant runtime state when they are available.
-   Replay the decision point against the current skill without leaking the
+   Replay the decision point against the current guidance without leaking the
    diagnosis, expected answer, or proposed patch to the tested subagent.
 2. Check the test itself.
    Make the expected behavior and pass/fail boundary unambiguous,
@@ -318,12 +326,12 @@ Explain briefly.
 Do not execute the choice.
 ```
 
-A good result chooses the action that preserves the skill's boundary,
+A good result chooses the action that preserves the guidance's boundary,
 cites the relevant guidance, and avoids expanding scope without evidence.
 
 ## Useful pressure types
 
-Use at least three pressures for discipline skills:
+Use at least three pressures for discipline guidance:
 
 | Pressure | Example |
 | --- | --- |
@@ -344,7 +352,7 @@ Record failures in this shape:
 [Prompt and constraints.]
 
 ## Expected behavior
-[What the skill should cause the agent to do.]
+[What the guidance should cause the agent to do.]
 
 ## Observed behavior
 [What the subagent did.]
@@ -369,14 +377,14 @@ For each new rationalization, diagnose and repair the exposed gap concretely:
 - For behavior-shaping repairs, identify the invariant, the observed symptom,
   and an adjacent valid case before drafting normative text.
 - Classify the failure using `Classify the failure owner`.
-- For a skill gap, locate and refine the rule, table, example,
+- For a guidance gap, locate and refine the rule, table, example,
   or reference that already governs the boundary using positive criteria.
 - For a test gap, repair the scenario, setup,
   or answer leak before changing guidance.
 - Use a direct negation only when the workaround is always invalid across the
-  skill's intended use cases.
+  guidance's intended use cases.
 - Keep a rationalization row, red flag,
-  or example for a skill gap when it materially improves recognition or
+  or example for a guidance gap when it materially improves recognition or
   application without restating the rule.
 - Update the description if the rationalization is a trigger symptom.
 - Rerun the scenario that exposed the loophole.
@@ -397,16 +405,10 @@ Audit overfitting before treating a repair as ready:
   or retest scenarios when they are only the case that exposed the boundary.
 - Test an adjacent valid case so the repair does not outlaw valid behavior.
 
-Use the smallest repair that preserves the boundary exposed by the loophole.
-Then complete the cycle in this order:
-
-1. Green: rerun the exact failing scenario against the smallest candidate.
-2. Refactor: integrate the candidate into the existing guidance,
-   remove duplication, and rerun the exact scenario against the final form.
-3. Rerun a pressure variant with the same temptation and relevant previously
-   passing cases.
-4. If a new rationalization appears, capture it verbatim and repeat the repair
-   loop.
+Return to green in the core workflow after diagnosing the loophole.
+Carry the exact failing scenario, captured rationalization,
+applicable pressure or adjacent variant,
+and relevant previously passing cases into that loop.
 
 Common red flags:
 
@@ -422,18 +424,18 @@ Common red flags:
 
 ## Meta-test prompt
 
-When a subagent fails despite having the skill,
+When a subagent fails despite having the guidance,
 ask a follow-up that exposes whether the problem is wording, organization,
 or deliberate noncompliance.
 This diagnoses a failed scenario; it does not replace baseline or pressure
 tests.
 
 ```text
-You read the skill and still chose [failing action].
+You read the guidance and still chose [failing action].
 
-How should the skill have been written or organized
+How should the guidance have been written or organized
 to make [correct action] the clear next step?
-If the skill already made that clear,
+If the guidance already made that clear,
 say so and explain what you ignored.
 ```
 
@@ -443,30 +445,32 @@ Use the answer carefully:
   integrate or sharpen that wording in the governing guidance.
 - If the subagent missed an existing section,
   move the guidance earlier or link it at the decision point.
-- If the subagent says the skill was clear, inspect the scenario, setup,
+- If the subagent says the guidance was clear, inspect the scenario, setup,
   and answer leaks before changing guidance.
-  Repair a test gap in the scenario; for an evidenced skill gap,
+  Repair a test gap in the scenario; for an evidenced guidance gap,
   refine the boundary or retain a useful recognition aid.
 
 ## Sufficient testing checklist
 
-A skill is ready when evidence shows that agents can use it,
+Agent guidance is ready when evidence shows that agents can use it,
 not merely recite it.
 
-- A new skill was tested without its guidance,
-  or an update was tested against the current skill.
+- New guidance was tested without the candidate,
+  or an update was tested against the current guidance.
 - Reproduced behavior-changing repairs have a failing pre-change scenario with
   failures captured verbatim.
   Narrowly supported preventive changes have reachable-boundary validation and
   an explicit unreproduced-runtime gap.
 - The new or changed guidance addresses an observed failure or the narrowly
   supported preventive boundary.
-- A fresh subagent ran a realistic isolated scenario with the skill.
+- A fresh subagent ran a realistic isolated scenario with the guidance.
 - The evaluation has a representative input and an observable quality bar.
 - Judgment tests permit defensible variation;
   conformance tests state the fixed contract.
-- Trigger-selection tests withhold the target path and body and cover positive
-  and nearby non-use cases.
+- Catalog-selection tests withhold the target skill path and body and cover
+  positive and nearby non-use cases.
+- Pointer-reach tests withhold the expected route and cover the target branch,
+  a nearby non-use branch, and competing pointers when relevant.
 - Artifact-producing tests grade the artifact with cited source-and-output
   evidence.
 - Discipline tests combined multiple pressures and forced a concrete choice with
@@ -477,13 +481,13 @@ not merely recite it.
 - Important or borderline cases have repeated-run evidence,
   and relevant previously passing cases were rerun.
 - The passing subagent cites or relies on the relevant guidance.
-- When a post-change subagent fails despite having the candidate skill,
-  meta-testing was used to diagnose whether the skill was unclear.
+- When a post-change subagent fails despite having the candidate guidance,
+  meta-testing was used to diagnose whether the guidance was unclear.
 - Mechanical validation passes.
 - Remaining risks are reported explicitly.
 
-A skill is not ready if the subagent finds a new rationalization,
-argues the skill is wrong, creates a hybrid workaround,
+Guidance is not ready if the subagent finds a new rationalization,
+argues the guidance is wrong, creates a hybrid workaround,
 or asks for permission while arguing for the violation.
 
 If a new rationalization appears, capture and diagnose it.
