@@ -162,6 +162,14 @@ Use concrete code when the implementation syntax is established.
 Use clearly labeled pseudocode
 when the reader needs to follow executable logic
 but implementation syntax is irrelevant or not established.
+Treat pseudocode as a behavioral model,
+not as an imitation of an unchosen programming language.
+Use stable domain names,
+one action or decision per line,
+and indentation to expose branches, loops, and returns.
+When the reader needs to distinguish several actors,
+states, ownership boundaries, or structural alternatives,
+use the corresponding visualization rather than forcing them into pseudocode.
 
 Choose the smallest useful demonstration.
 It may be illustrative, partial, or intentionally incomplete.
@@ -177,8 +185,6 @@ When a concrete demonstration makes a claim about actual behavior,
 use real names and evidence-backed results.
 Introduce necessary prerequisites before the demonstration.
 Keep the same inputs and identifiers as the surrounding explanation.
-Use a before-and-after comparison
-when the changed behavior is otherwise difficult to see.
 
 Place the demonstration near the claim it establishes.
 A demonstration may continue across nearby code blocks with prose between them
@@ -200,21 +206,50 @@ and necessary for the reader's task.
 Use a visualization when relationships,
 state changes, ownership, or sequence
 would be harder to evaluate in linear prose.
-Choose the smallest useful representation:
+Identify the exact relationship the reader must recover,
+then choose the smallest representation that exposes it:
 
 - Use a table to compare repeated fields, mappings, or alternatives.
-- Use a sequence or flow diagram to show actor handoffs and causal order.
+- Use a call tree to show nested runtime control flow from one entry point.
+- Use a component tree to show UI containment
+  and only the state or module boundaries relevant to that structure.
+- Use a shallow file tree to show responsibility, containment,
+  or the intended location of a broad refactor.
+- Use a sequence diagram to show actor handoffs and causal order.
+- Use a flow diagram to show branching control or data movement.
 - Use a state diagram to show lifecycle phases and allowed transitions.
-- Use a tree to show hierarchy, ownership, or containment.
 - Use a timeline to show operational events and recovery.
+
+Mermaid is available by default only in conversational chat.
+In an external or durable artifact,
+use Mermaid only when the user explicitly requests Mermaid for that artifact.
+A general request for a diagram does not supply that request.
+When Mermaid is not permitted,
+express the selected structure in plain text diagrams
+or an established non-Mermaid artifact format.
 
 Keep names, boundaries, and ordering consistent with the explanation.
 Show only the actors, states, and relationships relevant to the question.
 Introduce unfamiliar notation and explain what the reader should learn.
 Use text labels and accompanying prose
 so the meaning does not depend on color or appearance alone.
-Prefer a text-based representation, such as Mermaid,
-when the artifact supports it.
+Place each visualization next to the claim it supports.
+Do not repeat the same relationship in several visual forms
+unless each form answers a distinct reader question.
+
+### Changes to established shapes
+
+When the point is what changes in an established code shape,
+executable demonstration, or visualization,
+use a `diff` view of the relevant structure.
+Keep the nearest unchanged owner that identifies the changed elements:
+the containing operation, call entry point, parent component,
+or parent directory.
+
+Show the complete relevant shape instead
+when most of it is new,
+when omitted context would hide ownership or order,
+or when the reader needs a copyable target.
 
 ## Manage cognitive load
 
@@ -227,8 +262,6 @@ Introduce new information progressively.
 Keep directly related context near the claim it supports.
 Use a short list to group related items
 when their execution relationship is not the point.
-Use a timeline, table, or diagram
-only when its structure makes the relationships easier to evaluate.
 
 Choose implementation specificity by its effect on the reader's task.
 Include a method, helper, library call, algorithm,

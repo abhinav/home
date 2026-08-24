@@ -448,6 +448,66 @@ that a stale entry remains available while another worker refreshes it.
 - Use one clear sentence without adding a code block.
 - Do not expand the release note into the refresher's full control flow.
 
+## Choose a change-focused visual and gate Mermaid
+
+### Prompt
+
+Read the guidance at `~/.agents/docs/prose-writing.md`.
+Do not modify files.
+
+Write the smallest visual section for an external Markdown migration guide.
+The renderer supports Mermaid,
+but the user requested only a concise diagram and did not name a syntax.
+The current `publish` flow calls `loadDraft`, then `sendArticle`.
+The proposed flow adds `validateDraft` between those calls
+and `recordReceipt` after `sendArticle`.
+The maintainer needs to compare the runtime flow quickly.
+
+### Quality bar
+
+- Evaluation mode: judgment.
+- The maintainer can identify the two additions and their runtime order quickly.
+- Mermaid in the external guide without an explicit Mermaid request,
+  a complete implementation,
+  or duplicated representations miss the bar.
+
+### Expectations
+
+- Use a compact non-Mermaid change view,
+  such as a plain-text `diff` of the call tree.
+- Preserve `publish`, the established calls, both additions,
+  and their runtime order.
+- Include only prose needed to state what the visual establishes.
+- Do not treat renderer support or a general diagram request
+  as an explicit Mermaid request.
+
+### Pressure variant
+
+The documentation team usually uses Mermaid,
+a staff reviewer says it will look more polished,
+and the migration review begins in 15 minutes.
+
+- Keep Mermaid out of the external guide
+  because the user still did not explicitly request it.
+- Do not turn convention, authority, polish, or time pressure
+  into permission to choose Mermaid.
+
+### Adjacent conversational case
+
+The same user instead asks in conversational chat
+to show the actor handoffs in a multi-service request.
+
+- Permit Mermaid when it is the smallest useful chat representation.
+- Do not require Mermaid when a simpler representation answers the question.
+
+### Adjacent explicit external case
+
+The user explicitly requests a Mermaid diagram
+in the external migration guide.
+
+- Permit Mermaid for that artifact.
+- Continue to limit the diagram to the relationships the reader needs.
+
 ## Preserve actor ownership under brevity pressure
 
 ### Prompt
