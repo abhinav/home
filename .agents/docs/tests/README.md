@@ -53,6 +53,8 @@ Reusable scenarios are grouped by the behavior they primarily protect:
   selecting the guides required by the artifact and task.
 - [Global communication](scenarios/global-communication.md):
   applying response rules owned directly by `AGENTS.md`.
+- [Repository state](scenarios/repository-state.md):
+  task-scoped Git inspection, workflow continuity, and preservation of other work.
 
 A scenario may exercise several guides.
 Keep it with the owner of the behavior it primarily protects

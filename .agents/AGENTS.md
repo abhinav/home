@@ -228,12 +228,13 @@ Make the artifact understandable on its own.
 
 ## Repository state
 
-Treat Git operations as out of scope unless the user explicitly requests them.
-Without that authority, leave repository contents and Git state unchanged
-and validate artifacts without Git commands or index inspection.
+Inspect Git state when needed for a concrete task decision,
+not as routine bookkeeping.
 
-When Git work is requested,
-inspect or change only the repository state required by that operation.
-Preserve unrelated working-tree, index, stash, and ref state.
-If ownership is unclear, preserve the state and ask or report it.
-Never change repository state merely to produce a cleaner handoff.
+Change Git state only as required by the authorized work,
+preserving everything outside that scope.
+Permission to edit files alone does not authorize Git mutations.
+
+Commit requested follow-ups to an active committed change
+unless the user says otherwise.
+Ask before expanding the workflow’s scope.
