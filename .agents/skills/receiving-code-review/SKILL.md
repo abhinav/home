@@ -12,13 +12,16 @@ description: >-
 Treat review as technical collaboration.
 Account for every comment,
 but do not assume every suggestion is correct or should be implemented.
+Reviewers do not see the user's conversation,
+the accepted non-goals,
+or the system's actual operating context.
 
 ## Build The Feedback Ledger
 
 Before editing code:
 
 1. Read the complete feedback without acting on individual comments.
-2. Establish the reviewed diff before deciding scope.
+2. Establish the reviewed diff and authorized outcome before deciding scope.
    Identify its base and inspect the files and hunks introduced or modified by
    that diff,
    or record the explicit boundary supplied by the user.
@@ -44,10 +47,10 @@ Choose a representation that keeps comments, occurrences,
 and their statuses unambiguous.
 
 The current change is the default scope.
-An explicitly narrower or broader scope from the reviewer or user overrides the
-default.
+The user or reviewer may explicitly narrow the relevant feedback scope.
+Only the user or authorized operator may approve materially broader work.
 Do not modify matching occurrences in untouched pre-existing code unless the
-reviewer or user explicitly expands the scope.
+user explicitly authorizes that expansion.
 Do not use a textual match alone as proof that two occurrences are equivalent;
 inspect their behavior and note intentional exceptions.
 Ask for clarification only when the requested scope conflicts with this default
@@ -88,26 +91,47 @@ not only its punctuation or a `Q:` prefix.
   change.
   Inspect enough context to answer it,
   then answer it before addressing the actionable feedback.
-- A rhetorical question indicates a concern or proposed improvement.
-  Track it as actionable feedback and state the code, comment,
-  or test change that would resolve the concern.
+- A rhetorical question identifies a concern rather than requesting
+  information.
+  Assess its underlying claim like any other finding;
+  change code, comments, or tests only when that assessment accepts it.
 - If the intent is unclear,
   ask whether the reviewer wants an explanation, a change, or both.
 
 Do not silently translate a genuine question into a patch.
-Do not dismiss a rhetorical question with an explanation alone.
+Do not dismiss a rhetorical concern without assessing its underlying claim.
 
 ## Verify And Evaluate Every Item
+
+Establish the affected behavior's supported execution and risk models
+from user direction, local architecture, actual callers, deployment,
+and other authoritative evidence.
+Identify its inputs, actors, trust boundaries, concurrency, lifecycle,
+failure modes, and existing safeguards.
+Verify premises used to exclude a finding;
+investigate credible or uncertain correctness and security concerns.
 
 For each ledger entry:
 
 1. Restate the technical claim precisely.
 2. Verify the claim against the repository and relevant external contract.
-3. Evaluate correctness, soundness, and compatibility with the design.
+3. Separate technical possibility,
+   reachability under the supported execution model,
+   actual impact,
+   and whether the proposed remedy fits the authorized design.
 4. Record one assessment:
-   `accept`, `disagree`, `unclear`, or `question answered`.
+   `accept`, `inapplicable`, `disagree`, `unclear`, or `question answered`.
 5. Respond with assent and a reason when accepting,
-   or technical reasoning when disagreeing.
+   or evidence and technical reasoning for a no-change disposition.
+
+Reserve `inapplicable` for a failure premise excluded by the verified model.
+An applicable concern remains applicable when its proposed remedy violates
+an existing contract,
+adds unnecessary architecture,
+or has a smaller supported fix.
+Evaluate the concern separately from its proposed remedy
+and use the disagreement interlock when its resolution contests
+the authorized contract, risk model, or scope.
 
 Tests, mocks, and the comment itself are evidence,
 not automatically the intended behavior.
@@ -115,7 +139,13 @@ Check the real boundary when the proposed change would alter external behavior.
 
 ## Use The Disagreement Interlock
 
-Discuss every disagreement with the user before acting on that item.
+An evidence-backed `inapplicable` finding does not create a disagreement about
+the user's already established scope.
+Explain the verified boundary to the reviewer and continue independent
+accepted work without seeking permission the user has already supplied.
+
+Discuss an actual disagreement with the user before acting on that item when
+the intended contract, applicable risk, or authorized scope remains contested.
 Do not implement the suggestion,
 an alternative fix for the same concern,
 or a design decision that would prejudge the discussion.
@@ -126,7 +156,7 @@ Classify the disagreement by blast radius:
   mark the entry `blocked on discussion`, explain the reasoning,
   and wait on that entry.
   Independent accepted items may proceed.
-- For an item with collateral effects,
+- For an applicable item with unresolved collateral effects,
   such as an API contract, data model, architecture, security boundary,
   concurrency model, or changes spanning other ledger entries,
   pause all implementation.
@@ -142,6 +172,8 @@ If no whole-review interlock is active:
 
 1. Implement only accepted, sufficiently clear items and their verified
    in-scope pattern occurrences.
+   Remove unnecessary review-introduced mechanisms when doing so resolves
+   their derivative findings without changing required behavior.
 2. Update each entry as work progresses:
    `pending`, `in progress`, `blocked`, or `done`.
 3. Add or update regression coverage for each confirmed bug.
@@ -149,7 +181,8 @@ If no whole-review interlock is active:
    and passes with it,
    or the reason a regression test cannot be written is explained.
 4. Run focused validation and any broader checks justified by the change.
-5. Rerun every pattern entry's independent occurrence sweep.
+5. Compare the cumulative result with the originally authorized outcome,
+   then rerun every pattern entry's independent occurrence sweep.
 6. Re-read the raw feedback and reconcile it against the ledger.
    Verify that the ledger-entry count equals the raw-comment count,
    every pattern entry has an occurrence inventory,

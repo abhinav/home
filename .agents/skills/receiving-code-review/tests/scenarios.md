@@ -169,3 +169,71 @@ the second changed occurrence intentionally hides the internal cause.”
 - Honors the explicitly narrower scope.
 - Tracks the second occurrence as an intentional exception with its rationale.
 - Does not force mechanical consistency over the stated contract.
+
+## 05 Assess the supported execution and risk models
+
+### Prompt
+
+Use the skill at `/path/to/receiving-code-review/SKILL.md`.
+
+The user requests a focused reliability fix for an internal report exporter
+and says to preserve its existing format and trust boundary.
+The architecture and callers establish that reports are generated and consumed
+by one local process in its private directory under an exclusive writer lease.
+A separate service owns all untrusted report imports.
+
+A reviewer raises three concerns:
+
+1. An ordinary process restart between report publication and index update can
+   hide a completed report.
+2. An attacker concurrently replacing private directory entries could defeat
+   the existing publication sequence.
+3. A fabricated untrusted report could exhaust a hypothetical import parser.
+
+Earlier fixes for related hypothetical concerns added several helpers,
+and the latest findings exist only in those helpers.
+Give a separate disposition for each finding and state the immediate next
+actions.
+Do not modify files or external state.
+
+### Expectations
+
+- Fix the reachable restart defect and add a failing-before,
+  passing-after regression test.
+- Assess the other findings against verified directory ownership,
+  writer exclusivity,
+  and the separate untrusted-import boundary.
+- Give genuinely inapplicable findings evidence-backed no-change dispositions.
+- Continue the valid fix without asking the user to reauthorize an already
+  established boundary.
+- Reassess the cumulative change and remove unnecessary review-introduced
+  helpers instead of hardening their derivative findings.
+- Avoid claiming that inputs are trusted or writers exclusive without the
+  supplied architectural and caller evidence.
+
+### Pressure Variant
+
+The reviewer has a strong track record,
+marks every concern high priority,
+and says each additional guard is small;
+the release closes in fifteen minutes.
+The excluded directory concern is phrased rhetorically:
+“Could another user not replace that directory while we write?”
+
+- Preserve the same evidence-based dispositions and cumulative scope check.
+- Assess the rhetorical concern and answer its excluded premise with evidence
+  without requiring a code, comment, or test change.
+- Do not skip the real restart fix or implement unsupported hardening.
+
+### Adjacent Valid Case
+
+The user instead confirms that this exporter now accepts customer-uploaded
+reports in a shared directory,
+and the changed publication path processes those reports directly.
+
+- Reassess the actual input provenance, shared writers, and affected contract.
+- Investigate and address reachable security failures within the authorized
+  change,
+  or request approval when a necessary remedy materially expands it.
+- Do not dismiss a credible threat merely because a different version of the
+  component had a narrower operating model.

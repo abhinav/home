@@ -62,6 +62,8 @@ The guides below live in `~/.agents/docs/`.
   writing, changing, deleting, or reviewing tests
   or their supporting infrastructure.
 - `code-review.md`: Reviewing code or a code change.
+- `~/.agents/skills/receiving-code-review/SKILL.md`:
+  Evaluating or responding to feedback on your own code changes.
 - `go.md`: Working with Go code.
 - `cli.md`:
   Designing or changing a command-line interface
@@ -147,9 +149,9 @@ Judge simplicity by the resulting behavior and ownership model,
 not by patch size.
 When the governing boundary is wrong,
 repair and integrate that boundary instead of preserving it behind exceptions.
-After each review round,
-check the cumulative change against the outcome, constraints, and non-goals,
-not just the latest finding.
+After each revision,
+evaluate the cumulative change against the authorized outcome,
+constraints, and non-goals.
 
 Use a tool's default cache.
 Do not override `HOME` or configure another cache
@@ -169,8 +171,6 @@ and ownership, security, validation, and rollout costs.
 Present the tradeoffs and ask before proceeding.
 
 A failed route does not establish that a new capability is necessary.
-Review rejection requires disposition and re-review,
-not automatic expansion.
 
 ## Revision and feedback
 
