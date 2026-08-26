@@ -16,8 +16,9 @@ description: >
 
 Treat agent-guidance authoring as test-driven process design.
 Observe how an agent fails without the guidance,
-write or revise the guidance to address that failure,
-then pressure test until the desired behavior holds.
+make the smallest repair that changes that behavior,
+integrate the repair into its governing guidance and routed resources,
+then validate the complete integrated result.
 
 The goal is not to write a large document.
 The goal is to make future agents reliably do the right thing with the least
@@ -85,14 +86,16 @@ Follow this loop for new guidance and for edits to existing guidance:
    Rerun the same evidence type; use fresh subagents for behavioral claims.
    Treat the passing candidate as proof of the repair direction,
    not as the finished guidance.
-5. **Refactor:** Integrate the repair into the existing guidance and its routed
-   resources.
-   Replace or merge governing text, remove provisional headings and duplicated
-   rules, and preserve distinct valid behavior.
-   Rerun the failing scenario, applicable pressure or adjacent cases,
-   and relevant regressions against the final integrated form.
-   For artifact-producing guidance, grade the artifact independently against the
-   quality bar.
+5. **Refactor:** Inspect the complete affected guidance
+   and its directly routed resources.
+   Integrate the passing repair into its governing text,
+   merge or remove provisional and duplicated material,
+   and preserve distinct valid behavior.
+   Account for each changed requirement and its one governing home,
+   verify that affected routes reach it,
+   and record the disposition of each provisional addition.
+   This pass is complete only when that integration evidence exists,
+   including when inspection establishes that no further edit is necessary.
 6. Close any remaining loophole by refining the existing guidance that owns the
    failed behavior.
    Keep a red flag or example only when it materially improves recognition
@@ -101,10 +104,14 @@ Follow this loop for new guidance and for edits to existing guidance:
    changes to the guidance.
    Before adding or planning these artifacts,
    read `references/test-artifact-templates.md`.
-8. Validate the affected guidance mechanically and behaviorally before
-   deployment.
-   Validation is complete when the failing case, applicable variants,
-   and relevant previously passing cases clear the bar.
+8. After the recorded integration pass,
+   validate the affected guidance mechanically and behaviorally.
+   Rerun the failing scenario, applicable pressure or adjacent cases,
+   and relevant regressions against the final integrated form.
+   For artifact-producing guidance,
+   grade the artifact independently against the quality bar.
+   Validation is complete when the integration result
+   and final-form evidence establish the requested behavior.
 
 Read `references/subagent-testing.md` before designing subagent validation,
 running pressure tests, or repairing a loophole found during testing.
@@ -330,12 +337,7 @@ Apply the core workflow, with these update-specific checks:
    or retest scenarios instead.
 3. Derive every normative sentence from the user's requested behavior,
    retained valid guidance, or authoritative evidence.
-   Integrate the passing candidate into the existing governing home;
-   replace, narrow, merge, or delete overlapping text instead of appending a
-   provisional repair.
-   Preserve unrelated valid behavior and rerun affected entry,
-   application, pressure, adjacent-valid, and regression cases against the
-   final integrated guidance.
+   Preserve unrelated valid behavior within the authorized scope.
 
 The core workflow owns red, green, refactor, and failure classification.
 Do not restate that lifecycle in an update-specific section or reference.

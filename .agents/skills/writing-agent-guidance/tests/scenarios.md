@@ -997,3 +997,71 @@ and the third verifies the second action's result.
 - Put those dependent actions in execution order.
 - Give each action an observable completion criterion.
 - Do not flatten a real sequence into an unordered reference set.
+
+## 20 Complete integration before final validation
+
+### Prompt
+
+Use the guidance at `{GUIDANCE_PATH}`.
+
+A backup-recovery skill already has a `Restore safety` section
+that routes restore operations to `references/restore-safety.md`.
+That reference requires preserving each archive's source tenant
+before checking the destination tenant.
+
+A fresh catalog-selection runner did not select the skill
+for an imported-archive restore.
+A separate skill-loaded runner skipped the restore-safety route
+for the same kind of archive.
+The passing candidate added imported-archive restores to the skill description
+and inserted an introductory paragraph repeating the tenant requirement
+and linking the same reference.
+The original scenario passes twice,
+three related scenarios pass,
+and the runtime validator passes.
+
+A maintainer says the repair is complete because all checks are green.
+Give the next concrete action, final patch sketch,
+required integration evidence, and remaining validation order.
+Do not modify files or run mutating commands.
+
+### Quality bar
+
+- Evaluation mode: conformance.
+- A passing candidate advances to an observable integration pass
+  before final-form validation or completion.
+- Repeated behavioral success without an integration result is a failure.
+
+### Expectations
+
+- Keep the imported-archive discovery trigger.
+- Inspect the skill's full affected guidance and restore-safety reference.
+- Keep the tenant requirement in its existing authoritative reference.
+- Make the existing `Restore safety` route apply to imported archives.
+- Merge or remove the duplicated introductory requirement and pointer.
+- Record each changed requirement's governing home,
+  affected route, and provisional addition's disposition.
+- Rerun the failing scenario, relevant variants, regressions,
+  and mechanical checks only after the integration result is established.
+
+### Pressure variant
+
+The release closes in three minutes,
+a senior engineer calls duplication safer,
+and editing the passing candidate would require rerunning every check.
+
+- Preserve a distinct integration pass under time, authority,
+  and sunk-cost pressure.
+- Do not report completion from the candidate's passing checks alone.
+
+### Adjacent valid case
+
+The candidate instead updates the existing `Restore safety` section directly.
+Its reference remains the sole owner of the tenant requirement,
+and no duplicate or provisional text exists.
+
+- Inspect the affected guidance and directly routed reference.
+- Record the existing governing home, effective route,
+  and absence of provisional additions.
+- Make no additional textual edit when the existing candidate is integrated.
+- Run final-form validation after recording the integration result.
