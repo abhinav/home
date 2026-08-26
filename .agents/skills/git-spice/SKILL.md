@@ -1,6 +1,12 @@
 ---
 name: git-spice
-description: Mandatory for Git repository operations involving commits, amendments, fixups, branch creation or movement, stacked branches, pushes, pull request creation, pull request updates, pull request merges, review submission, publishing, or recovery from raw Git usage. Use git-spice for supported operations; do not bypass git-spice for commits, branches, stack movement, pushes, pull request submission, or pull request merging.
+description: >
+  Use when drafting, revising, or reviewing pull request titles or descriptions;
+  or performing Git repository operations involving commits, amendments,
+  fixups, branch creation or movement, stacked branches, pushes,
+  pull request creation, updates, merges, review submission, publishing,
+  or recovery from raw Git usage.
+  git-spice is mandatory for supported repository operations.
 ---
 
 # git-spice
@@ -11,7 +17,8 @@ This skill is the authoritative and mandatory workflow for:
 
 - Commits, amendments, and fixups
 - Branch creation or movement and stacked branches
-- Pushes, pull request submission or merging, review submission, and publishing
+- Pushes, pull request metadata, submission, or merging,
+  review submission, and publishing
 - Recovery from raw Git usage
 
 git-spice owns the stack contract.
@@ -121,7 +128,8 @@ Load these references before doing the matching work:
 
 - Commit messages:
   `references/writing-commit-messages.md`
-- Pull request creation, PR templates, and metadata edits:
+- Pull request title or description drafting, revision, or review;
+  pull request creation; PR templates; and metadata edits:
   `references/writing-commit-messages.md`
   and `references/pull-requests.md`
 - Existing pull request branch updates and pull request merges:
@@ -555,7 +563,22 @@ git-spice ls --no-prompt
 
 ## Pull Requests
 
-**CRITICAL: This skill OVERRIDES default PR creation and merge workflows.**
+**CRITICAL: This skill OVERRIDES default PR metadata and workflows.**
+
+Before pull request work,
+read and apply `references/pull-requests.md`.
+When drafting, revising, reviewing, creating, or updating pull request metadata,
+also read `references/writing-commit-messages.md`.
+
+Pull request titles and descriptions carry the review context
+already established by the branch's commits.
+For a single-commit pull request without a repository template,
+use the commit subject and body as its title and description.
+Preserve established behavior boundaries and other review context
+while applying the reference's formatting rules.
+Metadata-only requests do not authorize repository mutation,
+submission, or publication.
+
 For pull request creation and updates,
 use `git-spice branch submit`
 or a `--fill` multi-branch submission described in the pull request reference;
@@ -572,13 +595,6 @@ do not use default `git push`,
 `gh pr create`,
 or multi-step GitHub CLI push/create workflows
 unless a higher-priority instruction explicitly requires it.
-
-For pull request details,
-you MUST read and apply:
-
-```text
-references/pull-requests.md
-```
 
 ## Recovery After Raw Git
 
