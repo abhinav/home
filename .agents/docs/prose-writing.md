@@ -258,6 +258,24 @@ Use concrete subjects and actions
 that identify what changes and who changes it.
 Define an unfamiliar acronym, unit, or term on first material use.
 
+Prefer syntax that shows a relationship over a label that merely implies it.
+Use a compound modifier only when readers will recognize it
+as a familiar or established term;
+do not coin one merely for brevity or technical tone.
+When a modifier obscures who acted, the source used, what was compared,
+who receives the result, which object is protected,
+or what condition or limit applies,
+put the main noun early and state the relationship with a verb or preposition.
+During revision, replace unfamiliar compounds
+and remove any modifier whose relationship a clause already states.
+Do not treat a modifier as established merely because it appears in a draft.
+
+Every precision or emphasis word must alter the claim.
+Remove one when deleting it leaves the claim's scope,
+strength, and required correspondence unchanged.
+Retain it when it identifies a required match with a value,
+order, path, quotation, identifier, or another stated constraint.
+
 Introduce new information progressively.
 Keep directly related context near the claim it supports.
 Use a short list to group related items
@@ -328,6 +346,11 @@ Before returning external prose, check that the reader can:
   or visualization establishes;
 - recognize any material uncertainty, exception, or validation gap;
 - confirm that simplification preserved the claim's material distinctions;
+- recover each material relationship
+  without unpacking a coined modifier
+  or ignoring a clearer clause that already states it;
+- find no precision or emphasis word
+  whose deletion would leave the claim unchanged;
 - use the explanation without access to the conversation; and
 - apply its central conclusion to the reader's task.
 

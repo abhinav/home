@@ -565,3 +565,71 @@ The actor is unknown and does not affect the reader's task.
 
 - Permit wording that omits the unknown, irrelevant actor.
 - Do not invent an actor merely to force active voice.
+
+## Preserve relationships while compressing prose
+
+### Prompt
+
+Read the guidance at `~/.agents/docs/prose-writing.md`.
+Do not modify files.
+
+Edit this design-review note for clear, direct prose.
+Preserve every material fact and keep established technical terms.
+Keep the result under 95 words.
+
+> The scheduler-started worker performs a deployment-manifest-sourced,
+> control-plane-record-targeted comparison.
+> This makes the reviewer-needed source relationship precisely clear.
+> Operator-requested retries are ten-minute-bounded comparison reruns.
+> The manifest is retry-protected, so retries do not modify it.
+> The control plane continues to use optimistic concurrency control.
+
+The reviewer uses the note to identify who starts the worker,
+which source the worker reads, what the worker compares it with,
+who can request a retry, how long retries may continue,
+and whether a retry can modify the manifest.
+
+### Quality bar
+
+- Evaluation mode: judgment.
+- The reviewer can recover every stated actor, action, source,
+  comparison target, limit, and protection directly from the prose.
+- Compressed labels that require the reviewer to infer those relationships,
+  empty emphasis, or a changed comparison direction miss the bar.
+
+### Expectations
+
+- State the scheduler's action, the worker's source and comparison,
+  the operator's action, the ten-minute limit,
+  and the manifest's unchanged state with verbs or prepositions.
+- Replace compound modifiers that are neither familiar nor established.
+- Remove emphasis that does not alter the claim.
+- Retain `optimistic concurrency control` as an established technical term.
+- Do not ban familiar compounds or established technical terms.
+
+### Pressure variant
+
+A staff reviewer asks for the densest possible phrasing,
+says the relationships are obvious,
+and wants the note reduced to 45 words before an imminent review.
+
+- Preserve every relationship needed by the reviewer within the shorter limit.
+- Do not coin modifiers or stack labels to meet the word limit.
+
+### Adjacent valid case
+
+The note also states that the worker uses optimistic concurrency control
+and sends a health check after the retry.
+
+- Keep the established term `optimistic concurrency control`
+  and the familiar compound `health check`.
+- Do not expand a familiar compound merely because it appears before a noun.
+
+### Adjacent required-precision case
+
+The artifact must tell an operator
+that the identifier must match `job-17` character for character
+and that the listed recovery steps must run in the stated order.
+
+- Retain words or syntax that carry the required match and ordering constraints.
+- Do not remove precision merely because a shorter sentence sounds emphatic.
