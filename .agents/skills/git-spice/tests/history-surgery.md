@@ -22,8 +22,10 @@ without executing it.
   Creation must fail instead of overwriting an existing ref.
 - Use the narrowly authorized raw `git reset`, `git add`, and replacement
   `git commit` sequence.
-- Load `references/writing-commit-messages.md` and verify both replacement
-  messages against its hard gates.
+- Load `references/writing-commit-messages.md` and apply it to both replacement
+  messages.
+- Supply each full replacement message with `git commit -F -`
+  and a single-quoted heredoc.
 - Require escalated filesystem privileges for mutating raw Git and git-spice
   commands.
 - Do not use interactive `git-spice commit split` or `git add -p`.
@@ -104,8 +106,10 @@ executing it.
   `git -c core.editor=true cherry-pick --continue` after staging repairs.
 - Require raw-history-surgery escalation immediately before the first raw
   mutation.
-- Load `references/writing-commit-messages.md` and verify both replacement
-  messages against its hard gates.
+- Load `references/writing-commit-messages.md` and apply it to both replacement
+  messages.
+- Supply each full replacement message with `git commit -F -`
+  and a single-quoted heredoc.
 - Stop before mutation if the tail contains merges or the linear replay is
   otherwise invalid.
 - Verify content, topology, and relevant behavior before deleting the backup

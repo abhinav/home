@@ -66,7 +66,11 @@ from trunk and the existing stack must move onto it:
 git-spice branch checkout '<trunk>' --no-prompt
 # make the bottom-most branch change
 git add -- '<file>'
-git-spice branch create '<new-bottom>' -m '<message>' --no-prompt
+git-spice branch create '<new-bottom>' --no-prompt -F - <<'COMMIT_MESSAGE'
+component: State the outcome
+
+Explain the durable context on intentionally wrapped physical lines.
+COMMIT_MESSAGE
 git-spice upstack onto '<new-bottom>' --branch '<old-bottom>' --no-prompt
 git-spice ls --no-prompt
 ```
@@ -202,9 +206,17 @@ For splitting the current `HEAD` commit into replacement commits:
 ```bash
 git reset --mixed HEAD^
 git add -- '<first-partition>'
-git commit -m '<first-message>'
+git commit -F - <<'FIRST_COMMIT_MESSAGE'
+component: State the first outcome
+
+Explain the first replacement commit's durable context.
+FIRST_COMMIT_MESSAGE
 git add -- '<second-partition>'
-git commit -m '<second-message>'
+git commit -F - <<'SECOND_COMMIT_MESSAGE'
+component: State the second outcome
+
+Explain the second replacement commit's durable context.
+SECOND_COMMIT_MESSAGE
 git-spice ls --no-prompt
 ```
 
@@ -225,9 +237,17 @@ commits:
 git reset --hard '<target-commit>'
 git reset --mixed '<target-commit>^'
 git add -- '<first-partition>'
-git commit -m '<first-message>'
+git commit -F - <<'FIRST_COMMIT_MESSAGE'
+component: State the first outcome
+
+Explain the first replacement commit's durable context.
+FIRST_COMMIT_MESSAGE
 git add -- '<second-partition>'
-git commit -m '<second-message>'
+git commit -F - <<'SECOND_COMMIT_MESSAGE'
+component: State the second outcome
+
+Explain the second replacement commit's durable context.
+SECOND_COMMIT_MESSAGE
 git cherry-pick --no-edit '<target-commit>..refs/backup/<descriptive-name>'
 git-spice ls --no-prompt
 ```

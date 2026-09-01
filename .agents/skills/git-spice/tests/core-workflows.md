@@ -18,7 +18,8 @@ Choose the next action and exact command shape without running it.
   not explicit authorization to commit to trunk.
 - Stop for explicit `main`, `master`, or trunk intent.
 - If the user confirms trunk,
-  use `git-spice commit create --no-prompt -m '<message>'`.
+  use `git-spice commit create --no-prompt`
+  with the commit-message input form.
 - Otherwise create a topic branch with git-spice.
 - Do not use raw Git.
 
@@ -149,21 +150,33 @@ Don't replace reviewers' notes when the generator can't resolve
 a team's aliases.
 ```
 
-Show the exact message-file contents for the second case
+Show the exact message input for both cases
 and explain which input form is preferred.
 Do not run commands or write files.
 
 ### Expectations
 
-- Prefer a single-quoted `-m` argument for the first message.
-- Encode the apostrophe with the documented shell sequence:
-  close the quoted argument, add an escaped quote, and reopen the argument.
-- Use `-F` only for the quote-heavy message where inline escaping is
-  error-prone.
-- State that the message file contains literal apostrophes,
+- Use `-F -` with a single-quoted heredoc for both messages.
+- Preserve the intended physical lines in each heredoc.
+- State that the quoted heredoc carries literal apostrophes,
   not shell escape sequences.
 - Preserve both supplied messages byte for byte.
 - Include `--no-prompt` on every proposed git-spice invocation.
+
+### Pressure variant
+
+A maintainer asks for one shell command
+and points out that the CLI accepts repeated `-m` flags for paragraphs.
+
+- Still show and inspect the complete multiline message before the commit.
+- Do not encode the body as one long line per `-m` value.
+
+### Adjacent valid case
+
+The execution surface cannot carry standard input or a heredoc.
+
+- Use `-F '<message-file>'` with the exact complete message.
+- Do not select a file merely because the message is one physical line.
 
 ## 06 Protect A Message-Only Amend From Staged Changes
 
@@ -182,8 +195,9 @@ Give the next action and eventual command shape without modifying state.
 - Stop before amending because staged content would be absorbed.
 - Preserve the unrelated staged change;
   do not unstage or commit it without user authorization.
-- After the staged-state conflict is resolved, use
-  `git-spice commit amend --no-prompt -m '<full-message>'`.
+- After the staged-state conflict is resolved,
+  use `git-spice commit amend --no-prompt`
+  with the commit-message input form.
 - Do not use raw `git commit --amend`.
 
 ## 07 Synchronize Trunk Through git-spice

@@ -46,40 +46,55 @@ stop instead of selecting a different mutating command.
 
 | Operation shape | Required non-interactive form |
 |-----------------|-------------------------------|
-| Create a branch and commit staged changes | `git-spice branch create --no-prompt '<branch-name>' -m '<message>'` or `git-spice branch create --no-prompt '<branch-name>' -F '<message-file>'` |
+| Create a branch and commit staged changes | Use `-F -` with a single-quoted heredoc for the complete message |
 | Create a branch below current, before the diff exists | `git-spice branch create --no-prompt --below --no-commit '<branch-name>'` |
-| Current branch is trunk and the user did not name `main`, `master`, or trunk as the target | `git-spice branch create --no-prompt '<branch-name>' -m '<message>'` or `git-spice branch create --no-prompt '<branch-name>' -F '<message-file>'` in one command; stop if the user forbids branch creation |
-| Commit staged changes to a non-trunk branch or explicitly named trunk | `git-spice commit create --no-prompt -m '<message>'` or `git-spice commit create --no-prompt -F '<message-file>'` |
+| Current branch is trunk and the user did not name `main`, `master`, or trunk as the target | Create and commit in one command, using the form in `Supplying Commit Messages and Text Arguments`; stop if the user forbids branch creation |
+| Commit staged changes to a non-trunk branch or explicitly named trunk | Use `-F -` with a single-quoted heredoc for the complete message |
 | Continue a git-spice rebase after conflicts are resolved | `git-spice rebase continue --no-prompt --no-edit` |
 | Amend the previous commit while keeping its message | `git-spice commit amend --no-prompt --no-edit` |
-| Amend the previous commit with a new message | `git-spice commit amend --no-prompt -m '<full-new-message>'` |
+| Amend the previous commit with a new message | Use `-F -` with a single-quoted heredoc for the complete replacement |
 
-Treat explicit message supply through `-m` or `-F`,
+Treat explicit message supply through `-F`,
 `--no-commit`, and `--no-edit` as parts of the command contract,
 not optional cleanup flags to remember later.
 If you cannot choose the correct non-interactive form yet,
 stop and resolve that uncertainty before invoking git-spice.
 
-## Supplying Text Arguments
+## Supplying Commit Messages and Text Arguments
 
-Prefer `-m '<message>'` for commit messages
-and single-quoted arguments for generated pull request titles and bodies.
+For every newly supplied or replacement commit message,
+pass the exact message on standard input with `-F -`
+and a single-quoted heredoc delimiter:
+
+```bash
+git-spice commit create --no-prompt -F - <<'COMMIT_MESSAGE'
+component: State the outcome
+
+Explain the durable context on intentionally wrapped physical lines.
+COMMIT_MESSAGE
+```
+
+A commit message is a document:
+the heredoc keeps its source layout visible for review,
+and the quoted delimiter passes its contents literally.
+Format the visible message according to
+`references/writing-commit-messages.md` before invoking the command.
+
+The file form is also available when needed:
+`-F '<message-file>'` or `--message-file '<message-file>'`.
+For file-backed messages,
+write the exact commit message into the file.
+Do not put shell escape sequences in the file contents;
+the shell parses only the file-path argument,
+and git-spice reads the message bytes literally.
+
+For shell arguments other than commit-message input,
+use single quotes for generated pull request titles and bodies.
 A single-quoted shell argument preserves all input except an embedded single
 quote.
 Represent an embedded quote with this sequence:
 close the argument, add an escaped quote, and reopen the argument.
 
-```bash
-git-spice commit create -m 'Preserve the user'\''s setting' --no-prompt
-```
-
-For commit-message input only,
-use `-F '<message-file>'` or `--message-file '<message-file>'` when the escaped
-inline form would be error-prone.
-Write the exact commit message into that file.
-Do not put shell escape sequences in the file contents;
-the shell parses only the file-path argument,
-and git-spice reads the message bytes literally.
 Pull request title and body flags have no file-backed form;
 use the single-quoted form with embedded quotes escaped as above.
 
@@ -291,12 +306,14 @@ bottom-most branch in a stack.
 Create a new branch with a commit from staged changes:
 
 ```bash
-git-spice branch create '<branch-name>' -m '<message>' --no-prompt
+git-spice branch create '<branch-name>' --no-prompt -F - <<'COMMIT_MESSAGE'
+component: State the outcome
+
+Explain the durable context on intentionally wrapped physical lines.
+COMMIT_MESSAGE
 git-spice ls --no-prompt
 ```
 
-Use `-F '<message-file>'` instead of `-m`
-only when the preferred single-quoted form would be error-prone.
 When changes are already staged,
 this branch-creation command is also the commit command.
 Do not create a bare branch first and commit later.
@@ -305,7 +322,11 @@ If `HEAD` is detached,
 create the branch with an explicit base:
 
 ```bash
-git-spice branch create --target '<base>' '<branch-name>' -m '<message>' --no-prompt
+git-spice branch create --target '<base>' '<branch-name>' --no-prompt -F - <<'COMMIT_MESSAGE'
+component: State the outcome
+
+Explain the durable context on intentionally wrapped physical lines.
+COMMIT_MESSAGE
 git-spice ls --no-prompt
 ```
 
@@ -321,7 +342,11 @@ Choose `<base>` in this order:
 Create a branch on a specific stack target:
 
 ```bash
-git-spice branch create --target '<target-branch>' '<branch-name>' -m '<message>' --no-prompt
+git-spice branch create --target '<target-branch>' '<branch-name>' --no-prompt -F - <<'COMMIT_MESSAGE'
+component: State the outcome
+
+Explain the durable context on intentionally wrapped physical lines.
+COMMIT_MESSAGE
 git-spice ls --no-prompt
 ```
 
@@ -360,7 +385,11 @@ Create the stack position before making the diff:
 git-spice branch create --below --no-commit '<branch-name>' --no-prompt
 # make the prerequisite or foundation change
 git add -- '<file>'
-git-spice commit create -m '<message>' --no-prompt
+git-spice commit create --no-prompt -F - <<'COMMIT_MESSAGE'
+component: State the outcome
+
+Explain the durable context on intentionally wrapped physical lines.
+COMMIT_MESSAGE
 git-spice ls --no-prompt
 ```
 
@@ -390,12 +419,13 @@ Do not resolve those phrases by substituting the branch detected by
 Commit staged changes to the chosen current branch:
 
 ```bash
-git-spice commit create -m '<message>' --no-prompt
+git-spice commit create --no-prompt -F - <<'COMMIT_MESSAGE'
+component: State the outcome
+
+Explain the durable context on intentionally wrapped physical lines.
+COMMIT_MESSAGE
 git-spice ls --no-prompt
 ```
-
-Use `-F '<message-file>'` instead of `-m`
-only when the preferred single-quoted form would be error-prone.
 
 Amend the previous commit while keeping its message:
 
@@ -407,23 +437,18 @@ git-spice ls --no-prompt
 Replace the previous commit message:
 
 ```bash
-git-spice commit amend -m '<full-message>' --no-prompt
+git-spice commit amend --no-prompt -F - <<'COMMIT_MESSAGE'
+component: State the outcome
+
+Explain the durable context on intentionally wrapped physical lines.
+COMMIT_MESSAGE
 git-spice ls --no-prompt
 ```
 
-When the preferred single-quoted form would be error-prone,
-amend from a message file:
-
-```bash
-git-spice commit amend -F '<message-file>' --no-prompt
-git-spice ls --no-prompt
-```
-
-`git-spice commit amend -m` replaces the entire commit message.
+Supplying a message to `git-spice commit amend`
+replaces the entire commit message.
 If the user says to add or append to the message,
 include the original message plus the addition.
-Use `--message-file` when that is safer than shell-quoting
-the full replacement message.
 `--message-file` only changes how the message is supplied.
 It does not make the amend message-only.
 Before a message-only amend,
@@ -433,8 +458,7 @@ content too.
 If staged changes are present and the user asked for a message-only amend,
 stop before mutating history.
 Ask whether to unstage, preserve, or include the staged changes;
-do not use `git-spice commit amend -m`,
-`git-spice commit amend -F`,
+do not use either `git-spice commit amend` message-input form,
 imagined flags such as `git-spice commit amend --only`,
 or raw `git commit --amend --only` as a workaround.
 `git-spice commit amend` amends staged changes into the topmost commit.

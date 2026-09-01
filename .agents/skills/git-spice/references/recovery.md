@@ -39,8 +39,7 @@ If the user created or amended a commit with raw Git:
 
 1. Inspect the commit with `git log -1 --oneline`
    or `git show`.
-2. Fix the commit message if needed with
-   `git-spice commit amend --no-prompt -m '<full-message>'`.
+2. Fix the commit message if needed.
 3. Inspect the stack with `git-spice ls --no-prompt`.
 
 For a message-only amend,

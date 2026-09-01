@@ -90,3 +90,26 @@ No commit message or repository operation is involved.
 
 - Select the applicable prose guidance.
 - Do not select the `commit` or `git-spice` skill.
+
+## Route a non-executed commit command
+
+### Prompt
+
+Use the commit skill at `<skills-root>/commit/SKILL.md`.
+
+The user asks for the exact non-interactive command that would commit staged
+changes on an already chosen topic branch.
+They explicitly say not to execute it.
+The command must include a newly drafted message.
+
+Give the command only.
+Do not run it.
+
+### Expectations
+
+- Load the git-spice skill because the requested artifact is a commit command,
+  even though execution is forbidden.
+- Load the commit-message reference because the command supplies a new message.
+- Use `git-spice commit create --no-prompt -F -`
+  with a single-quoted heredoc.
+- Do not use raw Git or inline `-m`.

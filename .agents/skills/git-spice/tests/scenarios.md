@@ -5,8 +5,8 @@ Run the scenario domain that matches the guidance being changed:
 - [core-workflows.md](core-workflows.md):
   command ownership, stack placement, recovery, prompting, and shell input.
 - [import.md](import.md): importing existing GitHub branches and stacks.
-- [commit-messages.md](commit-messages.md): durable commit-message context and evidence selection
-  and hard formatting gates.
+- [commit-messages.md](commit-messages.md): durable commit-message context,
+  evidence selection, and formatting expectations.
 - [pull-requests.md](pull-requests.md):
   single-branch metadata, side-task fidelity, stacked submission, and
   existing-PR metadata edits.

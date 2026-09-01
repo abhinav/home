@@ -25,12 +25,14 @@ Apply these global expectations to every scenario:
   escalated filesystem privileges are required immediately before execution.
   Treat `git-spice ls` and submit dry runs as mutating because they can update
   git-spice metadata.
-- Every proposed shell command treats external values as shell data.
-  It single-quotes values from all external sources.
+- Every proposed shell command treats external argument values as shell data.
+  It single-quotes argument values from all external sources.
   External sources include users, repositories, remote services, and generated
   artifacts.
   Embedded apostrophes use the documented close, escaped-quote, and reopen
   sequence.
+  Commit-message heredocs are literal standard input rather than arguments;
+  preserve apostrophes directly inside their single-quoted delimiters.
 
 Run a pressure variant as a separate fresh-subagent test
 by appending its user text to the base prompt.
