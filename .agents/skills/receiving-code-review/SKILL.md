@@ -7,65 +7,57 @@ description: >-
   or direct user critique that may require replies or revisions.
 ---
 
-# Receiving Code Review
+# Receiving code review
 
 Treat review as technical collaboration.
 Account for every comment,
 but do not assume every suggestion is correct or should be implemented.
-Reviewers do not see the user's conversation,
-the accepted non-goals,
-or the system's actual operating context.
+Reviewers may not know the user's conversation,
+accepted non-goals,
+or the system's supported operating context.
 
-## Build The Feedback Ledger
+## Build the feedback ledger
 
 Before editing code:
 
 1. Read the complete feedback without acting on individual comments.
-2. Establish the reviewed diff and authorized outcome before deciding scope.
-   Identify its base and inspect the files and hunks introduced or modified by
-   that diff,
+2. Establish the reviewed diff and authorized outcome.
+   Identify its base and inspect the files and hunks it changed,
    or record the explicit boundary supplied by the user.
-3. Give every comment a stable number,
+3. Give every raw comment a stable ID,
    including questions, nits, and repeated-looking comments.
-4. Correlate each comment with its code-level context.
-   Inspect the referenced lines, surrounding symbol, callers, tests,
-   relevant contracts, and history when they affect the claim.
-5. Determine the scope of each comment.
-   A comment's location is an anchor,
-   not necessarily the full scope of the feedback.
-   When a comment describes a pattern, rule, or invariant,
-   identify every semantically equivalent occurrence introduced or modified by
-   the current change.
-6. Record a visible ledger in chat that preserves each comment's stable ID,
-   feedback, code context, scope, assessment, action, and status.
+4. Correlate each comment with the referenced code and any surrounding symbol,
+   caller, test, contract, or history needed to assess it.
+5. Record a visible ledger in chat with these fields:
+   `ID | feedback | context and scope | assessment | action | status | evidence`.
 
-Every raw comment must map to one ledger entry.
-Keep comments separate even when one change may address several.
-For pattern feedback,
-the entry must account separately for every verified in-scope occurrence.
-Choose a representation that keeps comments, occurrences,
-and their statuses unambiguous.
+Keep comments as separate entries even when one change may address several.
+Use `pending`, `in progress`, `blocked`, or `done` for status.
+
+Classify questions from their context,
+not only punctuation or a `Q:` prefix.
+Answer a genuine request for information before actionable feedback,
+and record it as `question answered`.
+Treat a rhetorical question as a technical claim to assess.
+If the intent is unclear,
+ask whether the reviewer wants an explanation, a change, or both.
+Do not substitute a patch for an answer.
 
 The current change is the default scope.
 The user or reviewer may explicitly narrow the relevant feedback scope.
 Only the user or authorized operator may approve materially broader work.
-Do not modify matching occurrences in untouched pre-existing code unless the
-user explicitly authorizes that expansion.
-Do not use a textual match alone as proof that two occurrences are equivalent;
-inspect their behavior and note intentional exceptions.
-Ask for clarification only when the requested scope conflicts with this default
-or the change boundary cannot be established.
 
-### Pattern Completeness Gate
+### When feedback describes a pattern
 
-Treat each pattern, rule, or invariant as an independent audit dimension.
-A location assigned to one feedback item must still be evaluated under every
-other applicable pattern entry.
-The same occurrence may therefore appear under multiple ledger entries.
+Treat the comment location as an anchor,
+then inventory every semantically equivalent occurrence introduced or modified
+by the current change.
+Do not modify matching occurrences in untouched pre-existing code without
+explicit authorization,
+and do not treat a textual match as proof of semantic equivalence.
 
-Before editing,
-each pattern entry must inventory its verified in-scope occurrences separately.
-Give every occurrence one disposition:
+Under each applicable pattern entry,
+give every verified in-scope occurrence one disposition:
 
 - change required
 - already compliant
@@ -73,79 +65,54 @@ Give every occurrence one disposition:
   with the scope or semantic reason
 
 Record plausible candidates that required inspection before exclusion.
-Do not inflate the ledger with unrelated textual matches.
+Evaluate an occurrence under every applicable pattern entry,
+even when another entry already accounts for that location.
+Before marking the entry done,
+repeat its scope discovery against the edited change
+and reconcile the final inventory and dispositions.
 
-Before marking a pattern entry done,
-rerun that pattern's scope discovery against the post-edit current change.
-The final code, occurrence inventory, and per-occurrence statuses must agree.
-Passing tests, formatting, compilation,
-and resolved review threads validate other properties;
-they do not establish review-scope completeness.
+## Assess every entry
 
-## Classify Questions Before Review Actions
-
-Determine whether each question is genuine or rhetorical from its context,
-not only its punctuation or a `Q:` prefix.
-
-- A genuine question asks for information and does not imply a code or comment
-  change.
-  Inspect enough context to answer it,
-  then answer it before addressing the actionable feedback.
-- A rhetorical question identifies a concern rather than requesting
-  information.
-  Assess its underlying claim like any other finding;
-  change code, comments, or tests only when that assessment accepts it.
-- If the intent is unclear,
-  ask whether the reviewer wants an explanation, a change, or both.
-
-Do not silently translate a genuine question into a patch.
-Do not dismiss a rhetorical concern without assessing its underlying claim.
-
-## Verify And Evaluate Every Item
-
-Establish the affected behavior's supported execution and risk models
-from user direction, local architecture, actual callers, deployment,
+Verify each claim against the repository and relevant external contract.
+When the claim depends on inputs, actors, trust boundaries, concurrency,
+lifecycle, failure modes, or safeguards,
+establish those parts of the supported execution and risk models from user
+direction, local architecture, actual callers, deployment,
 and other authoritative evidence.
-Identify its inputs, actors, trust boundaries, concurrency, lifecycle,
-failure modes, and existing safeguards.
-Verify premises used to exclude a finding;
-investigate credible or uncertain correctness and security concerns.
+Investigate credible or uncertain correctness and security concerns,
+including premises used to exclude a finding.
 
-For each ledger entry:
+For each entry:
 
 1. Restate the technical claim precisely.
-2. Verify the claim against the repository and relevant external contract.
-3. Separate technical possibility,
-   reachability under the supported execution model,
+2. Separate technical possibility,
+   reachability under the supported model,
    actual impact,
    and whether the proposed remedy fits the authorized design.
-4. Record one assessment:
+3. Record one assessment:
    `accept`, `inapplicable`, `disagree`, `unclear`, or `question answered`.
-5. Respond with assent and a reason when accepting,
-   or evidence and technical reasoning for a no-change disposition.
+4. Record the next action and supporting evidence.
 
 Reserve `inapplicable` for a failure premise excluded by the verified model.
-An applicable concern remains applicable when its proposed remedy violates
-an existing contract,
+An applicable concern remains applicable when its proposed remedy violates an
+existing contract,
 adds unnecessary architecture,
 or has a smaller supported fix.
-Evaluate the concern separately from its proposed remedy
-and use the disagreement interlock when its resolution contests
-the authorized contract, risk model, or scope.
+Evaluate the concern separately from the proposed remedy.
 
-Tests, mocks, and the comment itself are evidence,
+Tests, mocks, and the review comment are evidence,
 not automatically the intended behavior.
-Check the real boundary when the proposed change would alter external behavior.
+Check the real boundary before changing external behavior.
 
-## Use The Disagreement Interlock
+## Apply the disagreement interlock
 
-An evidence-backed `inapplicable` finding does not create a disagreement about
-the user's already established scope.
-Explain the verified boundary to the reviewer and continue independent
-accepted work without seeking permission the user has already supplied.
+An evidence-backed `inapplicable` assessment does not reopen the user's
+established scope.
+Explain the verified boundary and continue independent accepted work.
 
-Discuss an actual disagreement with the user before acting on that item when
-the intended contract, applicable risk, or authorized scope remains contested.
+When the intended contract, applicable risk, or authorized scope remains
+contested,
+discuss the disagreement with the user before acting on that entry.
 Do not implement the suggestion,
 an alternative fix for the same concern,
 or a design decision that would prejudge the discussion.
@@ -153,63 +120,43 @@ or a design decision that would prejudge the discussion.
 Classify the disagreement by blast radius:
 
 - For an isolated minor item,
-  mark the entry `blocked on discussion`, explain the reasoning,
-  and wait on that entry.
-  Independent accepted items may proceed.
-- For an applicable item with unresolved collateral effects,
-  such as an API contract, data model, architecture, security boundary,
-  concurrency model, or changes spanning other ledger entries,
-  pause all implementation.
-  Explain the affected decisions and wait for the user's direction.
+  mark the entry `blocked`, explain the disagreement,
+  and continue independent accepted entries.
+- For unresolved collateral effects involving an API contract, data model,
+  architecture, security boundary, concurrency model,
+  or other ledger entries,
+  pause all implementation and ask for the user's direction.
 
 When an action is unclear,
-mark it `needs clarification` and ask a focused question before editing it.
+mark it `blocked` and ask a focused question before editing it.
 Treat uncertainty about blast radius as a reason to pause the whole review.
 
-## Implement From The Ledger
+## Implement and reconcile
 
 If no whole-review interlock is active:
 
-1. Implement only accepted, sufficiently clear items and their verified
+1. Implement only accepted, sufficiently clear entries and their verified
    in-scope pattern occurrences.
-   Remove unnecessary review-introduced mechanisms when doing so resolves
-   their derivative findings without changing required behavior.
-2. Update each entry as work progresses:
-   `pending`, `in progress`, `blocked`, or `done`.
+   Remove unnecessary review-introduced mechanisms when that resolves their
+   derivative findings without changing required behavior.
+2. Update each entry's status as work progresses.
 3. Add or update regression coverage for each confirmed bug.
    A bug fix is not complete unless the regression test fails without the fix
    and passes with it,
    or the reason a regression test cannot be written is explained.
 4. Run focused validation and any broader checks justified by the change.
-5. Compare the cumulative result with the originally authorized outcome,
-   then rerun every pattern entry's independent occurrence sweep.
-6. Re-read the raw feedback and reconcile it against the ledger.
-   Verify that the ledger-entry count equals the raw-comment count,
-   every pattern entry has an occurrence inventory,
-   every occurrence has a final disposition and status,
-   and every exclusion has a scope or semantic reason.
+5. Compare the cumulative result with the authorized outcome,
+   then repeat every pattern entry's occurrence sweep.
+6. Re-read the raw feedback and reconcile it with the ledger.
+   Verify that every comment has one entry,
+   every pattern entry has a complete occurrence inventory,
+   and every occurrence has a final disposition and status.
 7. Report the final disposition and evidence for every entry.
 
-Do not use “addressed all feedback” to mean “implemented every suggestion.”
-It means every comment was correlated, evaluated, answered,
+“Addressed all feedback” means every comment was correlated,
+evaluated, answered,
 and either completed or left with an explicit blocker or decision.
-
-## Red Flags
-
-Stop and repair the process when you notice any of these thoughts:
-
-- “The reviewer asked for it, so I should just implement it.”
-- “This is only a nit; it does not need a ledger entry.”
-- “The question is probably rhetorical.”
-- “The patch answers the question, so no written answer is needed.”
-- “I can make the undisputed edits while the design disagreement waits.”
-- “These two comments look similar, so one ledger entry is enough.”
-- “The comment is attached to one line, so only that line counts.”
-- “This location belongs to another comment,
-  so I do not need to check it for this pattern.”
-- “I fixed the cited line and one sibling occurrence,
-  so the pattern sweep is complete.”
-- “The pattern also exists in untouched code, so this review must clean it up.”
+It does not mean every suggestion was implemented.
 
 ## Tests
 
