@@ -1,0 +1,30 @@
+diff --git a/service.py b/service.py
+--- a/service.py
++++ b/service.py
+@@ -1,13 +1,15 @@
+ class Service:
+     def create(self, request):
+         result = self.store.create(request)
++        self.pool.cleanup()
+         return result
+ 
+     def update(self, request):
+         result = self.store.update(request)
++        self.pool.cleanup()
+         return result
+ 
+     def shutdown(self):
+         self.pool.stop()
+-        return None
++        return self.pool.cleanup()
+ 
+diff --git a/test_service.py b/test_service.py
+--- a/test_service.py
++++ b/test_service.py
+@@ -1,4 +1,6 @@
+ def test_requests(service, pool):
+     assert service.create("a") == "created"
++    assert pool.cleanup_count == 1
+     assert service.update("b") == "updated"
++    assert pool.cleanup_count == 2
+ 

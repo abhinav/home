@@ -1,0 +1,6 @@
+The change adds cleanup after requests and during shutdown.
+The create and update handlers run while the pool is available and have the same
+input, ownership, and lifecycle contracts. pool.stop() closes the dependency
+required by pool.cleanup(). The request handlers return the result from their
+existing operation. The provided tests pass, but only exercise request cleanup.
+The change has two files. This is the complete diff for the change.

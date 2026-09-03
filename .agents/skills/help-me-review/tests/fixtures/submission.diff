@@ -1,0 +1,103 @@
+diff --git a/submission.py b/submission.py
+new file mode 100644
+--- /dev/null
++++ b/submission.py
+@@ -0,0 +1,9 @@
++class SubmissionRuntime:
++    def __init__(self, journal):
++        self.journal = journal
++
++    async def submit(self, batch, *, durable):
++        receipt = await self.journal.append(batch)
++        if durable:
++            await receipt.committed()
++        return receipt.id
+diff --git a/upload_route.py b/upload_route.py
+--- a/upload_route.py
++++ b/upload_route.py
+@@ -1,4 +1,4 @@
+-async def upload(request, store):
++async def upload(request, runtime):
+     batch = decode_upload(request.body)
+-    receipt_id = await store.write(batch)
++    receipt_id = await runtime.submit(batch, durable=False)
+     return Response(202, {"receipt": receipt_id})
+diff --git a/replace_route.py b/replace_route.py
+--- a/replace_route.py
++++ b/replace_route.py
+@@ -1,4 +1,4 @@
+-async def replace(request, store):
++async def replace(request, runtime):
+     batch = decode_replace(request.body)
+-    receipt_id = await store.write(batch)
++    receipt_id = await runtime.submit(batch, durable=False)
+     return Response(202, {"receipt": receipt_id})
+diff --git a/import_route.py b/import_route.py
+--- a/import_route.py
++++ b/import_route.py
+@@ -1,4 +1,4 @@
+-async def import_archive(request, store):
++async def import_archive(request, runtime):
+     batch = decode_archive(request.body)
+-    receipt_id = await store.write(batch)
++    receipt_id = await runtime.submit(batch, durable=False)
+     return Response(202, {"receipt": receipt_id})
+diff --git a/recovery.py b/recovery.py
+--- a/recovery.py
++++ b/recovery.py
+@@ -1,4 +1,4 @@
+-async def replay(staged, store):
++async def replay(staged, runtime):
+     batch = staged.read()
+-    await store.write(batch)
++    await runtime.submit(batch, durable=True)
+     staged.remove()
+diff --git a/server.py b/server.py
+--- a/server.py
++++ b/server.py
+@@ -1,6 +1,7 @@
+-def routes(store):
++def routes(journal):
++    runtime = SubmissionRuntime(journal)
+     return {
+-        "/upload": bind(upload, store),
+-        "/replace": bind(replace, store),
+-        "/import": bind(import_archive, store),
++        "/upload": bind(upload, runtime),
++        "/replace": bind(replace, runtime),
++        "/import": bind(import_archive, runtime),
+     }
+diff --git a/test_submission.py b/test_submission.py
+--- a/test_submission.py
++++ b/test_submission.py
+@@ -1,4 +1,16 @@
+-async def test_upload(store, request):
+-    response = await upload(request, store)
++async def test_upload(journal, request):
++    journal.pause_commits()
++    runtime = SubmissionRuntime(journal)
++    response = await upload(request, runtime)
+     assert response.status == 202
+-    assert await store.read(response.body["receipt"]) == request.batch
++    assert journal.pending(response.body["receipt"]) == request.batch
++
++async def test_replay(staged, journal):
++    journal.pause_commits()
++    runtime = SubmissionRuntime(journal)
++    task = start(replay(staged, runtime))
++    await journal.wait_for_append()
++    assert staged.exists()
++    journal.resume_commits()
++    await task
++    assert not staged.exists()
+diff --git a/README.md b/README.md
+--- a/README.md
++++ b/README.md
+@@ -1,4 +1,5 @@
+ # Submission API
+ 
+-A 202 response means the submitted batch is durable.
+-The receipt identifies the stored batch.
++A 202 response means the submitted batch was admitted to the journal.
++Poll the receipt until committed before discarding the source batch.
++The shared runtime also supports waiting for commitment during recovery.

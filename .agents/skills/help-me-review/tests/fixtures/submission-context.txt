@@ -1,0 +1,14 @@
+This is the complete eight-file change for a submission-service PR.
+Its purpose is to let interactive requests return while the journal commits batches in the background.
+The previous Store.write returned only after durable commitment. Journal.append returns a receipt after admission to process memory; Receipt.committed waits for durable commitment. Pending batches are lost if the service process crashes.
+Upload and replace clients already retain their input and poll receipt commitment. Their request input, ownership, failure, timing, and lifecycle contracts are equivalent for this migration.
+The unchanged archive-client operation is:
+
+async def send_archive(client, staged):
+    response = await client.post("/import", staged.read())
+    if response.status == 202:
+        staged.remove()
+
+The author says archive-client is retired. The supported-jobs catalog still lists its daily import job. Neither production activity nor retirement was verified. The captured automated reviewer flags a possible data-loss window for that client.
+The changed tests pass. They cover prompt admission while commits are paused and recovery retaining staged input until commitment. No supplied test runs archive-client across a server crash.
+The source capture is stable. There is no checkout. The PR has 11 of 12 CI jobs passed, with a packaging job running, and an automated security review pending. Two earlier status refreshes returned the same state.
