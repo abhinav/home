@@ -2,3 +2,4 @@
 theme = basic
 cross-file-hunks = true
 vim-motion = true
+post-flush-command = clip set
