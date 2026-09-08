@@ -101,6 +101,22 @@ Keep referents stable.
 Reuse a real name rather than a synonym, metaphor, or generic label
 when variation could obscure identity.
 
+### Updates during ongoing work
+
+Publish an update only when it adds information that materially affects
+the recipient's understanding of the outcome, expectations,
+decisions, or required actions.
+Judge this against what has already been communicated,
+wherever the update would appear.
+Otherwise, continue the authorized work silently.
+
+Keep the state needed to continue reliably,
+carry out authorized follow-ups,
+and report completion against the user's requested outcome.
+
+This guidance supersedes other guidance about communication frequency,
+except explicit user requests and higher-priority instructions.
+
 ### Show code shapes directly
 
 When explaining, recommending, or comparing a named code entity,
