@@ -1,9 +1,14 @@
 # Go
 
+Use current Go language and standard library facilities for new code.
+Follow an explicit project requirement to support an older Go version.
+
 - [Viewing dependency source](#viewing-dependency-source)
+- [Tool dependencies](#tool-dependencies)
 - [Context usage](#context-usage)
 - [Import aliases](#import-aliases)
 - [Program exits](#program-exits)
+- [Structured logging](#structured-logging)
 - [Error handling](#error-handling)
   - [Formatting variable values](#formatting-variable-values)
   - [Wrapping errors](#wrapping-errors)
@@ -16,10 +21,21 @@
 - [Exported members on unexported types](#exported-members-on-unexported-types)
 - [Accept interfaces, return structs](#accept-interfaces-return-structs)
 - [Map-shaped APIs](#map-shaped-apis)
+- [Collection operations](#collection-operations)
+- [Iteration and streaming](#iteration-and-streaming)
+  - [Memory and storage](#memory-and-storage)
+  - [Producing and consuming values](#producing-and-consuming-values)
+  - [Pulling values](#pulling-values)
+- [Strings and bytes](#strings-and-bytes)
 - [Parse, don't repeatedly validate](#parse-dont-repeatedly-validate)
+- [JSON](#json)
+- [Identifiers and random text](#identifiers-and-random-text)
+- [Filesystem boundaries](#filesystem-boundaries)
+- [HTTP routing](#http-routing)
 - [Enums](#enums)
 - [Pointers and values](#pointers-and-values)
 - [Avoid boolean API knobs](#avoid-boolean-api-knobs)
+- [Goroutines](#goroutines)
 - [Testing](#testing)
   - [Context](#context)
   - [Assertions](#assertions)
@@ -28,8 +44,11 @@
   - [File ordering](#file-ordering)
   - [Inline single-use variables](#inline-single-use-variables)
   - [Async tests](#async-tests)
+  - [HTTP tests](#http-tests)
+  - [Benchmarks](#benchmarks)
   - [Test-only API surface](#test-only-api-surface)
   - [Table tests](#table-tests)
+- [Tests](#tests)
 
 ## Viewing dependency source
 
@@ -37,6 +56,19 @@ To see source files from a Go dependency,
 or to answer questions about a dependency,
 run `go mod download -json MODULE`
 and use the returned `Dir` path to read the files.
+
+## Tool dependencies
+
+Declare Go command dependencies with a `tool` directive in `go.mod`.
+This keeps generators and linters in the module graph
+without a blank-import `tools.go` file.
+Use `go get -tool PACKAGE@VERSION` to add one,
+then run it with `go tool NAME`.
+Use the full package path if the short name is ambiguous.
+The module's `require` directive records the selected version.
+
+See [Go tool dependencies](https://go.dev/doc/modules/managing-dependencies#tools)
+for the module syntax and command behavior.
 
 ## Context usage
 
@@ -113,6 +145,19 @@ func connect(addr string) (net.Conn, error) {
 	return conn, nil
 }
 ```
+
+## Structured logging
+
+One `slog.Logger` can send records to several handlers:
+
+```go
+logger := slog.New(slog.NewMultiHandler(jsonHandler, diagnosticHandler))
+```
+
+Each handler retains its own level filtering,
+and `WithAttrs` and `WithGroup` propagate to both.
+Keep filtering that differs between destinations on the child handlers;
+an outer filter can suppress a record wanted by either destination.
 
 ## Error handling
 
@@ -450,6 +495,9 @@ func Parse(r io.Reader) (*Document, error) { ... }
 
 When a package produces an abstraction,
 return a concrete exported type by default.
+Exported functions and methods must never return unexported types,
+including through pointers, containers, or iterator element types.
+Their callers must be able to name the result types in their own declarations.
 Callers can define their own interfaces
 at the point of use if they need one.
 
@@ -496,8 +544,11 @@ Types like `map[string]string`,
 and nested maps make call sites hard to read
 because the signature does not explain what each key or value means.
 
-Prefer a named struct
-and accept or return a slice of those structs.
+Prefer a named struct for each record.
+Accept or return a slice for materialized records,
+or an `iter.Seq` / `iter.Seq2` for streaming traversal.
+See [Iteration and streaming](#iteration-and-streaming)
+for choosing and consuming sequences.
 Use a map inside the function
 when you need fast lookup, grouping, or uniqueness checks.
 
@@ -517,6 +568,135 @@ type EndpointSync struct {
 Nested maps deserve extra scrutiny.
 They often indicate that a small domain type
 would make the code easier to understand and safer to change.
+
+## Collection operations
+
+Copy a map or slice before changing a result that must not affect its input.
+The standard helpers also make merges clear:
+
+```go
+mapCopy := maps.Clone(original)
+sliceCopy := slices.Clone(input)
+maps.Copy(destination, overrides)
+names := slices.Compact(slices.Clone(sortedNames))
+```
+
+`maps.Copy` merges into an initialized destination map
+and overwrites matching keys.
+`slices.Compact` changes its slice and removes consecutive duplicates only.
+`maps.Clone` and `slices.Clone` preserve nil inputs
+and copy keys or elements by assignment, not recursively.
+Clone nested mutable values separately when they must be independent.
+
+Use [maps](https://pkg.go.dev/maps) and [slices](https://pkg.go.dev/slices)
+for ordinary deletion and equality;
+`slices` also covers membership and sorting.
+
+## Iteration and streaming
+
+`iter.Seq[V]` yields one value at a time;
+`iter.Seq2[K, V]` yields a pair, such as a key and value or a value and error.
+
+### Memory and storage
+
+Streaming lets producers and consumers process data incrementally
+without holding the entire input or intermediate results in memory.
+Read, transform, and consume values as they arrive,
+retaining only the current values and the state the operation needs.
+For filtering, counting, or writing, memory can stay bounded as input grows.
+That bound depends on record sizes, source buffers, batches,
+and anything the consumer retains.
+Aggregation may need growing state, such as one count per distinct key.
+
+Preserve incremental processing throughout the pipeline:
+a producer that loads the whole input before yielding still retains that input.
+Likewise, `slices.Values`, `slices.All`, `maps.Keys`, `maps.Values`,
+and `maps.All` expose sequences over existing collections;
+they avoid an additional collection while keeping the source storage alive.
+Use them at sequence API boundaries.
+A slice or map already supports direct ranging in local code.
+
+Materialize at the boundary that needs stored results:
+random access, an owned snapshot, repeated passes over a single-use source,
+or sorting unsorted data.
+Use `slices.Collect`, `maps.Collect`, or `maps.Insert` for those boundaries.
+Feed an API that supports batching with bounded batches,
+and bound any outstanding batches it retains.
+For sorted map keys, `slices.Sorted(maps.Keys(m))` collects and sorts them;
+range over the map directly when order does not matter.
+Map iteration order is unspecified.
+
+### Producing and consuming values
+
+Return a sequence from a traversal or transformation
+so callers can filter, transform, count, write, or stop after enough results
+without collecting the values first.
+Keep reads and transformations inside the iterator function.
+The producer must stop as soon as `yield` returns false,
+including through nested loops and adapters:
+
+```go
+func Active(records iter.Seq[Record]) iter.Seq[Record] {
+	return func(yield func(Record) bool) {
+		for record := range records {
+			if record.Active && !yield(record) {
+				return
+			}
+		}
+	}
+}
+
+for record := range Active(store.Records()) {
+	if err := writeRecord(w, record); err != nil {
+		return fmt.Errorf("write record: %w", err)
+	}
+}
+```
+
+Breaking or returning from the consumer loop stops the upstream sequence.
+
+For a fallible producer, `iter.Seq2[Record, error]` carries values and errors.
+Check each yielded error
+and apply [Wrapping errors](#wrapping-errors) at the consumer
+as at an ordinary call site.
+Yield a terminal read error once, then end the sequence.
+An iterator that owns a resource should acquire it inside the iterator function
+and defer cleanup there, so an early `break` or `return` also releases it.
+Document whether a sequence can be traversed again;
+streams that cannot be rewound are single-use.
+
+### Pulling values
+
+Use `iter.Pull` or `iter.Pull2` when the consumer must control
+when to advance a sequence, such as when pairing two streams.
+They return `next` and `stop` functions:
+
+```go
+next, stop := iter.Pull(seq)
+defer stop()
+value, ok := next()
+```
+
+`Pull2` returns two values and `ok` from `next`.
+Defer `stop()` immediately so early exits release the producer.
+Ordinary `for range` consumption does not need `Pull`.
+See [iter](https://pkg.go.dev/iter) for the sequence and pull contracts.
+
+## Strings and bytes
+
+Use `strings.Cut` or `bytes.Cut` to split around the first separator,
+and `CutLast` to split around the last separator.
+These return the pieces and a `found` boolean,
+avoiding index arithmetic and a separate missing-separator branch.
+
+For line-, field-, or separator-delimited iteration,
+`strings.Lines`, `strings.FieldsSeq`, and `strings.SplitSeq`
+have corresponding `bytes` functions.
+They yield one part at a time without collecting a slice first.
+`Lines` keeps each line's terminating newline.
+`Lines` and `SplitSeq` return single-use iterators;
+call the function again for another pass.
+Use `Split` or `Fields` when a slice is the desired result.
 
 ## Parse, don't repeatedly validate
 
@@ -545,6 +725,85 @@ Code that receives a `JobID`
 should not need to re-check
 whether it is shaped like a valid job ID.
 The type boundary should carry that guarantee.
+
+## JSON
+
+Use `encoding/json/v2` for new JSON code.
+Its `Marshal` and `Unmarshal` functions accept options,
+and `MarshalWrite` and `UnmarshalRead` work directly with writers and readers.
+The v2 defaults reject duplicate object names and invalid UTF-8.
+They also encode nil maps and slices as empty objects and arrays,
+so preserve an existing wire contract deliberately when changing established code.
+
+```go
+import "encoding/json/v2"
+
+data, err := json.Marshal(record)
+if err != nil {
+	return fmt.Errorf("marshal record: %w", err)
+}
+if err := json.Unmarshal(data, &decoded); err != nil {
+	return fmt.Errorf("unmarshal record: %w", err)
+}
+```
+
+For a field whose zero value should be absent from JSON,
+use `omitzero` instead of a custom marshaler or `omitempty`.
+Unlike `omitempty`, it omits a zero `time.Time`:
+
+```go
+type Event struct {
+	At time.Time `json:"at,omitzero"`
+}
+```
+
+See [JSON v2](https://pkg.go.dev/encoding/json/v2)
+for options and representation details.
+
+## Identifiers and random text
+
+Use the standard `uuid` package to generate and parse UUIDs.
+`uuid.New()` selects a suitable default algorithm;
+use `uuid.NewV4()` or `uuid.NewV7()` when the UUID version is part of a contract.
+`uuid.Parse` validates an incoming UUID string.
+An existing third-party UUID type may still be required by an established API.
+
+Use `crypto/rand.Text()` for an opaque secret string or token
+when its base32 alphabet and variable length fit the contract.
+It supplies at least 128 bits of randomness.
+Do not substitute it for a UUID or a token with a required format.
+
+## Filesystem boundaries
+
+`os.OpenRoot` opens a directory for operations confined to it.
+Use its `os.Root` methods for paths supplied from outside the trust boundary;
+they reject paths that escape the root through `..` or symbolic links.
+String prefix checks on cleaned paths do not provide that guarantee.
+
+```go
+root, err := os.OpenRoot(baseDir)
+if err != nil {
+	return fmt.Errorf("open root %q: %w", baseDir, err)
+}
+defer root.Close()
+
+file, err := root.Open(name)
+if err != nil {
+	return fmt.Errorf("open %q: %w", name, err)
+}
+defer file.Close()
+```
+
+## HTTP routing
+
+`http.ServeMux` accepts method and path-wildcard patterns.
+Read a matched segment with `r.PathValue`:
+
+```go
+mux.HandleFunc("GET /items/{id}", func(w http.ResponseWriter, r *http.Request) {
+	serveItem(w, r, r.PathValue("id"))
+})
+```
 
 ## Enums
 
@@ -622,13 +881,28 @@ They deserve more scrutiny
 when they become exported parameters,
 configuration fields, or interface methods.
 
+## Goroutines
+
+`sync.WaitGroup.Go` starts a goroutine and accounts for its completion:
+
+```go
+var group sync.WaitGroup
+group.Go(work)
+group.Wait()
+```
+
+This replaces the usual `Add(1)`, `go`, and deferred `Done` sequence.
+The function passed to `Go` must not panic.
+It does not return errors; use an error-aware group when failures
+must be collected or cancel sibling work.
+
 ## Testing
 
 ### Context
 
 Use `t.Context()` instead of `context.Background()`.
-It returns a context that is canceled when the test ends,
-which catches code that outlives the test.
+It is canceled just before `t.Cleanup` runs,
+so cleanup can wait for background work that observes cancellation.
 
 ```go
 // BAD
@@ -759,7 +1033,48 @@ This applies to concurrency tests,
 event-delivery tests,
 absence-of-event tests,
 and background-worker tests.
-Use a time-based check only when no deterministic signal is practical.
+Use a real-time check only when no deterministic signal
+or virtual-time test is practical.
+
+For behavior driven by timers or deadlines,
+`testing/synctest.Test` provides a bubble with virtual time.
+Create the timers and goroutines inside the bubble;
+`synctest.Wait` lets their activity settle before an assertion.
+`synctest.Sleep(d)` advances virtual time by `d`
+and then waits for activity at that time to settle.
+This is suitable for boundary assertions without real sleeping:
+
+```go
+func TestReadyAfterDelay(t *testing.T) {
+	synctest.Test(t, func(t *testing.T) {
+		var ready atomic.Bool
+		time.AfterFunc(10*time.Second, func() { ready.Store(true) })
+
+		synctest.Sleep(10*time.Second - time.Nanosecond)
+		assert.False(t, ready.Load())
+		synctest.Sleep(time.Nanosecond)
+		assert.True(t, ready.Load())
+	})
+}
+```
+
+The bubble cannot make external I/O or unrelated goroutines deterministic.
+Use explicit signals for those boundaries.
+
+### HTTP tests
+
+`httptest.NewTestServer(t, handler)` serves requests on an in-memory network
+and registers server cleanup with the test.
+Its `server.Client()` routes requests to that server without a TCP port,
+including requests made inside a `synctest` bubble.
+Call `Start` only when a real loopback listener is needed.
+
+### Benchmarks
+
+Use `for b.Loop() { ... }` for benchmark iterations.
+It keeps call arguments and results in the measured body alive,
+so the compiler cannot eliminate the operation being measured.
+Put reusable setup before the loop and cleanup after it.
 
 ### Test-only API surface
 
@@ -843,3 +1158,10 @@ t.Run("WithoutCache", func(t *testing.T) {
 	// ...
 })
 ```
+
+## Tests
+
+When changing this guidance,
+read [tests/README.md](tests/README.md).
+Run the relevant [Go scenarios](tests/scenarios/go.md)
+with fresh subagents that have empty context windows.
