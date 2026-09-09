@@ -3,6 +3,7 @@
 Use current Go language and standard library facilities for new code.
 Follow an explicit project requirement to support an older Go version.
 
+- [Module files](#module-files)
 - [Viewing dependency source](#viewing-dependency-source)
 - [Tool dependencies](#tool-dependencies)
 - [Context usage](#context-usage)
@@ -49,6 +50,25 @@ Follow an explicit project requirement to support an older Go version.
   - [Test-only API surface](#test-only-api-surface)
   - [Table tests](#table-tests)
 - [Tests](#tests)
+
+## Module files
+
+Use Go commands to update `go.mod` rather than editing its text by hand.
+For directive changes such as a module path or replacement,
+use `go mod edit -module=PATH` or `go mod edit -replace=OLD=NEW`.
+It changes the file without resolving the module graph.
+Use `go get MODULE@VERSION` when selecting a module version,
+and `go get go@VERSION` when changing the Go version;
+these commands account for constraints from other modules.
+
+After changing imports or module directives,
+run `go mod tidy` to reconcile requirements and checksums
+with the packages in the module.
+Let tidy remove requirements that are no longer needed.
+Use `go get MODULE@none` only when deliberately removing a module;
+it can also change the versions selected for other modules.
+Review the resulting `go.mod` and `go.sum` changes,
+then run the relevant tests.
 
 ## Viewing dependency source
 
