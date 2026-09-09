@@ -783,7 +783,6 @@ require('lazy').setup({
 
 	-- LSP and language features {{{2
 	'folke/trouble.nvim',
-	'https://git.sr.ht/~whynothugo/lsp_lines.nvim',
 	{
 		'mason-org/mason-lspconfig.nvim', -- {{{3
 		dependencies = {
@@ -1833,8 +1832,6 @@ require('trouble').setup {
 	warn_no_results = false,
 	open_no_results = true,
 }
-
-require('lsp_lines').setup()
 
 vim.diagnostic.config({
 	virtual_text = false,
