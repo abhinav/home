@@ -1,11 +1,11 @@
 -- Terminal customizations
 
 local function newTerminal()
-    local iterm = hs.application.find('iTerm2')
-    if iterm == nil then
-        hs.application.launchOrFocus('iTerm2')
+    local ghostty = hs.application.find('Ghostty')
+    if ghostty == nil then
+        hs.application.launchOrFocus('Ghostty')
     else
-        iterm:selectMenuItem({'Shell', 'New Window'})
+        ghostty:selectMenuItem({'File', 'New Window'})
     end
 end
 

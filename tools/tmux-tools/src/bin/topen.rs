@@ -173,15 +173,13 @@ fn run() -> Result<(), Error> {
     {
         tmux.new_detached_session(&session_name, &cli.directory)?;
     }
-
     let default_window_name = default_window_name(&cli.directory);
     let window_name = cli
         .window_name
         .as_deref()
         .or(default_window_name.as_deref());
-
     tmux.new_window(&session_name, &cli.directory, window_name)?;
-    focus_iterm();
+    focus_ghostty();
 
     Ok(())
 }
@@ -196,10 +194,10 @@ fn default_window_name(directory: &Path) -> Option<String> {
     }
 }
 
-fn focus_iterm() {
+fn focus_ghostty() {
     #[cfg(target_os = "macos")]
     {
-        let [program, flag, script] = iterm_focus_command();
+        let [program, flag, script] = ghostty_activation_command();
         _ = std::process::Command::new(program)
             .args([flag, script])
             .stdin(std::process::Stdio::null())
@@ -209,15 +207,11 @@ fn focus_iterm() {
     }
 }
 
-fn iterm_focus_command() -> [&'static str; 3] {
+fn ghostty_activation_command() -> [&'static str; 3] {
     [
         "osascript",
         "-e",
-        r#"if application "iTerm2" is running then
-    tell application "System Events" to set frontmost of process "iTerm2" to true
-else
-    tell application "iTerm2" to activate
-end if"#,
+        "tell application \"Ghostty\" to activate",
     ]
 }
 
