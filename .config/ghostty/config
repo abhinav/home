@@ -33,6 +33,8 @@ palette = 13=#ff679f
 palette = 14=#9aefff
 palette = 15=#feffff
 
+split-divider-color = #444444
+
 palette-generate = true
 
 # bold colors are brighter.
