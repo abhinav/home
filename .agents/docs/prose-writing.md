@@ -67,6 +67,61 @@ Present each prerequisite before reasoning that depends on it.
 When an important concept is unfamiliar, explain the need it answers, give its stable name,
 show what it represents or does, and state its material limits.
 
+## Choose the sentence mode
+
+A passage can give instructions, describe behavior,
+or use separate sentences for both purposes.
+Choose the sentence mode from what the reader must do with the passage.
+
+For procedural text:
+
+- use the imperative form to tell the reader what to do;
+- keep explanatory information outside the instruction
+  when it does not change the action.
+
+Before formatting the procedure,
+count each command that directs the reader
+to perform or avoid an action as one instruction.
+Instructions are independent when the reader can complete, skip,
+or fail one instruction without performing the other.
+Keep independent instructions in separate sentences.
+A single instruction can name several simultaneous effects
+when one atomic action produces them.
+
+Name the subject of each condition and the object of each instruction.
+When a condition evaluates one object
+and its instructions act on another object,
+repeat the established nouns instead of using pronouns.
+Do not omit an instruction's object
+merely because the operation or surrounding context makes it guessable.
+For example, do not write
+`If the archive's checksum is invalid, keep it in quarantine.`
+The pronoun can refer to the archive or the checksum.
+When one condition controls several independent instructions,
+state the condition as a lead-in and list each instruction separately:
+
+```text
+If the checksum is invalid:
+
+1. Keep the archive in quarantine.
+2. Do not import the archive.
+```
+
+Apply limits on steps, lines, or list items
+only after preserving the instruction boundaries.
+A numbered step, paragraph, or list item can contain multiple sentences.
+If the requested format cannot preserve the boundaries,
+keep the boundaries and identify the format conflict.
+
+For descriptive text:
+
+- use declarative sentences to explain behavior or state;
+- give information gradually in the order the reader needs it.
+
+Do not force a complete artifact into one mode.
+A runbook can contain descriptive context followed by procedural steps,
+but each sentence should make its purpose clear.
+
 ## Keep referents stable
 
 The writer and reader should both be able to identify
@@ -74,6 +129,11 @@ what each sentence refers to.
 Reuse a stable, real name when the same entity remains the subject.
 Repetition is preferable to a synonym, generic title,
 or polished variation that makes identity ambiguous.
+
+Use a pronoun only when it has one clear referent.
+When a pronoun could refer to multiple nouns, repeat the applicable noun.
+Do not replace a repeated noun with a synonym or pronoun
+only to add variation, avoid repetition, or reduce word count.
 
 When no stable name exists or the name does not matter,
 describe the precise role or behavior instead of inventing a label.
@@ -156,7 +216,7 @@ state the contract in prose.
 
 Use an executable demonstration when the reader needs to follow usage,
 branching, looping, or state-changing logic,
-or see the exact representation of an input, output, or failure.
+or see the verbatim representation of an input, output, or failure.
 Preserve that executable shape instead of narrating each step in prose.
 Use concrete code when the implementation syntax is established.
 Use clearly labeled pseudocode
@@ -206,7 +266,7 @@ and necessary for the reader's task.
 Use a visualization when relationships,
 state changes, ownership, or sequence
 would be harder to evaluate in linear prose.
-Identify the exact relationship the reader must recover,
+Identify the specific relationship the reader must recover,
 then choose the smallest representation that exposes it:
 
 - Use a table to compare repeated fields, mappings, or alternatives.
@@ -257,6 +317,22 @@ Give each paragraph one explanatory job.
 Use concrete subjects and actions
 that identify what changes and who changes it.
 Define an unfamiliar acronym, unit, or term on first material use.
+
+Use sentence length as a review signal rather than a mechanical target.
+Review an instruction that has more than 20 words
+and a descriptive sentence that has more than 25 words.
+Look for multiple instructions, topics, conditions, or causal steps.
+Split them when each part remains clear,
+but preserve a longer sentence when splitting it would hide the relationship.
+
+Review a prose noun group that contains more than three words.
+If the full term is established and necessary, introduce it in full.
+Then use a stable shorter form when the source or audience establishes one.
+Do not shorten code identifiers, commands, quotations,
+or established technical terms to satisfy this review signal.
+
+When a semicolon joins separate actions or topics,
+prefer separate sentences or a vertical list.
 
 Prefer syntax that shows a relationship over a label that merely implies it.
 Use a compound modifier only when readers will recognize it
@@ -340,6 +416,8 @@ Before returning external prose, check that the reader can:
 - identify the answer, decision, or observed consequence;
 - understand necessary terms before the explanation relies on them;
 - follow important causes, actor handoffs, and state transitions;
+- distinguish procedural instructions from descriptive information;
+- find no instruction that hides several independent actions in one sentence;
 - identify which behavior changed and which relevant behavior did not;
 - distinguish observed evidence from inference or future work;
 - understand what each retained code shape, executable demonstration,
@@ -349,6 +427,8 @@ Before returning external prose, check that the reader can:
 - recover each material relationship
   without unpacking a coined modifier
   or ignoring a clearer clause that already states it;
+- resolve each pronoun to one referent;
+- find stable terminology for each repeated concept;
 - find no precision or emphasis word
   whose deletion would leave the claim unchanged;
 - use the explanation without access to the conversation; and

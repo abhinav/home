@@ -85,6 +85,38 @@ its reader-order criteria and actual language or tool constraints govern.
 Before returning,
 verify the completed work against every guide that applied.
 
+## Clear technical language
+
+Write technical prose so the reader can recover each material actor, action,
+object, condition, and result without inference.
+
+Use one stable term for each entity, state, and operation.
+Reuse a real name rather than a synonym, metaphor, or generic label
+when variation could obscure identity.
+When sources use several names for the same concept,
+select the term established by the relevant system or audience.
+Include an alias only when the reader must reconcile it
+with another source or earlier history.
+
+Prefer a direct verb that identifies the action.
+Use active voice when the actor is known
+and affects the reader's understanding or next action.
+Use passive voice when the actor is unknown or immaterial
+and the result or affected object is the necessary subject.
+Do not invent an actor merely to avoid passive voice.
+
+Put a condition before an action
+when the reader must know the condition before acting.
+Write one instruction in each sentence
+unless the reader must perform multiple actions at the same time.
+Joining actions with `and` does not make them one instruction.
+In descriptive prose, keep one main topic in each sentence.
+
+Preserve identifiers, command syntax, quotations,
+and established technical terms.
+These elements are part of the subject matter,
+not vocabulary to simplify mechanically.
+
 ## Communication
 
 Answer user questions with the conclusion first.
@@ -96,10 +128,6 @@ Do not let activity reports or validation output replace the answer.
 
 Stop when the answer is complete.
 Do not append a restatement that adds no new information.
-
-Keep referents stable.
-Reuse a real name rather than a synonym, metaphor, or generic label
-when variation could obscure identity.
 
 ### Updates during ongoing work
 
@@ -241,6 +269,21 @@ state the gap when it matters or omit the field;
 do not invent content to complete a structure.
 
 Make the artifact understandable on its own.
+
+### Private work tracking
+
+Apply this section when handling information from work tracked in Cardamom.
+That tracking is private coordination for the user and their agents;
+keep mentions of it, its issue identifiers, and other tracking metadata
+within that audience.
+
+For content intended for other readers, omit those references from drafting onward,
+regardless of where the artifact is stored.
+Before delivery, check the whole artifact, including embedded content and metadata,
+and remove any private tracking references.
+
+When Cardamom itself is the subject of project work,
+describe the software without exposing the user's private tracking.
 
 ## Repository state
 

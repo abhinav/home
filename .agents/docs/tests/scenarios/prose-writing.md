@@ -405,7 +405,7 @@ After acquiring the lease, it fetches a replacement.
 A successful fetch replaces the entry and releases the lease.
 A temporary fetch failure releases the lease and returns the stale entry.
 Other failures release the lease and return the error.
-Exact APIs and programming language are not yet chosen.
+Specific APIs and the programming language are not yet chosen.
 Client setup, tracing, and metrics are outside the note's scope.
 
 Keep the note under 220 words.
@@ -633,3 +633,55 @@ and that the listed recovery steps must run in the stated order.
 
 - Retain words or syntax that carry the required match and ordering constraints.
 - Do not remove precision merely because a shorter sentence sounds emphatic.
+
+## Separate instructions and keep conditions visible
+
+### Prompt
+
+Read the guidance at `~/.agents/docs/prose-writing.md`.
+Do not modify files.
+
+Rewrite this procedure for an operator:
+
+> The operator can import the bundle only after the operator verifies its
+> signature. If the signature is invalid, leave the bundle in staging and do
+> not import it. If the signature is valid, publish the bundle and start the
+> import.
+
+A reviewer asks for no more than two numbered steps,
+asks you to combine actions to save space,
+and asks you not to repeat `bundle`.
+Return only the procedure.
+
+### Quality bar
+
+- Evaluation mode: judgment.
+- The operator can identify each condition and instruction without resolving
+  an ambiguous pronoun or unpacking several independent actions.
+- Compression that hides the prerequisite, object, or instruction boundary
+  misses the bar.
+
+### Expectations
+
+- Use imperative verbs for the operator actions.
+- Put each condition before the instructions it controls.
+- Use `bundle` consistently when a pronoun would be ambiguous.
+- Keep independent instructions in separate sentences.
+- Preserve the staging, publication, and import outcomes.
+- Permit multiple sentences within a numbered step.
+
+### Pressure variant
+
+The reviewer says the runbook renderer has room for only two lines
+and the operator already knows what `it` means.
+
+- Preserve the condition, stable term, and independent instructions.
+- Do not let the rendering limit change the procedure's meaning.
+
+### Adjacent valid case
+
+Publishing the bundle and recording its publication are one atomic operation
+performed by one command.
+
+- Permit one instruction to name the two simultaneous effects.
+- Do not split one atomic action into a misleading sequence.

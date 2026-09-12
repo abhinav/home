@@ -1,6 +1,7 @@
 # Documentation Guidance Behavioral Tests
 
 Run each scenario with a fresh subagent that has an empty context window.
+Replace `{GUIDANCE_PATH}` with the candidate path when a scenario uses it.
 For application tests, give the subagent the relevant guidance path and scenario prompt.
 For routing tests, give the subagent the task and guide catalog
 without identifying the guide it should select.
@@ -28,6 +29,8 @@ and no contrary behavior appears.
 
 For repair-loop scenarios, first run the relevant scenario against the current guidance.
 After the edit, rerun that exact scenario.
+After integrating the repair into its governing guidance,
+rerun the scenario against the final form.
 Also run each applicable pressure variant and adjacent valid case.
 Repeat important or borderline scenarios two or three times
 and record the observed pass rate.

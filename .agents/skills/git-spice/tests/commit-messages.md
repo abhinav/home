@@ -524,10 +524,10 @@ Final tree:
 
 Run-local context:
 
-- Before the change, inspection produced this exact diagnostic:
+- Before the change, inspection produced this diagnostic verbatim:
   `manifest references missing block 7` followed by
   `archive marked recovered`.
-- The durable recovery procedure uses these exact commands in order:
+- The durable recovery procedure uses these commands in the stated form:
   `archive scan --input damaged.arc`, then
   `archive repair --input damaged.arc`.
 - The problem and recovery procedure are distinct concerns
@@ -540,7 +540,7 @@ Run-local context:
 - Put the diagnostic in a top-level code block indented four spaces.
 - Keep each recovery command with its ordered list item
   and indent every code line eight spaces from the left margin.
-- Preserve the exact diagnostic and command text.
+- Preserve the diagnostic and command text verbatim.
 
 ### Unacceptable behavior
 
@@ -652,7 +652,7 @@ The implementation uses private helpers
 
 ### Expectations
 
-- Name the exact supported constructor syntax and observable status
+- Name the supported constructor syntax and observable status
   because readers need them to invoke and recognize the behavior.
 - Explain the caller-visible contract those public surface areas establish.
 - Omit private helper names and internal call sequencing.
@@ -725,3 +725,59 @@ The existing causal explanation and all other claims remain accurate.
 - Update the affected public name wherever needed.
 - Preserve supported, still-useful explanation.
 - Do not rewrite unrelated parts merely because the message is being revised.
+
+## Use direct language and stable terms
+
+### Prompt
+
+Use the commit-message reference at
+`<skill-path>/references/writing-commit-messages.md`.
+
+Write a commit message for this change.
+
+Final tree:
+
+- The authorization service verifies a credential's scope before caching it.
+- If verification fails, the authorization service leaves the credential
+  uncached.
+- A later request can provide a supported scope and cache the credential.
+
+Observed incident:
+
+- The loader cached credential 84 without write scope.
+- A caller used credential 84 for a write.
+- The write failed after dispatch.
+
+The affected area is `auth`.
+A maintainer requests one short body paragraph,
+says passive voice sounds more formal,
+and asks you to alternate `credential`, `token`, and `key`
+to avoid repetition.
+Return only the commit message.
+
+### Expectations
+
+- Use one stable term for the credential.
+- Use active voice for the known actors when ownership affects the explanation.
+- Use simple past for the observed incident
+  and simple present for behavior in the final tree.
+- Put the failed-scope condition before the uncached result.
+- Prefer direct verbs over noun phrases that hide the actions.
+- Keep each sentence focused on one main claim or causal step.
+
+### Pressure variant
+
+The maintainer says the release is waiting,
+the reviewers prefer formal passive prose,
+and repeated nouns will block approval.
+
+- Preserve stable terms and visible ownership despite the pressure.
+- Do not rotate synonyms for style.
+
+### Adjacent valid case
+
+The only incident evidence says that credential 84 was corrupted in transit.
+The actor is unknown and does not affect the change.
+
+- Permit passive voice for the unknown action.
+- Do not invent an actor to force active voice.

@@ -93,6 +93,13 @@ Explain what initiates the behavior, what changes,
 and what result the reader can observe.
 After a dense explanation, state the resulting behavior or invariant.
 
+Use direct descriptive sentences in the body.
+Use simple past for observed prior events
+and simple present for behavior in the final tree.
+Keep one main claim or causal step in each sentence.
+Review a body sentence that has more than 25 words,
+but preserve a longer sentence when splitting it would hide the causal link.
+
 When a failure depends on ordering,
 preserve the stable actors or states and their handoffs,
 enough event order to let the reader predict the failure,
@@ -140,7 +147,7 @@ Preserve compact motivating input or output verbatim
 when its original wording, structure, threshold, or search terms matter.
 When raw evidence is long, noisy, or sensitive,
 retain the smallest safe, self-contained excerpt that carries the claim.
-Paraphrase when the exact form adds nothing.
+Paraphrase when the original form adds nothing.
 
 A test written to drive new behavior records development process,
 even when its author observes the expected red result before implementation.
@@ -212,9 +219,9 @@ A top-level code block therefore has four leading spaces on every line;
 a code block within a top-level list item has eight leading spaces
 measured from the left margin.
 Put a complete command invocation in an indented code block
-when the reader needs its exact form to perform a procedure
+when the reader needs its full form to perform a procedure
 or reproduce evidence.
 Keep command names, flags, and partial syntax inline.
 Put multi-line output in an indented code block
-when its exact text materially supports the problem or result.
+when its original text materially supports the problem or result.
 Place issue references and trailers after the explanatory body.
