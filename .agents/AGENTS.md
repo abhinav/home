@@ -287,13 +287,16 @@ describe the software without exposing the user's private tracking.
 
 ## Repository state
 
-Inspect Git state when needed for a concrete task decision,
+Inspect Git state only when it informs a concrete task decision,
 not as routine bookkeeping.
 
-Change Git state only as required by the authorized work,
-preserving everything outside that scope.
-Permission to edit files alone does not authorize Git mutations.
+Preserve pre-existing worktree and index state,
+including the staged and unstaged split.
+Do not use `git add`, `git restore`, `git reset`, or similar commands
+merely to make unexpected state match your assumptions.
 
-Commit requested follow-ups to an active committed change
+For implementation work in a Git repository,
+leave completed and validated work in a local commit
 unless the user says otherwise.
-Ask before expanding the workflow’s scope.
+Stage only task changes;
+if they cannot be isolated without disturbing existing state, ask.
