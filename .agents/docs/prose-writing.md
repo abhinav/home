@@ -64,16 +64,52 @@ a lifecycle phase, a domain term, a unit, an input, or an established invariant.
 
 Introduce only the prerequisites needed for the reader's task.
 Present each prerequisite before reasoning that depends on it.
-When an important concept is unfamiliar, explain the need it answers, give its stable name,
-show what it represents or does, and state its material limits.
+When an important prerequisite is unfamiliar,
+explain its role and material limits before reasoning from it.
+Apply the naming rule below to its name and definition.
 
-## Keep referents stable
+## Keep names stable and the prose plain
 
-The writer and reader should both be able to identify
-what each sentence refers to.
-Reuse a stable, real name when the same entity remains the subject.
-Repetition is preferable to a synonym, generic title,
-or polished variation that makes identity ambiguous.
+Start with established names and common words.
+Keep an established technical name when it identifies a code entity, state,
+operation, protocol, or domain distinction
+that the reader must connect to the source or another representation.
+Preserve its spelling and use it consistently.
+When the same thing remains the subject, reuse its name or a clear pronoun;
+do not rename it with a synonym, role, behavior, or generic noun
+merely to vary the prose.
+
+Use another technical term only when the reader must use or search for it,
+common words would lose a material distinction,
+or a term familiar to the intended reader
+helps them explain, predict, or compare the behavior.
+When a needed technical term is unfamiliar to the reader,
+do not make it the subject of the opening sentence.
+First explain the behavior or relationship in common words,
+then give its established name.
+When the question asks about that name,
+or the reader must locate or use it before the behavior can be explained,
+lead with the name and define it immediately in common words.
+Do not import properties or consequences that the source does not establish.
+Audience expertise, artifact type, and incidental source jargon
+do not justify it by themselves.
+Define an unfamiliar acronym, unit, or term in common words on first use.
+
+State the source claim with its plain actors, actions, timing, and results.
+Keep the source's plain nouns and verbs when they already carry the relationship.
+Build understanding by connecting those facts in common words when useful.
+Do not replace a plain source verb with a technical verb,
+turn the relationship into a category,
+infer a purpose, or strengthen the claim.
+Prefer `Only five uploads run at once` and
+`` `Retry` returns the existing upload`` to
+`upload concurrency` and `idempotent retry semantics`.
+
+For example, write `` `Builder.Read` reads the configuration and returns steps;
+`Runner.Run` later runs them without reading it again.``
+Do not rename the steps as a `result` or `handle`, or call this
+`configuration-bound planning and plan-governed execution`,
+unless the reader must use or compare that term.
 
 When no stable name exists or the name does not matter,
 describe the precise role or behavior instead of inventing a label.
@@ -89,10 +125,18 @@ without relying on the writer's unstated intent.
 Keep an established name when a synonym or grammatical transformation
 would change the represented entity, state, destination, or boundary.
 
+Before returning, replace each added technical phrase or summary
+that does not meet a reason above with an established actor and common action.
+Remove an opening or closing classification
+when the direct relationship already explains it.
+
 ## Make causes and boundaries visible
 
 Explain what initiates a behavior, which actor performs each action,
 how state changes, and what consequence the reader can observe.
+Show a boundary through the established actors and actions on each side.
+Call it a boundary only when that is an established name
+or the reader must name or compare it.
 Keep event ordering and actor handoffs clear.
 For a sequence, first draft one clause for each distinct action.
 Each clause names its known, relevant actor and affected object,
@@ -128,8 +172,8 @@ when the reader must distinguish them.
 In that case, retain the relevant structure
 and visibly elide unrelated or unestablished parts.
 When this condition holds, prose alone is incomplete;
-under brevity pressure, shorten the shape by eliding more
-rather than replacing it with a prose enumeration.
+under brevity pressure, including a prose word limit,
+elide more rather than replacing the shape with a prose enumeration.
 Use prose alone only when syntax would expose
 no relationship relevant to the reader.
 
@@ -148,6 +192,7 @@ Do not invent syntax for a language or API that is not established.
 
 Use prose with the shape to explain semantics, constraints,
 rationale, consequences, and other behavior the syntax does not express.
+Apply the stable-name and plain-prose rule to that explanation.
 Do not expose a lower-level mechanism merely because code exists for it.
 When the reader needs the contract rather than the mechanism,
 state the contract in prose.
@@ -236,6 +281,9 @@ so the meaning does not depend on color or appearance alone.
 Place each visualization next to the claim it supports.
 Do not repeat the same relationship in several visual forms
 unless each form answers a distinct reader question.
+When revising, retain an existing diagram or table only while it remains
+the smallest useful representation and is easier to evaluate than prose.
+Simplify the prose around a retained structure instead of flattening it.
 
 ### Changes to established shapes
 
@@ -256,7 +304,6 @@ or when the reader needs a copyable target.
 Give each paragraph one explanatory job.
 Use concrete subjects and actions
 that identify what changes and who changes it.
-Define an unfamiliar acronym, unit, or term on first material use.
 
 Prefer syntax that shows a relationship over a label that merely implies it.
 Use a compound modifier only when readers will recognize it
@@ -279,7 +326,8 @@ order, path, quotation, identifier, or another stated constraint.
 Introduce new information progressively.
 Keep directly related context near the claim it supports.
 Use a short list to group related items
-when their execution relationship is not the point.
+when their execution relationship is not the point
+and the reader does not need aligned comparison, mapping, or repeated fields.
 
 Choose implementation specificity by its effect on the reader's task.
 Include a method, helper, library call, algorithm,
@@ -290,8 +338,11 @@ Otherwise explain the behavior, contract, invariant,
 input, output, or user-visible effect
 and omit the lower-level mechanism.
 
-After a dense sequence, state the consequence or reusable mental model.
-Remove remaining implementation details, repeated claims, and process narration
+After a dense sequence, state the consequence or reusable mental model
+with established names and common words.
+After retaining each required code shape, executable demonstration,
+and visualization,
+remove remaining implementation details, repeated claims, and process narration
 that do not help the reader's decision.
 When a requested limit cannot preserve the claim,
 keep the required meaning and state the constraint conflict
@@ -342,8 +393,10 @@ Before returning external prose, check that the reader can:
 - follow important causes, actor handoffs, and state transitions;
 - identify which behavior changed and which relevant behavior did not;
 - distinguish observed evidence from inference or future work;
-- understand what each retained code shape, executable demonstration,
-  or visualization establishes;
+- find each code shape, executable demonstration, visualization,
+  and established technical name needed for the reader's task;
+- understand what each retained representation establishes
+  through stable names and plain surrounding prose;
 - recognize any material uncertainty, exception, or validation gap;
 - confirm that simplification preserved the claim's material distinctions;
 - recover each material relationship

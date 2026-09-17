@@ -508,6 +508,62 @@ in the external migration guide.
 - Permit Mermaid for that artifact.
 - Continue to limit the diagram to the relationships the reader needs.
 
+## Retain only useful tables during revision
+
+### Prompt
+
+Read the guidance at `~/.agents/docs/prose-writing.md`.
+Do not modify files.
+
+Revise both Markdown sections below.
+Keep only the representations and prose that best support each reader's task.
+
+The first maintainer must compare every status
+with its owner and recovery action:
+
+```markdown
+## Recovery
+
+Ready belongs to the scheduler and needs no recovery.
+Blocked belongs to the dispatcher and requires retrying dispatch.
+Stale belongs to the reconciler and requires rebuilding the snapshot.
+
+| Status | Owner | Recovery |
+| --- | --- | --- |
+| `ready` | scheduler | none |
+| `blocked` | dispatcher | retry dispatch |
+| `stale` | reconciler | rebuild snapshot |
+
+The table above shows each status, owner, and recovery action.
+```
+
+The second reader needs only to know what `ready` means:
+
+```markdown
+## Status
+
+| Status | Meaning |
+| --- | --- |
+| `ready` | work can begin |
+
+The table shows that ready means work can begin.
+```
+
+Return only the two revised sections.
+
+### Quality bar
+
+- Evaluation mode: judgment.
+- Each section uses the smallest representation
+  that makes its required relationship easy to evaluate.
+- Retaining every existing structure or flattening both sections misses the bar.
+
+### Expectations
+
+- Retain the recovery table and remove prose that duplicates it.
+- Replace the one-row status table with one sentence.
+- Preserve the supplied statuses, owners, recovery actions, and meaning.
+
 ## Preserve actor ownership under brevity pressure
 
 ### Prompt
@@ -633,3 +689,222 @@ and that the listed recovery steps must run in the stated order.
 
 - Retain words or syntax that carry the required match and ordering constraints.
 - Do not remove precision merely because a shorter sentence sounds emphatic.
+
+## Explain an architectural relationship in plain words
+
+### Prompt
+
+Read the guidance at `~/.agents/docs/prose-writing.md`.
+Do not modify files.
+
+Write a concise conceptual explanation for an architecture reviewer
+who knows Go but is new to this subsystem.
+Keep it under 180 words and do not explain the code line by line.
+
+```go
+type Plan struct {
+    Tasks        []Task
+    Dependencies []Dependency
+}
+
+func (p *Planner) Plan(ctx context.Context, change Change) (Plan, error)
+func (e *Executor) Run(ctx context.Context, plan Plan) error
+```
+
+Each `Planner.Plan` call reads the repository rules
+that exist when the call begins.
+It returns all selected tasks and their dependencies in `Plan`.
+Planning does not reserve resources or run tasks.
+The caller can inspect `Plan` before execution.
+`Executor.Run` later runs the tasks in the supplied `Plan`
+and does not read the repository rules again.
+If the repository rules change,
+another `Planner.Plan` call for the same `Change`
+can return a different `Plan`.
+
+Return only the explanation.
+
+### Quality bar
+
+- Evaluation mode: judgment.
+- The code shape remains visible.
+- The prose uses the supplied names and direct relationships.
+- A plain synthesis may connect the supplied facts
+  when it helps the reader build a mental model.
+- Compressed architectural jargon, invented pattern names,
+  inferred purposes, or stronger claims than the supplied facts miss the bar.
+
+### Expectations
+
+- Preserve `Plan`, `Planner.Plan`, `Executor.Run`, `Change`,
+  repository rules, tasks, and dependencies.
+- State when `Planner.Plan` reads the rules,
+  what it returns, and what `Executor.Run` does not reread.
+- A sentence such as `` `Plan` separates choosing tasks from running them``
+  is a useful synthesis in common words.
+- Do not rename those relationships as rule-dependent planning,
+  plan-bound execution,
+  a materialized decision, policy resolution, or temporal semantics.
+- Do not infer why the caller inspects `Plan`
+  or how `Executor.Run` uses its dependencies.
+
+## Add a useful familiar term after the plain behavior
+
+### Prompt
+
+Read the guidance at `~/.agents/docs/prose-writing.md`.
+Do not modify files.
+
+Write two or three sentences for an architecture review.
+This paragraph describes one worker design;
+the reader will compare it with other designs documented elsewhere.
+Do not describe or infer behavior for those other designs.
+In this design, producers pause while the queue is full
+and resume when consumers make room.
+The audience already knows common concurrency patterns.
+The reviewer asks for the familiar pattern name if one applies,
+but the explanation must remain understandable without that name.
+
+Return only the explanation.
+
+### Quality bar
+
+- Evaluation mode: judgment.
+- The reader can understand the producer and consumer behavior
+  without relying on a pattern name.
+- Omitting the requested familiar name
+  or replacing the behavior with the name misses the bar.
+
+### Expectations
+
+- Explain the pause and resume behavior in common words.
+- Identify the behavior with a familiar, accurate pattern name,
+  such as `backpressure` or bounded producer-consumer behavior.
+- Do not infer dropping, buffering limits, memory effects,
+  throughput, or latency behavior that the prompt does not establish.
+
+## Explain an unfamiliar term after its behavior
+
+### Prompt
+
+Read the guidance at `~/.agents/docs/prose-writing.md`.
+Do not modify files.
+
+Write a conceptual explanation of no more than 120 words
+for an operator who knows service routing but is new to this system.
+
+The service documentation and API use the established term
+`activation epoch`, so the reader must learn that term
+and recognize the `activation_epoch` field later.
+
+The router gives each active backend a number.
+It increments the number when it replaces that backend.
+Every routed write includes the number.
+The backend accepts the write only when the number matches its current number.
+It rejects a write with an older number.
+This check stops a write intended for a replaced backend
+from changing the current backend.
+The API calls the required number `activation_epoch`.
+
+Return only the explanation.
+
+### Quality bar
+
+- Evaluation mode: judgment.
+- The reader can understand the check before relying on its unfamiliar name.
+- Omitting the established term or API field misses the bar.
+
+### Expectations
+
+- Explain the numbered comparison in common words before naming it
+  as the `activation epoch`.
+- Connect `activation_epoch` to the backend's current number.
+- Preserve the router, backend, replacement, acceptance, rejection,
+  and protection relationships.
+
+### Adjacent valid case
+
+The operator asks, "What does `activation epoch` mean?"
+
+- Permit the explanation to begin with `activation epoch`
+  because that established name is the subject of the question.
+- Still pair the name with the numbered comparison in common words.
+
+## Explain established technical names with plain prose
+
+### Prompt
+
+Read the guidance at `~/.agents/docs/prose-writing.md`.
+Do not modify files.
+
+Write a reviewer-facing explanation of at most 180 words
+for engineers who know job queues but are new to this subsystem.
+
+```go
+type Reservation interface {
+    Commit()
+    Release()
+}
+
+func (g *Gate) Reserve(
+    tenant TenantID,
+    job JobID,
+) (Reservation, error)
+```
+
+`Gate` limits how many jobs each tenant can run.
+`Reserve` temporarily holds one tenant slot for one job.
+A worker calls `Commit` only after that job starts.
+If startup fails, the worker calls `Release`, which returns the slot.
+A retry with the same `tenant` and `job`
+gets the same outstanding reservation instead of holding another slot.
+The implementation uses a map and a mutex,
+but those details do not affect the contract.
+
+The reviewer asks you to keep the note concise
+and make it suitable for an architecture review
+rather than a beginner tutorial.
+
+Return only the explanation.
+
+### Quality bar
+
+- Evaluation mode: judgment.
+- A new reader can see the relevant API shape
+  and understand the contract in familiar words.
+- New labels for supplied relationships,
+  renamed source concepts,
+  or prose that restates the code without explaining it miss the bar.
+
+### Expectations
+
+- Lead with the smallest faithful Go shape.
+- Preserve the spelling of `Gate`, `Reserve`, `Reservation`, `Commit`,
+  `Release`, `tenant`, and `job` in the code shape,
+  and use the same names when the prose refers to those entities.
+- Explain the hold, startup, release, and retry behavior in common words.
+- Do not rename the hold as an admission phase,
+  the slot as execution capacity,
+  or the retry behavior as an identity or lifecycle guarantee.
+- Do not explain the map or mutex;
+  if they are mentioned, state only that callers do not depend on them.
+
+### Pressure variant
+
+A staff reviewer says the audience already knows architecture,
+limits the answer to 100 words,
+and asks the writer to avoid unnecessary repetition.
+
+- Keep the established name when it identifies the same entity.
+- Shorten the explanation without inventing abstract labels or aliases.
+- Retain a partial code shape and the contract's material behavior.
+
+### Adjacent valid case
+
+The subsystem's public documentation and API both use `lease`
+for a renewable, time-limited claim,
+and the explanation must discuss that concept several times.
+
+- Keep `lease` as the established domain term.
+- Explain its unfamiliar meaning in common words on first material use.
+- Do not replace it with several friendlier synonyms.
