@@ -93,13 +93,6 @@ Explain what initiates the behavior, what changes,
 and what result the reader can observe.
 After a dense explanation, state the resulting behavior or invariant.
 
-Use direct descriptive sentences in the body.
-Use simple past for observed prior events
-and simple present for behavior in the final tree.
-Keep one main claim or causal step in each sentence.
-Review a body sentence that has more than 25 words,
-but preserve a longer sentence when splitting it would hide the causal link.
-
 When a failure depends on ordering,
 preserve the stable actors or states and their handoffs,
 enough event order to let the reader predict the failure,

@@ -29,8 +29,6 @@ and no contrary behavior appears.
 
 For repair-loop scenarios, first run the relevant scenario against the current guidance.
 After the edit, rerun that exact scenario.
-After integrating the repair into its governing guidance,
-rerun the scenario against the final form.
 Also run each applicable pressure variant and adjacent valid case.
 Repeat important or borderline scenarios two or three times
 and record the observed pass rate.
