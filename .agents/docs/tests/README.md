@@ -50,6 +50,8 @@ Reusable scenarios are grouped by the behavior they primarily protect:
   ownership, contracts, representations, compatibility, and evolution.
 - [Code testing](scenarios/code-testing.md):
   marginal evidence, change-detector avoidance, and detector ownership.
+- [Go](scenarios/go.md):
+  pointer and value semantics for types, receivers, and API shapes.
 - [Guidance routing](scenarios/guidance-routing.md):
   selecting the guides required by the artifact and task.
 - [Global communication](scenarios/global-communication.md):

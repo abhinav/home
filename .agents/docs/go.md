@@ -8,6 +8,7 @@ Follow an explicit project requirement to support an older Go version.
 - [Tool dependencies](#tool-dependencies)
 - [Context usage](#context-usage)
 - [Import aliases](#import-aliases)
+- [Names and scope](#names-and-scope)
 - [Program exits](#program-exits)
 - [Structured logging](#structured-logging)
 - [Error handling](#error-handling)
@@ -139,6 +140,36 @@ Use an alias only for a real naming constraint:
 two imported packages with the same package name in one file,
 an imported package whose declared name differs from its path,
 or an established local convention such as generated protobuf packages.
+
+## Names and scope
+
+Use the shortest name that remains clear at its ordinary use sites.
+As a declaration's scope and the number of competing symbols grow,
+add domain or role context to distinguish it.
+
+Unexported package-level declarations are visible across every file
+in the package and can be shadowed by local declarations.
+Give unexported package-level types, functions, variables, and constants
+enough context to distinguish their package-wide roles
+and leave natural short names available to local code.
+
+```go
+// BAD: generic names occupy the package block.
+type state struct{ /* ... */ }
+type result struct{ /* ... */ }
+type app struct{ /* ... */ }
+var failures metric.Counter
+
+// GOOD: each name identifies its package-wide role.
+type manifestParseState struct{ /* ... */ }
+type resourceComparison struct{ /* ... */ }
+type reconcileApplication struct{ /* ... */ }
+var applyFailureCounter metric.Counter
+```
+
+Use the smallest meaningful qualifier.
+Do not lengthen names with declaration mechanics
+such as `global`, `private`, or `internal`.
 
 ## Program exits
 
@@ -843,10 +874,15 @@ Document the reason when it is not apparent.
 
 ## Pointers and values
 
-Give each type one sharing model.
+Give each type one sharing model based on what a copy means,
+not on whether Go can copy its fields cheaply.
+Treat a struct as pointer-oriented unless it was deliberately designed
+to behave like a primitive value that callers should freely copy.
 Use pointers for objects with identity,
 owned resources or state,
 or values that should not be freely copied.
+A type that owns dependencies and exposes operations through them is an object,
+even when its fields are stable and its methods do not assign to them.
 Carry that model through parameters, results, and collections.
 Pointer semantics do not make `nil` valid.
 
