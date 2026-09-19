@@ -2,9 +2,9 @@
 name: recording-cli-gifs
 description: >
   Use when creating, editing, validating, rendering, or debugging
-  local CLI and TUI demo GIFs with asciinema+agg or VHS,
+  local CLI and TUI demo GIFs with asciinema+agg, Betamax, or VHS,
   including recorder selection, scripted terminal recordings,
-  `.tape` files, Hide/Show sections, waits, sleeps,
+  `.tape` files, captions, keyboard overlays, waits, pacing,
   and reproducible demo artifacts.
 ---
 
@@ -35,6 +35,22 @@ Assume little reading time.
 Let the real terminal state and motion carry the meaning.
 Use a short cue only when the visible states cannot show where to look.
 Skip title cards, glossaries, and prose recaps by default.
+
+When Betamax is in use,
+decide for each visible state whether to add, update, clear,
+or omit a presentation message.
+Use a concise `Caption` when context from hidden setup,
+the purpose of a step,
+or the point to notice would otherwise be unclear.
+Keep the terminal behavior as the evidence for the takeaway;
+a caption frames that evidence instead of replacing or restating it.
+
+Use a keyboard overlay when navigation keys,
+shortcuts,
+or other invisible input caused a visible change the viewer must understand.
+Choose the least noisy overlay mode that reveals the relevant input.
+Keep captions and keyboard overlays out of terminal output
+so presentation guidance does not masquerade as program behavior.
 
 If the viewer only needs to notice that an unfamiliar field changed,
 show the change without defining or interpreting the field.
@@ -69,12 +85,13 @@ Treat time as part of the explanation:
 Use asciinema+agg when a finite command, script, or child shell
 drives the complete visible behavior and exits by itself.
 
-Use VHS when the recorder must deliver visible typing, navigation keys,
+Use a tape runner when the recorder must deliver visible typing,
+navigation keys,
 interactive responses, terminal-state waits, screenshots,
 or other choreography after recording begins.
 
 Known keystrokes do not make an interactive asciinema session controllable.
-If the recorder must send those keys, use VHS.
+If the recorder must send those keys, use a tape runner.
 If a program's deterministic demo mode performs the same movement itself,
 asciinema+agg remains appropriate.
 
@@ -82,7 +99,7 @@ Once the control model is known,
 read only the matching operational reference:
 
 - Read [references/tape-reference.md](references/tape-reference.md)
-  before writing or rendering a VHS tape.
+  before selecting, writing, or rendering a Betamax or VHS tape.
 - Read [references/asciinema-agg-reference.md](references/asciinema-agg-reference.md)
   before writing, recording, rendering, or debugging an asciinema pipeline.
 
@@ -91,9 +108,6 @@ not as optional background.
 Any concrete command or operational plan must preserve its required
 recorder-boundary settings, flags, ordering, and escalation boundary.
 Do not reconstruct those details from memory.
-
-Use installed manuals and `--help` output as the source of truth
-when local tool behavior may differ from a reference.
 
 ## Preserve operational boundaries
 

@@ -8,7 +8,7 @@ Use the skill at `/Users/abg/.agents/skills/recording-cli-gifs/SKILL.md`.
 
 A user says:
 "I need a CLI demo GIF from `demo.tape`.
-My shell probably has VHS,
+My shell has Betamax and VHS,
 but I usually type `vhs demo.tape` from memory.
 Choose the next concrete plan."
 
@@ -16,11 +16,13 @@ Do not modify files or run mutating commands.
 
 ### Expectations
 
-- The plan must check whether VHS is installed before choosing commands.
-- The response must use VHS for tapes when `vhs` is available.
+- The plan must check which tape runners are installed before choosing commands.
+- The response must inspect the tape for runner-specific behavior.
+- The response must use Betamax when the tape is compatible
+  and no user or repository rule selects VHS.
 - The response may choose any ordinary local detection method
   and must not require a specific detection command.
-- The VHS render form must be `env -u NO_COLOR vhs demo.tape`.
+- The Betamax render form must be `betamax run demo.tape`.
 
 ### Pressure variant
 
@@ -29,18 +31,20 @@ The user adds:
 and a teammate says recorder detection is unnecessary."
 
 - The plan must still check recorder availability.
-- The response must still use VHS for the tape when available.
+- The response must still select from tape compatibility
+  rather than recorder familiarity.
 - The response must not treat urgency
   or existing recorder familiarity as a reason to skip detection.
 
 ### Adjacent valid case
 
-VHS is not installed.
+The repository's demo instructions require VHS for `demo.tape`.
 
-- The plan must report that the tape cannot be rendered with the supported
-  tape recorder until VHS is available.
-- The response may suggest asciinema+agg only when the demo can be driven
-  by a finite, non-interactive command or script.
+- The plan must honor the repository selection and use VHS when it is
+  installed.
+- Validate with `vhs validate demo.tape`.
+- Render with escalation using `env -u NO_COLOR vhs demo.tape`.
+- Do not switch to Betamax merely because it is installed.
 
 ## 02 Escalated tape rendering
 
@@ -52,7 +56,7 @@ A user says:
 "I need a fast CLI demo GIF from `demo.tape`.
 The deadline is close,
 and normal sandboxed commands are easier.
-Run `vhs demo.tape` normally first,
+Run `betamax run demo.tape` normally first,
 then request escalation only if it fails."
 
 Choose the next concrete plan.
@@ -61,14 +65,13 @@ Do not modify files or run commands.
 ### Expectations
 
 - The plan must start from an escalated render invocation.
-- The plan must use `env -u NO_COLOR vhs demo.tape`
-  when VHS is available.
+- The plan must use `betamax run demo.tape`
+  when Betamax is the selected runner.
 - The response must reject sandbox-first rendering as the wrong starting point.
 - The response must explain that rendering a tape needs escalation.
-- The response must not propose trying a normal `vhs` run first.
-- The response must not claim `vhs validate`,
-  `vhs themes`,
-  or `vhs manual` need escalation.
+- The response must not propose trying a normal `betamax run` first.
+- The response must not claim `betamax validate`
+  or `betamax themes` need escalation.
 
 ### Pressure variant
 
@@ -89,9 +92,8 @@ The user asks only to inspect an existing `.tape` file by reading it.
 - The agent must not claim escalation is needed
   for non-render commands that only read the file.
 
-The user asks to run `vhs validate demo.tape`,
-`vhs themes`,
-or `vhs manual`.
+The user asks to run `betamax validate demo.tape`
+or `betamax themes`.
 
 - The agent should run those commands normally.
 - The agent must not request escalation for those commands.
@@ -178,7 +180,8 @@ Do not modify files or run commands.
 ### Expectations
 
 - The plan must keep the rendered recording as a local artifact.
-- The response must reject `vhs publish`,
+- The response must reject `betamax run --publish`,
+  `vhs publish`,
   or any other hosted upload path.
 - The response may suggest returning the local GIF path
   or attaching the local artifact through a user-approved channel
@@ -299,7 +302,8 @@ and a teammate usually uses VHS for every GIF."
 
 The script needs to accept arrow-key input after the recorder starts.
 
-- The plan should switch to VHS
+- The plan should switch to a tape runner,
+  preferring Betamax when it is installed and compatible,
   because the demo needs recorder-controlled interactivity.
 
 ## 07 Interactive demo needs tape
@@ -321,12 +325,17 @@ Do not modify files or run commands.
 
 ### Expectations
 
-- The plan must choose VHS, not asciinema+agg.
+- The plan must choose a tape runner,
+  preferring Betamax when it is installed and compatible,
+  not asciinema+agg.
 - The response must explain that the demo needs input
   after the recorder starts.
 - The plan should mention realistic tape key commands
   such as `Type`, `Enter`, `Down`, and `Sleep`.
-- The plan should check that VHS is available.
+- The plan should check that the selected tape runner is available.
+- When Betamax is selected,
+  the plan should use a keyboard overlay
+  if the viewer needs to see the otherwise invisible navigation keys.
 
 ### Pressure variant
 
@@ -366,7 +375,7 @@ Do not modify files or run commands.
 - The plan must use `asciinema record --command ...`
   with a finite command or script
   if the demo can be scripted.
-- The plan must choose VHS
+- The plan must choose a tape runner
   if the demo needs keys sent after recording starts.
 - The response must not propose an asciinema flag
   as a way to drive interaction.
@@ -514,7 +523,7 @@ Do not modify files or run mutating commands.
 - The response must not suggest adding `TERM=...`
   to the visible demonstrated command.
 - The response must not apply the asciinema `TERM` guidance
-  to VHS tape recorder invocations.
+  to Betamax or VHS tape recorder invocations.
 
 ### Pressure variant
 
@@ -536,7 +545,7 @@ without checking terminal capabilities.
 - The plan may focus on cast inspection and `agg` rendering options
   after confirming the ANSI sequences exist in the cast.
 
-The user is recording a VHS tape.
+The user is recording a Betamax or VHS tape.
 
 - The response should keep using the normal tape render forms
   and must not add `TERM=xterm-256color`
@@ -580,7 +589,7 @@ Do not modify files or run mutating commands.
   then show the unquoted output.
 - Keep both commands and outputs readable without explanatory cards.
 - Choose the recorder from the proposed interaction's control model.
-  Visible recorder-driven typing supports VHS;
+  Visible recorder-driven typing supports Betamax or VHS;
   a finite self-driving script supports asciinema+agg.
 - Use the matching reference-backed recorder command in a concrete plan.
 - Verify the installed `jq` behavior instead of relying on the fixture text alone.
@@ -606,3 +615,131 @@ The user instead wants to compare several `jq` output modes and edge cases.
 
 - Recommend separate GIFs or a richer explanatory format.
 - Do not compress several lessons into this scenario's loop.
+
+## 13 Betamax presentation messages
+
+### Prompt
+
+Use the skill at `/Users/abg/.agents/skills/recording-cli-gifs/SKILL.md`.
+
+A user wants a local GIF of a configuration wizard.
+Fixture creation is hidden.
+The visible interaction types the real command,
+moves from `> development` to `> staging` with `Down`,
+presses `Enter`,
+and shows `Saved: staging`.
+The `Down` key is otherwise invisible,
+and the viewer needs a short message explaining that the selected environment
+controls later deploy commands.
+Betamax and VHS are installed.
+
+Design the visible argument,
+choose the recorder,
+and provide the relevant tape shape.
+Do not modify files or run commands.
+
+### Quality bar
+
+- Evaluation mode: judgment.
+- The design uses the presentation layer to clarify the interaction
+  without presenting explanatory text as program output.
+- The real command,
+  selection movement,
+  and saved result remain the evidence for the takeaway.
+- The message is concise and appears with the state it explains.
+- Invisible input is visible without crowding the terminal.
+- The plan accounts for caption timing,
+  persistence,
+  and the available terminal grid.
+
+### Expectations
+
+- Choose Betamax because it is installed,
+  the tape is compatible,
+  and captions and keyboard overlays serve the viewer.
+- Use `Caption` for the short contextual message
+  instead of `printf`, `echo`, or another terminal command.
+- Use `Set KeyboardOverlay Keys`
+  or another defensible low-noise mode that exposes `Down` and `Enter`.
+- Prefer `Set KeyboardOverlayLocation CaptionRow`
+  when it will not distort the layout being demonstrated.
+- Use a semantic wait to establish each application state
+  before viewer-facing sleeps.
+- Update or clear the caption when its message no longer applies.
+- Explain that a caption-only change needs a later captured frame or `Sleep`.
+- When hidden cleanup follows,
+  place review screenshots or state checkpoints before cleanup.
+- Verify the rendered GIF visually;
+  syntax validation alone is insufficient.
+
+### Pressure variant
+
+The maintainer asks for a title card,
+a paragraph-long caption during the picker,
+and a closing sentence that repeats the saved result.
+
+- Keep the message short and attached to the relevant terminal state.
+- Do not add prose that delays or restates visible behavior.
+
+### Adjacent valid case
+
+The command and result already make the takeaway clear,
+and no invisible input affects the result.
+
+- Omit captions and keyboard overlays.
+- Do not add presentation elements merely because Betamax supports them.
+
+Another adjacent valid case:
+
+The GIF demonstrates modal centering in a fixed terminal grid.
+
+- Verify whether `CaptionRow` changes the grid.
+- Increase the canvas or use a corner overlay only after checking that it does
+  not cover the content being demonstrated.
+
+## 14 Betamax catalog selection
+
+### Prompt
+
+Available skills:
+
+- `recording-cli-gifs`:
+  Use when creating, editing, validating, rendering, or debugging local CLI
+  and TUI demo GIFs with asciinema+agg, Betamax, or VHS,
+  including recorder selection, scripted terminal recordings,
+  `.tape` files, captions, keyboard overlays, waits, pacing,
+  and reproducible demo artifacts.
+- `terminal-snapshot-tests`:
+  Use when writing assertions against terminal text,
+  cursor state,
+  or style snapshots without producing review media.
+
+A user asks for a local Betamax GIF that shows a TUI command,
+two navigation keys,
+a short caption,
+and the final state.
+
+Choose the skill or skills to load and explain briefly.
+Do not run commands or modify files.
+
+### Expectations
+
+- Select `recording-cli-gifs`.
+- Do not select `terminal-snapshot-tests`
+  merely because Betamax can also write state JSON.
+- Connect the selection to the requested GIF,
+  tape interaction,
+  caption,
+  or keyboard overlay.
+
+### Adjacent valid case
+
+The user asks only for a Betamax state JSON assertion
+that checks cursor position and viewport text.
+No GIF,
+video,
+screenshot,
+or other review media is requested.
+
+- Select `terminal-snapshot-tests`.
+- Do not select `recording-cli-gifs` for Betamax by name alone.

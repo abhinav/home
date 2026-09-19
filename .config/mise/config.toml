@@ -10,6 +10,7 @@ zig = "latest"
 "github:umputun/revdiff" = "latest"
 pitchfork = "latest"
 "aqua:benbjohnson/litestream" = "latest"
+"github:joshka/betamax" = "latest"
 
 [settings]
 experimental = true

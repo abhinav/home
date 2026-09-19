@@ -1,8 +1,12 @@
 # Recording CLI GIFs behavioral tests
 
 Run each scenario with a fresh subagent that has an empty context window.
-Give the runner the skill path and scenario prompt.
-Give the runner the prompt and input;
+For application scenarios,
+give the runner the skill path and scenario prompt.
+For catalog-selection scenarios,
+give the runner the available-skill catalog and prompt,
+but withhold the target skill path and body.
+Give the runner only the prompt and input;
 withhold the Quality Bar, Expectations, and intended answer.
 Keep tests read-only or confined to a task-local temporary directory
 outside the target repository.
@@ -20,7 +24,7 @@ and no contrary behavior appears.
 For repair-loop scenarios,
 first run the relevant scenario against the current guidance.
 After the edit,
-rerun that exact scenario.
+rerun the same scenario.
 Also run each defined,
 applicable pressure variant and adjacent valid case.
 Repeat important or borderline cases two or three times,
