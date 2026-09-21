@@ -206,9 +206,3 @@ Match the representation to the request and medium:
   one.
 - Return source and rendered output when the user needs an editable artifact and
   a visual review surface.
-
-## Tests
-
-When changing this skill,
-read [tests/README.md](tests/README.md).
-Run the relevant scenarios with fresh subagents that have empty context windows.

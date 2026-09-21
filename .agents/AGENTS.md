@@ -30,55 +30,14 @@ or making a decision listed below,
 load every matching guide.
 Recheck the map when the work reaches a new artifact or decision.
 
-The guides below live in `~/.agents/docs/`.
-
-- `prose-writing.md`:
-  Writing or substantially revising a prose artifact
-  for readers outside the current conversation.
-  This includes documentation, design documents, incident reports,
-  pull request descriptions, commit messages, release notes,
-  application copy, generated reports,
-  and substantive documentation or implementation comments.
-  Also use it for a conversational explanation
-  when the user is trying to understand how or why something works,
-  happened, changed, or follows from the available evidence.
-  A formatting-only edit does not require this guide.
-  A trivial same-scale code comment does not load this guide merely because
-  it is prose.
-- `prose-formatting.md`:
-  Writing or editing prose other than conversational chat.
-- `code-readability.md`:
-  Writing, changing, or reviewing non-generated code.
-- `code-design.md`:
-  Designing or changing ownership, boundaries, contracts, or representations,
-  including while adding code or refactoring.
-- `code-comments.md`:
-  Writing or reviewing comments;
-  introducing or changing domain concepts, non-obvious contracts, invariants,
-  or representation boundaries;
-  or changing code whose local model is not clear from its structure.
-- `code-testing.md`:
-  Deciding what test evidence a code change needs;
-  writing, changing, deleting, or reviewing tests
-  or their supporting infrastructure.
-- `code-review.md`: Reviewing code or a code change.
-- `~/.agents/skills/receiving-code-review/SKILL.md`:
-  Evaluating or responding to feedback on your own code changes.
-- `go.md`: Working with Go code.
-- `cli.md`:
-  Designing or changing a command-line interface
-  or its boundary with application behavior.
-- `~/.agents/skills/commit/SKILL.md`:
-  Drafting, revising, evaluating, reviewing, or applying a commit message;
-  committing work;
-  or changing commit, branch, or stack state.
+Load skills by name.
 
 Routes combine.
-For example, reviewing a Go test loads the readability,
-testing, review, and Go guides.
+Selecting one skill does not displace another skill
+that governs a separate decision in the same task.
 
 Source declaration ordering is a user-wide preference
-owned by `code-readability.md`.
+owned by `$code-readability`.
 Target-local declaration-category conventions do not override that preference;
 its reader-order criteria and actual language or tool constraints govern.
 
@@ -230,12 +189,6 @@ in affirmative, negative, conditional, or contrastive form.
 Preserve verified history only when that history is part of the reader's task.
 
 ## Evidence and completion
-
-A code bug is not fixed without a regression test
-that fails without the fix and passes with it.
-If a regression test cannot be written,
-explain why and state the remaining validation gap
-before presenting the fix as complete.
 
 Treat tests, validators, implementation source, and mocked substitutes
 as evidence about external behavior,

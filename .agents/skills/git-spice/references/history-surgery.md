@@ -222,8 +222,7 @@ git-spice ls --no-prompt
 
 Keep raw `git commit` usage confined to replacement commits
 created as part of the split.
-Use full commit messages that satisfy
-`writing-commit-messages.md`.
+Use full commit messages that satisfy `writing-commit-messages`.
 
 ## Split a lower commit
 

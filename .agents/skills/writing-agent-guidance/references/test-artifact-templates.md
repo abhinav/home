@@ -201,20 +201,3 @@ Use the guidance at `{GUIDANCE_PATH}`.
 For a focused variant trial, give the runner the base `Prompt` plus only the
 prose before the first bullet in that variant section.
 The bullets remain evaluator-only.
-
-## Guidance footer
-
-Add this footer to the target guidance when it has persisted behavioral tests
-and its format permits a footer:
-
-```markdown
-## Tests
-
-When changing this guidance,
-read [tests/README.md](tests/README.md).
-Run the relevant scenarios with fresh subagents that have empty context windows.
-```
-
-If the target guidance needs a special harness,
-add one sentence after the footer command that names the required scenario group
-or harness file.

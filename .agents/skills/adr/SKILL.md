@@ -260,9 +260,3 @@ read relevant records fully and follow status and supersession links.
 Treat a conflict between an active ADR and current code as a finding.
 Do not silently change either side,
 and do not treat rejected or superseded decisions as current constraints.
-
-## Tests
-
-When changing this guidance,
-read [tests/README.md](tests/README.md).
-Run the relevant scenarios with fresh subagents that have empty context windows.

@@ -232,9 +232,3 @@ compare every code and diff shape with the source
 and move any inserted annotation or explanation outside it.
 Verify that source links identify the intended file, version, and line range.
 Report a navigation limitation if it affects the user's ability to inspect the evidence.
-
-## Tests
-
-When changing this guidance,
-read [tests/README.md](tests/README.md).
-Run the relevant scenarios with fresh subagents that have empty context windows.

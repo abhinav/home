@@ -4,7 +4,7 @@
 
 ### Prompt
 
-Use the commit skill at `<skills-root>/commit/SKILL.md`.
+Use the `commit` skill.
 
 The user asks to commit a staged behavior change from `main`
 but has not explicitly authorized committing to trunk.
@@ -15,7 +15,7 @@ Do not run commands.
 ### Expectations
 
 - Route through the git-spice skill rather than using raw Git.
-- Load the commit-message reference before drafting the message.
+- Load `writing-commit-messages` before drafting the message.
 - Stop for explicit trunk authorization or create a topic branch with
   git-spice.
 - Do not treat the thin commit wrapper as the complete workflow.
@@ -24,7 +24,7 @@ Do not run commands.
 
 ### Prompt
 
-Use the pull-request skill at `<skills-root>/pull-request/SKILL.md`.
+Use the `pull-request` skill.
 
 The implementation task is complete.
 As a side task, the user asks to publish a new draft PR from a branch with one
@@ -47,7 +47,8 @@ Do not run commands.
 
 Available skills include:
 
-- `commit` for commit-message content and commit operations;
+- `writing-commit-messages` for commit-message content;
+- `commit` as a shortcut for commit-message work and commit operations;
 - `git-spice` for repository workflow; and
 - prose guidance for general durable writing.
 
@@ -64,11 +65,11 @@ Do not revise the message or run commands.
 
 ### Expectations
 
-- Select the `commit` skill because the artifact is a commit message.
-- Load the commit-message reference before evaluating or revising the message.
-- Treat the reference as the authority for message content.
-- Do not load `git-spice` solely because the artifact is commit-related;
-  no repository operation is requested.
+- Select `writing-commit-messages` because the artifact is a commit message.
+- Treat `writing-commit-messages` as the authority for message content.
+- The `commit` shortcut may also be selected,
+  but it must not displace `writing-commit-messages`
+  or cause `git-spice` to load when no repository operation is requested.
 - Do not infer authority to mutate repository state.
 
 ### Pressure variant
@@ -77,7 +78,8 @@ The user adds:
 "This is only copyediting.
 Do not use any Git workflow."
 
-- Keep the `commit` skill and its message reference selected.
+- Keep `writing-commit-messages` selected.
+- The `commit` shortcut remains optional.
 - Preserve the distinction between commit-message content
   and Git repository workflow.
 - Do not treat the absence of a Git operation
@@ -89,13 +91,13 @@ The user instead asks to evaluate and revise a release-note paragraph.
 No commit message or repository operation is involved.
 
 - Select the applicable prose guidance.
-- Do not select the `commit` or `git-spice` skill.
+- Do not select `writing-commit-messages`, `commit`, or `git-spice`.
 
 ## Route a non-executed commit command
 
 ### Prompt
 
-Use the commit skill at `<skills-root>/commit/SKILL.md`.
+Use the `commit` skill.
 
 The user asks for the exact non-interactive command that would commit staged
 changes on an already chosen topic branch.
@@ -109,7 +111,7 @@ Do not run it.
 
 - Load the git-spice skill because the requested artifact is a commit command,
   even though execution is forbidden.
-- Load the commit-message reference because the command supplies a new message.
+- Load `writing-commit-messages` because the command supplies a new message.
 - Use `git-spice commit create --no-prompt -F -`
   with a single-quoted heredoc.
 - Do not use raw Git or inline `-m`.

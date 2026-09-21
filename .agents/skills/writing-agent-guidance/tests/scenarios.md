@@ -36,7 +36,9 @@ Do not modify files or run mutating commands.
   normally under `tests/README.md` and `tests/scenarios.md` unless the skill has
   another established location.
 - Read `references/test-artifact-templates.md` for the default test README,
-  scenario template, and guidance footer.
+  and scenario template.
+- Keep test-running and maintenance instructions in `tests/README.md`
+  rather than adding a `Tests` footer to the skill entrypoint.
 - Use an invented analogue for the persisted scenario.
 - Do not copy the real failure prompt, private context, names, paths, data,
   or exact incident shape into the persisted scenario.

@@ -157,9 +157,3 @@ If no whole-review interlock is active:
 evaluated, answered,
 and either completed or left with an explicit blocker or decision.
 It does not mean every suggestion was implemented.
-
-## Tests
-
-When changing this skill,
-read [tests/README.md](tests/README.md).
-Run the relevant scenarios with fresh subagents that have empty context windows.

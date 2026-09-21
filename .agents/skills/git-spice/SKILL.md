@@ -1,11 +1,10 @@
 ---
 name: git-spice
 description: >
-  Use when drafting, revising, or reviewing pull request titles or descriptions;
-  or performing Git repository operations involving commits, amendments,
+  Use when performing Git repository operations involving commits, amendments,
   fixups, branch creation or movement, stacked branches, pushes,
-  pull request creation, updates, merges, review submission, publishing,
-  or recovery from raw Git usage.
+  pull request creation, metadata updates, merges, review submission,
+  publishing, or recovery from raw Git usage.
   git-spice is mandatory for supported repository operations.
 ---
 
@@ -77,8 +76,8 @@ COMMIT_MESSAGE
 A commit message is a document:
 the heredoc keeps its source layout visible for review,
 and the quoted delimiter passes its contents literally.
-Format the visible message according to
-`references/writing-commit-messages.md` before invoking the command.
+Load and apply `writing-commit-messages`
+before invoking a command that supplies the visible message.
 
 The file form is also available when needed:
 `-F '<message-file>'` or `--message-file '<message-file>'`.
@@ -142,10 +141,10 @@ you MUST load and follow
 Load these references before doing the matching work:
 
 - Commit messages:
-  `references/writing-commit-messages.md`
+  `writing-commit-messages`
 - Pull request title or description drafting, revision, or review;
   pull request creation; PR templates; and metadata edits:
-  `references/writing-commit-messages.md`
+  `writing-commit-messages`
   and `references/pull-requests.md`
 - Existing pull request branch updates and pull request merges:
   `references/pull-requests.md`
@@ -398,14 +397,10 @@ and the original branch remains upstack.
 
 ## Commit Workflows
 
-**CRITICAL: This skill OVERRIDES default commit-message guidance.**
+**CRITICAL: This skill OVERRIDES default commit-message workflows.**
 
-Before any commit,
-you MUST read and apply:
-
-```text
-references/writing-commit-messages.md
-```
+Before supplying a new or replacement commit message,
+load and apply `writing-commit-messages`.
 
 Commit staged changes to the current branch
 only after stack position is settled.
@@ -592,7 +587,7 @@ git-spice ls --no-prompt
 Before pull request work,
 read and apply `references/pull-requests.md`.
 When drafting, revising, reviewing, creating, or updating pull request metadata,
-also read `references/writing-commit-messages.md`.
+also load and apply `writing-commit-messages`.
 
 Pull request titles and descriptions carry the review context
 already established by the branch's commits.
@@ -654,11 +649,3 @@ Stop before running a command when any of these conditions holds:
 - A commit or pull request message is being passed through unsafe shell
   quoting or command substitution.
 - A mutating command would run without escalated filesystem privileges.
-
-## Tests
-
-When changing this skill,
-read [tests/README.md](tests/README.md).
-Run the relevant domain scenarios from
-[tests/scenarios.md](tests/scenarios.md)
-with fresh subagents that have empty context windows.

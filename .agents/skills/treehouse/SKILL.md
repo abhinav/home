@@ -105,9 +105,3 @@ uncommitted or unsubmitted state.
 Do not remove the directory with `rm -rf`,
 `git worktree remove`,
 or `wt remove`.
-
-## Tests
-
-When changing this skill,
-read [tests/README.md](tests/README.md).
-Run the relevant scenarios with fresh subagents that have empty context windows.

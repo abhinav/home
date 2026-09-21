@@ -4,11 +4,14 @@
 
 ### Prompt
 
-Available documentation guides:
+Available user-level guidance:
 
-- `prose-writing.md` explains reader context, causal structure, boundaries, examples, and evidence.
-- `prose-formatting.md` governs headings, semantic line breaks, and line lengths.
-- `code-comments.md` governs documentation and implementation comments in code.
+- the `prose-writing` skill explains reader context, causal structure,
+  boundaries, examples, and evidence.
+- the `prose-formatting` skill governs headings, semantic line breaks,
+  and line lengths.
+- the `code-comments` skill governs documentation and implementation comments
+  in code.
 
 A user asks for a new Markdown incident report that explains why an API failed,
 what restored service, and which production questions remain unanswered.
@@ -26,9 +29,9 @@ Do not modify files.
 
 ### Expectations
 
-- Select `prose-writing.md` for the incident explanation.
-- Select `prose-formatting.md` for the Markdown artifact.
-- Do not select `code-comments.md` for a Markdown-only report.
+- Select the `prose-writing` skill for the incident explanation.
+- Select the `prose-formatting` skill for the Markdown artifact.
+- Do not select the `code-comments` skill for a Markdown-only report.
 
 ### Pressure variant
 
@@ -43,14 +46,14 @@ and must use semantic line breaks.
 The user asks only to repair line breaks in existing Markdown
 without changing its explanation.
 
-- Select `prose-formatting.md`.
+- Select the `prose-formatting` skill.
 - Do not invent a new explanation or unnecessary prose-writing task.
 
 ## Route prose embedded in code
 
 ### Prompt
 
-A user asks you to write the exact Go documentation comment for this method:
+A user asks you to write the verbatim Go documentation comment for this method:
 
 ```go
 func (p *Pool) Capacity() int
@@ -71,17 +74,17 @@ Do not modify files.
 
 ### Expectations
 
-- Select `prose-writing.md` for the comment's wording.
-- Select `prose-formatting.md` for its source representation.
-- Select `code-comments.md` for the documentation decision.
-- Select `go.md` for the target language.
+- Select the `prose-writing` skill for the comment's wording.
+- Select the `prose-formatting` skill for its source representation.
+- Select the `code-comments` skill for the documentation decision.
+- Select the `go-development` skill for the target language.
 
 ### Adjacent valid case
 
 The user instead asks an ordinary conversational question
 without requesting a persisted artifact or source-style prose.
 
-- Do not select `prose-formatting.md`.
+- Do not select the `prose-formatting` skill.
 
 ## Route code by the decision it reaches
 
@@ -108,11 +111,12 @@ Do not implement the type or write comments.
 
 ### Expectations
 
-- Select `code-readability.md` for the non-generated code.
-- Select `code-design.md` for the new ownership and representation boundary.
-- Select `code-comments.md` to decide how the named concept and invariants
+- Select the `code-readability` skill for the non-generated code.
+- Select the `code-design` skill for the new ownership and representation
+  boundary.
+- Select the `code-comments` skill to decide how the named concept and invariants
   should be exposed to readers.
-- Select `go.md` for the target language.
+- Select the `go-development` skill for the target language.
 
 ### Adjacent valid case
 
@@ -120,21 +124,24 @@ The user instead asks to rename one local Go variable from `x` to `remaining`.
 The rename changes no behavior, comments, tests, APIs, ownership,
 boundaries, contracts, or representations.
 
-- Select `code-readability.md` and `go.md`.
-- Do not select `code-design.md` or `code-comments.md`.
+- Select the `code-readability` and `go-development` skills.
+- Do not select the `code-design` or `code-comments` skills.
+
 ## Route test-evidence decisions before test edits
 
 ### Prompt
 
 Available user-level guidance includes:
 
-- `code-readability.md` for writing or changing non-generated code;
-- `code-design.md` for ownership, contract, and representation decisions;
-- `code-comments.md` for non-obvious concepts and invariants;
-- `code-testing.md` for deciding what test evidence a change needs
+- the `code-readability` skill for writing or changing non-generated code;
+- the `code-design` skill for ownership, contract, and representation
+  decisions;
+- the `code-comments` skill for non-obvious concepts and invariants;
+- the `code-testing` skill for deciding what test evidence a change needs
   and for test artifacts;
-- `code-review.md` for reviewing a code change; and
-- `go.md` for Go code.
+- the `performing-code-review` skill for independently reviewing a code change
+  and producing findings; and
+- the `go-development` skill for Go code.
 
 A user asks you to implement a Go refactor
 that replaces two private boolean fields with a private enum
@@ -158,16 +165,16 @@ Do not implement the refactor.
 
 ### Expectations
 
-- Select `code-readability.md` for the non-generated code change.
-- Select `code-design.md` for the representation and invariant change.
-- Select `code-comments.md` to decide how the new concept and invariant
+- Select the `code-readability` skill for the non-generated code change.
+- Select the `code-design` skill for the representation and invariant change.
+- Select the `code-comments` skill to decide how the new concept and invariant
   should be exposed to maintainers.
-- Select `code-testing.md` to decide whether the existing detectors
+- Select the `code-testing` skill to decide whether the existing detectors
   are sufficient and what validation the refactor needs.
-- Select `go.md` for the target language.
+- Select the `go-development` skill for the target language.
 - Do not require an explicit request to add or modify tests
-  before loading `code-testing.md`.
-- Do not select `code-review.md` for implementation alone.
+  before loading the `code-testing` skill.
+- Do not select the `performing-code-review` skill for implementation alone.
 
 ### Pressure variant
 
@@ -178,7 +185,7 @@ The user adds:
 
 #### Expected behavior
 
-- Keep `code-testing.md` selected because it owns the decision
+- Keep the `code-testing` skill selected because it owns the decision
   to add, retain, replace, or omit test evidence.
 - Do not treat the instruction against unnecessary tests
   as a reason to skip testing guidance.
@@ -193,19 +200,21 @@ choose validation evidence, or inspect a test artifact.
 
 #### Expected behavior
 
-- Select `go.md` for the language-specific explanation.
-- Do not select `code-testing.md` merely because compilation
+- Select the `go-development` skill for the language-specific explanation.
+- Do not select the `code-testing` skill merely because compilation
   can serve as a detector in other tasks.
 
-## Route commit-message review through the commit skill
+## Route commit-message review through writing-commit-messages
 
 ### Prompt
 
 Available user-level guidance includes:
 
-- a commit skill for commit operations and commit-message work;
-- prose-writing guidance for explanatory prose;
-- prose-formatting guidance for durable prose artifacts; and
+- the `writing-commit-messages` skill for commit-message content;
+- a commit skill that serves as a shortcut for commit-message work and commit
+  operations;
+- the `prose-writing` skill for explanatory prose;
+- the `prose-formatting` skill for durable prose artifacts; and
 - code-review guidance for reviewing code changes.
 
 A user provides an existing commit title and body.
@@ -228,9 +237,12 @@ Do not revise the message or run commands.
 
 ### Expectations
 
-- Select the commit skill for reviewing and revising the commit message.
-- Select applicable prose-writing and prose-formatting guidance.
-- Do not exclude the commit skill merely because no Git mutation is requested.
+- Select `writing-commit-messages` for reviewing and revising the commit
+  message.
+- Select the applicable `prose-writing` and `prose-formatting` skills.
+- The commit skill may also be selected as a shortcut,
+  but it must not displace `writing-commit-messages`
+  or imply a commit operation.
 - Do not select code-review guidance solely because the user says `review`;
   the artifact is a commit message rather than a code change.
 
@@ -240,7 +252,9 @@ The user adds:
 "This is only copyediting.
 Please avoid loading any Git-related workflow."
 
-- Keep the commit skill selected because it owns commit-message content.
+- Keep `writing-commit-messages` selected because it owns commit-message
+  content.
+- The commit shortcut remains optional when no commit operation is requested.
 - Do not infer authority to mutate repository state.
 
 ### Adjacent valid case
@@ -249,13 +263,14 @@ The user instead asks to review and revise a release-note paragraph.
 No commit message or commit operation is involved.
 
 - Select the applicable prose guidance.
-- Do not select the commit skill for unrelated durable prose.
+- Do not select `writing-commit-messages` or the commit skill for unrelated
+  durable prose.
 
 ## Route comments by the explanation their reader needs
 
 ### Prompt
 
-A user asks for the exact Go documentation comment for:
+A user asks for the verbatim Go documentation comment for:
 
 ```go
 func (q *Queue) Pending() int
@@ -278,17 +293,18 @@ Do not draft the comment or modify files.
 
 ### Expectations
 
-- Select `prose-writing.md` for the reader-facing behavioral distinction.
-- Select `prose-formatting.md` for the durable source representation.
-- Select `code-comments.md` for the documentation contract.
-- Select `go.md` for Go documentation conventions.
-- Do not exclude prose-writing because the result may be short.
+- Select the `prose-writing` skill for the reader-facing behavioral distinction.
+- Select the `prose-formatting` skill for the durable source representation.
+- Select the `code-comments` skill for the documentation contract.
+- Select the `go-development` skill for Go documentation conventions.
+- Do not exclude the `prose-writing` skill because the result may be short.
 
 ### Pressure variant
 
 A reviewer says the final comment should fit on one physical line.
 
-- Keep prose-writing selected when the behavioral distinction remains material.
+- Keep the `prose-writing` skill selected
+  when the behavioral distinction remains material.
 - Let artifact scale affect the amount of prose,
   not whether the reader contract applies.
 
@@ -301,8 +317,9 @@ The user instead asks whether to keep this private implementation comment:
 i++
 ```
 
-- Select `code-comments.md` to evaluate the comment.
-- Do not select prose-writing merely because the artifact contains prose.
+- Select the `code-comments` skill to evaluate the comment.
+- Do not select the `prose-writing` skill
+  merely because the artifact contains prose.
 - Permit deletion when the comment is only a same-scale translation.
 
 ## Route conversational explanations through prose writing
@@ -311,11 +328,12 @@ i++
 
 Available user-level guidance includes:
 
-- `prose-writing.md` for prose artifacts read outside the current conversation
+- the `prose-writing` skill for prose artifacts read outside the current conversation
   and for conversational explanations the user is trying to understand;
-- `prose-formatting.md` for durable prose source representation;
-- `code-design.md` for designing or changing ownership and contracts; and
-- `go.md` for Go-specific work.
+- the `prose-formatting` skill for durable prose source representation;
+- the `code-design` skill for designing or changing ownership and contracts;
+  and
+- the `go-development` skill for Go-specific work.
 
 A user asks in conversational chat:
 "Help me understand why a Go constructor owns `RetryPolicy`
@@ -336,11 +354,11 @@ Do not answer the Go question itself.
 
 ### Expectations
 
-- Select `prose-writing.md`
+- Select the `prose-writing` skill
   for the explanation the user is trying to understand.
-- Select `go.md` for the language-specific subject.
-- Do not select `prose-formatting.md` for ordinary conversational chat.
-- Do not select `code-design.md` when the user asks only to understand
+- Select the `go-development` skill for the language-specific subject.
+- Do not select the `prose-formatting` skill for ordinary conversational chat.
+- Do not select the `code-design` skill when the user asks only to understand
   an established ownership decision.
 
 ### Adjacent valid case
@@ -353,8 +371,9 @@ Return only the value."
 
 #### Expected behavior
 
-- Do not select `prose-writing.md` for the fact-only response.
-- Do not select `prose-writing.md` merely because the answer is written text.
+- Do not select the `prose-writing` skill for the fact-only response.
+- Do not select the `prose-writing` skill
+  merely because the answer is written text.
 
 ## Route prose artifacts by artifact
 
@@ -362,8 +381,9 @@ Return only the value."
 
 Available user-level guidance includes:
 
-- `prose-writing.md` for prose artifacts and conversational explanations;
-- `prose-formatting.md` for durable prose source representation.
+- the `prose-writing` skill for prose artifacts
+  and conversational explanations;
+- the `prose-formatting` skill for durable prose source representation.
 
 Choose the applicable guidance for each task
 and explain the responsibility of each selection.
@@ -384,10 +404,10 @@ Do not perform the tasks.
 
 ### Expectations
 
-- Select `prose-writing.md` for both prose artifacts.
-- Select `prose-formatting.md` for both durable source artifacts.
+- Select the `prose-writing` skill for both prose artifacts.
+- Select the `prose-formatting` skill for both durable source artifacts.
 - Let artifact scale control the amount of prose,
-  not whether `prose-writing.md` applies.
+  not whether the `prose-writing` skill applies.
 
 ### Pressure variant
 
@@ -398,7 +418,7 @@ and neither needs to explain a cause or cite evidence.
 
 #### Expected behavior
 
-- Keep `prose-writing.md` selected for both artifacts.
+- Keep the `prose-writing` skill selected for both artifacts.
 - Do not use explanatory complexity as the selection gate.
 
 ### Adjacent valid case
@@ -410,7 +430,7 @@ in an existing design document without changing any words.
 
 #### Expected behavior
 
-- Select `prose-formatting.md` for the source-only edit.
+- Select the `prose-formatting` skill for the source-only edit.
 - Do not invent a prose-writing task when the explanation is unchanged.
 
 ## Format pull request references for the message surface

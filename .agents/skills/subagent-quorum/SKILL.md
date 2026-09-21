@@ -121,9 +121,3 @@ Then report:
 
 Summarize the reasoning rather than returning raw subagent transcripts unless
 the user asks for them.
-
-## Tests
-
-When changing this guidance,
-read [tests/README.md](tests/README.md).
-Run the relevant scenarios with fresh subagents that have empty context windows.

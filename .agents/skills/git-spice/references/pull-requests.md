@@ -53,8 +53,8 @@ For multiple commits,
 summarize the overall change.
 Keep the title at or below 72 characters.
 
-Before preparing a pull request body,
-read and apply `writing-commit-messages.md`.
+Before preparing a pull request title or body,
+load and apply `writing-commit-messages`.
 A pull request body follows the same content and representation guidelines
 as a commit-message body,
 except where a repository template supplies the structure.

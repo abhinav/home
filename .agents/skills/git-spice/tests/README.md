@@ -8,8 +8,10 @@ Before dispatch, replace these placeholders:
 
 This permits testing a candidate copy instead of silently loading the
 installed skill.
-For routing scenarios, use one `<skills-root>` that contains candidate copies
-of `git-spice`, `commit`, and `pull-request`.
+For routing scenarios,
+install candidate copies of `git-spice`, `commit`, `pull-request`,
+and `writing-commit-messages` under one skills root,
+then invoke them by name.
 Do not combine candidate git-spice content with installed wrapper skills.
 Do not give it the expectations or intended answer.
 Keep tests read-only or confined to a task-local temporary directory.

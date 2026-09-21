@@ -266,9 +266,3 @@ If a semantic or grid check fails,
 repair the layout or simplify the diagram before delivery.
 Inspect the diagram in the destination when font substitution,
 ambiguous character widths, or wrapping could change the geometry.
-
-## Tests
-
-When changing this guidance,
-read [tests/README.md](tests/README.md).
-Run the relevant scenarios with fresh subagents that have empty context windows.

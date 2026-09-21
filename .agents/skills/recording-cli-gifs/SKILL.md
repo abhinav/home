@@ -132,9 +132,3 @@ Validate each boundary separately:
 Syntax validity does not establish recorder success.
 Recorder success does not establish render success.
 A valid GIF does not establish that the viewer can follow the explanation.
-
-## Tests
-
-When changing this skill,
-read [tests/README.md](tests/README.md).
-Run the relevant scenarios with fresh subagents that have empty context windows.

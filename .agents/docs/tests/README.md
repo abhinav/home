@@ -28,7 +28,7 @@ A scenario passes only when it meets the quality bar, every expectation holds,
 and no contrary behavior appears.
 
 For repair-loop scenarios, first run the relevant scenario against the current guidance.
-After the edit, rerun that exact scenario.
+After the edit, rerun the same scenario.
 Also run each applicable pressure variant and adjacent valid case.
 Repeat important or borderline scenarios two or three times
 and record the observed pass rate.
@@ -37,21 +37,6 @@ when the change can affect their protected behavior.
 
 Reusable scenarios are grouped by the behavior they primarily protect:
 
-- [Prose formatting](scenarios/prose-formatting.md):
-  source representation, semantic line breaks, and line width.
-- [Prose writing](scenarios/prose-writing.md):
-  reader contracts, causal explanation, medium selection,
-  evidence, and explanatory scale.
-- [Code comments](scenarios/code-comments.md):
-  documentation comments, implementation comments, and teaching structure.
-- [Code readability](scenarios/code-readability.md):
-  abstraction depth, change locality, and physical organization.
-- [Code design](scenarios/code-design.md):
-  ownership, contracts, representations, compatibility, and evolution.
-- [Code testing](scenarios/code-testing.md):
-  marginal evidence, change-detector avoidance, and detector ownership.
-- [Go](scenarios/go.md):
-  pointer and value semantics for types, receivers, and API shapes.
 - [Guidance routing](scenarios/guidance-routing.md):
   selecting the guides required by the artifact and task.
 - [Global communication](scenarios/global-communication.md):

@@ -1,15 +1,16 @@
 ---
 name: pull-request
-description: Use when creating pull requests, updating pull request branches, pushing or publishing work for review, editing pull request metadata, or submitting stacked branches. Load and follow the git-spice skill for the workflow.
+description: >
+  Use when creating pull requests, updating pull request branches, pushing or
+  publishing work for review, applying pull request metadata, or submitting
+  stacked branches. Do not use for drafting or reviewing pull request metadata
+  without a pull request operation; use writing-commit-messages instead.
 ---
 
-# Pull Request Command
+# Pull request work
 
-For pull request creation, submission, publication, or metadata updates, load
-and follow:
-
-```text
-../git-spice/SKILL.md
-```
-
-git-spice is the authoritative workflow for these operations.
+Load and follow `git-spice` for pull request creation, submission,
+publication, branch updates, and metadata updates.
+When drafting, revising, reviewing, or evaluating a pull request title or
+description,
+also load and apply `writing-commit-messages`.

@@ -400,7 +400,7 @@ Use a `tests/` directory when the target guidance does not already define
 another test location.
 Any plan to add or update persisted tests is incomplete until it reads
 `references/test-artifact-templates.md` and uses that file for the test README,
-scenario template, and guidance footer.
+and scenario template.
 
 The lightweight default layout is:
 
@@ -418,6 +418,10 @@ target repository, and compare the raw response with held-out expected and
 unacceptable behavior afterward.
 It should distinguish application tests from catalog-selection and pointer-reach
 tests and explain any independent artifact-grading step.
+Keep test-running and maintenance instructions in `tests/README.md`.
+Do not add a `Tests` footer to a skill entrypoint;
+future skill updates are expected to use this skill to discover and maintain
+the package's test artifacts.
 
 `tests/scenarios.md` records the reusable gamut.
 Store full-prompt examples or focused boundary tests according to the behavior
@@ -492,10 +496,3 @@ If testing reveals a new loophole, revise the guidance and repeat the relevant
 scenario.
 Do not treat the first passing run as enough
 when the guidance enforces discipline under pressure.
-
-## Tests
-
-When changing this guidance, read [tests/README.md](tests/README.md).
-Run the relevant scenarios with fresh subagents that have empty context windows.
-Before adding or updating persisted test artifacts, read
-[the test artifact templates](references/test-artifact-templates.md).

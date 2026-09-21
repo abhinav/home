@@ -11,10 +11,6 @@ description: >
 
 # Commit work
 
-Load and follow:
-
-```text
-../git-spice/SKILL.md
-```
-
-That skill contains the commit-message rules and the required commands.
+Load and follow `git-spice` for commit and repository operations.
+When drafting, revising, reviewing, or evaluating a commit message,
+also load and apply `writing-commit-messages`.

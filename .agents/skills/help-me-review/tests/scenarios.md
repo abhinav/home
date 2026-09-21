@@ -505,7 +505,8 @@ Give the panel arguments for that saved comparison too.
 
 Use the skill at `{GUIDANCE_PATH}` for this user request:
 "Help me review the submission-service PR."
-Read `~/.agents/docs/code-review.md` as applicable general review guidance.
+Also apply the `performing-code-review` skill
+as applicable general review guidance.
 The complete eight-file change is `{FIXTURE_DIR}/submission.diff`;
 contract, caller, and captured review-state evidence is in
 `{FIXTURE_DIR}/submission-context.txt`.

@@ -321,9 +321,3 @@ Rebuild the affected medium-specific construction and inspect it again.
 If rendered inspection is unavailable, state that validation gap.
 Do not present source validity or generation success as evidence of visual
 correctness.
-
-## Tests
-
-When changing this guidance,
-read [tests/README.md](tests/README.md).
-Run the relevant scenarios with fresh subagents that have empty context windows.
