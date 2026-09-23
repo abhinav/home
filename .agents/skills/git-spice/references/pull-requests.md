@@ -1,6 +1,15 @@
 # Pull Requests
 
-Use `git-spice branch submit` for one branch.
+Use `git-spice branch submit --branch '<branch>'` for one branch.
+Submission publishes the selected branch's committed history.
+When the requested changes are already committed,
+submit from an existing repository checkout and preserve its current branch.
+A working checkout of the target branch is needed only for additional work
+on files, such as editing, running tests, or resolving conflicts;
+PR creation and updates alone require no checkout or worktree acquisition.
+Inspect committed history with `git log '<base>..<branch>'`
+and committed files or templates with `git show '<branch>:<path>'`.
+
 Use multi-branch `--fill` only when every branch has exactly one commit.
 Each commit message must be intended to become pull request metadata.
 Use `git-spice stack submit --fill` for the whole stack
@@ -75,19 +84,20 @@ or an explicit pull-request-specific instruction.
 For a new pull request:
 
 ```bash
-git-spice branch submit --title '<title>' --body '<body>' --no-prompt
+git-spice branch submit --branch '<branch>' --title '<title>' --body '<body>' --no-prompt
 ```
 
 For a draft pull request:
 
 ```bash
-git-spice branch submit --draft --title '<title>' --body '<body>' --no-prompt
+git-spice branch submit --branch '<branch>' --draft --title '<title>' --body '<body>' --no-prompt
 ```
 
 To request reviewers while creating or submitting:
 
 ```bash
-git-spice branch submit --reviewer user1 --reviewer user2 --title '<title>' --body '<body>' --no-prompt
+git-spice branch submit --branch '<branch>' --reviewer user1 --reviewer user2 \
+  --title '<title>' --body '<body>' --no-prompt
 ```
 
 Never run `git-spice branch submit` without `--title` and `--body`
@@ -121,21 +131,22 @@ Pull request submission has no title-file or body-file flag.
 
 ## Update existing pull requests
 
-Update an existing pull request branch with:
+Publish committed updates to an existing pull request branch with:
 
 ```bash
-git-spice branch submit --no-prompt
+git-spice branch submit --branch '<branch>' --no-prompt
 ```
 
 For an existing pull request,
 `git-spice branch submit` does not update title or body metadata.
-After submitting the branch,
+For title or body changes,
 edit metadata with:
 
 ```bash
 gh pr edit '<number-or-url>' --title '<title>' --body '<body>'
 ```
 
+For a metadata-only request, use `gh pr edit` directly without submission.
 Use `gh pr edit` only for metadata edits.
 Do not use `gh pr create`.
 

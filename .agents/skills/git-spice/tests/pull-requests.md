@@ -107,7 +107,7 @@ steps rather than one intended pull request body.
 
 Use the skill at `<skill-path>/SKILL.md`.
 
-The current branch already has PR 314.
+The current branch `feature/cache-namespaces` already has PR 314.
 The branch commits need updates.
 After those changes, the PR title must be `Preserve cache namespace metadata`
 and its body must be `Keep imported tenant namespaces intact.`
@@ -115,7 +115,8 @@ Give the exact operation order without running commands.
 
 ### Expectations
 
-- Update the branch first with `git-spice branch submit --no-prompt`.
+- Update the branch first with
+  `git-spice branch submit --branch 'feature/cache-namespaces' --no-prompt`.
 - Then use:
 
   ```bash
@@ -280,3 +281,80 @@ and reviewers are waiting.
 The user explicitly requests disabling stack-navigation comments.
 
 - Include `--nav-comment=false` on the pull request submissions.
+
+## 08 Publish committed work after releasing its worktree
+
+### Prompt
+
+Use the skill at `<skill-path>/SKILL.md`.
+
+An experimental layout renderer is finished on local branch `dev/layout-engine`.
+Its twelve commits have been reviewed and validated.
+The temporary worktree was released and its directory removed;
+the tracked branch and Git objects remain in the primary repository.
+You are in that repository on `main` with a clean index and worktree.
+No pull request exists.
+Repository policy requires implementation changes in an isolated managed
+worktree, and a worktree manager is available.
+The previous implementation session used that manager.
+Commit messages and the PR template still need inspection.
+The user asks for a draft PR.
+The reviewer is waiting, implementation took several days,
+and only publication remains.
+
+Give the concrete next action and command plan.
+If worktree management is needed, state the action without inventing commands.
+Do not execute mutations.
+
+### Expected behavior
+
+- Inspect the target branch's committed history and files by ref.
+- Submit from the existing checkout with
+  `git-spice branch submit --branch 'dev/layout-engine' --draft --no-prompt`
+  and explicit title and body synthesized from its commits and template.
+- Preserve the current checkout and index.
+- Require filesystem escalation for mutating Git Spice commands.
+
+### Unacceptable behavior
+
+- Acquire or recreate a worktree merely to inspect commits or publish the PR.
+- Check out the target branch merely to publish it.
+- Read `main` or unqualified `HEAD` as the target branch's review content.
+- Use `--fill` for the twelve-commit branch.
+
+### Existing PR variant
+
+#### Runner prompt addition
+
+Instead of creating a draft PR, the user requests publishing committed updates
+to existing PR 628 while retaining its title, body, and draft state.
+
+#### Expected behavior
+
+- Use named-branch submission without checkout or worktree acquisition.
+- Omit creation metadata and preserve the existing draft state.
+
+### Metadata-only variant
+
+#### Runner prompt addition
+
+PR 628 already contains all the commits.
+The user only requests changing its title to `layout: Bound panel width`.
+
+#### Expected behavior
+
+- Use `gh pr edit '628' --title 'layout: Bound panel width'` directly.
+- Do not submit the branch, acquire a worktree, or switch branches.
+
+### Adjacent valid case
+
+#### Runner prompt addition
+
+Before publication, the user now requests one additional implementation change
+and a focused test run on the feature branch.
+
+#### Expected behavior
+
+- Obtain an appropriate working checkout under repository policy for the
+  requested edit and test, then commit the change before publication.
+- Do not treat ref-based publication as a ban on checkouts needed for file work.

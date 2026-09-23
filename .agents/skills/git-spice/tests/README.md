@@ -14,7 +14,13 @@ and `writing-commit-messages` under one skills root,
 then invoke them by name.
 Do not combine candidate git-spice content with installed wrapper skills.
 Do not give it the expectations or intended answer.
-Keep tests read-only or confined to a task-local temporary directory.
+Keep tests read-only or confined to a task-local temporary directory
+outside the target repository.
+For full-prompt scenarios, give the runner only `Prompt` and any selected
+`Runner prompt addition`; withhold expected and unacceptable behavior.
+After integrating a repair into its governing reference, rerun the failing
+scenario and affected adjacent cases against that final form.
+Repeat important cases with two or three fresh runners and record the pass rate.
 
 Capture the raw response and compare it with the expectations afterward.
 A scenario passes only when every expectation holds
