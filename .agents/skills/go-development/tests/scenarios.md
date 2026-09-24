@@ -221,10 +221,14 @@ Give a concise recommendation with the relevant Go shape or commands.
 - `errors-and-diagnostics.md`:
   Replace `log.Fatal` in a helper
   and add useful context when returning its error.
-- `api-design.md`:
-  Design a constructor,
-  a consumer-owned interface,
-  and options for an exported API.
+- `interfaces.md`:
+  Design a consumer-owned interface
+  and verify implementation compliance.
+- `signatures-and-construction.md`:
+  Design a constructor and parameter object for an exported API.
+- `map-and-boolean-apis.md`:
+  Choose between a map or named records,
+  and between a boolean or named mode for an exported API.
 - `type-semantics.md`:
   Choose pointer or value semantics for an object
   and parse its external identifier at the boundary.
@@ -246,8 +250,15 @@ Give a concise recommendation with the relevant Go shape or commands.
   Register a method-specific route with a path parameter
   and read that parameter.
 - `testing.md`:
-  Test timer behavior without real waiting
-  and add a benchmark for the operation.
+  Choose assertions, test context, and resource cleanup for a unit test.
+- `async-tests.md`:
+  Test timer behavior without real waiting.
+- `http-tests.md`:
+  Test an HTTP handler with a client and server.
+- `benchmarks.md`:
+  Add a benchmark for an operation.
+- `table-tests.md`:
+  Choose a structure and names for uniform test cases.
 
 ### Expected behavior
 

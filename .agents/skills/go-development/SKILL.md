@@ -23,9 +23,12 @@ decision it governs:
   read [Source organization](references/source-organization.md).
 - For process termination, structured logging, or errors,
   read [Errors and diagnostics](references/errors-and-diagnostics.md).
-- For interfaces, function shapes, construction, dependencies,
-  exported members, map-shaped APIs, or boolean API parameters,
-  read [API design](references/api-design.md).
+- For interfaces, interface compliance, or concrete result types,
+  read [Interfaces](references/interfaces.md).
+- For function shapes, construction, dependencies, or exported members,
+  read [Signatures and construction](references/signatures-and-construction.md).
+- For map-shaped APIs or boolean API parameters,
+  read [Map and boolean APIs](references/map-and-boolean-apis.md).
 - For parsing domain values, enums, copying and sharing semantics,
   receiver choice,
   or whether APIs and collections carry pointers or values,
@@ -42,8 +45,17 @@ decision it governs:
   read [Filesystem](references/filesystem.md).
 - For HTTP routing,
   read [HTTP](references/http.md).
-- For Go tests or benchmarks,
+- For Go tests,
   read [Testing](references/testing.md).
+- For asynchronous behavior, event delivery, background workers, timers,
+  or deadlines in tests,
+  read [Async tests](references/async-tests.md).
+- For HTTP tests,
+  read [HTTP tests](references/http-tests.md).
+- For benchmarks,
+  read [Benchmarks](references/benchmarks.md).
+- For choosing or writing table tests,
+  read [Table tests](references/table-tests.md).
 
 Combine these language-specific rules with the general skills that govern the
 decision:
