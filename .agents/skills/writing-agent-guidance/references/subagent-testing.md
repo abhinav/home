@@ -3,6 +3,10 @@
 Use this reference before validating agent-guidance behavior with subagents,
 designing pressure tests, or repairing loopholes discovered during testing.
 
+Use subagents as independent validation surfaces.
+The point is to learn whether the guidance transfers,
+not whether another agent can infer your intended answer.
+
 ## When to test
 
 Use subagent tests for guidance that enforces discipline, has compliance costs,
@@ -31,6 +35,7 @@ they should not mutate shared files, create commits, publish artifacts,
 deploy systems, or modify external state.
 If tool use is necessary, limit it to read-only inspection or artifacts under a
 task-local temporary directory outside the target repository.
+Retain raw responses and artifacts for evaluation.
 
 ## Prepare the evaluation
 
@@ -64,8 +69,8 @@ judgment | conformance
 ```
 
 Give the runner the prompt and representative input.
-Keep the quality bar, expectations, and proposed repair outside the runner
-prompt;
+Keep the quality bar, expectations, diagnosis, and proposed repair outside the
+runner prompt;
 the evaluator or judge applies them afterward.
 
 ## Choose the scenario scope
@@ -100,6 +105,10 @@ the comparison chooses a green candidate and does not replace final-form
 refactor or end-to-end testing.
 
 ## Guidance kinds and test shapes
+
+Test entry and application separately.
+An application runner receives the target guidance and realistic task.
+Catalog-selection and pointer-reach tests exercise entry as described below.
 
 Use the test shape that matches the guidance kind.
 Many guidance systems mix kinds;
@@ -409,6 +418,9 @@ Return to green in the core workflow after diagnosing the loophole.
 Carry the exact failing scenario, captured rationalization,
 applicable pressure or adjacent variant,
 and relevant previously passing cases into that loop.
+
+Use these common red flags to recognize shortcuts
+without maintaining a second rationalization table.
 
 Common red flags:
 

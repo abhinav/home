@@ -6,6 +6,40 @@ Adapt headings and scenario names to the target guidance.
 Preserve the behavioral boundary, but do not copy a real failure into the
 persisted scenario text verbatim.
 
+## Organize and maintain test artifacts
+
+Use a `tests/` directory when the target guidance does not already define
+another test location.
+The lightweight default layout is:
+
+```text
+tests/
+  README.md
+  scenarios.md
+```
+
+Keep test-running and maintenance instructions in `tests/README.md`.
+Do not add a `Tests` footer to a skill entrypoint;
+future skill updates are expected to use this skill to discover and maintain
+the package's test artifacts.
+
+`tests/scenarios.md` records the reusable gamut.
+Store full-prompt examples or focused boundary tests according to the behavior
+being protected, plus any special harness steps needed to reproduce the check.
+Add pressure variants or adjacent valid cases when the claimed boundary requires
+them.
+
+Real failures are diagnostic evidence, not reusable test fixtures.
+Persisted scenarios must be invented analogues that preserve the same behavioral
+boundary, temptation, and expected decision without copying the real prompt,
+private context, names, paths, data, or exact incident shape.
+
+When a real failure produced useful rationalization wording,
+capture the exact wording in the repair record.
+For persisted tests, translate that wording into expectations, red flags,
+or an invented pressure variant unless the quoted text is already generic and
+safe to reuse.
+
 ## `tests/README.md`
 
 ```markdown
