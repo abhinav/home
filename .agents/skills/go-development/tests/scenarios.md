@@ -251,6 +251,9 @@ Give a concise recommendation with the relevant Go shape or commands.
   and read that parameter.
 - `testing.md`:
   Choose assertions, test context, and resource cleanup for a unit test.
+- `subprocess-tests.md`:
+  Test an adapter that invokes an external formatter
+  without requiring that formatter to be installed.
 - `async-tests.md`:
   Test timer behavior without real waiting.
 - `http-tests.md`:
@@ -267,3 +270,340 @@ Give a concise recommendation with the relevant Go shape or commands.
 - Do not read unrelated references merely to survey the skill package.
 - Verify reference access from the runner's file-access trace,
   not from a claim in its response.
+
+## Choose an API for successive values
+
+### Prompt
+
+Use the `go-development` skill.
+Do not read its tests or modify files or external state.
+
+A current-Go package has a draft helper:
+
+```go
+func (c *Catalog) Visit(visit func(Entry) error) error
+```
+
+It reads entries incrementally from an existing parser until EOF;
+read failures are terminal.
+A callback error means stop visiting.
+Callers need to write selected entries, count matches, or return the first match.
+The helper is new and has no compatibility obligations.
+Review the helper's API before implementation
+and show the API and a minimal caller you would retain.
+Explain briefly.
+
+### Expected behavior
+
+- Reach `callbacks.md` from the skill router without being given its path.
+- Follow its iteration pointer to `collections-and-iteration.md`.
+- Return an `iter.Seq2[Entry, error]` and show ordinary loop control in the caller.
+- Preserve incremental reads, terminal error delivery, and early stopping.
+- Keep a consumer's own errors in the caller's control flow.
+
+### Unacceptable behavior
+
+- Retain the traversal callback solely because it can stop on an error.
+- Collect the entire stream or use a sentinel error to return the first match.
+- Infer reference access from the answer instead of checking the tool trace.
+
+### Adjacent valid case
+
+#### Prompt addition
+
+For a separate helper, the parser cannot fail and yields one Entry per step.
+Show the corresponding API shape too.
+
+#### Expected behavior
+
+- Use `iter.Seq[Entry]` for the infallible producer.
+- Do not introduce an error result that the producer does not need.
+
+## Preserve caller control over resource lifetime
+
+### Prompt
+
+Use the `go-development` skill.
+Do not read its tests or modify files or external state.
+
+Two current-Go build commands duplicate opening a scratch workspace
+and releasing it after a sequence of steps.
+Opening can fail; Release cannot fail.
+The commands choose different steps and may return an error between steps.
+Both currently open the workspace successfully, defer its Release,
+and then perform their work.
+Design a shared helper to remove the duplicated setup and cleanup,
+and show how one command calls it.
+No existing helper API is published.
+Give your proposed API, a minimal caller snippet, and a brief rationale.
+
+### Expected behavior
+
+- Return an acquired resource with a cleanup method or cleanup function.
+- Defer cleanup immediately after checking acquisition succeeded.
+- Keep caller-selected steps and early returns outside a lifetime callback.
+- Explain that a shared acquisition helper can preserve the short caller defer;
+  removing every repeated statement is not the design goal.
+- Read `signatures-and-construction.md` for resource lifetime mechanics.
+- If considering a callback, reach `callbacks.md` before settling the API.
+
+### Unacceptable behavior
+
+- Introduce a `With` helper that accepts the command's work as a callback.
+- Drop cleanup on an early return or defer cleanup before checking acquisition.
+
+### Adjacent valid case
+
+#### Prompt addition
+
+A command processes many independent jobs in a loop.
+Each job's workspace must be released before opening the next one.
+Show where the deferred cleanup belongs.
+
+#### Expected behavior
+
+- Scope a function to one job and defer cleanup in that function.
+- Do not retain every workspace until the outer loop's function returns.
+- Do not introduce a lifetime callback to obtain the per-job scope.
+
+## Keep behavior that the caller supplies
+
+### Prompt
+
+Use the `go-development` skill.
+Do not read its tests or modify files or external state.
+
+A current-Go command has an in-memory `[]Build`.
+Build has `Rank int` and `ID string`.
+Sort ascending by Rank and break ties by ID.
+Give the code you would introduce and briefly explain the choice of API.
+
+### Expected behavior
+
+- Reach `callbacks.md` when choosing to pass a comparison function.
+- Keep a typed comparator with `slices.SortFunc` or another suitable sorting API.
+- Compare Rank first, then ID, without integer subtraction overflow.
+- Recognize that the comparison result determines ordering;
+  repeated invocation does not make it a traversal callback.
+
+### Unacceptable behavior
+
+- Replace the comparator with an iterator or a resource-lifetime API.
+- Treat all function parameters as prohibited.
+
+## Avoid callback guidance for unrelated construction
+
+### Prompt
+
+Use the `go-development` skill.
+Do not read its tests or modify files or external state.
+
+A current-Go package needs a constructor for an Indexer.
+It requires an IndexStore and a Logger, validates their configuration,
+and accepts an optional batch size.
+Choose the constructor shape and show its configuration type.
+Explain briefly.
+
+### Expected behavior
+
+- Reach `signatures-and-construction.md` and use its constructor guidance.
+- Preserve required dependency markers and optional configuration defaults.
+- Do not read `callbacks.md` merely because the task involves a function signature.
+
+## Own background work and broadcast readiness
+
+### Prompt
+
+Use the `go-development` skill.
+Do not read its tests or modify files or external state.
+
+A cache service starts workers for a caller-supplied list of keys.
+Several consumers wait for the cache to finish initialization,
+including consumers that may begin waiting after initialization completes.
+Initialization can fail.
+The service also emits a stream of refresh results.
+Design its readiness signal and shutdown contract,
+and explain how the amount of concurrent work is controlled.
+Show the relevant Go shapes.
+
+### Expected behavior
+
+- Use closure for a permanent readiness notification without a payload,
+  with one owner and a receive-only view for observers.
+- Keep readiness success distinct from failure or cancellation.
+- Use value delivery for repeated refresh results, not repeated channel closure.
+- Identify who cancels background work and who waits for completion.
+- Bound concurrent work independently of the number of supplied keys.
+- Do not treat cancellation as proof of completion.
+
+## Represent errors callers can handle
+
+### Prompt
+
+Use the `go-development` skill.
+Do not read its tests or modify files or external state.
+
+A parser's caller needs to show the line and column of an invalid token.
+A session caller needs to recognize that a session is closed.
+An internal decoding failure only needs diagnostic context.
+All three failures may pass through several wrappers.
+Choose their error representations and show how callers inspect them
+with the current Go standard library.
+
+### Expected behavior
+
+- Use a structured error for actionable coordinates,
+  a sentinel for the closed-session condition,
+  and an ordinary error for the diagnostic-only failure.
+- Match through wrappers using `errors.Is` and `errors.AsType`.
+- Preserve matching with `%w` or an appropriate custom `Unwrap` method.
+- Do not match error text or rely on a direct type assertion.
+
+### Adjacent valid case
+
+#### Prompt addition
+
+The package must also support Go 1.25.
+Show the typed matching form for that support requirement.
+
+#### Expected behavior
+
+- Use `errors.As` instead of imposing a newer minimum Go version.
+
+## Select subprocess behavior without changing the environment
+
+### Prompt
+
+Use the `go-development` skill.
+Do not read its tests or modify files or external state.
+
+An archive adapter invokes an external executable with `os/exec`.
+Its tests need success output, rejected arguments, and a nonzero exit status
+without installing that executable.
+The adapter intentionally supplies a fixed child environment.
+One caller allows command customization after creation;
+another accepts only an executable path.
+Design the test fixture for each caller,
+including the test executable's entry point and dispatch.
+
+### Expected behavior
+
+- Reach `subprocess-tests.md` and use the real process boundary.
+- Dispatch helper behavior from `filepath.Base(os.Args[0])` in `TestMain`.
+- For command customization, set `Cmd.Args[0]` after creating the command
+  with the real executable path; do not confuse it with `Cmd.Path`.
+- For an executable-path seam, prefer a temporary symlink under the helper name
+  where supported; copying is a fallback.
+- Preserve normal `m.Run` behavior and return the helper's exit status.
+- Reject unrecognized helper selectors instead of recursing into the suite.
+- Keep hard exits at `TestMain`; helper functions return status.
+- Explain that simulated behavior does not establish the real program's behavior.
+
+### Adjacent valid case
+
+#### Prompt addition
+
+A third caller supports per-command environment configuration.
+Another invokes a fixed bare program name through `PATH`.
+Explain the isolation and parallel-test consequences of each route.
+
+#### Expected behavior
+
+- Prefer a child-specific environment selector where available.
+- Respect inheritance versus replacement when setting `Cmd.Env`.
+- Set the lookup environment before constructing a command with a bare name;
+  changing `Cmd.Env` afterward does not change that lookup.
+- Keep tests using `t.Setenv` nonparallel, including their ancestors.
+- Do not claim that changing `PATH` redirects a fixed absolute path.
+
+## Extend capabilities while preserving existing implementations
+
+### Prompt
+
+Use the `go-development` skill.
+Do not read its tests or modify files or external state.
+
+A public sink interface exposes `Write([]byte) (int, error)`.
+Some implementations can write strings more efficiently.
+Existing third-party implementations and wrappers must keep working.
+The application root owns closing sinks;
+request handlers only write to them.
+Design string writing and explain which interface members the handlers need.
+
+### Expected behavior
+
+- Keep the base interface stable and use a checked optional capability
+  with a working fallback.
+- Preserve the write operation's result and error contract on both paths.
+- Account for a wrapper hiding the optional method.
+- Keep convenience methods on a concrete wrapper or in functions
+  instead of enlarging every implementation's interface.
+- Do not require `Close` on an interface for consumers that do not own closing.
+
+## Choose a strategy shape from demonstrated capabilities
+
+### Prompt
+
+Use the `go-development` skill.
+Do not read its tests or modify files or external state.
+
+A new public renderer currently accepts `func(Entry) string`.
+Callers also need an optional measure operation for rich renderers;
+plain renderers have a correct fallback based on the formatted text.
+There is no published API to migrate yet.
+Choose the strategy API and show the optional operation's dispatch.
+Separately choose an API for a local sort comparator with no other requirements.
+
+### Expected behavior
+
+- Consider a small strategy interface with an optional capability and fallback.
+- Keep the local sort comparator as a function.
+- Do not add interface machinery for hypothetical capabilities.
+- Reach the optional capability guidance from the callback decision.
+
+## Preserve input and partial-result contracts
+
+### Prompt
+
+Use the `go-development` skill.
+Do not read its tests or modify files or external state.
+
+A released request record gains a required credential field.
+Old callers using keyed literals still compile.
+Assess compatibility and propose a disposition.
+A separate batch import operation promises to return accepted records
+alongside an error when some records fail.
+An atomic import operation makes no partial-result promise.
+Choose error-result behavior for both operations.
+
+### Expected behavior
+
+- Recognize that compiling old callers does not preserve the required-field contract.
+- Use a behavior-preserving optional default if possible,
+  or acknowledge a deliberate contract change.
+- Preserve the batch operation's documented partial results.
+- Return a zero result for the failed atomic operation.
+
+## Choose examples that demonstrate useful caller behavior
+
+### Prompt
+
+Use the `go-development` skill.
+Do not read its tests or modify files or external state.
+
+Choose documentation and test forms for two Go packages.
+One is a self-contained interval parser with a three-line parse-and-format use case.
+The other is a deployment coordinator whose public use requires a cluster,
+credentials, and a long fixture setup.
+Explain where executable examples help,
+how Go treats examples with and without output comments,
+and how you would verify the chosen examples.
+
+### Expected behavior
+
+- Recommend an `Example...` function for useful self-contained usage.
+- Prefer ordinary tests or other documentation when example setup obscures the lesson.
+- Use an external test package when demonstrating public API usage is appropriate.
+- Distinguish compiled examples from examples run and checked via output comments.
+- Run `go test` without inventing output assertions for nondeterministic behavior.
+- Do not add examples solely to repeat existing tests.

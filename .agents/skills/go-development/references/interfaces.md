@@ -85,3 +85,33 @@ Producer-defined interfaces are still useful
 when the package has multiple implementations,
 when the interface represents a single operation,
 or when callers commonly wrap the abstraction.
+
+When callers need a rich API but implementations only need a few core operations,
+put convenience methods on a concrete wrapper around the small interface.
+Do not require every implementation to repeat operations derivable from that core.
+Include lifecycle methods only in interfaces used by consumers
+that own those lifecycle responsibilities.
+A request handler that needs `Get` need not also require `Close`;
+the component owning the store's lifetime can close the concrete store.
+
+## Optional capabilities
+
+To extend an established interface without requiring every implementation to change,
+detect a separate capability with a checked type assertion
+and retain a working fallback using the original interface:
+
+```go
+func WriteString(w io.Writer, s string) (int, error) {
+	if sw, ok := w.(io.StringWriter); ok {
+		return sw.WriteString(s)
+	}
+	return w.Write([]byte(s))
+}
+```
+
+The capability and fallback must satisfy the operation's contract.
+If the new behavior cannot be implemented through the original interface,
+make the new requirement explicit rather than pretending it is optional.
+Wrappers can conceal additional methods of the wrapped value.
+Check both paths, including a wrapper exposing only the original interface;
+preserve the capability explicitly when the wrapper's contract requires it.

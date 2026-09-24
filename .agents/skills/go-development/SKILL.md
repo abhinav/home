@@ -25,7 +25,11 @@ decision it governs:
   read [Errors and diagnostics](references/errors-and-diagnostics.md).
 - For interfaces, interface compliance, or concrete result types,
   read [Interfaces](references/interfaces.md).
-- For function shapes, construction, dependencies, or exported members,
+- When considering a callback API, accepting a function parameter,
+  or passing a function or closure to a helper,
+  read [Callbacks](references/callbacks.md).
+- For function shapes, resource acquisition and cleanup,
+  construction, dependencies, or exported members,
   read [Signatures and construction](references/signatures-and-construction.md).
 - For map-shaped APIs or boolean API parameters,
   read [Map and boolean APIs](references/map-and-boolean-apis.md).
@@ -35,7 +39,7 @@ decision it governs:
   read [Type semantics](references/type-semantics.md).
 - For maps, slices, iterators, streaming, strings, or bytes,
   read [Collections and iteration](references/collections-and-iteration.md).
-- For context propagation or goroutines,
+- For context propagation, goroutines, channels, or synchronization,
   read [Context and concurrency](references/context-and-concurrency.md).
 - For JSON representation or encoding,
   read [JSON](references/json.md).
@@ -45,8 +49,10 @@ decision it governs:
   read [Filesystem](references/filesystem.md).
 - For HTTP routing,
   read [HTTP](references/http.md).
-- For Go tests,
+- For Go tests or executable API examples,
   read [Testing](references/testing.md).
+- For testing code that invokes external programs through `os/exec`,
+  read [Subprocess tests](references/subprocess-tests.md).
 - For asynchronous behavior, event delivery, background workers, timers,
   or deadlines in tests,
   read [Async tests](references/async-tests.md).

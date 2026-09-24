@@ -2,9 +2,11 @@
 
 ## Program exits
 
-Never call `log.Fatal`, `os.Exit`,
-or similar hard-exit functions outside `main()`.
-Return errors and let the caller decide.
+Keep `log.Fatal`, `os.Exit`, and similar hard exits at process entry points:
+application `main`, or `TestMain` when it owns the test process's exit status.
+Reusable helpers return errors or a status to that entry point.
+For helper-process dispatch from `TestMain`,
+read [Subprocess tests](subprocess-tests.md).
 
 ```go
 // BAD: hard exit buried in a helper.
@@ -40,6 +42,46 @@ Keep filtering that differs between destinations on the child handlers;
 an outer filter can suppress a record wanted by either destination.
 
 ## Error handling
+
+### Error contracts
+
+Choose an error representation by how callers can respond:
+
+- Use `errors.New` or `fmt.Errorf` when callers only need to propagate
+  or report the failure.
+- Use a sentinel such as `var ErrClosed = errors.New("session is closed")`
+  when callers need to recognize a condition without additional fields.
+  Prefix sentinel names with `Err`.
+- Use a structured error when callers need information such as a field name
+  or source location to respond.
+  Suffix the type name with `Error` and use a pointer receiver for `Error()`.
+
+Match conditions with `errors.Is` and extract error values with `errors.AsType`:
+
+```go
+if errors.Is(err, fs.ErrNotExist) {
+	// Apply the supported missing-file fallback.
+}
+if pathErr, ok := errors.AsType[*fs.PathError](err); ok {
+	// Use pathErr.Path to identify the affected file.
+}
+```
+
+These operations traverse wrapped errors;
+string matching and direct type assertions do not preserve that behavior.
+Use `errors.As` when the supported Go version predates `AsType`,
+or when matching an interface that does not implement `error`.
+See [errors](https://pkg.go.dev/errors) for matching contracts.
+
+When a custom structured error wraps a cause that callers should match,
+provide `Unwrap` as well as `Error`:
+
+```go
+func (e *DecodeError) Unwrap() error { return e.Err }
+```
+
+Handle only failures for which this caller has a meaningful response;
+propagate the others with context.
 
 ### Formatting variable values
 

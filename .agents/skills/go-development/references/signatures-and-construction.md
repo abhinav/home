@@ -35,6 +35,16 @@ or select a documented default.
 When omission must be distinguished from the type's zero value,
 a pointer, nullable representation, or required field may be clearer.
 
+Adding a required field to an established input object can invalidate existing
+callers even when their code still compiles.
+Preserve their construction behavior through an optional field and default,
+or treat the new requirement as a deliberate contract change.
+
+When returning a result alongside an error, normally return the result's zero value.
+Return a partial result only when the operation deliberately supports one;
+document which parts remain usable on failure.
+Preserve existing partial-result contracts, such as the count from `io.Writer.Write`.
+
 ## Constructors and required dependencies
 
 Use a constructor when creating a value requires behavior:
@@ -107,6 +117,31 @@ uses the inline marker to enforce initialization of required fields.
 Prefer useful zero-value behavior for optional fields.
 Document defaults, deferred initialization, or cases where omission must be
 distinguished from the field type's zero value.
+
+## Resource acquisition and cleanup
+
+Return the acquired resource with a cleanup method or cleanup function,
+and have the caller defer cleanup immediately after successful acquisition.
+This keeps the resource's lifetime visible beside its use
+and lets the caller use ordinary control flow and error returns.
+
+For example, with a cleanup function that cannot fail:
+
+```go
+foo, cleanup, err := acquireFoo()
+if err != nil {
+    return err
+}
+defer cleanup()
+
+if err := useFoo(foo); err != nil {
+    return err
+}
+```
+
+Choose the owning function's scope to match the required resource lifetime;
+`defer` runs when that function returns, not when a block or loop iteration ends.
+See [Defer](https://go.dev/doc/effective_go#defer) for the language behavior.
 
 ## Exported members on unexported types
 
