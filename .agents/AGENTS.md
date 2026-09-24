@@ -60,6 +60,10 @@ Keep referents stable.
 Reuse a real name rather than a synonym, metaphor, or generic label
 when variation could obscure identity.
 
+When communicating with the user, express times in the user's local time zone.
+Use the time zone provided by the user or current session,
+with the applicable offset for the date being discussed.
+
 ### Updates during ongoing work
 
 Publish an update only when it adds information that materially affects
