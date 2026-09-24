@@ -31,6 +31,10 @@ diagram-design spatial model
 
 ## Realize the visual vocabulary in Pikchr
 
+When choosing Pikchr objects or expressing positions and paths,
+read [Language basics and relative geometry](references/language-basics-and-relative-geometry.md)
+for syntax, evaluation, anchors, and routing.
+
 Translate the selected vocabulary into built-in Pikchr objects,
 labeled primitives, and paths.
 When the vocabulary requires custom geometry,
@@ -60,12 +64,19 @@ that preserves those invariants and leaves later relationships addressable:
 - Use variables, distances, headings, and labeled intersections for parametric
   structures such as radial, organic, or repeated geometric forms.
 
+When using variables, expressions, macros, or diagnostic statements,
+read [Macros and diagnostics](references/macros-and-diagnostics.md)
+for their syntax and evaluation behavior.
+
 A repeated source fragment does not automatically deserve a macro.
 Keep a construction explicit when later paths must address its individual
 parts,
 or design the macro so those parts remain reachable.
 Optimize the source for useful relationships and anchors,
 not for the fewest lines.
+
+When selecting shared defaults, dimensions, colors, strokes, or text attributes,
+read [Defaults and styling](references/defaults-and-styling.md).
 
 Establish one representative object as the size and style prototype for its
 role,
@@ -79,6 +90,10 @@ or using an invisible path when text needs an orientation or alignment that no
 visible object supplies.
 
 ## Build the spatial model
+
+When using containers or controlling drawing layers and paint order,
+read [Containers and paint order](references/containers-and-paint-order.md)
+for grouping, scoping, backgrounds, and layering mechanics.
 
 Build the source in semantic phases:
 
@@ -115,10 +130,6 @@ A throwaway diagram does not need a separate maintainability exercise.
 Pikchr diagrams are code.
 Use blank lines and comments to separate sections when that makes the source
 easier to scan or change.
-
-[The language reference](references/language-reference.md) covers the Pikchr
-execution model, diagram-wide defaults, objects, labels, positions, paths,
-containers, macros, expressions, text, and styling.
 
 ## Control paint order
 
