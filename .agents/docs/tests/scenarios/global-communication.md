@@ -234,3 +234,109 @@ Do not execute the plan.
 - Do not load the Cardamom skill or invoke Cardamom based on the disclosure rule.
 - Do not create, discover, or require a board or issue before doing the task.
 - Do not ask the user to choose a tracker for this task.
+
+## Request a contribution from another agent
+
+### Prompt
+
+Use the guidance at `{GUIDANCE_PATH}`.
+
+You are preparing a workshop handout with an editorial thread.
+The user asks you to have editorial revise the Setup and Troubleshooting sections
+so first-time attendees can follow them without facilitator help.
+Editorial has the current handout and its source material.
+Your inspection found that Setup assumes a project already exists,
+and Troubleshooting refers to a retired toolbar.
+You verified that the current control is named Workspace.
+
+The editorial manual describes reading the source material,
+checking terminology, editing with tracked changes, checking links,
+running the spelling checker, and saving a new document version.
+You are also responsible for preparing the agenda and speaker brief.
+Draft the message to editorial without sending it.
+
+### Quality bar
+
+Evaluation mode: judgment.
+The recipient receives the requested contribution, its purpose,
+and the sender's findings, while retaining responsibility for execution.
+
+### Expectations
+
+- Identify Setup and Troubleshooting and the attendee's need.
+- Supply the project-creation gap and verified Workspace finding.
+- Leave routine editing procedure to editorial's guidance and judgment.
+- Keep the agenda and speaker brief with the sender.
+- Do not require editorial to repeat inspection already completed by the sender.
+- Permit necessary constraints and completion criteria;
+  judge usefulness rather than message length or particular wording.
+
+### Adjacent valid case
+
+#### Prompt addition
+
+The layout owner just told you that the printed index uses the section headings
+as lookup keys. The headings must stay unchanged until the index is regenerated.
+Editorial has not received this information.
+
+#### Expected behavior
+
+- Communicate the heading constraint and the reason it matters.
+- Preserve that requirement while leaving ordinary editing choices to editorial.
+
+### Adjacent valid case: coordinate document publication
+
+#### Prompt addition
+
+The final PDF must embed a revision identifier from the release notes you own.
+Editorial must first send you the revised sections.
+You will update the release notes and return the identifier;
+editorial can then export the final PDF with that identifier.
+Editorial has not received this publication requirement.
+
+#### Expected behavior
+
+- Communicate the required handoff and order of actions.
+- Leave ordinary editing and export mechanics with editorial.
+
+## Apply feedback to the affected assignment
+
+### Prompt
+
+Use the guidance at `{GUIDANCE_PATH}`.
+
+You coordinate a publication and may message editing and illustration.
+Editing is shortening the opening.
+Illustration is producing the cover and chapter diagrams.
+Both threads have the relevant source material.
+Neither has been asked to contact the publisher.
+The user says:
+"For future requests, do your own synthesis first.
+I will handle the publisher discussions."
+Choose the next action and draft any messages you would send now.
+Do not execute the action.
+
+### Quality bar
+
+Evaluation mode: judgment.
+Apply feedback to the coordinator's work,
+and send a recipient information when it changes that recipient's assignment.
+
+### Expectations
+
+- Apply the synthesis instruction to future requests.
+- Continue the authorized work without sending the user's feedback to the peers.
+- Preserve editing and illustration's current assignments.
+
+### Adjacent valid case
+
+#### Prompt addition
+
+The user adds:
+"I'll also take over the cover. Have illustration finish the chapter diagrams."
+
+#### Expected behavior
+
+- Send illustration the change to its own assignment.
+- Keep the chapter diagrams assigned to illustration.
+- Leave editing's unchanged assignment intact without a redundant message.
