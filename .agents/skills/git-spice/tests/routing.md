@@ -36,7 +36,7 @@ Do not run commands.
 ### Expectations
 
 - Route through the git-spice skill.
-- Load `references/pull-requests.md` before generating metadata.
+- Load `references/pull-request-submission.md` before generating metadata.
 - Preserve the polished commit message as the default PR title and body.
 - Use a git-spice branch submission with `--draft`, `--no-prompt`,
   `--title`, and `--body`.

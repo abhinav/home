@@ -5,7 +5,7 @@ raw Git history surgery.
 
 Topology surgery changes the stack graph.
 Restacking preserves the existing stack graph
-and should stay in the main `git-spice` skill.
+and follows `restacking-and-conflict-continuation.md`.
 
 This reference also defines the narrow raw-Git exception to the main skill.
 Outside a raw history-surgery window, raw Git may not create or move branches
@@ -57,8 +57,8 @@ The normal repository-state and destructive-operation safeguards still apply.
 
 ## Move A Stack Onto A New Bottom-Most Branch
 
-The main skill owns normal creation, `--insert`, and the preferred `--below`
-workflow.
+`branch-and-commit-workflows.md` owns normal creation, `--insert`,
+and the preferred `--below` workflow.
 Use this alternative only when the new bottom-most branch is created separately
 from trunk and the existing stack must move onto it:
 
