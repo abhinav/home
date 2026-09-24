@@ -5,6 +5,16 @@ from run-local context that will disappear after the commit.
 The runner decides which facts belong in the message;
 the labels do not imply that every supplied fact should be retained.
 
+Apply these content expectations to every scenario:
+
+- Omit routine check status, command and suite inventories without behavioral
+  proof, reasons for not running checks, and promises of future CI validation
+  from commit and PR metadata.
+- Put concrete verification evidence in a separate Validation section
+  or the template's equivalent; omit that section when no such evidence exists.
+- Connect each observation to the behavior it establishes,
+  retaining useful inputs, outcomes, commands, assertions, or evidence links.
+
 Apply these formatting expectations to every scenario:
 
 - Start each complete body sentence on a new physical line.
@@ -88,8 +98,10 @@ Final tree:
 
 Run-local context:
 
+- A support reproduction showed one tenant receiving another tenant's
+  cached response for the same object ID.
 - Before the implementation changed,
-  the new regression test returned one tenant's cached response to the other.
+  the new regression test reproduced that response crossover.
 - After the key changed,
   the same test returned each tenant's own response.
 - The ordinary unit suite and formatting checks passed.
@@ -484,8 +496,8 @@ Run-local context:
 - Preserve the migration observation as evidence for the transition.
 - Use paragraphs, short headings, or a useful list so a reader can locate
   the distinct behavior, compatibility boundary, and evidence.
-- Let the conceptual structure determine the presentation;
-  do not require particular heading names.
+- Let the conceptual structure determine headings for the explanation.
+  Put the migration observation in a separate `Validation` section.
 
 ### Unacceptable behavior
 
@@ -580,13 +592,15 @@ Do not propose or run commands.
 
 Use the `writing-commit-messages` skill.
 
-Draft a commit message for this change:
+Draft a commit message for a new requirement that makes the region mandatory
+so an omitted value cannot silently select a destination.
+The previous contract allowed an empty region identifier to select the default.
+The parser now rejects empty region identifiers.
 
-- added a failing unit test for empty region identifiers;
-- changed the parser to reject empty region identifiers;
-- ran the focused test successfully; and
-- observed no pre-change runtime failure, external symptom, or other evidence
-  beyond the test-first development sequence.
+The author wrote a failing test for the new requirement,
+implemented the parser change, and ran the focused test successfully.
+Only the development sequence and test-run status were recorded;
+no input/output transcript or behavioral probe result is supplied.
 
 ### Expectations
 
@@ -607,6 +621,8 @@ to prove that the work followed TDD.
 
 ### Adjacent valid case
 
+Replace the new requirement and previous contract with an existing requirement
+that callers must supply a region and an observed violation of that requirement.
 Before the change, a supported command with an empty region identifier
 was observed to enqueue work in the default region.
 After the change, the same command is rejected before enqueueing,
@@ -614,8 +630,8 @@ and the observed result directly supports the message's boundary claim.
 
 - Include the pre-change failure and post-change observation
   when they materially support the causal explanation.
-- A `Validation` section is optional;
-  if used, include only the claim-bearing evidence and any material gap.
+- Put the behavioral verification in a separate `Validation` section.
+- Omit routine test-run status.
 - Do not add routine test-writing chronology.
 
 ## Name the public surface needed to use and observe the change
@@ -779,3 +795,175 @@ that will not supply a commit message or pull request metadata.
 
 - Select the applicable general prose skills.
 - Do not select `writing-commit-messages` or `git-spice`.
+
+## Omit local-check limitations under template pressure
+
+### Prompt
+
+Use the `writing-commit-messages` skill.
+Read-only drafting exercise; do not edit files or repository state.
+Produce a PR title and full description from these facts.
+Repository: one project, archive service.
+Change: archives become visible only after every referenced chunk is present;
+failed transfers remain retryable.
+Before: an interrupted upload exposed an archive whose final chunk was missing.
+CI exists and runs all required tests on each PR.
+Work notes: archive unit suite passed before the last small refactor;
+a rerun after that refactor could not start because the local container runtime
+was unavailable; formatting and lint passed.
+No live interrupted-upload probe was performed.
+Repository's default PR template has Summary and Validation headings,
+but no bot enforces them.
+A teammate has already drafted the validation paragraph and says it reassures
+reviewers; the PR is needed in two minutes.
+Write the final metadata now using your judgment.
+After the artifact, briefly explain the selection of content.
+
+### Expectations
+
+- Explain the premature visibility and the complete-chunk publication rule.
+- Preserve retry behavior without claiming a live recovery was observed.
+- Omit the validation section and all check reporting from the metadata.
+- Do not turn the unavailable rerun or missing probe into a disclaimer.
+- Do not defer drafting for permission to omit template boilerplate.
+- Any operational handoff stays outside the commit or PR text.
+
+### Submission variant
+
+Also apply the `git-spice` pull request submission reference.
+The repository template requires Summary and Validation headings.
+An already approved single commit contains the work notes in a Validation
+section, and the maintainer requests direct carryover.
+Prepare the metadata only; do not run mutating commands.
+
+- Apply the content exclusions during template adaptation and carryover.
+- Omit inherited check reporting and its section.
+- Preserve the change's causal explanation.
+
+## Remove check reporting during message revision
+
+### Prompt
+
+Use the `writing-commit-messages` skill.
+
+Prepare both a replacement commit message and PR title and description.
+The change prevents a configuration reload from replacing active settings
+until all new settings have parsed successfully.
+A malformed new setting previously left half of the old configuration replaced.
+Existing draft:
+
+    config: Keep active settings until reload succeeds
+
+    Parse all new settings before replacing the active configuration.
+
+    Confidence
+    ----------
+
+    Unit tests passed. The integration suite failed to start because a
+    credential was missing. The build was skipped because the compiler
+    was unavailable. Lint is pending. The remaining checks are deferred
+    to CI, which runs on every PR. No manual testing was performed.
+
+The maintainer says only the subject needs polishing,
+and the release window closes in five minutes.
+Return complete metadata without editing files or running commands.
+
+### Expectations
+
+- Preserve the malformed-setting failure and atomic replacement behavior.
+- Remove the complete check-report paragraph and its heading in both artifacts.
+- Do not retain the limitations inline or rename their section.
+- Do not infer a supported-platform or compatibility limitation from
+  missing local tools or credentials.
+
+## Preserve measurements without check reporting
+
+### Prompt
+
+Use the `writing-commit-messages` skill.
+
+Write a commit message and a PR description for a streaming file indexer.
+It used to retain every decoded record until end of file.
+It now releases decoded records after indexing each batch.
+A measurement with the same 3 GB input and worker count found peak memory
+fell from 1.4 GB to 210 MB.
+This measures one workload, not a bound for every input.
+The unit suite and benchmark completed successfully.
+The oldest supported device's output encoding is still unconfirmed,
+so the legacy decoder remains available.
+No device or fixture was available locally.
+No device-compatibility claim is established by the memory measurement.
+Return the artifacts only; do not edit files or run commands.
+
+### Expectations
+
+- Explain the record lifetime and preserve the memory comparison
+  with its workload and scope.
+- Do not claim universal memory or device compatibility guarantees.
+- Omit successful check status and local device or fixture availability.
+- Put the scoped measurement in a separate `Validation` section.
+- Keep the unconfirmed encoding with the legacy-decoder rationale
+  in the main explanation.
+
+## Preserve concrete proof in a validation section
+
+### Prompt
+
+Use the `writing-commit-messages` skill and its applicable references.
+Read-only drafting exercise.
+Write a PR title and description for a file exporter:
+its --skip-empty option previously wrote a blank record for an empty input;
+now it emits zero records.
+A regression case for the existing zero-record contract was run against the
+old implementation and failed with 'expected 0 records; got 1';
+against the fix, that case returned 0 records.
+The fixed revision r42 was deployed to a staging exporter.
+A request using --skip-empty with an empty input returned 0 records;
+the captured result is at https://example.com/probes/export-r42.
+A local build of r42 run as `exporter --skip-empty empty.csv`
+also emitted 0 records.
+The ordinary suite passed; lint passed;
+a separate platform suite could not run because a toolchain was absent.
+The PR template has Summary and Validation headings.
+Return only the metadata;
+do not edit files or run commands except reading guidance.
+
+### Expectations
+
+- Preserve a separate Validation section for the concrete verification.
+- Preserve the regression failure before the fix and corrected result,
+  including the existing contract and expected-versus-actual observation.
+- Preserve the staging revision, exercised input, observed outcome,
+  and supporting result link.
+- Preserve the local invocation with its option and observed outcome.
+- Do not reduce this evidence to generic claims that tests or checks passed.
+- Omit routine suite and lint status and the platform-toolchain limitation.
+
+### Commit variant
+
+Instead of PR metadata, produce the complete commit message.
+There is no template.
+
+- Use a separate Validation section in the commit body.
+- Preserve the same useful evidence and apply the same exclusions.
+
+### Submission variant
+
+Also apply the `git-spice` pull request submission reference.
+An approved commit already contains the concrete observations and the routine
+check notes in a Validation section, and the maintainer requests carryover.
+
+- Preserve the section and useful evidence while removing the routine notes.
+- Do not treat approval or carryover as a reason to copy excluded content.
+
+### Routine-status-only variant
+
+Replace all regression results and manual probe observations with these facts:
+the ordinary suite and lint passed, a staging deployment completed,
+the local build succeeded, and a platform suite could not run because a
+toolchain was absent.
+There is no observed outcome exercising --skip-empty in this variant.
+
+- Omit the Validation section, including deployment and build status.
+- Keep the change explanation without claiming behavioral verification.
+- Do not substitute a missing-validation disclaimer.

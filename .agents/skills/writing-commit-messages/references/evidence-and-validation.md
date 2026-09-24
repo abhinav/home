@@ -1,39 +1,39 @@
-# Evidence and validation
+# Behavioral evidence
 
 Keep evidence at the fidelity needed to carry its meaning.
 Preserve compact motivating input or output verbatim
-when its original wording, structure, threshold, or search terms matter.
+when its wording, structure, threshold, or search terms matter.
 When raw evidence is long, noisy, or sensitive,
 retain the smallest safe, self-contained excerpt that carries the claim.
 Paraphrase when the original form adds nothing.
 
-A test written to drive new behavior records development process,
-even when its author observes the expected red result before implementation.
-That result shows that the purpose-built test distinguishes unimplemented
-behavior; it does not establish an independently existing failure.
-Do not preserve that TDD red/green chronology as commit-message evidence.
-A regression test supplies causal evidence only when it reproduces a failure
-established independently of the test's introduction,
-such as an observed product failure or supported-boundary reproduction,
-and the post-change result materially establishes the repair.
+For a bug fix, preserve a regression test's demonstrated failure against
+the old implementation and its corrected result against the fix.
+Name the existing contract, triggering input, and expected versus actual
+behavior so the reader can assess what the comparison proves.
+A regression test can itself reveal the violation of an existing contract;
+a separate production incident is not required.
+A test written to define new behavior does not by itself establish
+that the old implementation violated an existing contract.
+Without a pre-change observation, make no reproduction claim.
 
-Measurements, real-boundary probes, and material validation gaps
-earn space under the same standard.
-A gap is material when an unresolved claim and its consequence
-change how the reader should evaluate, use, or continue the change.
-State that claim boundary and consequence;
-do not turn unavailable evidence into an activity report.
-Without a pre-change result, make no reproduction claim.
+For manual verification, preserve the exercised behavior and observed result.
+Identify the relevant revision and environment when they establish what
+was verified, and retain supporting output or a captured-result link.
+A staging deployment followed by a successful behavioral probe qualifies;
+deployment completion alone does not demonstrate the changed behavior.
+A local build run with a new option qualifies when the invocation and observed
+outcome demonstrate that option's behavior; build success alone does not.
 
-## Structure validation evidence
+Measurements earn space when they substantiate the behavioral claim.
+Keep the workload, comparison, and limits needed to interpret them.
+For example, a reduction in peak memory under a stated workload can substantiate
+a memory claim; a successful benchmark run cannot.
 
-A `Validation` section is optional.
-Use it only when it carries claim-bearing evidence
-or a material validation gap.
-Map every retained result or gap to the claim it supports.
-If no useful validation content remains, omit the heading and section entirely.
-Do not place purpose-built TDD red/green results,
-other test-first chronology, routine pass status,
-or a command inventory under `Validation`.
-Evidence can instead remain near its claim when a separate section
-would make the relationship less clear.
+Preserve uncertainty when it explains a design choice, compatibility limit,
+or decision the reader must make about the system.
+State the affected behavior and consequence, not the unavailable check
+or the writer's inability to run it.
+For example, an unconfirmed appliance format can explain retaining a legacy
+reader; an unavailable local test environment does not explain that design.
+Narrow an unsupported claim instead of appending a testing disclaimer.

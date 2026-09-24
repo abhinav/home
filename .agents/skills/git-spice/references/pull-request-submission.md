@@ -87,7 +87,8 @@ Preserve the relevant purpose, changed behavior, boundaries,
 and evidence from the commit bodies.
 Omit or rewrite that information only for the aggregate pull request scope,
 the repository template, a verified factual correction,
-or an explicit pull-request-specific instruction.
+an explicit pull-request-specific instruction,
+or the content exclusions in `writing-commit-messages`.
 
 For a new pull request:
 
@@ -176,21 +177,15 @@ File names are case-insensitive.
 
 If the repository has a pull request template:
 
-1. Follow the template format.
-2. Replace placeholders with substantive content.
-   Preserve requested section or list structure,
-   but never retain literal tokens such as `<command>` or `<result>`.
-3. Delete instruction text.
-4. Include all relevant information from the commit message body.
+1. Apply `writing-commit-messages` to select content and omit sections
+   that it excludes, including during direct carryover from a commit.
+2. Adapt retained content to the remaining template structure.
+   Preserve its heading representation rather than converting headings
+   to the commit-message heading form.
+3. Replace placeholders with substantive content and delete instruction text.
+   Placeholder syntax does not create a content or formatting exception.
+4. Preserve relevant purpose, changed behavior, and boundaries
+   from the commit message body.
 
-The template governs structure;
-apply the commit-message guidelines within that structure.
-Preserve the template's heading representation
-rather than converting its headings to the commit-message heading form.
-Reshape field contents as needed to satisfy those guidelines.
-Preserve a complete, claim-bearing validation invocation
-as an indented code block within the template section.
-Placeholder syntax does not create a formatting exception.
-If a required section has neither material evidence nor a supported material
-gap,
-stop only when completing it would require an unsupported assertion.
+`writing-commit-messages` owns evidence selection and representation.
+A template supplies organization, not an independent reason to include content.

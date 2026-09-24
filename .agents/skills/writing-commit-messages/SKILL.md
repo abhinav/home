@@ -23,7 +23,8 @@ A single-commit pull request normally carries forward the commit subject and
 body.
 A multi-commit pull request synthesizes the aggregate outcome and context.
 When a repository template exists,
-adapt the content to its structure.
+adapt useful content to its structure under the content rules below.
+Remove template sections and placeholders that call only for excluded content.
 
 ## Preserve the context that history needs
 
@@ -148,24 +149,52 @@ When available evidence does not establish a motivation, behavior, or boundary,
 narrow the claim, preserve a material uncertainty,
 or obtain the missing context instead of inventing a plausible story.
 
+## Keep routine check reporting out of the message
+
+The user's projects have CI.
+Running checks is expected development work;
+reporting whether they ran does not explain the change.
+Omit routine test, CI, formatter, linter, build, and patch-hygiene status
+from commit messages and pull request descriptions.
+This includes bare passed, failed, skipped, blocked, pending, or deferred
+status, check-command inventories, and reasons checks could not run locally.
+Promises that CI will run or validate the change also earn no space.
+These exclusions apply to paragraphs and bullets as well as headings;
+renaming the content as evidence, confidence, or a limitation does not qualify it.
+Keep operational check status in CI or the task handoff when needed.
+Continue performing the checks required by the task.
+
 ## Match evidence to the claim
 
-Preserve evidence when it establishes something the final tree cannot show
-and materially changes how the reader evaluates a claim.
-State what each retained observation establishes
-and place it beside the behavior or boundary it supports.
-Distinguish an observed result from an inference.
-
-When a message preserves raw input or output, observed failure, reproduction,
-measurements, test results, or a validation gap,
-read [Evidence and validation](references/evidence-and-validation.md)
-before drafting those claims or choosing a `Validation` section.
-
-Omit routine test, formatter, linter, build, and patch-hygiene status.
-Those results describe development activity rather than durable context.
+Preserve observations about the changed system when they establish something
+the final tree cannot show and materially affect the reader's decision.
+Connect each observation to the behavior it establishes,
+including the relevant input, conditions, and outcome.
+Distinguish observation from inference.
+A check's execution status alone is not such an observation.
 For a test-only commit, explain the invariant the tests protect
 and the previously unrepresented risk they make visible.
 Test names and case inventories belong only when they define that boundary.
+
+When preserving raw input or output, a regression comparison, manual verification,
+measurements, or uncertainty about the system's behavior,
+read [Behavioral evidence](references/evidence-and-validation.md)
+before drafting those claims.
+
+Put concrete verification evidence in a separate `Validation` section,
+or the repository template's equivalent section.
+Use it for demonstrated regression failures and their corrected results,
+manual staging or local probes, and measurements that substantiate the change.
+Retain the command, assertion, output, or evidence link needed to assess
+what was exercised and what happened.
+Keep the motivating problem and design explanation in the main body.
+If no concrete verification evidence remains after filtering routine status,
+omit the section entirely; a template does not require filling it with noise.
+Apply this content decision during drafting, revision, template adaptation,
+and copying existing commit or PR text.
+Before returning, check every retained validation item for an observed outcome
+that supports a claim about the change, and remove excluded reporting
+wherever it appears in the artifact.
 
 ## Structure and format the message
 

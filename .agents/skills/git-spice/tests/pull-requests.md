@@ -36,8 +36,11 @@ normalization path.
 Route all four paths through `PreservedNamespace`.
 Rollback recovery continues to restore entries in reverse write order.
 
-A migration probe covered import, startup migration, and rollback recovery.
-Manual repair is supported by code inspection only.
+Validation
+----------
+
+A migration probe preserved `tenant-blue` through import and startup migration,
+and rollback restored the original namespace.
 ````
 
 Produce the PR metadata,
@@ -66,8 +69,10 @@ and the review window closes in ten minutes.
 
 The repository requires `Impact` and `Verification` headings.
 
-- Preserve configuration blocks and paths.
-  Also preserve guarantee, ordering, and evidence distinctions.
+- Preserve configuration blocks, paths, guarantees, and ordering.
+- Preserve `Verification` with the namespace-preservation observations,
+  under `writing-commit-messages`.
+- Narrow unsupported migration claims without reporting check status.
 
 ## 02 Submit A Whole Stack From Commit Metadata
 
@@ -165,9 +170,9 @@ Prepare the pull request body without running commands.
 
 ### Expectations
 
-- Preserve the template's `## Summary` and `## Validation` headings;
-  do not convert them to underlined commit-message headings.
-- Keep only the non-routine fixture probe in `Validation`.
+- Preserve the template's `## Summary` heading representation.
+- Preserve `## Validation` with the fixture observation
+  under the content rules in `writing-commit-messages`.
 - Put the complete claim-bearing probe invocation in a top-level code block
   with four leading spaces.
 - State that the probe preserved all six sticker positions.
@@ -193,11 +198,12 @@ Only routine test and CI status exists,
 and the repository template makes `Validation` optional.
 The team usually fills every section,
 and a reviewer approved `No manual validation was performed`.
+The fixture probe could not run because the sample renderer was unavailable.
 
 - Omit the `Validation` section.
 - Do not substitute generic absence-of-validation filler.
-- If an unavailable sample renderer materially limits the claimed toy behavior,
-  preserve that gap and explain why it remains.
+- Omit the unavailable renderer as an explanation for not running a check.
+- Narrow unsupported behavior claims rather than appending check disclaimers.
 
 ## 06 Normalize Commands During Direct Carryover
 
@@ -221,7 +227,9 @@ Prepare the pull request body.
 
 ### Expectations
 
-- Carry over the complete behavior and validation result.
+- Carry over the complete behavior and observed sticker order.
+- Preserve a separate Validation section for the observation,
+  formatting its heading under `writing-commit-messages`.
 - Move the complete invocation into an indented code block.
 - Do not preserve the invocation inline merely because the body was approved.
 - Preserve the command bytes and surrounding meaning.

@@ -12,10 +12,10 @@ but withhold the target skill body and filesystem location.
 Replace `{GUIDANCE_DESCRIPTION}`
 with the candidate's current catalog description.
 Keep the expectations and intended answer hidden from the runner.
-For a pressure, alternate-positive, intended-destination,
-or adjacent case,
+For any variant, including pressure, adjacent, commit, and submission cases,
 give a fresh runner the base `Prompt`
-plus only that case's runner-visible prose.
+plus only that variant's prose before its expectation bullets.
+Apply stated replacements to the base facts before sending the prompt.
 Keep all expectation bullets hidden.
 Keep tests read-only or confined to a task-local temporary directory
 outside the target repository.
