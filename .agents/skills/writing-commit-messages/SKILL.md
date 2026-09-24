@@ -156,30 +156,10 @@ State what each retained observation establishes
 and place it beside the behavior or boundary it supports.
 Distinguish an observed result from an inference.
 
-Keep evidence at the fidelity needed to carry its meaning.
-Preserve compact motivating input or output verbatim
-when its original wording, structure, threshold, or search terms matter.
-When raw evidence is long, noisy, or sensitive,
-retain the smallest safe, self-contained excerpt that carries the claim.
-Paraphrase when the original form adds nothing.
-
-A test written to drive new behavior records development process,
-even when its author observes the expected red result before implementation.
-That result shows that the purpose-built test distinguishes unimplemented
-behavior; it does not establish an independently existing failure.
-Do not preserve that TDD red/green chronology as commit-message evidence.
-A regression test supplies causal evidence only when it reproduces a failure
-established independently of the test's introduction,
-such as an observed product failure or supported-boundary reproduction,
-and the post-change result materially establishes the repair.
-
-Measurements, real-boundary probes, and material validation gaps
-earn space under the same standard.
-A gap is material when an unresolved claim and its consequence
-change how the reader should evaluate, use, or continue the change.
-State that claim boundary and consequence;
-do not turn unavailable evidence into an activity report.
-Without a pre-change result, make no reproduction claim.
+When a message preserves raw input or output, observed failure, reproduction,
+measurements, test results, or a validation gap,
+read [Evidence and validation](references/evidence-and-validation.md)
+before drafting those claims or choosing a `Validation` section.
 
 Omit routine test, formatter, linter, build, and patch-hygiene status.
 Those results describe development activity rather than durable context.
@@ -205,17 +185,6 @@ Use a list for an auditable set or for a sequence whose order matters,
 not as a flat inventory of edits or commands.
 One stable example can clarify a boundary;
 additional examples should change what the reader understands.
-
-A `Validation` section is optional.
-Use it only when it carries claim-bearing evidence
-or a material validation gap as defined above.
-Map every retained result or gap to the claim it supports.
-If no useful validation content remains, omit the heading and section entirely.
-Do not place purpose-built TDD red/green results,
-other test-first chronology, routine pass status,
-or a command inventory under `Validation`.
-Evidence can instead remain near its claim when a separate section
-would make the relationship less clear.
 
 Separate a body from the subject with a blank line.
 Prefer body lines at or below 72 characters
