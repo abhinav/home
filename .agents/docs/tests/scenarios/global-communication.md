@@ -340,3 +340,65 @@ The user adds:
 - Send illustration the change to its own assignment.
 - Keep the chapter diagrams assigned to illustration.
 - Leave editing's unchanged assignment intact without a redundant message.
+
+## Show branching and mixed PR stacks
+
+### Prompt
+
+Use the operating guidance at `{GUIDANCE_PATH}`.
+Use only the supplied PR data; no network requests or repository operations.
+Return the response you would give the user, without evaluation commentary.
+
+User request: Give me a concise overview of these open PRs and their status.
+
+Repository: example/harbor.
+PR links use `https://github.com/example/harbor/pull/NUMBER`.
+The data is current; base identifies the branch the PR targets.
+
+| PR | Title | Head | Base | CI | Review |
+| --- | --- | --- | --- | --- | --- |
+| 416 | Retry metrics | retry-metrics | retries | Passing | Awaiting review |
+| 411 | Update setup guide | setup-guide | main | Passing | Approved |
+| 413 | Request retries | retries | client-core | Running | Awaiting review |
+| 421 | Cache counters | cache-counters | cache | Passing | Approved |
+| 410 | Client core | client-core | main | Passing | Approved |
+| 412 | Request timeouts | timeouts | client-core | Passing | Awaiting review |
+| 420 | Response cache | cache | main | Failing | Awaiting review |
+
+### Quality bar
+
+- Evaluation mode: conformance for relationships; judgment for status wording.
+- List indentation conveys direct stacking relationships.
+- A table or flat list with dependencies described in prose misses the bar.
+
+### Expectations
+
+- Use nested bullets with 410, 411, and 420 at the top level.
+- Nest 412 and 413 under 410, 416 under 413, and 421 under 420.
+- Preserve each PR's status and use linked `#NUMBER` labels.
+- Permit any ordering among independent roots or siblings.
+- Do not invent dependencies or treat approval and passing CI as proof of mergeability.
+
+### Adjacent valid case: independent PRs
+
+#### Prompt addition
+
+Replace the PR data with only PRs 410, 411, and 420 from the supplied data.
+
+#### Expected behavior
+
+- A flat numbered list is sufficient.
+- Keep all three PRs at the top level, with their supplied status and links.
+- Do not imply stacking relationships between them.
+
+### Adjacent valid case: one linear stack
+
+#### Prompt addition
+
+Replace the PR data with only PRs 416, 413, and 410 from the supplied data.
+
+#### Expected behavior
+
+- A flat numbered list is sufficient, ordered 410, 413, 416 from the base.
+- Accurate nesting is also permitted.
+- Preserve the supplied status and links without inventing dependencies.

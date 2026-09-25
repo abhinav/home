@@ -136,6 +136,12 @@ Use the shortest unambiguous pull request label:
 When the destination cannot render links,
 use its supported link representation instead.
 
+A flat list is fine for independent PRs
+or a single linear stack listed base first.
+For branching stacks or a mix of stacks and independent PRs,
+use nested bullets: each child is directly stacked on its parent.
+Keep independent PRs and stack bases at the top level.
+
 ## Authority and scope
 
 Match initiative to the authority the user granted.
