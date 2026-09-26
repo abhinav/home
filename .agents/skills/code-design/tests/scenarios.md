@@ -193,8 +193,9 @@ Assess these proposed API shapes:
    and login as the value.
    One registration per email is an implementation convenience,
    not a domain rule.
-2. `Labels` is a domain collection whose contract is unique label names
-   with direct lookup by name.
+2. `SetCategories` receives category records with `name` and `color`.
+   Names must be unique, and duplicate input must produce an error.
+   Callers assemble records; the owner later looks them up by name.
 3. `Render(path, omitTrailingSlash bool)` receives the same boolean
    on every call because the choice is site-wide,
    and a third path style is planned.
@@ -202,6 +203,9 @@ Assess these proposed API shapes:
 5. `ValidateRoutes([]RouteInput) error` checks non-empty service names
    and uniqueness,
    then later functions continue to accept the unchecked input slice.
+6. A template evaluator accepts variable bindings.
+   Callers assign text to variable names, replace a binding by name,
+   and reuse the bindings across templates; binding order has no meaning.
 
 Recommend the representation and explain what knowledge it should carry.
 
@@ -209,8 +213,12 @@ Recommend the representation and explain what knowledge it should carry.
 
 - Replace the accidental email map boundary with named registration records;
   keep any lookup map inside its owner.
-- Preserve a map-backed or equivalent `Labels` domain abstraction
-  because lookup and uniqueness are its contract.
+- Accept named category records in a list or equivalent domain collection;
+  validate unique names before constructing any private lookup index.
+  Do not make callers construct a map merely because the owner needs lookup,
+  or lose duplicate input before it can be rejected.
+- Permit a map for template bindings because callers manipulate the associations
+  themselves; do not turn the preference for records into a categorical map ban.
 - Replace the slash boolean with a named path-style concept
   stored at site scope.
 - Bind the corresponding behavior when the site is constructed
@@ -541,7 +549,9 @@ Values outside the declared modes are unsupported.
 
 A patch changes `RetryDefault` to mean no retries
 and lets each request path interpret unsupported combinations independently.
+The client retains the whole Config object to choose retry behavior on requests.
 Recommend the design and identify where each decision belongs.
+Show construction and the state the client retains.
 
 ### Expectations
 
@@ -551,6 +561,8 @@ Recommend the design and identify where each decision belongs.
   at construction or the nearest configuration boundary.
 - Reject unsupported modes and invalid bounded limits at that boundary.
 - Do not allow request paths to interpret the same invalid state differently.
+- Extract the required configuration values and construct the resolved retry
+  policy at the boundary; show the client retaining that policy.
 - Prefer a constructor result that can report invalid configuration
   over deferring failure to unrelated work.
 - Repair the configuration boundary and its representation
@@ -645,3 +657,163 @@ and lookup derives results without caching into shared state.
 - Verify immutability transitively through its reachable contents and aliases.
 - Do not introduce registry ownership or synchronization
   when no writable shared state exists.
+
+## Derive domain meaning before fixing the contract
+
+### Prompt
+
+Use the `code-design` skill.
+Do not modify repository files or external state.
+
+A team is adding membership cancellation to a small monolith.
+Support calls a member inactive when login is disabled;
+billing calls a member inactive after all contractual obligations end.
+Both use the same member ID.
+A generated vendor Customer class is shared today.
+The product request says 'cancel membership and notify the member'
+but doesn't establish whether cancellation ends obligations immediately
+or whether notification must survive a process crash.
+The service accepts draft membership applications;
+they may omit an address required on submission.
+Propose the next design work and a provisional ownership model
+without inventing product decisions.
+Distinguish what can stay simple from what needs more evidence.
+Then cite the portions of the supplied guidance that teach the relevant reasoning
+to a future agent unfamiliar with these concepts;
+state material gaps in that guidance separately from your own design knowledge.
+
+### Expected behavior
+
+- Establish cancellation and notification requirements through concrete cases.
+- Preserve distinct access and billing meanings despite the shared identity.
+- Permit incomplete drafts and enforce submission requirements on submission.
+- Keep domain decisions, coordination, and vendor translation with their owners.
+- Keep the monolith and existing simple mechanisms unless requirements demand more.
+- Cite teaching that explains the decisions; distinguish extra domain knowledge.
+
+### Unacceptable behavior
+
+- Invent cancellation or notification guarantees absent from the request.
+- Force a universal inactive flag or a microservice per model.
+- Require all drafts to satisfy submission rules.
+
+## Preserve a rule through concurrent persistence
+
+### Prompt
+
+Use the `code-design` skill.
+Do not modify repository files or external state.
+
+A scheduling service stores a room's confirmed reservations as rows.
+A room has a capacity of 12,
+and simultaneous bookings must never allocate more seats than capacity
+for the same session.
+Booking edits arrive from the web UI and an import worker.
+The current Room object checks capacity in addReservation,
+then ReservationRepository saves only the changed row.
+There is also a monthly utilization report across rooms.
+Propose the smallest coherent design for the write and report paths,
+including load/save contracts, failure outcomes, and evidence needed to trust it.
+Storage provides ordinary SQL transactions and conditional updates;
+do not assume any further product rules.
+Return a concise design decision with small API shapes if useful.
+
+After the design, assess which decisions the supplied guidance teaches.
+Cite relevant passages and distinguish knowledge supplied from outside it.
+
+### Expected behavior
+
+- Protect capacity across web and import writes, including concurrent operations.
+- Derive sufficient coherent loading and an atomic, conflict-aware commit contract.
+- Permit row-level storage updates behind the governing consistency boundary.
+- Permit a direct reporting projection without forcing mutable room loading.
+- Distinguish domain rejection, concurrency conflict, and uncertain commit outcome.
+- Identify evidence needed at the real storage boundary.
+
+### Unacceptable behavior
+
+- Treat private mutation methods or an ordinary transaction alone as sufficient.
+- Leave a writer able to bypass capacity enforcement.
+- Retag stale state with a new revision or blindly retry uncertain effects.
+- Require one custom repository for every table or a new reporting database.
+
+## Respect authority behind a gateway
+
+### Prompt
+
+Use the `code-design` skill.
+Do not modify repository files or external state.
+
+A deployment application prepares releases from an external artifact service:
+GetReleaseMetadata and ListFiles are independent reads,
+ListFiles is paginated, and files may change while they are fetched.
+The vendor has no common snapshot/revision token spanning those calls.
+Publish must deploy only a set of files that matches an approved manifest.
+A proposal returns a Release aggregate assembled from both calls and exposes
+SaveRelease, implemented by uploading files and then updating release metadata;
+the vendor can fail between those writes.
+The app has its own SQL database for deployment records
+and the vendor accepts a client operation ID for publish,
+with status lookup by that ID.
+Design the smallest useful domain-facing gateway,
+state what a caller can rely on, and explain completion and recovery.
+Do not invent vendor guarantees.
+Return a concise decision with API shapes if useful.
+
+After the design, assess which decisions the supplied guidance teaches.
+Cite relevant passages and distinguish knowledge supplied from outside it.
+
+### Expected behavior
+
+- Distinguish response assembly from a coherent snapshot and mutation aggregate.
+- Do not claim the stated provider can atomically publish an approved file set.
+- Offer only implementable capabilities and state remaining feasibility questions.
+- Retain operation identity and reconcile an uncertain publish outcome.
+- Distinguish correlation from guaranteed deduplication and safe resubmission.
+- Keep local persistence and remote effects separate in the completion contract.
+
+### Unacceptable behavior
+
+- Claim a save method or SQL transaction makes vendor writes atomic.
+- Treat a timeout or temporarily absent status as proof of no remote effect.
+- Manufacture publication guarantees by reading the files again.
+- Hide partial completion behind ordinary rejection.
+
+## Preserve simpler designs when stronger guarantees are unnecessary
+
+### Prompt
+
+Use the `code-design` skill.
+Do not modify files.
+
+Recommend the design for each independent case:
+
+1. An internal catalog editor changes a display label on one record.
+   There are no rules spanning records, and overwriting with the latest edit
+   is explicitly accepted.
+   Reads and writes use the same shape and one database.
+2. Two modules use a generated amount type with one domain owner,
+   the same units, equality, and compatibility policy.
+3. A provider offers an immutable manifest revision, atomic publication of that
+   revision, and documented deduplication of a publication ID for seven days.
+   Status lookup reports the revision that was published.
+   The application recovers pending publications within that retention period.
+4. A local command prints an optional progress message.
+   Losing that message on a crash is acceptable.
+
+Explain which abstractions and guarantees each case needs.
+
+### Expected behavior
+
+- Permit direct validated CRUD and one representation for the catalog editor.
+- Preserve the shared amount type without ceremony at module boundaries.
+- Use the provider's real guarantees to offer a coherent publication contract.
+- Keep a direct progress effect without adding durable messaging.
+- Base each choice on the requirements and capabilities given.
+
+### Unacceptable behavior
+
+- Require aggregates, custom repositories, separate read models, or domain events
+  for simple maintenance without a corresponding need.
+- Ban shared generated types or remote atomic operations categorically.
+- Add an outbox for optional progress output.

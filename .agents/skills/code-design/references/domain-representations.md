@@ -1,12 +1,45 @@
 # Domain representations
 
-Parse less-structured input into a representation
-that carries what the program has learned.
-Validation that returns only success
-while continuing to pass the original string, map, or external object
-leaves every later reader dependent on an invisible earlier check.
-A parsed domain value should make valid structure and invariants available
-without repeating the proof.
+## Express identity and lifecycle
+
+When identity must survive changes to attributes, model that identity explicitly.
+An entity is recognized as the same thing through those changes.
+A value object is meaningful through its contents;
+equal contents represent the same value within its domain.
+Use replacement and immutability for values when that keeps their meaning stable.
+Read-only fields do not protect mutable contents or aliases by themselves.
+Choose equality from domain meaning, not from a database key added for storage.
+
+Enforce the guarantees of the current lifecycle state, on every authoritative path.
+
+```text
+draft = drafts.save(Draft(address=None))  # valid incomplete state
+submit(draft)                           # rejects; draft remains editable
+```
+
+Construction and transitions establish downstream guarantees;
+client feedback cannot replace those checks for clients or workers.
+
+Use a constructor or factory when valid construction would otherwise expose
+assembly rules to callers.
+Return enough information for the caller to understand a rejection;
+collect independent input errors when that serves correction better than
+reporting only the first one.
+Represent a recurring condition as a named predicate or specification
+when its shared meaning earns that abstraction.
+Neither a factory hierarchy nor a specification framework follows automatically.
+
+## Carry established guarantees forward
+
+Return the validated representation instead of discarding the proof
+and passing unchecked input onward.
+
+```text
+parse_routes(raw: List<RouteInput>) -> ValidRoutes
+build_router(routes: ValidRoutes) -> Router
+```
+
+`ValidRoutes` carries the established structure and invariants.
 Retain raw input only when diagnostics, audit, or round-tripping requires it.
 
 Establish an invariant at the first boundary
@@ -22,41 +55,59 @@ Primitive values and generic containers are useful at external edges,
 but repeated checks and conventions around them
 usually reveal a missing domain concept.
 
-A boolean is appropriate for a stable binary fact or local predicate.
-It is a poor boundary when it means an unnamed mode,
-especially when later modes or combinations are credible.
-Name the choice and place it at the scope where it varies.
+Choose from meaning, not blanket bans on primitives or containers.
 
-A finite, system-known choice should remain inspectable data.
-Use a callback, strategy, or other behavior-bearing contract
-only when the caller genuinely supplies open-ended behavior;
-do not disguise a closed set of modes as opaque behavior injection.
+```text
+has_children: Bool                 # stable binary fact
+path_style: "relative" | "rooted"    # named finite choice, not an opaque callback
+registrations: List<Registration>   # retains repeated emails
+```
 
-A map is appropriate when key-to-value lookup and key uniqueness
-are part of the domain contract.
-It is a poor boundary when it merely encodes a collection of records
-or exposes an accidental uniqueness policy.
-In that case, use named records at the boundary
-and keep lookup maps inside the owner that needs them.
+Place a choice where it varies; reserve behavior injection for open-ended choices.
+
+For collections of domain records, expose named records and keep lookup indexes
+inside the owner.
+Uniqueness is a validation rule; it does not require callers to supply a map.
+Building a map before validation can silently discard duplicate input,
+and repeating an identifier in both key and record creates two sources of truth.
+
+```text
+Label { name: LabelName, color: Color }
+set_labels(labels: List<Label>)     # reject duplicate names; any index stays private
+
+expand(template, bindings: Map<VariableName, Text>)
+expand("Hello, $recipient", {"recipient": "Sam"})
+```
+
+A map fits when callers work with the keyed associations themselves,
+as with variable bindings.
+Choose it from those operations and semantics, not from an internal lookup need.
 
 Introduce a cohesive request, result, or configuration concept
 when it is meaningful to callers,
 when several values change together,
 or when demonstrated evolution at a stable boundary
 would otherwise force mechanical changes across callers.
-The configuration concept owns the meaning of omission, defaults,
-supported choices, and invalid combinations.
-Normalize and validate those surface states
-at construction or the nearest API boundary,
-then give downstream code a validated representation
-whose meaning it does not have to reinterpret.
+The configuration boundary owns omission, defaults, and invalid combinations.
+Parsing rejects unsupported or conflicting choices.
+Construction extracts the values and binds the behavior the client will own:
+
+```text
+new_client(raw_options):
+    options = parse_options(raw_options, defaults=established_defaults)
+    return Client(
+        endpoint=options.endpoint,
+        timeout=options.timeout,
+        retry_policy=make_retry_policy(options.retry_mode, options.retry_limit),
+    )
+```
+
+Normalize at construction or the nearest API boundary,
+so downstream code does not reinterpret surface states.
 When adding an optional choice to a stable boundary,
 preserve established behavior when that choice is omitted,
 defaulted, or zero-valued where applicable,
 unless the contract deliberately changes.
-Reject unsupported or conflicting choices there
-instead of letting an accidental fallback select behavior
-or making every consumer reinterpret the configuration.
 Do not wrap a small internal signature in a vague object
 only to reserve space for imagined growth.
 

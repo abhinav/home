@@ -32,6 +32,17 @@ the boundary has not reduced the load.
 
 Begin with the outcome the caller needs,
 not the classes, functions, or framework pieces already available.
+Establish what the operation means to the people or systems affected by it:
+which facts matter, which decisions change them,
+and which rules must remain true.
+Use concrete successful, rejected, and interrupted cases
+to discover missing concepts and ambiguous terms.
+Treat the model as an explanation to refine with domain evidence;
+record unresolved business rules instead of filling them with familiar defaults.
+When discovering domain concepts or reconciling different meanings of a concept,
+read [Domain modeling](references/domain-modeling.md)
+for scenarios, shared language, and the scope of a model.
+
 Design the public or inter-component surface from the calling code inward.
 Sketch representative calls before choosing the implementation shape.
 From those calls, draft the smallest useful boundary:
@@ -86,13 +97,13 @@ when the ordering and coordination belong to the domain.
 Preserve composable stages when callers genuinely own their selection,
 ordering, or reuse.
 
-For example, if every invoice caller must load an invoice,
-price it, send it, apply the same retry policy,
-and record the same audit event,
-the billing boundary should usually own `SendInvoice`.
-If media callers intentionally choose and reorder decoding,
-transformation, and encoding stages,
-those stages are part of the useful contract and should remain available.
+```text
+billing.send_invoice(invoice_id)  # billing owns load, price, send, retry, audit
+
+frames = decode(source)           # media caller owns stage selection and order
+frames = crop(frames, region)
+encode(frames, format)
+```
 
 The same test applies at every scale.
 A helper, type, object, module, package, or service is useful
@@ -113,6 +124,17 @@ responsibility, lifecycle, invariant set, dependency boundary, or contract.
 A declaration kind, framework layer, or size target
 does not create such a boundary.
 
+Distinguish the decision from its execution.
+Domain behavior determines whether a change is allowed and what it means.
+Application coordination obtains facts, invokes that behavior,
+arranges persistence and effects, and reports the outcome.
+Adapters translate between that model and external mechanisms.
+A rule about eligibility, ordering, or required follow-up remains domain policy
+even when executing it requires several steps or collaborators.
+Give a meaningful operation that fits no single object its own domain owner.
+Objects, functions over validated values, and private modules can all express
+these responsibilities; a fixed layer count or inheritance tree is unnecessary.
+
 Trace representative workflows through the proposed layout.
 Repeated crossings between files or modules
 to complete one operation or change one policy
@@ -131,20 +153,22 @@ without coordinating its internal policy or sequence.
 If that knowledge remains on both sides,
 the new boundary is a helper, not an owner.
 
-Place each value where its lifetime and rate of change match the abstraction.
-Application-wide or object-wide values usually belong at construction.
-Per-operation values belong on the operation.
-Data that can change between operations should remain behind a provider
-or be supplied for each operation;
-do not freeze dynamic state merely to simplify a signature.
+Match values to their owner's lifetime and rate of change.
+Translate external state at composition or adapters.
 
-Read environment variables, flags, configuration files,
-framework requests, database rows, and other external state
-at a composition or adapter boundary.
-Translate them into domain values or capabilities,
-then give each component only what it needs.
-This keeps process and infrastructure knowledge out of domain behavior
-and makes dependencies visible.
+```text
+# Composition owns process settings and stable dependencies.
+reporter = Reporter(client, parse_timeout(env["REPORT_TIMEOUT"]))
+authorizer = Authorizer(plan_provider)  # retain the provider, not a plan snapshot
+
+# Operations receive changing inputs; authorization obtains the current plan.
+reporter.send(report)
+authorizer.authorize(tenant_id, action)
+```
+
+Bind behavior where its choice becomes stable;
+re-evaluate choices whose source can change, or supply them per operation.
+Keep environment, request, and storage formats outside domain behavior.
 
 Stateful collaborators and replaceable policy should be visible
 at a construction or operation boundary.
@@ -156,20 +180,13 @@ exposes writable shared state.
 Global addressability is not itself the problem;
 hidden mutation, replaceable policy, or lifecycle is.
 
-Do not replace visible dependencies with one unrelated application context.
-A broad bag couples every consumer to the shape of the whole application
-and obscures which capabilities each operation needs.
-A cohesive context is different:
-when its fields share one domain meaning and lifecycle,
-such as a job execution or transaction,
-the context can be the domain concept rather than a convenience bag.
+An unrelated application bag hides dependencies and couples consumers to its shape.
+Pass narrow collaborators; keep contexts that share a domain meaning and lifetime.
 
-Evaluate a stable choice at the boundary where it becomes stable
-and select the corresponding implementation once.
-Re-evaluate choices whose source can legitimately change.
-The design follows the lifetime of the decision,
-not a blanket preference for either construction-time
-or call-time selection.
+```text
+handler = InvoiceHandler(billing, logger)
+run_job(JobContext(job_id, attempt, deadline, cancellation, logger))
+```
 
 Keep each policy or declaration authoritative in one place.
 Derive reverse lookups, indexes, transport views,
@@ -180,15 +197,24 @@ deduplication is useful only when the values must change together.
 ## Keep domain boundaries meaningful
 
 When adapting an external system, translating across a domain boundary,
-or choosing a process or network boundary,
+coordinating external effects, or choosing a process or network boundary,
 read [External boundaries](references/external-boundaries.md)
-for domain adapters, translation, and distribution decisions.
+for capability contracts, translation, completion, and distribution decisions.
 
 ## Let representations carry the model
 
 When parsing inputs, establishing invariants, or choosing domain data shapes,
 read [Domain representations](references/domain-representations.md)
-for validated values, modes, records, and configuration contracts.
+for identity, lifecycle, validated values, modes, and configuration contracts.
+
+## Preserve rules through persistence
+
+When grouping state for mutation, designing load/save contracts,
+or separating reporting from state changes,
+read [Aggregates and persistence](references/aggregates-and-persistence.md)
+for consistency boundaries, concurrency, and read models.
+When that work also involves an external system,
+read External boundaries for the limits of remote authority and completion.
 
 ## Use change locality as the diagnostic
 
@@ -226,7 +252,8 @@ read [Scoped evolution](references/scoped-evolution.md).
 
 Before implementing or settling on a design:
 
-1. Describe the caller's useful outcome and sketch representative calls.
+1. Establish the operation's meaning through concrete cases,
+   then describe the caller's outcome and sketch representative calls.
 2. Establish any supported existing behavior and compatibility commitments.
 3. Draft the observable contract and validate it against real callers.
 4. Identify the decision, invariant, state, and external knowledge involved.
