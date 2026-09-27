@@ -131,6 +131,17 @@ arranges persistence and effects, and reports the outcome.
 Adapters translate between that model and external mechanisms.
 A rule about eligibility, ordering, or required follow-up remains domain policy
 even when executing it requires several steps or collaborators.
+Application coordination can execute policy defined by a different domain owner.
+For each required sequence across collaborators, identify who defines the rule,
+who executes the effects, and who enforces each local transition.
+Justify policy ownership from the invariant
+and the component's supported contract.
+Existing control flow establishes execution;
+policy ownership needs its own evidence.
+Retain a coordinator when its contract owns the domain workflow.
+When only execution is established, identify the missing contract evidence
+before approving or relocating the policy.
+Trace a change to the rule through its owner, callers, and collaborators.
 Give a meaningful operation that fits no single object its own domain owner.
 Objects, functions over validated values, and private modules can all express
 these responsibilities; a fixed layer count or inheritance tree is unnecessary.

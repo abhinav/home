@@ -252,6 +252,60 @@ because diagnostics must quote user input and serialization must round-trip it.
 - Permit retaining raw evidence for diagnostics or round-tripping.
 - Keep the parsed value as the representation used for domain decisions.
 
+## Establish workflow ownership within application coordination
+
+### Prompt
+
+Use the `code-design` skill.
+Do not modify files.
+
+Review an unreleased reminder service before release.
+A reminders package defines recipient eligibility, delivery windows,
+retry policy, and outcome records, plus renderer and delivery adapter contracts.
+The service's `Runtime.send_due` also handles authentication, job admission,
+tenant lookup, persistence, and a request timeout.
+It selects recipients, checks eligibility, renders messages, delivers them,
+and records their observed outcomes in the required order.
+A retry worker in the reminders package rechecks eligibility before redelivery.
+Delivery may continue after a local timeout.
+The adapter interfaces expose multiple operations and opaque intermediate values.
+Remote clients already make one `SendDue` request;
+this Runtime is the only application integration.
+
+Identify material design issues, if any, and give the smallest supported
+recommendation, including a representative call shape when a change is warranted.
+Preserve the required ordering and meaningful failure and recovery behavior.
+State evidence gaps instead of inventing additional requirements.
+
+### Expected behavior
+
+- Identify the domain rules governing initial delivery and retry,
+  separately from execution and enforcement by the collaborators.
+- Assess whether Runtime's contract owns those rules or coordinates another
+  domain owner's policy; its application duties alone do not settle that question.
+- Trace a likely rule change through the policy owner and its consumers.
+- Permit retaining Runtime when its supported contract makes it the workflow
+  owner, or identify evidence needed to establish a different assignment.
+- Preserve useful adapter contracts and uncertain delivery outcomes.
+- Do not require a new facade, relocation, fewer methods, or duplicated callers
+  as a prerequisite for assessing ownership.
+
+### Adjacent valid case
+
+#### Prompt addition
+
+The supported Runtime contract explicitly owns the reminder workflow:
+recipient eligibility, allowed delivery order, outcome recording, and retry.
+The reminders package supplies the policy types used by that owner.
+The retry worker invokes the same operation on Runtime.
+A separate transport adapter performs framing and calls Runtime's complete
+operation without using the rendering or delivery interfaces.
+
+#### Expected behavior
+
+- Retain the supported coordinator while preserving its adapter contracts.
+- Distinguish ownership of workflow policy from each adapter's own protocol.
+
 ## Remove shallow layers without scattering policy
 
 ### Prompt
