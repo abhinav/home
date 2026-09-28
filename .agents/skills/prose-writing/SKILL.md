@@ -183,8 +183,16 @@ executable demonstrations, visualizations, and structural diffs.
 ## Manage cognitive load
 
 Give each paragraph one explanatory job.
-Use concrete subjects and actions
-that identify what changes and who changes it.
+Each sentence should add a useful fact or help the reader draw an inference.
+Make sentences easy to follow on the first reading.
+Keep the subject and its action close enough to recognize together,
+and place a condition or modifier next to the action or object it describes.
+Split distinct thoughts or nested conditions into separate sentences,
+while keeping closely related ideas together.
+Use words such as "because," "so," and "if"
+when they make the relationship easier to follow.
+Judge brevity by the reader's effort, not just the word count;
+keep a few more words when they make the meaning easier to recover.
 
 Prefer syntax that shows a relationship over a label that merely implies it.
 Use a compound modifier only when readers will recognize it
@@ -219,8 +227,11 @@ Otherwise explain the behavior, contract, invariant,
 input, output, or user-visible effect
 and omit the lower-level mechanism.
 
-After a dense sequence, state the consequence or reusable mental model
-with established names and common words.
+After a dense sequence, state a consequence when it answers a reader question
+that the preceding explanation leaves unresolved.
+Use established names and common words.
+When the consequence or recommendation is already clear,
+keep it in one place with its material conditions.
 After retaining each required code shape, executable demonstration,
 and visualization,
 remove remaining implementation details, repeated claims, and process narration

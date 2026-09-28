@@ -908,3 +908,93 @@ and the explanation must discuss that concept several times.
 - Keep `lease` as the established domain term.
 - Explain its unfamiliar meaning in common words on first material use.
 - Do not replace it with several friendlier synonyms.
+
+
+## Keep a recommendation with its conditions
+
+### Prompt
+
+Use `$prose-writing`.
+Do not modify files.
+
+Rewrite this paragraph for a product manager deciding
+whether to keep a notification rollout paused.
+Preserve the facts.
+
+> Determining whether enabling notifications for customers who imported
+> contacts before the consent check was added, provided that their imported
+> records have since been updated without replacing the original consent
+> timestamps, is safe depends on whether the consent timestamps still
+> reflect permission for notifications rather than permission only to store
+> the contacts.
+> The audit has not established which permission the timestamps represent.
+> Keep the rollout paused until the audit establishes this.
+
+### Quality bar
+
+- Evaluation mode: judgment.
+- The reader can identify the recommendation, affected customers,
+  unresolved permission distinction, and condition for reconsidering it.
+- Each sentence contributes useful information or reasoning.
+- Dense syntax is a failure only when it obscures a relationship
+  or reasonably requires rereading; sentence length alone is not a failure.
+
+### Expectations
+
+- Keep the rollout paused pending the audit's finding.
+- Preserve the original timestamps, later record updates,
+  and imports before the consent check.
+- Preserve the distinction between permission to send notifications
+  and permission only to store contacts.
+- State the recommendation and condition for reconsidering it
+  without restating a decision that is already clear.
+- Omit a restatement of reasoning the surrounding prose already makes clear.
+
+### Adjacent valid case
+
+#### Runner prompt addition
+
+Instead, explain this sequence to a new support engineer:
+a canceled export job stops before creating an archive;
+billing runs only after an archive is created.
+The engineer needs to know whether that canceled job incurs a charge.
+
+#### Expected behavior
+
+- State that the canceled job incurs no charge and explain why.
+- Preserve the cancellation timing and billing condition.
+- Include the conclusion the reader needs to infer from the supplied sequence;
+  do not omit it merely because it adds no new source fact.
+
+## Place a format beside the operation it describes
+
+### Prompt
+
+Use `$prose-writing`.
+Do not modify files.
+
+Write a release-note paragraph from these facts:
+users previously copied billing totals from monthly invoices into a spreadsheet;
+the new Export totals button downloads those same totals as CSV;
+invoice calculation is unchanged.
+The product brief calls it a powerful step forward
+for financial workflow efficiency.
+Return the publication-ready paragraph.
+
+### Quality bar
+
+- Evaluation mode: judgment.
+- The new download format and the former manual action
+  are distinguishable on the first reading.
+- Each sentence contributes a fact or useful reasoning.
+
+### Expectations
+
+- Place the CSV format with the new download action.
+- Preserve the button name, monthly invoice totals,
+  replacement of manual copying, and unchanged calculations.
+- State the concrete benefit without the brief's generic praise.
+- Do not require the reader to reinterpret a trailing format phrase
+  after initially attaching it to the former copying action.
+- Keep useful technical precision such as CSV;
+  ordinary language does not require removing established terms.
