@@ -56,9 +56,38 @@ Do not let activity reports or validation output replace the answer.
 Stop when the answer is complete.
 Do not append a restatement that adds no new information.
 
-Keep referents stable.
-Reuse a real name rather than a synonym, metaphor, or generic label
-when variation could obscure identity.
+Use reference-first communication in every chat message,
+including progress updates and final answers.
+When reporting a status, explaining a result, or requesting a decision
+about a concrete entity, identify that entity at its first mention
+in the message.
+Put its established name or identifier alongside the claim,
+and link directly to it when a usable reference is available.
+Include a short description when the identifier alone
+does not tell the reader what the entity is or why it matters.
+
+For a tracked work item, including a pull request or ticket,
+start its first mention in each message with one complete reference:
+its identifier paired with its title or a meaningful short description of the work.
+The identifier locates the item; the description tells the reader what work it is.
+Follow that reference with the item's status, result, or next action,
+including when opening a progress update.
+Render work-item references as ordinary prose;
+code spans mark literal code or command syntax.
+When a usable URL is available, put the complete reference inside the link text;
+otherwise keep it as unlinked prose.
+Later mentions within the same message may use just the identifier.
+Name the tracking system only when needed to distinguish
+otherwise ambiguous references or explain an action.
+
+The reader should be able to identify and locate the subject
+without reconstructing earlier messages, tool calls, or agent activity.
+Lead with the requested answer and its subject together.
+Keep referents stable throughout the message.
+Reuse the established name;
+use a pronoun only when its referent is clear within the message.
+When a reference is unavailable, use the known name or description
+and state any uncertainty that prevents identification.
 
 When communicating with the user, express times in the user's local time zone.
 Use the time zone provided by the user or current session,
@@ -124,14 +153,15 @@ no relationship relevant to the reader.
 These conventions apply in chat
 and in link-capable external messages such as Slack,
 GitHub replies, and email.
-Use the shortest unambiguous pull request label:
+Use the shortest unambiguous pull request identifier
+with a title or meaningful short description in the first link of each message:
 
 - In a single-repository context,
-  use `[#123](https://github.com/<owner>/<repo>/pull/123)`.
+  use `[#123: <description>](https://github.com/<owner>/<repo>/pull/123)`.
 - When several repositories in one organization are in context,
-  use `[<repo>#123](https://github.com/<owner>/<repo>/pull/123)`.
+  use `[<repo>#123: <description>](https://github.com/<owner>/<repo>/pull/123)`.
 - When several organizations are in context,
-  use `[<owner>/<repo>#123](https://github.com/<owner>/<repo>/pull/123)`.
+  use `[<owner>/<repo>#123: <description>](https://github.com/<owner>/<repo>/pull/123)`.
 
 When the destination cannot render links,
 use its supported link representation instead.

@@ -341,6 +341,132 @@ The user adds:
 - Keep the chapter diagrams assigned to illustration.
 - Leave editing's unchanged assignment intact without a redundant message.
 
+## Identify PRs in their first links
+
+### Prompt
+
+Read `{GUIDANCE_PATH}` as the operating guidance.
+Which of these changes can I merge? Keep it brief.
+Both belong to openai/openai.
+PR 412, “Reuse snapshots for checkout,” has passing required CI
+and complete approvals.
+PR 419, “Select a staging checkout endpoint,” has passing required CI
+but lacks an owner approval.
+Their GitHub URLs end in /pull/412 and /pull/419.
+Write only the user response; take no actions beyond reading the guidance.
+Use only the supplied facts, without network requests or memory.
+
+### Quality bar
+
+- Evaluation mode: conformance.
+- Each first link identifies the PR and its purpose without surrounding prose.
+- Status and destination follow the supplied facts and operating guidance.
+
+### Expectations
+
+- First link labels contain `#412` and `#419`, respectively,
+  plus their title or a meaningful short description inside the link.
+- Use `https://flow.apps.openai.org/prs/openai/openai/412`
+  and `https://flow.apps.openai.org/prs/openai/openai/419`.
+- State that 412 can merge and 419 still needs owner approval.
+- Do not claim a merge happened or invent failed checks.
+- A number-only first link with its description outside the link fails.
+
+### Adjacent valid case: several repositories in one organization
+
+#### Prompt addition
+
+Replace the PR data with these two approved changes, both with passing required CI:
+example/harbor PR 17, “Cache response headers,”
+at https://github.com/example/harbor/pull/17;
+example/beacon PR 17, “Show deployment progress,”
+at https://github.com/example/beacon/pull/17.
+
+#### Expected behavior
+
+- First links contain `harbor#17: <description>`
+  and `beacon#17: <description>`.
+- Preserve the supplied GitHub destinations and ready status.
+- Do not add an unnecessary organization qualifier.
+
+### Adjacent valid case: several organizations
+
+#### Prompt addition
+
+Replace the PR data with these two approved changes, both with passing required CI:
+example/harbor PR 17, “Cache response headers,”
+at https://github.com/example/harbor/pull/17;
+sample/harbor PR 17, “Show deployment progress,”
+at https://github.com/sample/harbor/pull/17.
+
+#### Expected behavior
+
+- First links contain `example/harbor#17: <description>`
+  and `sample/harbor#17: <description>`.
+- Preserve the supplied GitHub destinations and ready status.
+
+### Adjacent valid case: later mentions in one message
+
+#### Prompt addition
+
+Start with one sentence introducing both changes and their status.
+Then give a separate one-line merge recommendation referring to both again.
+Keep the second line compact by referring to the changes by number.
+
+#### Expected behavior
+
+- First links still contain identifiers and descriptions and use Flow.
+- Later mentions may use `#412` and `#419` alone, linked or unlinked.
+- Preserve readiness and the missing owner approval in the recommendation.
+
+### Adjacent valid case: a new message
+
+#### Prompt addition
+
+The previous chat message already introduced both changes with their titles.
+This response is a new message.
+
+#### Expected behavior
+
+- Both first links in this new message still contain identifiers and descriptions.
+- Do not carry the later-mention allowance across messages.
+
+## Identify tickets in their first links
+
+### Prompt
+
+Read `{GUIDANCE_PATH}` as the operating guidance.
+Use only these invented facts, without network requests or memory.
+Do not modify files or contact anyone.
+Give me a short status update for these tickets:
+OPS-31, “Restore nightly exports,” is complete;
+its URL is https://issues.example.com/OPS-31.
+OPS-36, “Increase archive retention,” needs a policy decision;
+its URL is https://issues.example.com/OPS-36.
+Write only the user response.
+
+### Quality bar
+
+- Evaluation mode: conformance.
+- Each first ticket link identifies the work and its status is accurate.
+
+### Expectations
+
+- First link labels contain each ticket's identifier
+  and title or meaningful short description.
+- Preserve the supplied URLs, completion, and pending policy decision.
+
+### Adjacent valid case: no usable URLs
+
+#### Prompt addition
+
+Neither ticket has a usable URL. The supplied URLs are placeholders.
+
+#### Expected behavior
+
+- Use plain text identifiers and descriptions.
+- Preserve both statuses without inventing usable links.
+
 ## Show branching and mixed PR stacks
 
 ### Prompt
@@ -375,7 +501,8 @@ The data is current; base identifies the branch the PR targets.
 
 - Use nested bullets with 410, 411, and 420 at the top level.
 - Nest 412 and 413 under 410, 416 under 413, and 421 under 420.
-- Preserve each PR's status and use linked `#NUMBER` labels.
+- Preserve each PR's status and use linked `#NUMBER: <description>` labels.
+- Put each title or meaningful short description inside its first link.
 - Permit any ordering among independent roots or siblings.
 - Do not invent dependencies or treat approval and passing CI as proof of mergeability.
 

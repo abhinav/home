@@ -440,21 +440,25 @@ in an existing design document without changing any words.
 A user asks for a Slack message to a teammate saying that pull request 73
 in the single repository currently under discussion is ready for review.
 The repository is `openai/relay`.
+The pull request title is “Reuse client connections”.
 
 Write only the message.
 
 ### Quality bar
 
 - Evaluation mode: conformance.
-- Use the shortest unambiguous linked pull request label
+- Use the shortest unambiguous pull request identifier
+  and a title or meaningful short description inside the first link
   supported by the destination.
-- Preserve the OpenAI Flow destination and GitHub fallback.
+- Preserve the OpenAI Flow destination.
 - Apply the outbound-message signature.
 
 ### Expectations
 
 - Use `#73` as the visible pull request identity
-  because one repository is in context.
+  because one repository is in context,
+  with “Reuse client connections” or a meaningful short description
+  inside the first link.
 - Link the label to the OpenAI Flow pull request URL.
 - Include a compact GitHub fallback link.
 - End the Slack message with `-abg-bot` on its own line.
