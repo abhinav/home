@@ -607,3 +607,85 @@ and how you would verify the chosen examples.
 - Distinguish compiled examples from examples run and checked via output comments.
 - Run `go test` without inventing output assertions for nondeterministic behavior.
 - Do not add examples solely to repeat existing tests.
+
+
+## Distinguish supported construction from Go constructibility
+
+### Prompt
+
+Use the `go-development` skill.
+Do not modify files or inspect tests.
+
+A user is concerned about validation methods in this unpublished API:
+
+```go
+type Input struct { filename string; reader io.Reader }
+func StreamInput(filename string, reader io.Reader) Input {
+    return Input{filename: filename, reader: reader}
+}
+func (i Input) Validate() error {
+    _, err := i.validate()
+    return err
+}
+func (i Input) validate() (Encoding, error) {
+    if i.filename == "" || i.reader == nil {
+        return EncodingUnspecified, errInvalidInput
+    }
+    return encodingFor(i.filename)
+}
+func (i Input) Send(client *Client) error {
+    encoding, err := i.validate()
+    if err != nil { return err }
+    return client.Send(i.filename, encoding, i.reader)
+}
+```
+
+The CLI invokes Validate before obtaining a client;
+library callers can invoke Send directly.
+Explain what is wrong and recommend the smallest coherent API shape.
+Focus on validation and receiver choices.
+Identify missing contract information that materially changes the recommendation.
+
+### Expectations
+
+- A guidance-access trace shows selection of `code-design` by name
+  and retrieval of its domain representation guidance through its own router.
+  The prompt supplies no cross-skill reference path.
+- Prefer fallible construction that establishes invariants and retains encoding.
+- Do not infer supported zero-value or literal construction merely from Go syntax.
+- Identify any uncertainty about supported construction before choosing checks
+  for invalid object state during Send.
+- With controlled construction, remove validation methods and redundant checks.
+- Treat shared stream state as an object model and use pointer semantics
+  unless a supported independent-value contract establishes otherwise.
+- Do not mistake stable interface fields for independent copied stream state.
+
+### Adjacent valid case
+
+#### Prompt addition
+
+The package contract explicitly supports external Input literals with exported
+fields, zero-value assembly, and editing those fields before sending.
+The CLI needs validation feedback before dialing.
+Preserve that public contract.
+
+#### Expected behavior
+
+- Permit validation for the supported unchecked representation.
+- Send must check current inputs even after a prior successful Validate call.
+- Do not remove supported construction or infer validity from an optional factory.
+
+### Constructor-only variant
+
+#### Prompt addition
+
+The supported construction path is StreamInput alone;
+zero values and external literals are unsupported,
+and there are no setters or decoding paths.
+Encoding selection depends only on the immutable filename.
+
+#### Expected behavior
+
+- Return a valid *Input or an error from StreamInput and retain its encoding.
+- Send relies on established local invariants without validation methods.
+- Do not add invalid-state guards solely for unsupported zero values or nil.

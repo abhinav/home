@@ -871,3 +871,74 @@ Explain which abstractions and guarantees each case needs.
   for simple maintenance without a corresponding need.
 - Ban shared generated types or remote atomic operations categorically.
 - Add an outbox for optional progress output.
+
+
+## Establish validity through supported construction
+
+### Prompt
+
+Use the `code-design` skill.
+Do not modify files.
+
+An unpublished delivery API exposes a `Delivery` object with private fields.
+Its only supported creation path is a factory accepting a destination label
+and payload description.
+There are no supported setters or decoding paths.
+The factory currently stores arbitrary inputs;
+`Delivery.Validate()` rejects an empty label or an unsupported payload format,
+and `Send()` repeats those checks before contacting the destination.
+The CLI calls `Validate()` before obtaining a network connection.
+Library callers invoke `Send()` directly.
+A reviewer wants to preserve both checks because library callers bypass the CLI.
+
+Recommend the smallest coherent API and explain where each failure belongs.
+Show the construction and operation contracts.
+
+### Expectations
+
+- Make the factory reject invalid inputs and retain resolved payload information.
+- Remove object validation methods and repeated invariant checks from Send.
+- Explain how fallible construction serves CLI preflight and library callers.
+- Keep delivery failures and changing destination availability at operation time.
+- Require no extra preparation wrapper or state hierarchy for these invariants.
+
+### Adjacent valid case
+
+#### Prompt addition
+
+Instead, the documented API supports callers creating and editing a public
+`DeliveryInput` record, including incomplete forms and decoded user settings.
+An editor wants validation feedback while users correct those fields.
+The execution operation accepts this raw input directly for compatibility.
+
+#### Expected behavior
+
+- Permit useful validation on DeliveryInput and preserve supported construction.
+- Check current raw inputs at execution because previous feedback can become stale.
+- Do not silently require a new constructor-only API or remove editor feedback.
+- Keep any internally constructed object valid after the raw-input boundary.
+
+## Apply construction guarantees in Python
+
+### Prompt
+
+Use the `code-design` skill.
+Do not modify files.
+
+An unpublished Python Packet class accepts a nonempty label and a borrowed
+binary stream in its constructor.
+It has no supported setters, subclassing, or decoding path.
+Its public validate method delegates to a private validator;
+send calls the private validator again before reading the stream.
+The CLI validates before connecting; library callers call send directly.
+Show the smallest coherent API and explain what happens when callers pass
+one Packet to another function.
+The caller controls closing the stream and replay is not promised.
+
+### Expected behavior
+
+- Check stable invariants in construction and omit redundant object validators.
+- Use ordinary Python methods and object references.
+- Preserve shared stream state and the caller's responsibility for closing it.
+- Do not introduce copying or ownership-transfer machinery without a caller need.
+- Leave changing I/O failures at the operation that uses the stream.

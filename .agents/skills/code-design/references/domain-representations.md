@@ -10,7 +10,38 @@ Use replacement and immutability for values when that keeps their meaning stable
 Read-only fields do not protect mutable contents or aliases by themselves.
 Choose equality from domain meaning, not from a database key added for storage.
 
-Enforce the guarantees of the current lifecycle state, on every authoritative path.
+## Establish validity through supported construction
+
+A successfully constructed object carries its invariants to its consumers.
+Identify the supported ways callers create and change it.
+Constructors, factories, parsers, and supported decoding paths establish the
+same guarantees; supported mutations preserve them.
+Reject invalid inputs before returning the object,
+resolve defaults and derived values there,
+and retain the representation downstream operations need.
+Consumers can then rely on those guarantees.
+
+Provide a validation method only when the API supports callers constructing
+or editing a representation with invalid inputs,
+such as an unchecked configuration record or an incomplete draft.
+State which supported path admits that state and what validation establishes.
+When construction is controlled, put the checks in that construction boundary
+and omit validation methods that recheck the resulting object's invariants.
+A caller's need for early error reporting is served by fallible construction.
+
+Language mechanisms that can manufacture an instance do not by themselves
+establish a supported construction path.
+Use the public contract and supported callers to decide whether literals,
+zero values, defaults, or decoding belong to that contract.
+If the contract is unclear, identify that uncertainty before choosing validation
+behavior; do not silently expand the supported states.
+
+Object validity covers the invariants construction can establish and preserve.
+Changing external facts, such as file availability or current authorization,
+remain checks of the operation that depends on them.
+
+An incomplete draft can be valid for editing;
+its transition to submission establishes the stronger guarantees of that state.
 
 ```text
 draft = drafts.save(Draft(address=None))  # valid incomplete state
@@ -20,8 +51,7 @@ submit(draft)                           # rejects; draft remains editable
 Construction and transitions establish downstream guarantees;
 client feedback cannot replace those checks for clients or workers.
 
-Use a constructor or factory when valid construction would otherwise expose
-assembly rules to callers.
+Keep assembly rules inside the constructor or factory.
 Return enough information for the caller to understand a rejection;
 collect independent input errors when that serves correction better than
 reporting only the first one.

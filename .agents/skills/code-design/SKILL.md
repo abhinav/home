@@ -214,9 +214,11 @@ for capability contracts, translation, completion, and distribution decisions.
 
 ## Let representations carry the model
 
-When parsing inputs, establishing invariants, or choosing domain data shapes,
+When designing constructors or validation methods,
+parsing inputs, establishing invariants, or choosing domain data shapes,
 read [Domain representations](references/domain-representations.md)
-for identity, lifecycle, validated values, modes, and configuration contracts.
+for supported construction paths, invariants, identity, lifecycle,
+and configuration contracts.
 
 ## Preserve rules through persistence
 

@@ -47,6 +47,9 @@ Preserve existing partial-result contracts, such as the count from `io.Writer.Wr
 
 ## Constructors and required dependencies
 
+Choose constructor results and receiver semantics with
+[Type semantics](type-semantics.md).
+
 Use a constructor when creating a value requires behavior:
 validation, normalization, implementation selection, resource acquisition,
 or other work that establishes an invariant.
