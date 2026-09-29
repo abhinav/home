@@ -30,7 +30,15 @@ Decide what evidence a code change needs before writing a test:
    It may be an existing test, the compiler, the type system,
    a schema validator, a static analyzer, the build,
    or another repeatable check that owns the guarantee.
-3. Mentally introduce the regression and choose the disposition:
+3. Look for promises over combinations of inputs or operation histories.
+   Preservation across a transformation, an inverse operation,
+   or agreement with a simple model can make whole input families checkable.
+   When those relationships can expose gaps in the current evidence,
+   read [Property-based testing](references/property-based-testing.md)
+   and choose a useful property test alongside concrete examples.
+   Make this choice during ordinary implementation and test planning;
+   also read that reference when designing or reviewing a property-based test.
+4. Mentally introduce the regression and choose the disposition:
    - Add or strengthen a permanent test when a new or changed promise,
      or an uncovered bug, would otherwise pass every relevant detector.
      A bug-fix regression test should fail without the fix

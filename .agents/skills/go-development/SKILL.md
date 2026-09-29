@@ -51,6 +51,8 @@ decision it governs:
   read [HTTP](references/http.md).
 - For Go tests or executable API examples,
   read [Testing](references/testing.md).
+- For property-based tests, test input generators, or fuzz targets,
+  read [Property-based tests and fuzzing](references/property-based-testing.md).
 - For testing code that invokes external programs through `os/exec`,
   read [Subprocess tests](references/subprocess-tests.md).
 - For asynchronous behavior, event delivery, background workers, timers,

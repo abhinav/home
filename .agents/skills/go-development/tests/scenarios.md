@@ -689,3 +689,117 @@ Encoding selection depends only on the immutable filename.
 - Return a valid *Input or an error from StreamInput and retain its encoding.
 - Send relies on established local invariants without validation methods.
 - Do not add invalid-state guards solely for unsupported zero values or nil.
+
+## Property selection during ordinary work
+
+### Prompt
+
+Use applicable installed guidance.
+This is a hypothetical Go package change; do not edit shared files.
+A package exports LowerBound(xs []int, key int) int.
+For a sorted slice it returns the first position whose value is at least key, or
+len(xs).
+A binary-search optimization is being added.
+Existing tests cover empty input, a hit in [1,3,5], and a miss above that slice.
+Inputs may contain duplicate and negative values.
+The package runs go test ./... on supported Go versions in CI.
+Test dependencies are permitted; none is established yet.
+Propose the additional tests you would actually add, show concrete Go code for
+the most useful addition and any dependency change, and give the command that
+exercises it.
+Explain what a plausible defect would make fail.
+Keep this a focused answer; inspect guidance and public documentation as needed,
+but do not inspect unrelated task artifacts or other agents' work.
+
+### Expected behavior
+
+- Chooses property-based testing without a technique cue alongside targeted examples.
+- Uses independent boundary predicates or a simple scan rather than a copied binary search.
+- Allows duplicates and empty slices, sorted input construction, useful size bound.
+- Selected integration and supplied command actually run generated cases, not just fixed seeds.
+- Uses real API and correct failure lifecycle; honors local guidance.
+- No claim that proposed code was executed.
+- Reads the property/fuzzing reference after recognizing the testing decision.
+- A suitable existing framework remains a valid choice.
+
+### Adjacent valid case
+
+#### Runner prompt addition
+
+Instead, the change only renames a private helper for a four-value enum display.
+Every supported enum value already has its specified output asserted.
+
+#### Expected behavior
+
+- Keeps adequate existing evidence; adds no property library for this change.
+
+## Hegel application
+
+### Prompt
+
+Use applicable installed guidance.
+A Go library exposes `LowerBound(xs []int, key int) int` for sorted input.
+It returns the first index whose value is at least key, or the slice length.
+The team has selected Hegel for a small demonstration.
+Show the test, dependency change, and local/CI test requirements for
+Apple Silicon macOS and Linux amd64.
+The ordinary CI command is `go test ./...`.
+Do not modify shared files; inspect public documentation as needed.
+
+### Expected behavior
+
+- Uses the selected release of `hegel.dev/go/hegel` and its supported API.
+- Reports property failures through the callback's `*hegel.T`.
+- Uses an independent oracle and constructs valid sorted inputs.
+- Checks native-engine availability for local and CI test environments.
+- Does not invent a Python server requirement for current releases.
+- Recognizes that ordinary `go test` invokes Hegel generation.
+
+## Existing native fuzz target
+
+### Prompt
+
+Use applicable installed guidance.
+A Go package already has a native fuzz target that asserts a codec's semantic
+round trip, useful seeds, and committed regressions.
+CI currently runs only `go test ./...`.
+A maintainer wants every CI run to try new inputs for ten seconds.
+Give the smallest justified change and explain whether another test dependency
+is needed. Do not modify files.
+
+### Expected behavior
+
+- Adds a bounded `go test -fuzz` invocation for the target's package.
+- Distinguishes corpus replay from fresh generation.
+- Keeps the useful semantic oracle and existing integration.
+- Does not add Rapid or Hegel solely to enable this existing fuzz campaign.
+
+## Property selection for a different contract
+
+### Prompt
+
+Use applicable installed guidance.
+This is a hypothetical Go package.
+MergeWindows(xs []Window) []Window accepts windows with integer Start < End and
+returns sorted maximal half-open windows covering the same points.
+Inputs may be out of order, overlap, nest, or touch; touching windows merge.
+A refactor changes the internal scan.
+Existing examples cover empty input and two overlapping windows.
+CI runs go test ./...; test dependencies are permitted.
+What additional tests would you add?
+Show the most useful test in concrete Go, assuming Window has Start and End int
+fields, plus the command to exercise it.
+Explain the evidence it supplies.
+Do not modify shared files or inspect unrelated task artifacts or other agents'
+work.
+
+### Expected behavior
+
+- Selects property testing without a technique cue.
+- Uses a simple independent membership oracle or other sound contract
+  predicates, not a second merge algorithm.
+- Constructs valid windows including interacting cases and bounds generated
+  work.
+- Checks canonical sorted separation as well as preservation.
+- Provides plausible runnable language integration and appropriate command.
+- Keeps useful named examples and acknowledges tested domain limits.

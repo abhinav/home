@@ -32,3 +32,9 @@ Repeat important or borderline scenarios two or three times,
 and record the observed pass rate.
 
 Use [scenarios.md](scenarios.md) for the reusable gamut.
+
+For ordinary property-selection scenarios,
+give only the task prompt and the normal available-skill catalog.
+Do not name the desired technique, framework, skill, or reference.
+The explicit library and fuzzing cases establish application evidence only.
+Grade substantial code artifacts independently and check reference access traces.
