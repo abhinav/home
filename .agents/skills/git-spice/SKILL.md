@@ -252,7 +252,7 @@ Stop before running a command when any of these conditions holds:
 - The current branch has not been chosen as the intended stack position.
 - More than one branch is planned for one requested outcome,
   but the proposed review units have not been checked
-  for self-containedness under `references/designing-stacks.md`.
+  against the review and release criteria in `references/designing-stacks.md`.
 - A topology-changing command such as `onto`, `--insert`, or `branch split`
   is being used for an ordinary restack or a different topology operation.
 - A remote-tracking ref is being used where git-spice requires a local branch.

@@ -30,10 +30,8 @@ read and apply:
 designing-stacks.md
 ```
 
-Settle the review boundary before choosing the stack position.
-A stacked branch is a self-contained review unit.
-Its incremental diff must provide the implementation, context, and validation
-needed to understand and evaluate its outcome with its downstack dependencies.
+Settle the review boundaries and release conditions
+before choosing the stack position.
 
 ## Choosing Stack Position
 
