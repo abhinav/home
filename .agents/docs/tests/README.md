@@ -2,6 +2,9 @@
 
 Run each scenario with a fresh subagent that has an empty context window.
 Replace `{GUIDANCE_PATH}` with the candidate path when a scenario uses it.
+For reviewable-code-change scenarios, use the candidate global `AGENTS.md`.
+The pricing scenario is self-contained and evaluates delivery decisions;
+it does not require an implementation fixture.
 For application tests, give the subagent the relevant guidance path and scenario prompt.
 For routing tests, give the subagent the task and guide catalog
 without identifying the guide it should select.

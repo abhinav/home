@@ -227,6 +227,45 @@ Present the tradeoffs and ask before proceeding.
 
 A failed route does not establish that a new capability is necessary.
 
+## Make changes to established code reviewable
+
+A reviewer must identify what behavior changes
+and which established logic remains unchanged.
+Before editing, plan the review boundaries as well as the final code shape.
+A coherent final design and an understandable transition are separate needs.
+
+Keep behavioral diffs focused on the requested outcome.
+Preserve surrounding names, placement, and organization
+when changing them would obscure the behavioral difference.
+When movement, extraction, renaming, or reorganization would hide that difference,
+give the behavior-preserving refactor its own review branch.
+Put the refactor below the behavioral change when it makes that change
+simpler to inspect, or above when the behavior is clear in the existing structure.
+Use branch stacking for these review units.
+Separate commits within one aggregate review may still conceal the distinction.
+
+Keep small structural edits with the behavior
+when the changed decisions remain directly visible.
+When separation would require contrived intermediate code
+or leave an incomplete change, keep the necessary edits together
+and explain their relationship.
+Judge separation by the reviewer's reconstruction work, not line count.
+Complete refactoring needed for the requested outcome;
+leave unrelated cleanup outside the change.
+
+Design new code well from the outset, including in existing projects.
+Keep changes to established files focused on integration.
+Moving or copying established logic into a new file does not make that logic new.
+Apply design and source-order guidance to the complete result
+without using a smaller diff to preserve a defective boundary.
+
+Before handoff, inspect each review diff against its parent.
+Check that the behavioral decisions are visible
+and that refactoring preserves the behavior of that parent,
+including behavior introduced below it in the stack.
+Use appropriate validation for each claim;
+a passing suite alone does not make a mixed diff understandable.
+
 ## Revision and feedback
 
 When revising work after feedback,
