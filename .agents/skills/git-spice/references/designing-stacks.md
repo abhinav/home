@@ -3,6 +3,14 @@
 Use this reference before planning multiple branches for one requested outcome,
 or splitting existing work into review branches.
 
+Distinguish branches used to organize development
+from branches intended for review and merge.
+The review and release criteria below govern the intended review stack.
+When worktrees and subagent execution are available,
+read [Parallel development](parallel-development.md)
+before choosing how to develop independent work against a shared contract
+and assemble it into review branches.
+
 ## Keep every merged prefix deployable
 
 Design for bottom-up merges with deployment after each merge by default.
@@ -24,7 +32,7 @@ or combine inseparable changes into one coherent review unit.
 
 ## Treat each branch as a review unit
 
-A stacked branch represents one coherent engineering outcome.
+A review branch represents one coherent engineering outcome.
 Its incremental diff against its parent is a self-contained review unit.
 It gives a reviewer enough implementation, context, and validation
 to understand the decision and verify the relevant behavior
@@ -35,7 +43,7 @@ rather than implementation chronology or file organization.
 
 ## Establish the boundary before creating the branch
 
-For every proposed branch, identify:
+For every proposed review branch, identify:
 
 1. The outcome the branch delivers.
 2. The downstack outcomes it depends on.

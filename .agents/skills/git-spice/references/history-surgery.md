@@ -40,6 +40,7 @@ Prefer git-spice where it provides the operation:
   where the desired topology is unchanged
   and branches only need to replay on recorded bases.
 - Use `git-spice branch split` for branch-level splitting.
+- Use `git-spice branch fold` to combine a branch with its base.
 - Do not use `git-spice commit split` in an agent session.
   It invokes interactive hunk selection that `--no-prompt` cannot suppress.
 - Use raw Git only for non-interactive commit-level surgery
@@ -80,6 +81,23 @@ Do not use an empty commit as a placeholder for this workflow.
 
 This form is topology surgery because it changes the recorded base of
 the existing stack.
+
+## Fold a branch into its base
+
+Use folding when a branch boundary should disappear
+and its commits belong in the branch directly below it:
+
+```bash
+# mutating: request escalated filesystem privileges first
+git-spice branch fold --branch '<branch>' --no-prompt
+git-spice ls --no-prompt
+```
+
+Confirm the selected branch, its base, and affected upstack before folding.
+Git Spice moves the selected branch's commits into its base,
+deletes the selected branch, and retargets its children to that base.
+Folding removes the branch boundary; it does not squash its commits.
+Inspect the resulting contents and branch relationships before continuing.
 
 ## Split a branch
 
@@ -155,10 +173,12 @@ explicit safe reassignment plan before topology mutation.
 
 ## Safety gate
 
-Before branch topology surgery,
-confirm that the user asked to change stack topology,
-such as moving work to a different base
-or splitting an existing branch apart.
+Before branch topology surgery, confirm that it is authorized:
+the user asked to change the topology,
+or the operation assembles task-owned, unpublished development branches
+into the planned review units for an authorized implementation task.
+That development plan does not extend authority to reshape published
+or other-owned branches.
 These git-spice commands are mutating,
 so request escalated filesystem privileges before running them.
 

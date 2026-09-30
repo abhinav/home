@@ -19,6 +19,9 @@ Run the scenario domain that matches the guidance being changed:
 - [stack-design.md](stack-design.md):
   self-contained review units, deployment between merges,
   refactor separation, and branch granularity.
+- [parallel-development.md](parallel-development.md):
+  contract-based parallel work, temporary development branches,
+  and assembly of the final review stack.
 - [routing.md](routing.md): commit and pull-request wrapper delegation.
 
 Follow [README.md](README.md) for the harness and variant protocol.

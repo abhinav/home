@@ -10,7 +10,8 @@ Load `history-surgery.md`
 before stack surgery,
 including `git-spice branch onto`,
 `git-spice upstack onto`,
-or `git-spice branch split`.
+`git-spice branch split`,
+or `git-spice branch fold`.
 Those commands change stack topology.
 Do not use them for ordinary restacking.
 

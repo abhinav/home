@@ -108,7 +108,7 @@ Never interpolate an external value into executable shell text.
 
 Use git-spice for:
 
-- Creating, renaming, tracking, splitting, or moving branches
+- Creating, renaming, tracking, splitting, folding, or moving branches
 - Updating repository trunk state before stack movement or rebasing
 - Continuing a git-spice rebase after conflict resolution
 - Creating, amending, or fixing up commits
@@ -157,11 +157,15 @@ Load these references before doing the matching work:
   `references/pull-request-merges.md`
 - Non-interactive commit splitting and other raw history surgery:
   `references/history-surgery.md`
-- Branch topology surgery with `branch onto`, `upstack onto`, or `branch split`:
+- Branch topology surgery with `branch onto`, `upstack onto`, `branch split`,
+  or `branch fold`:
   `references/history-surgery.md`
 - Planning more than one branch for one requested outcome,
   or splitting work into review branches:
   `references/designing-stacks.md`
+- Planning parallel implementation with worktrees and subagents,
+  or assembling temporary development branches into review units:
+  `references/parallel-development.md`
 - Recovery from raw Git usage or stale stack metadata:
   `references/recovery.md`
 - Importing existing GitHub pull request branches or stacks locally:
@@ -253,7 +257,8 @@ Stop before running a command when any of these conditions holds:
 - More than one branch is planned for one requested outcome,
   but the proposed review units have not been checked
   against the review and release criteria in `references/designing-stacks.md`.
-- A topology-changing command such as `onto`, `--insert`, or `branch split`
+- A topology-changing command such as `onto`, `--insert`, `branch split`,
+  or `branch fold`
   is being used for an ordinary restack or a different topology operation.
 - A remote-tracking ref is being used where git-spice requires a local branch.
 - A raw fetch is being used instead of `git-spice repo sync` for a
