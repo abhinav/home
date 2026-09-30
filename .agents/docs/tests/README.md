@@ -35,14 +35,8 @@ and record the observed pass rate.
 Rerun previously passing scenarios
 when the change can affect their protected behavior.
 
-Reusable scenarios are grouped by the behavior they primarily protect:
-
-- [Guidance routing](scenarios/guidance-routing.md):
-  selecting the guides required by the artifact and task.
-- [Global communication](scenarios/global-communication.md):
-  applying response rules owned directly by `AGENTS.md`.
-- [Repository state](scenarios/repository-state.md):
-  task-scoped Git inspection, workflow continuity, and preservation of other work.
+Reusable scenarios are grouped by the behavior they primarily protect.
+See scenarios/ for the full list of scenarios.
 
 A scenario may exercise several guides.
 Keep it with the owner of the behavior it primarily protects
