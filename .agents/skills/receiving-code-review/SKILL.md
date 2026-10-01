@@ -11,10 +11,12 @@ description: >-
 
 Treat review as technical collaboration.
 Account for every comment,
-but do not assume every suggestion is correct or should be implemented.
+and exercise independent engineering judgment about its claim and remedy.
 Reviewers may not know the user's conversation,
 accepted non-goals,
 or the system's supported operating context.
+Requirements and evidence govern the change;
+review feedback supplies claims to evaluate, not new product authority.
 
 ## Build the feedback ledger
 
@@ -63,6 +65,7 @@ give every verified in-scope occurrence one disposition:
 - already compliant
 - intentional exception or semantic nonmatch,
   with the scope or semantic reason
+- no change or follow-up, with the relevance and cost rationale
 
 Record plausible candidates that required inspection before exclusion.
 Evaluate an occurrence under every applicable pattern entry,
@@ -79,7 +82,7 @@ lifecycle, failure modes, or safeguards,
 establish those parts of the supported execution and risk models from user
 direction, local architecture, actual callers, deployment,
 and other authoritative evidence.
-Investigate credible or uncertain correctness and security concerns,
+Use the smallest check that can resolve uncertainty material to the disposition,
 including premises used to exclude a finding.
 
 For each entry:
@@ -91,7 +94,12 @@ For each entry:
    and whether the proposed remedy fits the authorized design.
 3. Record one assessment:
    `accept`, `inapplicable`, `disagree`, `unclear`, or `question answered`.
-4. Record the next action and supporting evidence.
+4. Separately choose an action: fix, no change, investigate, follow-up,
+   or operator decision.
+   Record the supporting evidence and status.
+
+An `accept` assessment accepts the technical claim, not necessarily its remedy
+or a commitment to change code.
 
 Reserve `inapplicable` for a failure premise excluded by the verified model.
 An applicable concern remains applicable when its proposed remedy violates an
@@ -104,43 +112,82 @@ Tests, mocks, and the review comment are evidence,
 not automatically the intended behavior.
 Check the real boundary before changing external behavior.
 
-## Apply the disagreement interlock
+## Choose a proportionate disposition
 
-An evidence-backed `inapplicable` assessment does not reopen the user's
-established scope.
-Explain the verified boundary and continue independent accepted work.
+First establish why the behavior matters to the requested outcome.
+Use supported workflows, foreseeable mistakes, actual callers,
+and credible adversarial paths to assess the trigger and consequence.
+A parser's accepted input domain establishes technical possibility;
+the product's requirements and operating context establish what needs support.
+An unusual configuration can expose a real limitation without making support
+for it a requirement.
 
-When the intended contract, applicable risk, or authorized scope remains
-contested,
-discuss the disagreement with the user before acting on that entry.
-Do not implement the suggestion,
-an alternative fix for the same concern,
-or a design decision that would prejudge the discussion.
+For security concerns, identify who controls the trigger,
+what capabilities they have, and what protected resource or authority is affected.
+An adversary can deliberately choose uncommon inputs;
+ordinary input frequency does not bound that risk.
+Credible security failures and rare failures with severe consequences warrant
+investigation without a prior incident.
+Missing evidence about reachability is uncertainty, not proof of rarity or safety.
 
-Classify the disagreement by blast radius:
+Assess severity independently of the reviewer's priority label.
+When a change is warranted, seek the smallest adequate remedy at the component
+that owns the behavior.
+Compare its benefit with implementation, validation, rollout, runtime,
+and continuing maintenance costs, including added compatibility obligations.
+Patch size alone does not establish that a change is useful.
+Evaluate the cumulative result, including mechanisms introduced by earlier
+review fixes, against the authorized outcome.
 
-- For an isolated minor item,
-  mark the entry `blocked`, explain the disagreement,
-  and continue independent accepted entries.
-- For unresolved collateral effects involving an API contract, data model,
-  architecture, security boundary, concurrency model,
-  or other ledger entries,
-  pause all implementation and ask for the user's direction.
+Choose and record a disposition:
 
-When an action is unclear,
-mark it `blocked` and ask a focused question before editing it.
-Treat uncertainty about blast radius as a reason to pause the whole review.
+- Fix confirmed defects that violate requirements or have material consequences
+  under supported use or a credible threat model.
+  Favor small useful improvements that fit the change.
+- Choose no change when the claim is disproven, already satisfied,
+  excluded by the verified model, or does not justify work in this change.
+  For a real remaining limitation, state its trigger, consequence,
+  practical relevance, and why the benefit does not justify the cost.
+  Routine trade-offs within the authorized outcome belong to the implementing
+  agent; they need neither proof that the trigger is impossible nor a prior
+  operator waiver for that individual case.
+- Investigate unresolved claims with a check that can change the decision.
+  Keep uncertainty visible until the relevant evidence is available.
+- Recommend follow-up for worthwhile independent work or broader design.
+  State whether this change can safely proceed and the next decision needed,
+  without inventing an owner, commitment, or completed follow-up.
+- Seek an operator decision when satisfying the concern requires material
+  expansion, changing an established promise, or accepting a material risk.
+  Explain the requirement, affected callers, smaller supported alternatives,
+  durable benefit, and ownership, security, validation, and rollout costs.
+  Low likelihood or high cost does not waive a hard requirement.
+
+## Escalate decisions that require authority
+
+Resolve technical disagreement from evidence within the established contract.
+Explain a rejected suggestion or a no-change disposition and continue the work.
+A reviewer's insistence does not itself create an unresolved product decision.
+
+When authoritative requirements conflict or the intended contract,
+applicable risk, or authorized scope needs an operator decision,
+ask before implementing that entry or an alternative that would prejudge it.
+Name the unresolved decision and identify which other entries depend on it.
+Mark those entries `blocked`; continue independent accepted work.
+Pause all implementation only when that decision governs the whole change
+or its effects cannot be safely isolated.
+If independence is unclear, inspect the relevant dependencies before editing
+affected code and present the remaining uncertainty with the decision request.
 
 ## Implement and reconcile
 
-If no whole-review interlock is active:
+For entries whose disposition permits implementation:
 
-1. Implement only accepted, sufficiently clear entries and their verified
+1. Implement only accepted, sufficiently clear fixes and their verified
    in-scope pattern occurrences.
    Remove unnecessary review-introduced mechanisms when that resolves their
    derivative findings without changing required behavior.
 2. Update each entry's status as work progresses.
-3. Add or update regression coverage for each confirmed bug.
+3. Add or update regression coverage for each bug being fixed.
    A bug fix is not complete unless the regression test fails without the fix
    and passes with it,
    or the reason a regression test cannot be written is explained.
