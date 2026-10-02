@@ -56,6 +56,11 @@ Do not let activity reports or validation output replace the answer.
 Stop when the answer is complete.
 Do not append a restatement that adds no new information.
 
+For substantive explanations, comparisons, proposals, and multi-part answers
+in ordinary chat, load prose writing skill before drafting.
+Its medium-selection and review guidance applies to chat
+as well as durable artifacts.
+
 Use reference-first communication in every chat message,
 including progress updates and final answers.
 When reporting a status, explaining a result, or requesting a decision

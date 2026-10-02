@@ -33,13 +33,19 @@ but they do not change the grammar or meaning of the text.
 Formatting should not add, remove, or move words merely to make lines look
 balanced.
 
-## Preserve established representation
+## Preserve established source conventions
 
 New artifacts and content without an established local representation
 follow this guide.
-Edits and additions inherit the surrounding representation
+Edits and additions inherit the surrounding source conventions
 unless reformatting is requested or required for correctness.
 A content change alone does not justify reformatting.
+
+This governs source layout, such as wrapping and line breaks.
+For a substantive explanation revision,
+`$prose-writing` governs the choice of paragraphs, lists, tables, code, or diagrams.
+Keep the surrounding source conventions when writing the chosen form;
+preserve an output format the user explicitly requires.
 
 Use semantic line breaks when this guide governs the representation.
 Start each complete sentence on a new physical line.

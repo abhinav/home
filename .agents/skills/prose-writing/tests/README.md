@@ -6,7 +6,8 @@ For application and explicit-invocation tests,
 give the runner only the scenario's `Prompt` section;
 the prompt invokes `$prose-writing` by name.
 For automatic-selection tests,
-give the runner a realistic task without naming or providing the skill.
+give the runner a realistic task through the governing AGENTS instructions
+and available-skill catalog, without directing it to load the target skill.
 For catalog-selection tests,
 give the runner the scenario prompt and available-skill catalog,
 but withhold the target skill path and body.
@@ -24,6 +25,8 @@ Capture the raw response or artifact and any required access trace,
 then compare them with the held-out expectations.
 Require the trace to show whether the runner loaded `prose-writing`;
 do not substitute the runner's self-report.
+For a task that enters a conditional reference branch,
+also check the tool trace for the required reference read.
 For a substantial written artifact,
 give a separate fresh judge the artifact, source input, expectations,
 and governing skill principles;
@@ -39,4 +42,20 @@ Run each applicable adjacent case and relevant previously passing case.
 Repeat important or borderline scenarios two or three times,
 and record the observed pass rate.
 
-Use [scenarios.md](scenarios.md) for the reusable gamut.
+Replace `{GUIDANCE_PATH}` with the candidate's entrypoint
+and `{GUIDANCE_DESCRIPTION}` with its catalog description where present.
+For integration trials, replace `{AGENTS_PATH}` with the governing candidate
+instructions and `{SKILL_CATALOG}` with the available skills and their paths.
+When testing edits across related skills,
+resolve each skill name to the corresponding candidate version.
+Keep the production failure record separate from reusable invented fixtures.
+
+Use [scenarios.md](scenarios.md) for the retained prose and code contracts
+and [representation scenarios](representation-scenarios.md)
+for chat, revision, comparison, transfer, and rendering decisions.
+Grade the reader's ability to compare, trace, locate, or use the information;
+the presence of a diagram, table, or list alone does not establish success.
+A nearby qualification may serve several rows or branches.
+Do not require every source fact in one structure or a visual in a simple answer.
+Compare the whole explanation with a simpler faithful form;
+a large diagram plus repeated narration can fail despite correct relationships.

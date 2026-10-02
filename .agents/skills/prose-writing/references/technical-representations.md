@@ -86,15 +86,27 @@ and distinguish an invocation from its output.
 Include credentials or sensitive values only when independently authorized
 and necessary for the reader's task.
 
-## Visualizations
+## Tables and lists
 
-Use a visualization when relationships,
-state changes, ownership, or sequence
-would be harder to evaluate in linear prose.
-Identify the specific relationship the reader must recover,
-then choose the smallest representation that exposes it:
+Give a table one comparison or lookup task.
+Use the same dimensions across peer rows and short, parallel cell contents.
+Keep a condition with the action it limits.
+Put a shared prerequisite beside the table when it governs several rows;
+do not bury it in a later section.
+Keep unknown values visibly unknown rather than filling them by inference.
 
-- Use a table to compare repeated fields, mappings, or alternatives.
+A cell that needs a separate causal explanation usually belongs beside
+the table as a short explanation or sequence.
+Retain the qualification needed to interpret the cell itself.
+Use bullets for independent items, with one scannable point per item.
+Use numbered steps for required order, not merely to enumerate peers.
+Paragraphs with bullet markers still impose the same reading work.
+
+## Diagrams
+
+For a diagram selected under the main skill's medium decision,
+choose the form that exposes its specific relationship:
+
 - Use a call tree to show nested runtime control flow from one entry point.
 - Use a component tree to show UI containment
   and only the state or module boundaries relevant to that structure.
@@ -105,6 +117,13 @@ then choose the smallest representation that exposes it:
 - Use a state diagram to show lifecycle phases and allowed transitions.
 - Use a timeline to show operational events and recovery.
 
+Use position, connection, or enclosure to carry a relationship.
+Keep labels short enough to follow the path;
+placing the original paragraphs inside boxes does not expose their structure.
+Show alternate outcomes as alternatives, not as successive events.
+Mark an unknown or proposed connection as such;
+an arrow asserts a relationship just as a sentence does.
+
 Mermaid is available by default only in conversational chat.
 In an external or durable artifact,
 use Mermaid only when the user explicitly requests Mermaid for that artifact.
@@ -112,6 +131,10 @@ A general request for a diagram does not supply that request.
 When Mermaid is not permitted,
 express the selected structure in plain text diagrams
 or an established non-Mermaid artifact format.
+When a chosen format does not render, replace it with a compatible form
+that preserves the relationships.
+Return the requested explanation with the replacement in place;
+return only the visual when that is the requested scope.
 
 Keep names, boundaries, and ordering consistent with the explanation.
 Show only the actors, states, and relationships relevant to the question.
@@ -119,11 +142,6 @@ Introduce unfamiliar notation and explain what the reader should learn.
 Use text labels and accompanying prose
 so the meaning does not depend on color or appearance alone.
 Place each visualization next to the claim it supports.
-Do not repeat the same relationship in several visual forms
-unless each form answers a distinct reader question.
-When revising, retain an existing diagram or table only while it remains
-the smallest useful representation and is easier to evaluate than prose.
-Simplify the prose around a retained structure instead of flattening it.
 
 ## Changes to established shapes
 

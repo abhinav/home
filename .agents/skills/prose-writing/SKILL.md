@@ -1,33 +1,32 @@
 ---
 name: prose-writing
 description: >
-  Use for conversational explanations of how or why something works, happened,
-  changed, or follows from evidence; or when writing or substantially revising
+  Use for substantive explanations, comparisons, proposals, and multi-part
+  answers in conversational chat; or when writing or substantially revising
   reader-facing prose outside the current conversation, including
   documentation, design documents, incident reports, pull request
   descriptions, commit messages, release notes, application copy, generated
   reports, and substantive documentation or implementation comments. Comment
   length does not determine whether this applies. Do not use for
-  formatting-only edits, fact-only answers, or trivial same-scale comments.
+  formatting-only edits, bare factual lookups, or trivial same-scale comments.
 ---
 
 # Prose writing
 
-Use this skill when writing or substantially revising a prose artifact
+Use this skill for substantive conversational explanations, comparisons,
+proposals, and multi-part answers,
+and when writing or substantially revising an artifact
 for readers outside the current conversation.
 This includes documentation, design documents, incident reports,
 pull request descriptions, commit messages, release notes,
 application copy, generated reports,
 and substantive documentation or implementation comments.
-Also use it for a conversational explanation
-when the user is trying to understand how or why something works,
-happened, changed, or follows from the available evidence.
 Comment length does not determine whether the guide applies.
 A trivial same-scale comment does not load this guide merely because it is prose.
 
-Load `$prose-formatting` for formatting conventions,
-and apply any provided artifact-specific guidance
-for the type of prose you are writing.
+For durable artifacts or chat that requests source-style prose,
+load `$prose-formatting` for source conventions.
+Apply any provided artifact-specific guidance for the type of prose you write.
 
 A formatting-only edit does not require this guide.
 
@@ -44,10 +43,76 @@ why it changes, and what remains unchanged.
 Application copy should identify the user's task
 and provide the information or action the user needs next.
 
-The reader does not have access to the conversation, the writer's investigation,
-or unstated implementation history.
-Include the context needed to understand the artifact independently.
+For an artifact read outside the conversation,
+include the context needed to understand it independently of the discussion,
+the writer's investigation, and unstated implementation history.
+For a chat follow-up, build on the established context
+and answer the remaining question.
+Reintroduce context only when needed to interpret that answer or its limits.
 Omit background that does not affect the reader's task.
+
+## Match the medium to the structure
+
+Choose the representation before drafting the explanation.
+The reader should spend effort understanding the subject,
+not holding separated facts in memory and reconstructing their relationships.
+A table aligns facts the reader would otherwise compare across paragraphs;
+a diagram exposes connections the reader would otherwise have to draw mentally.
+Code shows syntax and ownership that a prose enumeration can obscure.
+These are ways to carry the explanation, not additions after it is written.
+
+Identify what the reader must recover, then choose the smallest useful form:
+
+| Reader's task | Useful form |
+| --- | --- |
+| Understand one claim and its reason or qualification | A sentence or short paragraph |
+| Scan independent findings, requirements, or actions | A short unordered list |
+| Follow a serial procedure where order matters | Numbered steps |
+| Compare common fields, alternatives, or condition/action mappings | A table |
+| Inspect a named code entity, usage, or executable logic | A faithful code shape or demonstration |
+| Trace handoffs, branches, state changes, hierarchy, or dependencies | A diagram, timeline, or tree |
+| Assess quantities, trends, or variation | A chart when the data supports it; a table for individual values |
+
+For a comparison or condition/action mapping,
+align the shared dimensions so the reader can inspect each case in one place.
+For a process whose explanation depends on branches or handoffs across actors,
+show those relationships together in a sequence, flow, or state representation.
+When a decision depends on where normal and exceptional behavior diverge,
+show that divergence and carry each relevant path through to its consequence.
+A short, single-path sequence can use numbered steps.
+Readable sentences are not sufficient when the reader must still assemble
+the comparison or process from separate passages.
+Draft that structure first, then write the prose needed to interpret it.
+Use prose alone when it carries the relationship directly
+and another form would add decoding effort or ceremony.
+There is no visual quota, and a short answer can be complete as one sentence.
+Honor the reader's requested format and the destination's capabilities.
+
+Let each representation carry the facts it exposes well.
+Use supporting prose for the answer, interpretation, material conditions,
+and evidence the representation does not already convey.
+Review the combined explanation for reading and navigation effort:
+compare a large structure with a more compact form that exposes the same relationship,
+and remove narration the chosen form replaces.
+Choose a separate representation only for a separate reader question.
+A policy table explains which action applies to a state;
+a sequence explains how the system reaches that state.
+Use both when the reader needs both answers and one form cannot expose them.
+
+When the task involves named code structure, executable logic,
+tables, lists, diagrams, or a change to an established shape,
+read [Technical representations](references/technical-representations.md)
+for faithful construction, format constraints, and revision.
+The code-shape requirements there still apply under brevity pressure.
+
+On a substantive revision, choose whether to keep, replace, simplify,
+or remove each representation according to the reader's task.
+Restructure passages whose relationships remain buried;
+preserve useful code, tables, lists, or diagrams and trim prose that duplicates them.
+Existing paragraph form is not a format requirement unless the user makes it one.
+When adapting a chat explanation into an external artifact,
+carry forward the useful explanatory structure, supply the new reader's context,
+and use a form the destination can render.
 
 ## Lead with the useful answer
 
@@ -65,8 +130,6 @@ For a causal explanation, use the applicable elements of this arc:
 
 Treat the arc as a selection tool, not a required sequence of headings or paragraphs.
 Combine elements when a sentence can carry the reader's entire task.
-Use an ordered timeline when several actors, state transitions,
-or events are needed to explain the outcome.
 
 ## Introduce prerequisites before using them
 
@@ -168,18 +231,6 @@ when the distinction affects the reader's decision.
 Describe a proposed or future behavior as such;
 do not present it as already implemented or observed.
 
-## Match the medium to the structure
-
-Choose the medium that preserves the structure
-the reader must understand, verify, or use.
-
-When explaining a named code entity whose syntax carries relevant structure,
-demonstrating executable logic,
-showing relationships or state changes,
-or comparing changes to an established shape,
-read `references/technical-representations.md` for code shapes,
-executable demonstrations, visualizations, and structural diffs.
-
 ## Manage cognitive load
 
 Give each paragraph one explanatory job.
@@ -214,9 +265,6 @@ order, path, quotation, identifier, or another stated constraint.
 
 Introduce new information progressively.
 Keep directly related context near the claim it supports.
-Use a short list to group related items
-when their execution relationship is not the point
-and the reader does not need aligned comparison, mapping, or repeated fields.
 
 Choose implementation specificity by its effect on the reader's task.
 Include a method, helper, library call, algorithm,
@@ -278,11 +326,14 @@ and the applicable artifact-specific contract.
 
 ## Review the finished explanation
 
-Before returning external prose, check that the reader can:
+Before returning a chat answer or artifact governed by this skill,
+check that the reader can:
 
 - identify the answer, decision, or observed consequence;
 - understand necessary terms before the explanation relies on them;
 - follow important causes, actor handoffs, and state transitions;
+- compare the relevant cases in one place and trace a material branch
+  without constructing a table or diagram from separate paragraphs;
 - identify which behavior changed and which relevant behavior did not;
 - distinguish observed evidence from inference or future work;
 - find each code shape, executable demonstration, visualization,
@@ -296,7 +347,7 @@ Before returning external prose, check that the reader can:
   or ignoring a clearer clause that already states it;
 - find no precision or emphasis word
   whose deletion would leave the claim unchanged;
-- use the explanation without access to the conversation; and
+- use an external artifact without access to the conversation; and
 - apply its central conclusion to the reader's task.
 
 Remove requirements that do not apply to the artifact.
