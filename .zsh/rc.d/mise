@@ -1,11 +1,6 @@
 #!/bin/zsh
 
-if [ -z "$_MISE_LOADED" ]; then
-	if (command -v mise &> /dev/null); then
-		eval "$(mise activate zsh)"
-		alias mr='mise run'
-	fi
-
-	_MISE_LOADED=$(date +%s)
-	export _MISE_LOADED
+if (command -v mise &> /dev/null); then
+	eval "$(mise activate zsh)"
+	alias mr='mise run'
 fi
