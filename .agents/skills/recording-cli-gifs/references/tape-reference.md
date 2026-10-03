@@ -96,6 +96,11 @@ Common settings include:
 - `Set PlaybackSpeed 1.0` controls output playback speed.
 - `Set WaitTimeout 30s` controls the default wait timeout.
 
+Betamax defaults to `FontFamily "JetBrains Mono"`.
+If JetBrains Mono is not installed,
+the tape must set `FontFamily` to another installed monospace font,
+or JetBrains Mono must be installed with user authorization.
+
 Choose dimensions that fit the demonstrated content.
 Small TUI widgets usually need less terminal space than full CLI workflows.
 
