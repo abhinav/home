@@ -198,11 +198,15 @@ This makes the route recognizable before entry and reinforces the concept after
 the agent follows it.
 
 Keep each requirement in one governing home.
-Link to authoritative commands, configuration, source, policy,
-or external specifications instead of copying facts that the agent can retrieve
-cheaply.
-Copy only what is expensive to recover or what the source does not carry,
-such as an unwritten convention, rationale, or durable gotcha.
+A link in executing guidance invites retrieval and spends turns and context.
+Add or retain a source link only when a concrete task condition requires
+information or authority the guidance does not already supply.
+At the point of use, name that condition and what the agent must obtain.
+When the guidance supplies what the task needs, omit the link;
+source attribution alone does not justify a retrieval route.
+Keep stable knowledge needed on the main path in the guidance.
+For facts that must be current or details needed only by a distinct branch,
+route to their maintained source instead of copying them.
 
 Splitting a document creates progressive disclosure only when the later material
 sits behind a real context boundary.
@@ -352,6 +356,8 @@ Before considering guidance ready:
   while independently consulted reference material remains a peer set.
 - Confirm each retained requirement has one governing home and each copied
   authoritative fact earns its maintenance cost.
+- Confirm each source link supplies information or authority missing from the
+  guidance under its stated task condition; remove redundant source pointers.
 - Confirm each required behavior supplies the applicable parts of the entry,
   application, model, action, and evidence contract.
 - Confirm the guidance does not merely define a good artifact;

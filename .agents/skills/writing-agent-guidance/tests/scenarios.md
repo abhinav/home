@@ -1067,3 +1067,92 @@ and no duplicate or provisional text exists.
   and absence of provisional additions.
 - Make no additional textual edit when the existing candidate is integrated.
 - Run final-form validation after recording the integration result.
+
+## 21 Keep sufficient guidance self-contained
+
+### Prompt
+
+Use the guidance at `{GUIDANCE_PATH}` to finish this passage for an agent skill.
+You are at the integration step after the behavior has been validated.
+The skill helps agents export data from a fictional reporting tool.
+Its only export format is UTF-8 CSV; it does not support other encodings.
+The maintainer requires no byte order mark in exports.
+The tool's official manual confirms that export writes UTF-8 without a byte
+order mark, and that bytes EF BB BF identify a UTF-8 byte order mark.
+These are all the facts from the manual relevant to this workflow.
+No fresh source lookup is needed for this exercise.
+
+Draft passage:
+
+```markdown
+## Check the export encoding
+
+Write the export as UTF-8 without a byte order mark.
+Inspect the first three bytes and reject an export beginning with EF BB BF.
+See the [official export manual](https://docs.example.org/reporting/export)
+for the encoding rules.
+```
+
+Return the passage you would retain in the skill and briefly explain any
+editorial change.
+Do not modify files, run validation, delegate, or browse the web.
+
+### Quality bar
+
+- Evaluation mode: judgment.
+- The passage supplies the complete export check without a needless retrieval.
+
+### Expectations
+
+- Retain the no-byte-order-mark requirement and the EF BB BF rejection check.
+- Omit the manual link because the passage carries all relevant information.
+- Do not move the byte signature into an external lookup or introduce a
+  verification branch merely to keep the citation.
+
+## 22 Retain sources needed for a task decision
+
+### Prompt
+
+Use the guidance at `{GUIDANCE_PATH}` to finish a fictional migration skill.
+The behavior has already been validated; this is the integration step.
+The author has two source notes:
+
+- Before selecting an upgrade, agents need the vendor's current compatibility
+  matrix at https://docs.example.org/reporting/compatibility.
+  Supported version pairs change, and the skill does not contain that matrix.
+- Exports require UTF-8 without a byte order mark.
+  The skill already gives the complete check: reject leading bytes EF BB BF.
+  The author learned those facts from
+  https://docs.example.org/reporting/export.
+
+Draft passage:
+
+```markdown
+Before choosing an upgrade target, confirm that the source and target versions
+are compatible.
+
+Write exports as UTF-8 without a byte order mark.
+Reject an export beginning with EF BB BF.
+
+Sources:
+- https://docs.example.org/reporting/compatibility
+- https://docs.example.org/reporting/export
+```
+
+Return the passage you would retain and briefly explain the source placement.
+Treat the supplied source notes as verified for this exercise.
+Do not modify files, run validation, delegate, or browse the web.
+
+### Quality bar
+
+- Evaluation mode: judgment.
+- Source retrieval serves the decision that needs missing current information.
+
+### Expectations
+
+- Link the compatibility matrix at the upgrade-selection decision.
+- State that the agent must obtain the supported source/target version pair
+  from the current matrix before choosing the upgrade.
+- Preserve the complete export check and omit its redundant source pointer.
+- Do not retain a bibliography of authoring sources or remove the useful matrix
+  link under a blanket ban on external links.
