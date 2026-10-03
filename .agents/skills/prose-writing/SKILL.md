@@ -13,22 +13,14 @@ description: >
 
 # Prose writing
 
-Use this skill for substantive conversational explanations, comparisons,
-proposals, and multi-part answers,
-and when writing or substantially revising an artifact
-for readers outside the current conversation.
-This includes documentation, design documents, incident reports,
-pull request descriptions, commit messages, release notes,
-application copy, generated reports,
-and substantive documentation or implementation comments.
-Comment length does not determine whether the guide applies.
-A trivial same-scale comment does not load this guide merely because it is prose.
+Write so the reader understands the point on the first reading
+and can use it for the task at hand.
+Plain English may need more words than compressed prose.
+Clarity depends on what the reader can recover, not on how polished the text sounds.
 
 For durable artifacts or chat that requests source-style prose,
 load `$prose-formatting` for source conventions.
 Apply any provided artifact-specific guidance for the type of prose you write.
-
-A formatting-only edit does not require this guide.
 
 ## Establish the reader's contract
 
@@ -51,15 +43,18 @@ and answer the remaining question.
 Reintroduce context only when needed to interpret that answer or its limits.
 Omit background that does not affect the reader's task.
 
+Scale the explanation to that task.
+A release note may need one sentence;
+a design document may need alternatives, constraints, and consequences.
+When revising, preserve the author's useful voice as well as the facts.
+Warmth, humor, and directness can serve the reader;
+generic praise and reassurance need a reason to remain.
+
 ## Match the medium to the structure
 
-Choose the representation before drafting the explanation.
-The reader should spend effort understanding the subject,
-not holding separated facts in memory and reconstructing their relationships.
-A table aligns facts the reader would otherwise compare across paragraphs;
-a diagram exposes connections the reader would otherwise have to draw mentally.
-Code shows syntax and ownership that a prose enumeration can obscure.
-These are ways to carry the explanation, not additions after it is written.
+Choose the representation before drafting.
+Use a form that lets readers see the relationships they need
+without assembling them from separate passages.
 
 Identify what the reader must recover, then choose the smallest useful form:
 
@@ -80,21 +75,17 @@ show those relationships together in a sequence, flow, or state representation.
 When a decision depends on where normal and exceptional behavior diverge,
 show that divergence and carry each relevant path through to its consequence.
 A short, single-path sequence can use numbered steps.
-Readable sentences are not sufficient when the reader must still assemble
-the comparison or process from separate passages.
 Draft that structure first, then write the prose needed to interpret it.
 Use prose alone when it carries the relationship directly
 and another form would add decoding effort or ceremony.
 There is no visual quota, and a short answer can be complete as one sentence.
 Honor the reader's requested format and the destination's capabilities.
 
-Let each representation carry the facts it exposes well.
-Use supporting prose for the answer, interpretation, material conditions,
-and evidence the representation does not already convey.
-Review the combined explanation for reading and navigation effort:
-compare a large structure with a more compact form that exposes the same relationship,
-and remove narration the chosen form replaces.
-Choose a separate representation only for a separate reader question.
+Use supporting prose for the answer, interpretation, conditions,
+and evidence the representation does not convey.
+Remove narration the chosen form replaces,
+and prefer a compact form when it shows the same relationship.
+Add a separate representation only for a separate reader question.
 A policy table explains which action applies to a state;
 a sequence explains how the system reaches that state.
 Use both when the reader needs both answers and one form cannot expose them.
@@ -133,16 +124,10 @@ Combine elements when a sentence can carry the reader's entire task.
 
 ## Introduce prerequisites before using them
 
-Identify the concepts the reader must understand
-before an explanation or decision becomes meaningful.
-Useful prerequisites can include an actor, the relevant system boundary, baseline behavior,
-a lifecycle phase, a domain term, a unit, an input, or an established invariant.
-
-Introduce only the prerequisites needed for the reader's task.
-Present each prerequisite before reasoning that depends on it.
-When an important prerequisite is unfamiliar,
-explain its role and material limits before reasoning from it.
-Apply the naming rule below to its name and definition.
+Introduce the actors, baseline behavior, terms, units, inputs,
+or invariants the reader needs before reasoning from them.
+Explain an unfamiliar prerequisite's role and relevant limits.
+Use the naming rules below for its name and definition.
 
 ## Keep names stable and the prose plain
 
@@ -154,6 +139,10 @@ Preserve its spelling and use it consistently.
 When the same thing remains the subject, reuse its name or a clear pronoun;
 do not rename it with a synonym, role, behavior, or generic noun
 merely to vary the prose.
+Check what a general noun such as "the result" or "this change" refers to
+in its paragraph or the one before it.
+Repeat the name when a reader would have to search farther back,
+including in a section that readers may reach directly.
 
 Use another technical term only when the reader must use or search for it,
 common words would lose a material distinction,
@@ -181,30 +170,20 @@ Prefer `Only five uploads run at once` and
 `` `Retry` returns the existing upload`` to
 `upload concurrency` and `idempotent retry semantics`.
 
-For example, write `` `Builder.Read` reads the configuration and returns steps;
-`Runner.Run` later runs them without reading it again.``
-Do not rename the steps as a `result` or `handle`, or call this
-`configuration-bound planning and plan-governed execution`,
-unless the reader must use or compare that term.
-
 When no stable name exists or the name does not matter,
 describe the precise role or behavior instead of inventing a label.
 
-Treat the source claim as a correctness constraint.
-Before simplifying, identify each material actor, action, object, condition,
-scope, modality, consequence, state, and destination.
-An actor is material when different actors perform actions
-or own outcomes that the reader must distinguish.
-A rewrite is correct only when the reader can recover those distinctions
-from the artifact and the context available at its reading site,
-without relying on the writer's unstated intent.
-Keep an established name when a synonym or grammatical transformation
-would change the represented entity, state, destination, or boundary.
-
-Before returning, replace each added technical phrase or summary
-that does not meet a reason above with an established actor and common action.
-Remove an opening or closing classification
-when the direct relationship already explains it.
+Check each rewritten sentence against its source before accepting it.
+Compare who acts, what happens, to which object, under which conditions,
+and with what scope and consequence.
+Include conditions introduced by headings, list introductions,
+and table labels in that comparison.
+Check whether the source states a fact, possibility, permission,
+requirement, or proposal; preserve that force when changing grammar or format.
+A smoother sentence can change the instruction or strengthen the claim.
+Keep distinct actors, states, destinations, and established names distinct.
+If a missing fact prevents a faithful rewrite, retain the uncertainty
+or identify the information needed; do not complete the story by inference.
 
 ## Make causes and boundaries visible
 
@@ -233,8 +212,8 @@ do not present it as already implemented or observed.
 
 ## Manage cognitive load
 
-Give each paragraph one explanatory job.
-Each sentence should add a useful fact or help the reader draw an inference.
+Give each paragraph one job.
+Each sentence should help the reader understand, act, or connect with the author.
 Make sentences easy to follow on the first reading.
 Keep the subject and its action close enough to recognize together,
 and place a condition or modifier next to the action or object it describes.
@@ -263,9 +242,6 @@ strength, and required correspondence unchanged.
 Retain it when it identifies a required match with a value,
 order, path, quotation, identifier, or another stated constraint.
 
-Introduce new information progressively.
-Keep directly related context near the claim it supports.
-
 Choose implementation specificity by its effect on the reader's task.
 Include a method, helper, library call, algorithm,
 or other low-level mechanism
@@ -275,15 +251,10 @@ Otherwise explain the behavior, contract, invariant,
 input, output, or user-visible effect
 and omit the lower-level mechanism.
 
-After a dense sequence, state a consequence when it answers a reader question
-that the preceding explanation leaves unresolved.
-Use established names and common words.
-When the consequence or recommendation is already clear,
-keep it in one place with its material conditions.
-After retaining each required code shape, executable demonstration,
-and visualization,
-remove remaining implementation details, repeated claims, and process narration
-that do not help the reader's decision.
+After a dense sequence, state a consequence only if it answers
+a question the sequence leaves unresolved.
+Keep an already clear consequence or recommendation
+in one place with its conditions.
 When a requested limit cannot preserve the claim,
 keep the required meaning and state the constraint conflict
 instead of silently changing the claim.
@@ -301,55 +272,41 @@ A deployment submission does not establish service readiness.
 State a missing validation, unknown cause, or unspecified owner
 when it materially affects the decision.
 
+For a measure such as "high," "fast," or "significant,"
+give the number, comparison, or condition that makes it useful.
+If none is established, state what was observed.
+Attribute an opinion when the reader needs that person's judgment;
+do not turn it into a measurement or repeat it merely to add emphasis.
+
 Include evidence when it reduces a relevant uncertainty.
 Omit command inventories, routine validation, speculative alternatives,
 and unrelated investigation history
 unless they change what the reader should conclude or do.
 
-## Scale the explanation to the artifact
-
-Choose the length and structure required by the reader's task:
-
-- A release note can state one observable change in one sentence.
-- A short answer can give the decision and its material qualification.
-- A reviewer explanation can establish prior behavior, changed behavior, scope,
-  and useful evidence.
-- An incident handoff can state current health,
-  the causal sequence, recovery evidence, and remaining unknowns.
-- A design document can explain the problem, decision, material alternatives,
-  constraints, and consequences.
-
-Add background, examples, chronology, or additional structure
-only when they improve that artifact.
-Follow the requested format, the established reader context,
-and the applicable artifact-specific contract.
-
 ## Review the finished explanation
 
-Before returning a chat answer or artifact governed by this skill,
-check that the reader can:
+Check each sentence against its source and nearby context
+using the meaning and naming rules above.
+Then read the whole draft as the intended reader:
+can they find the point, follow the causes, compare the cases,
+and act without reconstructing missing context?
+Check that the chosen representations still expose the required relationships
+and that the author's useful voice survived the edit.
 
-- identify the answer, decision, or observed consequence;
-- understand necessary terms before the explanation relies on them;
-- follow important causes, actor handoffs, and state transitions;
-- compare the relevant cases in one place and trace a material branch
-  without constructing a table or diagram from separate paragraphs;
-- identify which behavior changed and which relevant behavior did not;
-- distinguish observed evidence from inference or future work;
-- find each code shape, executable demonstration, visualization,
-  and established technical name needed for the reader's task;
-- understand what each retained representation establishes
-  through stable names and plain surrounding prose;
-- recognize any material uncertainty, exception, or validation gap;
-- confirm that simplification preserved the claim's material distinctions;
-- recover each material relationship
-  without unpacking a coined modifier
-  or ignoring a clearer clause that already states it;
-- find no precision or emphasis word
-  whose deletion would leave the claim unchanged;
-- use an external artifact without access to the conversation; and
-- apply its central conclusion to the reader's task.
+Remove phrases that add only a tone of importance or completion:
+stock openers, generic praise, a closing claim of value,
+or a summary that repeats an already clear point.
+Keep a contrast when the reader needs to distinguish real alternatives
+or correct a plausible misunderstanding.
+Otherwise state the claim directly.
+A sentence that could appear unchanged in an unrelated document
+needs a specific subject and reason to remain.
+Apply the same test to headings, bold labels, lists, and tables:
+each should help the reader find, compare, or use information.
 
-Remove requirements that do not apply to the artifact.
-A concise, accurate answer is sufficient
-when it already establishes what the reader needs.
+For a long draft, inspect repeated content words and short phrases in context.
+Remove repeated ideas and replace catch-all nouns with what they name.
+Keep established names stable; repeated names are often useful.
+If the text is already clear, specific, and faithful, leave it alone.
+Return the requested prose first, with an editing note only when
+missing evidence or an unresolved meaning affects its use.

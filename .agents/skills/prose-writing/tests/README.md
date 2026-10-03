@@ -53,6 +53,14 @@ Keep the production failure record separate from reusable invented fixtures.
 Use [scenarios.md](scenarios.md) for the retained prose and code contracts
 and [representation scenarios](representation-scenarios.md)
 for chat, revision, comparison, transfer, and rendering decisions.
+Use [editing scenarios](editing-scenarios.md)
+for source fidelity, author voice, nearby noun references, useful measures,
+and edits that should leave clear text alone.
+In comparative trials, give each runner only the assigned writing guidance.
+An alternate-guide control must not load prose-writing as additional guidance.
+Record which files each runner read and retain the raw artifacts.
+Use the same inputs for the original and candidate;
+grade them without treating either guide as the expected winner.
 Grade the reader's ability to compare, trace, locate, or use the information;
 the presence of a diagram, table, or list alone does not establish success.
 A nearby qualification may serve several rows or branches.
