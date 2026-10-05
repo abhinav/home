@@ -28,7 +28,13 @@ source input,
 expectations,
 and governing guidance principles.
 Require the verdict to cite source-and-output evidence.
-A scenario passes only when every required behavior holds
+Record reader usefulness and mechanical conformance separately,
+then require both for an overall pass.
+For usefulness, cite what the reader can or cannot explain from the artifact;
+keyword presence and a persuasive author rationale do not establish it.
+Do not penalize omission of a source fact that changes no reader decision
+or require a representation that adds no useful relationship.
+A scenario passes only when every applicable required behavior holds
 and no unacceptable behavior appears.
 
 Repeat important or borderline scenarios two or three times,

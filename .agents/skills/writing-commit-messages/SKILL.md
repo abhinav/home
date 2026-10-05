@@ -11,41 +11,79 @@ description: >
 # Writing commit messages
 
 This skill governs commit messages, pull request titles and descriptions,
-and source text intended to become or supply those artifacts.
-It adds artifact-specific guidance for that work.
-Apply `prose-writing` and `prose-formatting` alongside it
-whenever their descriptions match the task.
-higher-priority constraints still govern.
+and source text intended to supply those artifacts.
+Apply `prose-writing` for explanation and representation choices
+and `prose-formatting` for source conventions.
+The artifact-specific rules here govern their application to commit and PR text.
 
-For pull request metadata,
-apply the reader model to the pull request's complete review scope.
-A single-commit pull request normally carries forward the commit subject and
-body.
-A multi-commit pull request synthesizes the aggregate outcome and context.
-When a repository template exists,
-adapt useful content to its structure under the content rules below.
-Remove template sections and placeholders that call only for excluded content.
+## Build the explanation the reader needs
 
-## Preserve the context that history needs
+A reviewer must decide whether one coherent change makes sense.
+A future maintainer must be able to find, evaluate, change, or revert it.
+Both can inspect the source; neither has necessarily repeated the investigation.
+The message supplies the understanding needed to evaluate the diff.
+That includes baseline behavior and causal relationships that source inspection
+could eventually reveal: source availability is not the reader's prior knowledge.
 
-A commit message serves two durable readers:
-a reviewer deciding whether one coherent change makes sense now
-and a future maintainer encountering it through history, blame, or bisect.
-The final message identifies the outcome and preserves the explanation
-that the final tree cannot supply by itself.
+Before drafting, recover the supported explanation from the request,
+investigation, and existing discussion.
+Establish the affected behavior, the motivating condition and consequence,
+and how the final change addresses them within its limits.
+Use those relationships to build the explanation;
+use the final diff to verify its accuracy and scope.
+Discard superseded proposals and conversation-specific material.
 
-Treat the message as a standalone artifact.
-The reader does not have the writer's investigation, conversation,
-or unstated implementation history.
-Include what the reader needs to find, evaluate, change, or revert the outcome;
-omit content that does not change one of those tasks.
+Decide whether the subject alone gives the reader enough context
+to understand and evaluate the outcome.
+Use a body when the reader would otherwise have to reconstruct the problem,
+its mechanism, the reason for the chosen behavior,
+or a material constraint, tradeoff, compatibility boundary, or observation.
+A relationship can earn space even when its component facts appear in the diff.
+Use a subject-only message when no such explanation is needed.
+For a mechanical change, first check the request, issue, maintenance policy,
+or history for purpose or selection criteria that the diff does not express.
+A dependency refresh may follow a release policy or address a particular failure.
+Do not manufacture a body from an edit inventory or unrelated non-changes.
+If no coherent outcome fits, reconsider the commit boundary.
 
-This is also the rule for revising an existing message.
-Re-evaluate the complete message against the current change and evidence,
-preserve useful established context only while it remains supported,
-and produce one coherent replacement.
-Do not patch new sentences into the draft while retaining stale claims,
-routine activity, or a structure that no longer fits the explanation.
+Lead the body with the consequence or reason the reader needs.
+Introduce the affected system, baseline behavior, actors, and unfamiliar terms
+before reasoning that depends on them.
+Choose context by what explains the need for the change,
+including relevant behavior that remains unchanged.
+When an existing guarantee, limit, or safeguard appears to address the problem,
+explain what it actually governs and how the motivating condition still occurs.
+Stating that it is insufficient leaves the reader to reconstruct the reason.
+When order matters, preserve enough of the actions and handoffs
+for the reader to explain why the old behavior leads to the consequence
+and why the change addresses it.
+A list of mechanisms or a generic benefit cannot supply that explanation.
+
+Choose the representation before compressing the explanation.
+Carry forward a useful code shape, example, or comparison
+when it still exposes a relationship the new reader needs;
+adapt it to the destination's supported form.
+Trim setup and repetition while preserving the relationship.
+Do not turn a useful explanation into labels merely to shorten the message.
+A short causal paragraph is sufficient when it carries the reader's task.
+
+Include public names or readable syntax needed to discover, invoke, configure,
+or observe the behavior: commands, flags, keys, input forms, statuses, or errors.
+Include internal names and implementation details when they explain the failure,
+a constraint, a surprising choice, or the review boundary.
+Omit details whose removal leaves the causal explanation
+and the reader's decisions intact.
+Distinguish normal use from explicit maintenance, migration, or recovery
+when that changes what the reader should do or expect.
+Locate this commit's responsibility within a larger effort only as needed;
+keep future behavior distinct from what the change implements.
+
+A qualification earns space when it limits a claim the explanation makes
+or changes the reader's decision.
+Remove an unchanged-path disclaimer if the text would not otherwise imply
+that path changed.
+When evidence is missing, narrow the claim, retain a material uncertainty,
+or obtain the missing context rather than invent a plausible story.
 
 ## Identify the outcome in the subject
 
@@ -83,118 +121,60 @@ and keep it at or below 72 characters.
 When shortening it, preserve the terms that distinguish this change
 from nearby history.
 
-## Decide whether the body preserves anything material
+## Select evidence that changes the assessment
 
-Apply the information-loss test:
-if the body disappeared while the reader retained the subject, final diff,
-and surrounding code, what important knowledge would be lost?
-Possible answers include the motivating condition and its consequence,
-the changed behavior or invariant, a non-obvious constraint or tradeoff,
-a compatibility boundary, or evidence that controls the claim.
-Write the body when it preserves such context.
+Keep observations that resolve a material uncertainty about the changed behavior.
+For each observation, identify its relevant input or condition,
+what happened, and what claim that outcome supports.
+For each additional observation, ask what uncertainty it resolves
+that the explanation and retained evidence leave open.
+Omit repetitions and test mechanics that establish no additional behavior.
+A test-only change should explain the invariant and previously unrepresented risk;
+case names belong only when they define that boundary.
 
-If nothing material would be lost, use a subject-only message.
-Do not manufacture a body from file changes, routine checks,
-or the absence of unrelated effects.
-Before deciding that a mechanical change needs no body,
-look for purpose or selection criteria in the request, issue,
-maintenance policy, or repository history.
-For example, a dependency version diff cannot show whether a policy selected
-the release or a specific failure required it.
-
-Difficulty describing one outcome can reveal a commit-boundary problem.
-Re-examine that boundary instead of constructing one broad narrative
-for unrelated changes.
-
-## Explain the behavior at the reader's boundary
-
-Lead with the consequence or reason the reader needs.
-Introduce the affected system, baseline behavior, stable actors,
-states, and unfamiliar terms before reasoning that depends on them.
-Explain what initiates the behavior, what changes,
-and what result the reader can observe.
-After a dense explanation, state the resulting behavior or invariant.
-
-When a failure depends on ordering,
-preserve the stable actors or states and their handoffs,
-enough event order to let the reader predict the failure,
-and the resulting behavior or invariant.
-Do not replace that causal sequence with a generic benefit,
-but do not inventory implementation steps that add no explanatory force.
-
-Document the specific public names or readable syntax a consumer needs
-to discover, invoke, configure, or observe the changed behavior.
-This can include a command, flag, configuration key, input form,
-status value, error, or other supported surface.
-Omit internal implementation names unless a name exposes a constraint
-or otherwise changes that reader outcome.
-
-Distinguish ordinary consumer behavior from explicit maintenance,
-migration, repair, or recovery machinery when that boundary affects use.
-For example, say when a migration command rewrites stored data
-but normal startup does not.
-Describe a future step as context, not as present behavior.
-
-Implementation details belong when they expose a constraint,
-compatibility concern, surprising choice, or review boundary.
-Otherwise let the diff carry them.
-If the change is one step in a larger effort,
-describe the larger path only far enough to locate this commit's responsibility.
-
-Boundaries must limit a claim the message actually makes.
-Read the explanation without the boundary:
-if it would not support the broader interpretation,
-the negation preserves no durable context.
-When available evidence does not establish a motivation, behavior, or boundary,
-narrow the claim, preserve a material uncertainty,
-or obtain the missing context instead of inventing a plausible story.
-
-## Keep routine check reporting out of the message
-
-The user's projects have CI.
-Running checks is expected development work;
-reporting whether they ran does not explain the change.
-Omit routine test, CI, formatter, linter, build, and patch-hygiene status
-from commit messages and pull request descriptions.
-This includes bare passed, failed, skipped, blocked, pending, or deferred
-status, check-command inventories, and reasons checks could not run locally.
-Promises that CI will run or validate the change also earn no space.
-These exclusions apply to paragraphs and bullets as well as headings;
-renaming the content as evidence, confidence, or a limitation does not qualify it.
-Keep operational check status in CI or the task handoff when needed.
-Continue performing the checks required by the task.
-
-## Match evidence to the claim
-
-Preserve observations about the changed system when they establish something
-the final tree cannot show and materially affect the reader's decision.
-Connect each observation to the behavior it establishes,
-including the relevant input, conditions, and outcome.
-Distinguish observation from inference.
-A check's execution status alone is not such an observation.
-For a test-only commit, explain the invariant the tests protect
-and the previously unrepresented risk they make visible.
-Test names and case inventories belong only when they define that boundary.
-
-When preserving raw input or output, a regression comparison, manual verification,
-measurements, or uncertainty about the system's behavior,
+When using raw input or output, regression comparisons, manual probes,
+measurements, or uncertainty about behavior,
 read [Behavioral evidence](references/evidence-and-validation.md)
-before drafting those claims.
+for interpreting and preserving their evidentiary scope.
+Keep the problem and design explanation in the main body.
+Put selected concrete verification in a separate `Validation` section
+or the repository template's equivalent.
+Retain the input, assertion, output, command, or link needed to assess the claim.
+Omit the section when no material verification remains.
 
-Put concrete verification evidence in a separate `Validation` section,
-or the repository template's equivalent section.
-Use it for demonstrated regression failures and their corrected results,
-manual staging or local probes, and measurements that substantiate the change.
-Retain the command, assertion, output, or evidence link needed to assess
-what was exercised and what happened.
-Keep the motivating problem and design explanation in the main body.
-If no concrete verification evidence remains after filtering routine status,
-omit the section entirely; a template does not require filling it with noise.
-Apply this content decision during drafting, revision, template adaptation,
-and copying existing commit or PR text.
-Before returning, check every retained validation item for an observed outcome
-that supports a claim about the change, and remove excluded reporting
-wherever it appears in the artifact.
+Routine test, CI, formatter, linter, build, and patch-hygiene status
+never explains the change, including passed, failed, skipped, blocked,
+pending, or deferred status and reasons checks could not run locally.
+Omit command inventories and promises that CI will validate the change.
+Renaming this reporting as evidence, confidence, or limitations does not qualify it.
+Keep operational status in CI or the task handoff;
+continue performing the checks required by the task.
+
+## Prepare and review the complete artifact
+
+A commit message stands alone for its change.
+A PR description stands alone for the complete review scope:
+a single-commit PR normally carries forward the commit's explanation;
+a multi-commit PR synthesizes the aggregate outcome and context.
+Adapt useful content to a repository template,
+removing sections and placeholders that call only for excluded content.
+
+For a revision, reassess the subject and entire body against the current change.
+Keep supported, useful explanation, replace stale claims,
+and produce one coherent replacement rather than append corrections.
+Apply the same content decisions when copying commit text into a PR
+or revising metadata without changing code.
+
+Before returning or supplying metadata to a tool,
+read each artifact without the conversation or work notes.
+Can the intended reader explain the motivating behavior,
+why the previous behavior permits the problem,
+how this change addresses it, and the material limits of that claim?
+For another kind of change, can the reader explain the reason for the outcome?
+Repair missing premises or representations before polishing the format.
+Mentioning each topic is insufficient when their relationships remain implicit.
+Remove evidence that adds no distinct support and excluded check reporting
+wherever it appears, then verify subject and source formatting.
 
 ## Structure and format the message
 
@@ -203,7 +183,7 @@ A simple message may need one paragraph.
 When several independent concerns matter,
 use paragraphs, short headings, or a list so the reader can find them.
 Format a heading as sentence-case text on its own line
-with a matching hyphen underline:
+with a matching hyphen underline and a blank line before the content:
 
     Recovery
     --------

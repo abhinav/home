@@ -7,17 +7,23 @@ When raw evidence is long, noisy, or sensitive,
 retain the smallest safe, self-contained excerpt that carries the claim.
 Paraphrase when the original form adds nothing.
 
-For a bug fix, preserve a regression test's demonstrated failure against
-the old implementation and its corrected result against the fix.
-Name the existing contract, triggering input, and expected versus actual
-behavior so the reader can assess what the comparison proves.
+For a selected regression comparison, name the existing contract,
+triggering input, and observed outcomes before and after the fix.
+Retain the assertion, output, or result link needed to assess that comparison.
 A regression test can itself reveal the violation of an existing contract;
 a separate production incident is not required.
 A test written to define new behavior does not by itself establish
 that the old implementation violated an existing contract.
+A check disabled in the new implementation tests sensitivity to that change;
+it does not by itself demonstrate the behavior of the old implementation.
+Keep those comparisons distinct.
 Without a pre-change observation, make no reproduction claim.
 
-For manual verification, preserve the exercised behavior and observed result.
+For a selected manual probe, preserve the exercised behavior and observed result.
+Match the claim to the system boundary actually exercised.
+A fake can establish an ordering contract without demonstrating storage durability;
+a process restart does not establish behavior after power loss.
+Use those limits to qualify the observation, not to imply unperformed checks.
 Identify the relevant revision and environment when they establish what
 was verified, and retain supporting output or a captured-result link.
 A staging deployment followed by a successful behavioral probe qualifies;

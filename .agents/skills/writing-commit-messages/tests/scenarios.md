@@ -1,9 +1,10 @@
 # Commit-message scenarios
 
-Each prompt distinguishes information preserved by the final tree
-from run-local context that will disappear after the commit.
-The runner decides which facts belong in the message;
-the labels do not imply that every supplied fact should be retained.
+Each prompt supplies source facts and investigation context.
+The runner selects what a reader needs to understand and evaluate the change.
+Facts visible in the source may still be necessary explanatory premises;
+neither their location nor the prompt's labels determine what belongs.
+Judge the relationships the artifact establishes, not how many facts it repeats.
 
 Apply these content expectations to every scenario:
 
@@ -17,6 +18,7 @@ Apply these content expectations to every scenario:
 
 Apply these formatting expectations to every scenario:
 
+- Leave a blank line between a heading underline and its content.
 - Start each complete body sentence on a new physical line.
 - Keep divisible body prose at or below 72 characters.
 - Break longer sentences at meaningful grammatical or structural boundaries
@@ -219,8 +221,8 @@ Run-local context:
 
 ### Expected behavior
 
-- Prefix the subject with `admission:` because admission control is the stable
-  affected area in this single-project repository.
+- Prefix the subject with a concise name for admission control,
+  the stable affected area in this single-project repository.
 - Do not substitute `leases:` merely because the changed files live under
   `internal/leases/`.
 - Keep the stale-worker result recognizable after the prefix.
@@ -238,17 +240,23 @@ Run-local context:
 The author says the diff is tiny, the project is obvious from the path,
 and the message is needed immediately.
 
-- Still use `admission:` in the subject.
+- Still name admission control in the subject prefix.
 - Do not treat urgency, diff size, or path visibility outside the message
   as reasons to omit the affected area from the stored subject.
 
 ### Monorepo project-wide case
 
-Replace the repository context with:
+Replace the repository context and change facts with:
 
-- The repository contains the independently owned Quartz, Harbor,
-  and Beacon projects.
-- The change alters archive compatibility across all Quartz components.
+The repository contains the independently owned Quartz, Harbor,
+and Beacon projects.
+The change alters archive compatibility across all Quartz components.
+No repository-specific subject convention or nearby history is available.
+All Quartz archive writers now emit format 3.
+All Quartz archive readers continue accepting format 2 and format 3.
+Format 3 includes a tenant identifier that format 2 omitted.
+Archives from different tenants could otherwise share a session identity.
+Existing format 2 archives remain supported during the transition.
 
 - Use `quartz:` because the outcome is project-wide.
 - Do not invent a narrower component.
@@ -262,17 +270,20 @@ Replace the repository context with:
 - The outcome specifically changes Quartz admission control.
 - The changed files remain under `internal/leases/`.
 
-- Use `quartz/admission:` to locate both the project and affected component.
+- Use a project/component prefix that locates Quartz admission control.
 - Do not use only `quartz:` when the stable component is known.
 - Do not derive `quartz/leases:` mechanically from the file path.
 
 ### Prefix omission case
 
-Replace the repository context with:
+Replace the repository context and change facts with:
 
-- The repository contains one small executable with no stable component
-  boundaries.
-- The change renames that executable in every supported surface.
+The repository contains one small executable with no stable component boundaries.
+No repository-specific subject convention or nearby history is available.
+The executable is renamed from `quartz` to `pebble` in every supported surface,
+including installation instructions and command examples.
+Its runtime behavior is unchanged.
+No further context for the rename is available.
 
 - A plain imperative summary may omit a prefix when the summary names the
   executable and no narrower stable area exists.
@@ -677,8 +688,13 @@ so reviewers can see the implementation work.
 
 ### Adjacent valid case
 
-The commit repairs only an internal recovery-index corruption
-and changes no supported invocation, configuration, output, or status.
+Replace the public-policy change with this internal recovery-index repair:
+
+The recovery index stored references to a mutable buffer used to read block keys.
+Reading the next block overwrote the key retained by an earlier index entry,
+so recovery could select the wrong block.
+Each index entry now owns a copy of its block key.
+No supported invocation, configuration, output, or status changes.
 
 - Explain the internal ownership and failure mechanism
   needed by maintainers.
@@ -728,8 +744,17 @@ and asks for the smallest textual edit.
 
 ### Adjacent valid case
 
-A revision changes only the name of one supported configuration key.
-The existing causal explanation and all other claims remain accurate.
+Replace the existing message and final implementation facts with:
+
+    policy: Share parsed policies across clients
+
+    Build one process-wide policy cache so every client reuses parsed entries.
+    The `policy_cache_entries` setting limits the number of retained entries.
+    Validate policy syntax lazily on the first request.
+
+The final revision changes only the supported configuration key
+`policy_cache_entries` to `policy_cache_capacity`.
+The existing explanation and all other claims remain accurate.
 
 - Update the affected public name wherever needed.
 - Preserve supported, still-useful explanation.
@@ -933,9 +958,10 @@ do not edit files or run commands except reading guidance.
 - Preserve a separate Validation section for the concrete verification.
 - Preserve the regression failure before the fix and corrected result,
   including the existing contract and expected-versus-actual observation.
-- Preserve the staging revision, exercised input, observed outcome,
-  and supporting result link.
-- Preserve the local invocation with its option and observed outcome.
+- Preserve distinct evidence of staging behavior with its revision,
+  exercised input, observed outcome, and supporting result link.
+- The local invocation may be retained if it gives useful reproducibility;
+  do not require a second zero-record observation that adds no new support.
 - Do not reduce this evidence to generic claims that tests or checks passed.
 - Omit routine suite and lint status and the platform-toolchain limitation.
 
@@ -945,7 +971,7 @@ Instead of PR metadata, produce the complete commit message.
 There is no template.
 
 - Use a separate Validation section in the commit body.
-- Preserve the same useful evidence and apply the same exclusions.
+- Apply the same selection of material evidence and the same exclusions.
 
 ### Submission variant
 
@@ -967,3 +993,144 @@ There is no observed outcome exercising --skip-empty in this variant.
 - Omit the Validation section, including deployment and build status.
 - Keep the change explanation without claiming behavioral verification.
 - Do not substitute a missing-validation disclaimer.
+
+## Carry investigation context into commit and PR text
+
+### Prompt
+
+Write the complete commit message and the PR title/body for the completed change
+below.
+Return the artifacts only.
+Do not edit files, commit, or publish.
+Use `writing-commit-messages` and applicable prose guidance.
+Repository is a single-project document-printing service.
+The stable component prefix is spooler.
+There is no PR template.
+This is one commit.
+
+Earlier investigation discussed with the maintainer: A print client sends a
+document with a job ID and waits for an accepted receipt.
+After receiving that receipt it removes the local document.
+The server's journal makes accepted jobs recoverable after a restart.
+That is an existing promise, not a new durability tier.
+
+The journal has three relevant safeguards.
+A checksum detects damaged stored bytes.
+A job ID prevents a retry from creating a second copy.
+A flush makes pending writes durable.
+Neither a valid checksum nor duplicate detection proves a recently accepted job
+reached durable storage.
+
+The old submission sequence is:
+
+    async fn submit(job: Job) -> Result<Receipt> {
+        let receipt = journal.append(job).await?;
+        queue.schedule(receipt.id());
+        Ok(receipt)
+    }
+
+`append` acknowledges a write to an in-memory journal buffer.
+A timer flushes the buffer periodically.
+Thus the server could send the accepted receipt, the client could discard its
+source, and the server could lose power before the timer flush.
+Recovery would find no record, leaving neither side with the document.
+A retry cannot repair that case because the client already considers submission
+complete and has discarded its source.
+
+The final patch places `journal.flush().await?`
+between `append` and `queue.schedule`.
+The journal serializes append/flush bookkeeping, and a completed flush covers
+every append preceding that flush.
+The caller sends the receipt only after `submit` returns.
+A flush error therefore reaches the caller instead of an accepted receipt, and
+that job is not scheduled by this submission.
+A failed flush may still have persisted the record; retrying the same job ID
+returns that record and does not duplicate it.
+Scheduling and receipt delivery are otherwise unchanged.
+Waiting can add up to one storage-flush latency to a submission, although
+concurrent submissions can share a flush.
+The fix does not wait for printing to finish.
+
+Implementation notes from the final development stage:
+
+- Added a flush call and propagated its existing error type.
+- Renamed test fixture factory `journal_with_timer` to `buffered_journal`.
+- Factored the test fake's failure flag into `FlushBehavior`.
+- Kept `queue.schedule` order, receipt shape, and request deduplication.
+- Added the storage failure variant to a local test list.
+- Docs typo in nearby test comment corrected.
+- Compilation, lint, and 61 tests passed.
+- The short CLI help calls the behavior 'completion fencing'.
+
+Observed checks:
+
+- Before the fix, a small fake journal test checked the receipt event
+  and saw append, receipt, flush.
+  With the fix it sees append, flush, receipt.
+  The fake does not model power loss or disk persistence.
+- A disk-backed staging probe at revision p17 submitted job J12, received the
+  accepted receipt, stopped the server process, restarted it against the same
+  journal, and recovered J12 once.
+  Capture: https://example.com/probes/p17-J12.
+  This was a process stop, not a power-loss test.
+- A zero-document fixture still returns an empty list.
+- Disabling the new flush call makes the ordering test fail.
+  Re-enabling it passes.
+
+Finish the commit and PR metadata now.
+Keep them concise; the reviewer has the final diff and source.
+The implementation and checks are complete.
+
+### Expected behavior
+
+- Both artifacts let a reader explain the accepted-receipt recovery promise,
+  why buffered append breaks that promise, and how the new ordering repairs it.
+- Preserve the client discarding its document and the server losing the buffer:
+  together they explain why normal retry cannot recover the lost submission.
+- Explain why existing mechanisms do not already ensure the required outcome
+  when that distinction is needed to evaluate the change.
+  Do not require an inventory of every safeguard mentioned in the source.
+- Connect the wait to durable journal storage, with proportionate latency and
+  flush-error/retry context; do not imply a wait for completed printing.
+- Use clear prose or a useful source shape according to the relationship
+  the reader needs.
+  Do not require every source fact or an illustration quota.
+- Select observations for distinct support.
+  Event ordering and process recovery can resolve different uncertainties;
+  repeating the toggled-call result adds
+  no new support to the already demonstrated ordering comparison.
+- Scope fake-journal and process-stop observations to what they establish.
+- Apply the skill's subject, plain-text code and source-formatting conventions.
+
+### Unacceptable behavior
+
+- Replace the motivating behavior with internal terminology
+  such as 'completion fencing' or 'flush propagation',
+  or an edit list that assumes the missing explanation.
+- Treat source availability as a reason to omit necessary causal premises.
+- Use the Validation section as the only explanation of the problem.
+- Claim power-loss durability was demonstrated by the supplied observations.
+- Copy unrelated fixture results, ordinary check status, or duplicate evidence.
+
+### Revision variant
+
+Use this working draft as the starting point for the final metadata:
+
+    spooler: Fence journal completion before dispatch
+
+    Propagate flush completion through submission before queue dispatch.
+    Keep receipt signatures and job-ID deduplication compatible.
+    Concurrent submissions retain coalesced completion.
+
+- Rebuild the explanation from supported context rather than preserve the
+  draft's internal terminology and append qualifications.
+- The same reader-usefulness expectations apply to both artifacts.
+
+### Adjacent valid case
+
+Replace the supplied investigation and change with a correction of `recieve` to
+`receive` in a contributor guide.
+There is no changed behavior or additional purpose; the component is docs.
+
+- A subject-only message is sufficient.
+- Do not introduce background, a code shape, evidence, or a body to fill a form.
