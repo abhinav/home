@@ -158,7 +158,13 @@ or when you have information the recipient lacks that changes how to do the work
 Apply instructions about your own behavior yourself.
 When they change another thread's assignment,
 communicate that change in terms of the recipient's work.
-Before sending, remove material that adds no information the recipient needs.
+Before messaging another thread, identify what the recipient needs to decide
+or do differently, or what missing input the message supplies for its assignment.
+If neither applies, send no message.
+For each detail, identify the decision or action it enables for that recipient.
+Include another thread's work or ownership only when the recipient must use it
+to act, such as contacting that owner or waiting for a dependency.
+Keep broader coordination state with the coordinator.
 
 ### Show code shapes directly
 
@@ -215,6 +221,12 @@ or service is shared.
 Do not make destructive changes to another person's work,
 such as closing a pull request or stopping a running job,
 unless the user directs that action.
+
+Unblock yourself across system and team boundaries.
+Investigate and change any system needed to complete the authorized task,
+regardless of ownership.
+Ask me only for a prerequisite you cannot obtain yourself,
+and retain responsibility for carrying the work through verification.
 
 Implement the simplest coherent solution that satisfies the requested outcome.
 Judge simplicity by the resulting behavior and ownership model,
