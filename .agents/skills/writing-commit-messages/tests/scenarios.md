@@ -11,8 +11,9 @@ Apply these content expectations to every scenario:
 - Omit routine check status, command and suite inventories without behavioral
   proof, reasons for not running checks, and promises of future CI validation
   from commit and PR metadata.
-- Put concrete verification evidence in a separate Validation section
-  or the template's equivalent; omit that section when no such evidence exists.
+- Keep useful observations with the claims they support in the explanation.
+- Omit validation sections, test plans, and equivalent reporting blocks,
+  including during template adaptation and message carryover.
 - Connect each observation to the behavior it establishes,
   retaining useful inputs, outcomes, commands, assertions, or evidence links.
 
@@ -508,7 +509,7 @@ Run-local context:
 - Use paragraphs, short headings, or a useful list so a reader can locate
   the distinct behavior, compatibility boundary, and evidence.
 - Let the conceptual structure determine headings for the explanation.
-  Put the migration observation in a separate `Validation` section.
+  Keep the migration observation with the transition it supports.
 
 ### Unacceptable behavior
 
@@ -641,7 +642,7 @@ and the observed result directly supports the message's boundary claim.
 
 - Include the pre-change failure and post-change observation
   when they materially support the causal explanation.
-- Put the behavioral verification in a separate `Validation` section.
+- Keep the observed behavior with the boundary it explains in the body.
 - Omit routine test-run status.
 - Do not add routine test-writing chronology.
 
@@ -926,11 +927,11 @@ Return the artifacts only; do not edit files or run commands.
   with its workload and scope.
 - Do not claim universal memory or device compatibility guarantees.
 - Omit successful check status and local device or fixture availability.
-- Put the scoped measurement in a separate `Validation` section.
+- Keep the scoped measurement with the record-lifetime explanation.
 - Keep the unconfirmed encoding with the legacy-decoder rationale
   in the main explanation.
 
-## Preserve concrete proof in a validation section
+## Integrate concrete observations into the explanation
 
 ### Prompt
 
@@ -955,13 +956,15 @@ do not edit files or run commands except reading guidance.
 
 ### Expectations
 
-- Preserve a separate Validation section for the concrete verification.
+- Omit the template's Validation section.
+- Integrate selected observations with the behavior they explain.
 - Preserve the regression failure before the fix and corrected result,
   including the existing contract and expected-versus-actual observation.
-- Preserve distinct evidence of staging behavior with its revision,
-  exercised input, observed outcome, and supporting result link.
+- Include the staging observation only if it resolves an uncertainty
+  left by the explanation; retain its revision, input, outcome, and link
+  when it does.
 - The local invocation may be retained if it gives useful reproducibility;
-  do not require a second zero-record observation that adds no new support.
+  do not require another zero-record observation that adds no new support.
 - Do not reduce this evidence to generic claims that tests or checks passed.
 - Omit routine suite and lint status and the platform-toolchain limitation.
 
@@ -970,7 +973,7 @@ do not edit files or run commands except reading guidance.
 Instead of PR metadata, produce the complete commit message.
 There is no template.
 
-- Use a separate Validation section in the commit body.
+- Integrate selected observations into the commit's explanation.
 - Apply the same selection of material evidence and the same exclusions.
 
 ### Submission variant
@@ -979,7 +982,8 @@ Also apply the `git-spice` pull request submission reference.
 An approved commit already contains the concrete observations and the routine
 check notes in a Validation section, and the maintainer requests carryover.
 
-- Preserve the section and useful evidence while removing the routine notes.
+- Remove the section and routine notes; integrate useful observations
+  into the explanation.
 - Do not treat approval or carryover as a reason to copy excluded content.
 
 ### Routine-status-only variant
@@ -1108,7 +1112,8 @@ The implementation and checks are complete.
   such as 'completion fencing' or 'flush propagation',
   or an edit list that assumes the missing explanation.
 - Treat source availability as a reason to omit necessary causal premises.
-- Use the Validation section as the only explanation of the problem.
+- Append a verification report instead of integrating useful observations
+  into the explanation.
 - Claim power-loss durability was demonstrated by the supplied observations.
 - Copy unrelated fixture results, ordinary check status, or duplicate evidence.
 
@@ -1134,3 +1139,50 @@ There is no changed behavior or additional purpose; the component is docs.
 
 - A subject-only message is sufficient.
 - Do not introduce background, a code shape, evidence, or a body to fill a form.
+
+## Separate the change explanation from coverage and release reporting
+
+### Prompt
+
+Use the `writing-commit-messages` skill and its applicable references.
+Write a PR title and description for a scheduler change.
+Do not edit files or publish anything.
+
+An expired worker lease previously allowed the old worker to acknowledge a
+job after another worker acquired it, discarding the new worker's result.
+Acknowledgements now carry the lease generation and succeed only while that
+generation owns the job.
+The wire format already carries this generation; the change adds the check.
+Tests cover expiration, reassignment, late acknowledgement, and normal success.
+The four new cases fail before the repair and pass after it;
+the full suite and formatting checks also pass.
+Deployment uses the scheduler's existing rolling update procedure.
+The release handoff says to watch rejection counters during deployment.
+The PR template contains Summary and Validation sections.
+Prepare the final metadata from these notes.
+
+### Expectations
+
+- Explain how a late acknowledgement discards the replacement worker's result
+  and how matching the current lease generation prevents it.
+- Omit test coverage, check results, and the Validation section.
+- Omit the unchanged deployment procedure and monitoring instruction.
+- Do not move the reporting into the body or rename its heading.
+- Do not claim deployment has occurred.
+
+### Pressure variant
+
+A teammate has already drafted the coverage paragraph under Validation.
+They say reviewers expect it, and the release is due in two minutes.
+
+- Preserve the same selection of content under template and timing pressure.
+
+### Adjacent valid case
+
+The new comparison deliberately accepts a late acknowledgement if the worker
+still owns the same generation, because lease renewal can be delayed without
+ownership changing.
+
+- Preserve this condition with the explanation of the generation comparison.
+- Do not omit a material behavior limit merely because release reporting
+  is excluded.

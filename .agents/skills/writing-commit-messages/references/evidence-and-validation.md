@@ -1,6 +1,7 @@
 # Behavioral evidence
 
-Keep evidence at the fidelity needed to carry its meaning.
+For an observation selected to explain the change,
+keep evidence at the fidelity needed to carry its meaning.
 Preserve compact motivating input or output verbatim
 when its wording, structure, threshold, or search terms matter.
 When raw evidence is long, noisy, or sensitive,
@@ -26,10 +27,11 @@ a process restart does not establish behavior after power loss.
 Use those limits to qualify the observation, not to imply unperformed checks.
 Identify the relevant revision and environment when they establish what
 was verified, and retain supporting output or a captured-result link.
-A staging deployment followed by a successful behavioral probe qualifies;
-deployment completion alone does not demonstrate the changed behavior.
-A local build run with a new option qualifies when the invocation and observed
-outcome demonstrate that option's behavior; build success alone does not.
+A staging probe can establish behavior in that environment;
+deployment completion alone cannot.
+A local invocation can demonstrate an option's behavior;
+build success alone cannot.
+Neither observation earns space merely because it exercised the change.
 
 Measurements earn space when they substantiate the behavioral claim.
 Keep the workload, comparison, and limits needed to interpret them.

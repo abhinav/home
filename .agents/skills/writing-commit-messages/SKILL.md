@@ -121,14 +121,24 @@ and keep it at or below 72 characters.
 When shortening it, preserve the terms that distinguish this change
 from nearby history.
 
-## Select evidence that changes the assessment
+## Keep evidence within the explanation
 
-Keep observations that resolve a material uncertainty about the changed behavior.
-For each observation, identify its relevant input or condition,
-what happened, and what claim that outcome supports.
-For each additional observation, ask what uncertainty it resolves
-that the explanation and retained evidence leave open.
-Omit repetitions and test mechanics that establish no additional behavior.
+Commit and PR text explains the change; verification reporting and release
+status belong in CI or the task handoff.
+Do not add validation sections, test plans, or equivalent reporting blocks,
+including when adapting a repository template or carrying forward a message.
+Continue performing the checks required by the task.
+
+Use observations as source material for the explanation itself.
+An observed failure can establish the motivating problem;
+a scoped measurement can quantify the consequence of a design choice.
+Describe what the system did under the relevant conditions.
+Retain the method or environment only when it changes what the result establishes.
+When an observation supplies the problem or result,
+use it in place of a generic account of that behavior,
+so the reader encounters the behavior once.
+Ask what the reader could not explain or assess without the observation.
+If it only confirms behavior already explained, omit it.
 A test-only change should explain the invariant and previously unrepresented risk;
 case names belong only when they define that boundary.
 
@@ -136,19 +146,13 @@ When using raw input or output, regression comparisons, manual probes,
 measurements, or uncertainty about behavior,
 read [Behavioral evidence](references/evidence-and-validation.md)
 for interpreting and preserving their evidentiary scope.
-Keep the problem and design explanation in the main body.
-Put selected concrete verification in a separate `Validation` section
-or the repository template's equivalent.
 Retain the input, assertion, output, command, or link needed to assess the claim.
-Omit the section when no material verification remains.
 
-Routine test, CI, formatter, linter, build, and patch-hygiene status
-never explains the change, including passed, failed, skipped, blocked,
+Omit test-coverage summaries and test, CI, formatter, linter, build,
+deployment, and patch-hygiene status, including passed, failed, skipped, blocked,
 pending, or deferred status and reasons checks could not run locally.
 Omit command inventories and promises that CI will validate the change.
 Renaming this reporting as evidence, confidence, or limitations does not qualify it.
-Keep operational status in CI or the task handoff;
-continue performing the checks required by the task.
 
 ## Prepare and review the complete artifact
 
