@@ -105,12 +105,15 @@ frames = crop(frames, region)
 encode(frames, format)
 ```
 
-The same test applies at every scale.
 A helper, type, object, module, package, or service is useful
 when it names a real concept, protects an invariant,
 owns a cohesive operation, or centralizes genuine shared policy.
-It is shallow when readers still have to inspect both sides
-and reconstruct the same decision or control flow.
+Judge the contract the reader relies on:
+a boundary is shallow when using it still requires callers
+to reconstruct the decision or sequence it claims to own.
+Private methods can organize an owner's implementation
+without creating additional owners.
+Use `$code-readability` to judge that decomposition across the whole operation.
 
 ## Put knowledge with its owner
 
@@ -163,6 +166,39 @@ and depends on its result
 without coordinating its internal policy or sequence.
 If that knowledge remains on both sides,
 the new boundary is a helper, not an owner.
+
+A cohesive operation can itself be represented by a private type.
+When substantial phases share working state and one lifetime,
+consider an instance for one execution of the operation.
+Let it own the shared state, phase ordering, and outcome.
+Keep values used only within a phase local to that phase;
+use parameters and results when they express dependencies clearly.
+The type should make the computation cohesive,
+not merely bundle arguments while leaving its sequencing with callers.
+
+Illustrative pseudocode, with `?` propagating failure:
+
+```text
+parse(source):
+    return Parser(source).run()
+
+private Parser:
+    source, cursor, symbols, diagnostics
+
+    run():
+        readHeader()?
+        records = readRecords()?
+        resolveReferences(records)?
+        return finish(records)
+
+    # Phase implementations remain within this owner.
+```
+
+Here the parser lasts for one parse;
+it need not be a persistent entity or reusable service.
+Keep a local sequence when it already exposes the operation clearly,
+and retain separate functions when their inputs and results
+express the relationships without scattering ownership.
 
 Match values to their owner's lifetime and rate of change.
 Translate external state at composition or adapters.

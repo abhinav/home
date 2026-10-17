@@ -942,3 +942,54 @@ The caller controls closing the stream and replay is not promised.
 - Preserve shared stream state and the caller's responsibility for closing it.
 - Do not introduce copying or ownership-transfer machinery without a caller need.
 - Leave changing I/O failures at the operation that uses the stream.
+
+## Own the working state of one computation
+
+### Prompt
+
+Use the `code-design` and `code-readability` skills.
+Do not modify files.
+
+A package exposes `loadCatalog(source) -> Catalog or LoadError`.
+Its implementation reads a preamble, loads named entries,
+resolves references among entries, and constructs the catalog.
+Each phase has substantial parsing and diagnostic logic.
+The source, cursor, name index, and diagnostics are used across phases;
+token text and temporary lengths are needed only inside individual loops.
+All input is available when the call starts, and no intermediate state escapes.
+
+One proposal extracts four free functions that each accept and return
+the shared working values in a tuple.
+Another keeps the entire operation in one function because the phases
+have no independent callers.
+Choose the organization, show a small structural sketch,
+and explain where the data and ordering belong.
+Preserve the public API and failure behavior.
+
+### Expectations
+
+- Keep shared working data, sequencing, and completion with one operation owner.
+- Permit a private type for one invocation, or an equivalent cohesive structure.
+- Use private phases when they expose meaningful parts of the computation;
+  independent reuse is unnecessary.
+- Keep temporary lengths and token text local;
+  use parameters and results where they express dependencies clearly.
+- Avoid a reusable service, global state, public phase API, or framework
+  without a requirement for it.
+- Do not require an explicit phase field for this uninterrupted computation.
+
+### Adjacent valid case
+
+#### Prompt addition
+
+Also assess two separate operations.
+A nine-line `normalizeLabel(text)` trims whitespace, normalizes case,
+and rejects an empty result, using only local values.
+An image tool exposes `decode`, `crop`, and `encode`;
+its supported callers select, omit, and reorder transformations themselves.
+
+#### Expectations
+
+- Keep the short normalization operation local when its sequence is clear.
+- Preserve independent image operations because callers own their composition.
+- Do not infer that several steps require a private operation type.

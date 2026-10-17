@@ -472,3 +472,84 @@ The repository keeps these declarations in one predictable generated file.
 - Preserve the established generated-file and lookup conventions.
 - Do not colocate them with one arbitrary consumer
   merely to satisfy a preference for physical proximity.
+
+## Preserve a useful outline within one operation
+
+### Prompt
+
+Use the `code-readability` and `code-design` skills.
+Do not modify files.
+
+A private PackageReader exists for one `readPackage(source)` call.
+It owns the source, cursor, index, and diagnostics.
+Its `run` method calls `readDirectory`, `readEntries`, `resolveLinks`,
+and `finish` in order, returning immediately on failure.
+Each phase contains substantive loops, conditions, and diagnostics.
+Temporary entry sizes and decoded names stay within those loops.
+The type, entry point, and private methods are together in one file.
+
+A reviewer requests inlining all four methods into `run`:
+each has one caller, shares mutable working state,
+and must be inspected when changing that phase's behavior.
+The reviewer cites the guidance against shallow boundaries.
+Decide whether to retain the organization or change it, and explain why.
+Do not invent additional package-format requirements.
+
+### Expectations
+
+- Preserve useful private decomposition within the operation owner.
+- Explain how the outline lets a reader understand the sequence
+  before inspecting relevant phase details.
+- Distinguish implementation maintenance from a caller needing internals
+  to use a contract.
+- Judge the overall reading task, not call count, method length,
+  shared state alone, or independent reuse.
+- Require the outline to expose ordering and relevant failure paths.
+
+### Adjacent valid case
+
+#### Prompt addition
+
+In a separate helper extraction, `prepareEntry` reads a mutable flag,
+changes the cursor differently for each flag value, and sets another flag.
+Its caller immediately reads that second flag to choose a branch
+that must agree with the cursor change.
+Changing either part requires editing both, and the helper's name
+and result do not explain the relationship.
+
+#### Expectations
+
+- Identify that this extraction still splits one decision across two places.
+- Regroup the decision or give the helper a useful result and responsibility.
+- Do not accept every named method as a useful outline.
+
+## Choose how an operation represents progress
+
+### Prompt
+
+Use the `code-readability` skill
+and any design guidance it makes applicable.
+Do not modify files.
+
+Choose how each operation should represent progress and explain the distinction.
+
+1. A parser receives a complete buffer and returns one result.
+   It advances through a header, repeated blocks, and a trailer in order.
+   Its loop repeatedly switches on a phase variable that only selects
+   the next piece of code; execution never leaves the operation between phases.
+2. A supported `feed(chunk)` API can return halfway through a length prefix
+   or payload and later continue from the next chunk.
+3. A workflow saves a checkpoint, exits, and must resume after process restart.
+
+Preserve each contract.
+Do not introduce callbacks, concurrency, or a workflow framework.
+
+### Expectations
+
+- Prefer a sequence and loop for the complete-buffer parser
+  when they directly express the established order.
+- Preserve working data such as the source, cursor, and accumulated result.
+- Retain explicit progress and partial data needed across `feed` calls.
+- Retain serializable progress required by the persisted workflow.
+- Do not conflate grouping working data in a type with needing a phase field.
+- Do not remove explicit state at the cost of changing an operation's contract.

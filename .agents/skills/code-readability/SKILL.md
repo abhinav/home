@@ -80,9 +80,19 @@ to determine which effects have occurred or which possibilities remain.
   Keep nesting when it directly represents a hierarchy
   or several outcomes that remain relevant.
 - Converge successful branches before work they share.
-- Represent mutually exclusive states directly
+- When state needs an explicit data representation,
+  represent mutually exclusive states directly
   instead of encoding them as combinations of booleans.
 - Keep mutations, effects, and ordering near the operations they govern.
+
+Distinguish working data from bookkeeping about where execution has reached.
+Use sequence, branches, loops, and calls when they naturally express progress;
+the reader can then infer what has happened from the code being executed.
+Keep progress as explicit data when the supported operation must resume
+across calls, persist a checkpoint, or respond to transitions
+that do not fit that control structure.
+Choose from the operation's contract;
+grouping its working data in a type does not require a phase field.
 
 A longer visible sequence can be easier to understand
 than a compressed expression or chain of calls
@@ -143,15 +153,25 @@ at the boundary where a maintainer must reason about it.
 
 Every helper, type, class, module, or service boundary introduces a name
 and a relationship the reader may need to understand.
-A boundary earns its place when its contract replaces implementation knowledge
-and lets the reader stop.
+A boundary that callers rely on earns its place
+when its contract replaces implementation knowledge and lets the reader stop.
 A complete domain operation, invariant, or shared policy
 can provide such a contract.
 Function length alone cannot.
 
-When understanding the caller still requires reading the boundary's body,
-or when coordination remains distributed across both sides,
+When using that contract still requires reconstructing its implementation,
+or when callers must coordinate details it claims to own,
 the boundary has moved complexity rather than contained it.
+
+Within one owner, private methods can provide an outline of a complex operation.
+Keep a phase separate when its name and contract let the reader understand
+its role and relevant effects, then inspect its details selectively.
+Independent reuse and isolation from shared working state are not prerequisites.
+Reading a phase to change its implementation is expected;
+repeatedly alternating between caller and callee to reconstruct one decision
+is evidence that the decomposition is unhelpful.
+Keep sequencing, branches, and failure paths legible in the outline,
+and keep phase implementations near the operation they explain.
 
 For example, a private `isReady` helper that only holds the prerequisites
 for one nearby `submit` call makes a maintainer inspect two places
