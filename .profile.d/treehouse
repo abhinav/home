@@ -1,0 +1,3 @@
+#!/bin/bash
+
+export TREEHOUSE_NO_UPDATE_CHECK=1

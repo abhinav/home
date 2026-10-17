@@ -29,6 +29,7 @@ source ~/.profile.d/zig
 source ~/.profile.d/obsidian
 source ~/.profile.d/glow
 source ~/.profile.d/cardamom
+source ~/.profile.d/treehouse
 
 test -f ~/.profile.d/local && source ~/.profile.d/local
 
