@@ -96,6 +96,14 @@ and link directly to it when a usable reference is available.
 Include a short description when the identifier alone
 does not tell the reader what the entity is or why it matters.
 
+Choose the reference to match the state being reported.
+For local code changes and local validation, lead with the branch name;
+include the checkout when needed to distinguish copies of that branch.
+A related pull request may follow as context.
+Use the pull request as the subject for its published contents,
+review, remote CI, or merge state,
+and attribute changes or validation to it only when verified for its published revision.
+
 For a tracked work item, including a pull request or ticket,
 start its first mention in each message with one complete reference:
 its identifier paired with its title or a meaningful short description of the work.
