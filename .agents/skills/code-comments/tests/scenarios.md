@@ -927,6 +927,63 @@ and the label names both responsibilities accurately.
 - Do not delete an accurate region label
   merely because each individual call is descriptively named.
 
+## Distinguish teaching coverage from phase coverage
+
+### Prompt
+
+Use `$code-comments`.
+Do not modify files.
+
+A user asks for teacher comments across a recovery coordinator's
+selection, compilation, and execution path for a capable new maintainer.
+An earlier review found the pipeline easy to follow.
+Names and helper boundaries already make the phases clear.
+Existing comments explain token comparison and sealed-segment replacement.
+Other comments say only "Select recovery work", "Compile actions",
+and "Execute groups".
+
+Source evidence establishes:
+
+- The journal records desired state; receipts record observed effects.
+- A crash can leave an applied effect without a receipt.
+- Matching remote and recorded generation tokens allow receipt recovery
+  without repeating an effect; differing tokens require a fresh apply.
+- A sealed journal segment rejects additions,
+  so extending the logical operation requires a new segment.
+- Compilation nests independent groups inside dependent sequences.
+- A caught group failure lets siblings proceed;
+  an uncaught failure stops the containing sequence.
+
+Return the concrete comment additions or replacements and their placement.
+Keep behavior and structure unchanged.
+
+### Expectations
+
+- Identify which prerequisite models remain unexplained
+  despite the readable phases and existing comments.
+- Teach the distinction between desired state and observed effects,
+  including why receipt absence does not prove an effect absent.
+- Teach how nesting and catching control failure propagation
+  so the reader can predict whether siblings continue.
+- Preserve the existing token and sealed-segment explanations
+  without duplicating their lessons.
+- Place each missing lesson where the implementation relies on it.
+- Do not substitute a pipeline inventory or more phase headings
+  for teaching the missing premises.
+- Do not use a fixed comment count as the completion criterion.
+
+### Adjacent valid case
+
+The existing comments also explain desired versus observed state,
+receipt ambiguity, and the consequences of caught and uncaught errors
+at the relevant decisions.
+Names, structure, and these comments establish the complete recovery model.
+
+- Keep accurate teaching comments and omit redundant additions.
+- Do not manufacture another lesson because the user asks for more comments.
+- Judge any remaining phase labels by their orientation value,
+  independently of whether prerequisite knowledge is already taught.
+
 ## Document dependency meaning and non-obvious local context
 
 ### Prompt

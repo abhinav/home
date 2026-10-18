@@ -96,6 +96,22 @@ but a capable maintainer may not know or recall.
 Use one when that knowledge is necessary to verify or change the code
 and names, types, or structure cannot carry it.
 
+A guide comment helps the reader follow or group operations.
+A teacher comment supplies the premise that makes a decision understandable:
+what the domain permits, what a representation means,
+or how a mechanism produces its consequences.
+A path can be easy to follow while those premises remain unfamiliar.
+Evaluate that knowledge gap separately from the need for phase orientation.
+
+When adding or reviewing teacher comments,
+first identify the unfamiliar premises behind decisions in the requested span.
+Check which premises the code and existing explanations already establish,
+then teach each missing premise where the implementation relies on it.
+Keep an existing explanation when it supplies the needed model;
+omit a new comment when the reader can already predict the decision.
+Judge coverage by whether the reader can explain the remaining decisions,
+not by the number of comments or phases described.
+
 Teach only the model used here:
 
 1. State the implementation goal.

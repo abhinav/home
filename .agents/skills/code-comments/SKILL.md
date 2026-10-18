@@ -80,7 +80,7 @@ concept, and field documentation.
 
 When writing, reviewing, or deciding whether to add implementation comments,
 read `references/implementation-comments.md` for context, working state,
-primary-path guidance, and prerequisite knowledge.
+guide comments, and teacher comments that explain prerequisite knowledge.
 
 ## Delete or rewrite comments that do not help
 
