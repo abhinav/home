@@ -1245,6 +1245,13 @@ vim.opt.complete:append('kspell')
 vim.opt.fillchars:append {diff = '·'}
 
 vim.cmd [[
+" Codeview uses these backgrounds while preserving syntax foregrounds.
+augroup DiffBackgrounds
+  autocmd!
+  autocmd ColorScheme * highlight DiffAdd guibg=#244032 ctermbg=22
+  autocmd ColorScheme * highlight DiffDelete guibg=#50252a ctermbg=52
+augroup END
+
 colorscheme molokai-dark
 
 " Invisible vertical split
