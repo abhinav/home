@@ -1117,17 +1117,18 @@ require('lazy').setup({
 
 	-- Terminal integration {{{2
 	{
-		'alexghergh/nvim-tmux-navigation', -- {{{3
+		'mrjones2014/smart-splits.nvim', -- {{{3
 		config = function()
-			require('nvim-tmux-navigation').setup {
-				keybindings = {
-					left = '<C-h>',
-					right = '<C-l>',
-					up = '<C-k>',
-					down = '<C-j>',
+			local splits = require('smart-splits')
+			splits.setup {
+				move = {
+					at_edge = require('pane_navigation'),
 				},
 			}
-
+			vim.keymap.set('n', '<C-h>', splits.move_cursor_left, { silent = true, desc = 'Navigate left' })
+			vim.keymap.set('n', '<C-j>', splits.move_cursor_down, { silent = true, desc = 'Navigate down' })
+			vim.keymap.set('n', '<C-k>', splits.move_cursor_up, { silent = true, desc = 'Navigate up' })
+			vim.keymap.set('n', '<C-l>', splits.move_cursor_right, { silent = true, desc = 'Navigate right' })
 		end,
 	},
 	'lambdalisue/vim-manpager',

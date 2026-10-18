@@ -1,4 +1,5 @@
 require("pane_cycle")
+require("vim_navigation")
 local bind = require("tmux_bind")
 
 bind("ctrl+b>ctrl+b", "pane.send_key", { key = "ctrl+b" })
