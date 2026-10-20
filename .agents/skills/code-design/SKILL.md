@@ -59,6 +59,22 @@ When feasibility is uncertain, use a private spike to test the mechanism,
 then revise either the contract or the implementation from what the spike proves.
 Do not let exploratory implementation become the public contract by accident.
 
+Evaluate a candidate as a complete way to deliver the supported outcome.
+Trace normal use, failure, and recovery through it,
+including what callers and operators must coordinate.
+For each additional component, state, or step,
+identify the requirement it satisfies and the obligations it introduces.
+Those obligations are costs of choosing that mechanism;
+they do not independently establish that the mechanism is needed.
+When a choice creates a problem requiring more machinery,
+compare changing that choice with supporting its consequences.
+Prefer the design that satisfies the contract with fewer concepts
+and interactions to maintain across implementation and operation.
+Keep necessary complexity with the owner of the requirement that demands it.
+When a material constraint is uncertain,
+identify the evidence that would distinguish the alternatives
+before committing to the structure that depends on it.
+
 Outside-in design does not require freezing an early guess.
 When the domain or workflow is still uncertain,
 keep the initial structure easy to change
@@ -291,11 +307,12 @@ for control flow, naming, and local helper decisions.
 Escalate to a design change when the local complexity exists
 because ownership or policy is split across the system.
 
-## Improve without inventing a migration
+## Evolve within the requested scope
 
 When a proposed local improvement differs from repository precedent,
-or could require expanding the change into a migration,
-read [Scoped evolution](references/scoped-evolution.md).
+could expand into a migration, or implements an accepted migration,
+read [Scoped evolution](references/scoped-evolution.md)
+for scope and the obligations of moving from the current state to the destination.
 
 ## Apply the model
 

@@ -993,3 +993,131 @@ its supported callers select, omit, and reorder transformations themselves.
 - Keep the short normalization operation local when its sequence is clear.
 - Preserve independent image operations because callers own their composition.
 - Do not infer that several steps require a private operation type.
+
+
+## Evaluate the obligations introduced by a design choice
+
+### Prompt
+
+Use the `code-design` skill.
+Do not modify files.
+
+A desktop application must produce a local report from an immutable input file.
+Generation takes up to twenty seconds and must not block the UI.
+Cancellation may discard the work, and after application exit the user can retry.
+The existing process supports background tasks and atomic replacement
+of a completed output file. No other application needs this operation.
+
+A proposed design sends the input to a new local daemon.
+Reviewers correctly observe that the daemon would need request authentication,
+durable job identifiers, reconnect handling, and a result cleanup policy.
+Recommend the complete implementation direction and explain which findings
+affect it. Do not implement changes.
+
+### Expectations
+
+- Evaluate the daemon itself against the supported operation;
+  valid findings about its consequences do not establish a need for it.
+- Prefer the existing background execution capability when it meets the contract.
+- Preserve UI responsiveness, cancellation, output integrity, and error reporting.
+- Derive failure and recovery behavior from the chosen supported execution model.
+- Do not add durable service machinery solely to make the initial proposal viable.
+
+### Adjacent valid case
+
+#### Prompt addition
+
+Instead, reports take hours, must finish after the UI closes,
+and must resume after machine restart. Several applications submit reports.
+An existing authenticated job service supplies durable submission,
+resumption, cancellation, and result retention.
+
+#### Expected behavior
+
+- Use the existing job service or justify another supported durable mechanism.
+- Retain the identity, completion, access, and recovery obligations required
+  by the cross-process lifetime.
+- Do not apply the original in-process recommendation to the changed contract.
+
+## Derive transition steps from compatibility commitments
+
+### Prompt
+
+Use the `code-design` skill.
+Do not modify files.
+
+An offline analysis tool is replacing a project file format.
+One process owns the file while it runs. There are no independent readers,
+background writers, or external clients. Users approve a tool upgrade and
+conversion together. A source file can be retained while conversion writes
+and validates a new file; the filesystem supports atomic replacement.
+Old binaries need not open the converted format.
+
+The proposed plan adds a compatibility release, dual writing,
+a migration status service, conversion, a reader switch, and later cleanup.
+Recommend the transition and its review boundaries, including interruption
+handling and evidence that the result preserves the project.
+
+### Expectations
+
+- Derive the transition from exclusive ownership and the coordinated upgrade.
+- Permit direct conversion with preservation and validation of the source.
+- Use supported file operations to handle interruption and replacement.
+- Reject unnecessary compatibility stages based on the supplied contract,
+  without treating a particular number of branches as the goal.
+
+### Adjacent valid case
+
+#### Prompt addition
+
+Instead, the representation is a network protocol used by independently
+upgraded mobile clients. The service must continue accepting the previous
+protocol for six months, and old clients cannot all be upgraded together.
+The service can distinguish protocol versions on each request.
+
+#### Expected behavior
+
+- Preserve the explicit old-client compatibility commitment.
+- Permit an adapter or parallel protocol support and staged retirement.
+- Justify stages from client lifetimes and compatibility evidence,
+  rather than applying the offline conversion sequence.
+
+## Prepare a maintained population before dependent readers
+
+### Prompt
+
+Use the `code-design` skill.
+Do not modify files.
+
+A product catalog will store deterministic normalized search terms
+that current readers compute from product fields.
+Search results must remain equivalent and available during rollout.
+The user asks for an implementation stack and a deployment after each unit.
+Recovery is through subsequent releases, with no requirement to restore
+previous binaries.
+
+The database supports additive fields and conditional per-record updates
+against a revision. Updates preserve unrelated fields, and a backfill can
+retry after a conflict. Old readers ignore the new field.
+Old writers preserve it but do not recompute it when product fields change.
+The deployment service can establish when old writers have retired.
+Every product can be enumerated, including products with a stored term.
+
+A shared normalization library also has an existing import-tool caller.
+Propose review units, useful behavior after each deployment,
+and evidence needed before the new reader becomes authoritative.
+
+### Expected behavior
+
+- Permit a shared library unit with its demonstrated caller.
+- Establish maintenance of the new representation and preparation of existing
+  products before relying on it in serving queries.
+- Make producer adoption and repeatable repair a usable increment;
+  allow justified review boundaries without requiring one branch count.
+- Account for old writers making present values stale.
+  Missing-field checks alone cannot establish readiness;
+  reconcile after writer convergence or provide an equivalent supported proof.
+- Preserve serving behavior during preparation,
+  verify query equivalence and completeness,
+  and explain interruption and forward repair.
+- Require a concrete invariant before adding migration modes or a new coordinator.
