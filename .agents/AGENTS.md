@@ -216,6 +216,21 @@ For branching stacks or a mix of stacks and independent PRs,
 use nested bullets: each child is directly stacked on its parent.
 Keep independent PRs and stack bases at the top level.
 
+### Thread titles
+
+When applicable add one of the following prefixes to the thread title:
+
+- 👀 a result or proposal is ready for review or a decision
+- 📬 input or action is needed to proceed
+- 🚨 urgent attention is needed
+- 🚧 blocked
+- ✅ assignment complete
+
+The following additional markers designated by the user compose with the above.
+
+- 🔼 high-priority work
+- ⏸️ paused work
+
 ## Authority and scope
 
 Match initiative to the authority the user granted.
