@@ -15,7 +15,7 @@ Full-prompt examples use `Expected behavior` and `Unacceptable behavior`.
 Focused boundary tests use `Quality bar` and `Expectations`.
 Those grading sections are evaluator-only;
 withhold them and the intended answer.
-For a full-prompt adjacent-valid trial,
+For a full-prompt variant trial,
 give the runner the base `Prompt`
 plus only that variant's `Runner prompt addition`.
 Keep tests read-only or confine artifacts to a task-local temporary directory

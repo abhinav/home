@@ -22,6 +22,7 @@ Work through this model:
 ```text
 artifact and destination
   -> viewer question
+  -> subject relationships
   -> diagram concept
   -> visual vocabulary
   -> spatial layout
@@ -111,7 +112,19 @@ Write one internal sentence before laying out objects:
 
 > After viewing this diagram, the reader understands ...
 
-Use that sentence to choose the diagram concept.
+Establish the subject relationships that let the viewer reach that conclusion.
+Identify the relevant entities or states,
+what connects or separates them,
+and which relationships explain the outcome.
+For a causal explanation, trace who acts on what,
+which state changes or persists,
+and how that state enables or prevents the next action.
+Give independently acting entities or independently changing states
+separate visual identities when their interaction explains the outcome.
+Show the interaction through connections, containment, alignment,
+or transitions between those elements.
+
+Use that model to choose the diagram concept.
 A sequence emphasizes order and exchange.
 Containment emphasizes ownership or composition.
 Topology emphasizes connection.
@@ -120,6 +133,17 @@ Comparison emphasizes differences.
 Anatomy emphasizes parts.
 A timeline emphasizes change over time.
 Combine concepts only when the viewer question needs both.
+
+Choose a spatial encoding for each relationship the viewer must recover.
+Actor columns and message paths can expose handoffs;
+containment can expose ownership;
+aligned state views can expose what changes and what persists.
+Labels identify the entities, actions, and conditions within that structure.
+For a comparison, keep corresponding entities recognizable
+and make the changed relationships visible.
+The model is ready when each element has a subject meaning
+and the connections, groups, or axes express the relationships needed
+to answer the viewer's question.
 
 Include only actors, states, boundaries, and relationships that change the
 intended understanding.
@@ -297,7 +321,13 @@ Read the diagram as the intended viewer, then verify:
 1. The entry point, reading direction, primary path, story destination,
    and intended takeaway are apparent from the diagram and the surrounding
    content available at its destination.
-   The viewer does not need to reconstruct an unstated relationship.
+   Answer the viewer's question by tracing the diagram's visible relationships.
+   For a causal explanation, trace the action, affected state, and consequence;
+   for a comparison, locate the relationship that changes the outcome.
+   Verify that the geometry exposes the required interaction among subjects,
+   beyond the order in which their labels are read.
+   Supporting prose may interpret the drawing,
+   but each relationship assigned to the diagram must be recoverable there.
 2. Every required actor, state, boundary, and relationship is present.
    No unsupported or irrelevant element competes with the main story.
 3. Every path reaches its intended endpoints.

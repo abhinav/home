@@ -266,3 +266,81 @@ Do not create files.
 - Treat parsing or rendering success as visual correctness.
 - Accept a connector or label whose meaning requires guesswork.
 - Retain irrelevant content merely because the source supplied it.
+
+## 07 Explain a causal mechanism
+
+### Prompt
+
+Use the guidance at `{GUIDANCE_PATH}`.
+
+A document gateway keeps document bodies in a cache.
+Authorization is held separately by a permission service.
+Today a cache hit returns the cached body directly to the requesting browser.
+A cache miss checks the permission service,
+then fetches an allowed document from the origin and caches its body.
+Revoking a reader's access updates the permission service
+but leaves the cached body present.
+The proposed gateway checks permission on every request before looking in the cache;
+a denial ends the request,
+while an allowed request uses the existing cache hit/miss behavior.
+
+Create a plain-text diagram for a design review explaining why the change
+prevents a revoked reader from retrieving a cached document.
+Show the proposed behavior alongside the current behavior.
+Include only the supporting explanation the reviewer needs.
+
+### Quality bar
+
+- Evaluation mode: judgment.
+- The viewer can trace the current cache-hit path that bypasses authorization
+  and the proposed path that makes authorization govern cache access.
+- The diagram preserves the distinction between cached content
+  and the separately held permission state.
+- Connections, grouping, alignment, or transitions expose those relationships;
+  mentioning the facts in labels alone does not satisfy this requirement.
+- Equivalent sequence, flow, topology, or state representations are acceptable.
+
+### Expectations
+
+- Give the relevant participants or states recognizable visual identities.
+- Make the bypass and its removal visible in the compared structures.
+- Show denial terminating the proposed request before content is returned.
+- Preserve supported cache hit/miss behavior for allowed requests.
+- Keep labels, connections, and surrounding explanation factually consistent.
+- Reject a chain of whole-situation summaries that encodes only reading order,
+  even when every summary is true and its rectangles are well formed.
+- Grade semantic usefulness independently from medium conformance.
+
+### Other-medium variant
+
+#### Runner prompt addition
+
+Use SVG instead of plain text.
+Keep the drawing readable at 900 pixels wide.
+Save the editable SVG and a rendered preview;
+inspect the preview before delivery.
+
+#### Expected behavior
+
+- Preserve the same causal relationships in the selected medium.
+- Inspect the rendered artifact at the requested reading width.
+- Treat source validity as separate from visual usefulness.
+
+### Adjacent valid case
+
+#### Runner prompt addition
+
+Replace the gateway task with this runbook task:
+Draw a compact plain-text diagram of a local import procedure.
+Scan files, validate their format, and import valid files.
+Invalid files terminate with an error.
+The reader needs only to follow this procedure;
+no network services, ownership boundaries, or persistent state are relevant.
+Use short action labels and keep the diagram within 60 columns.
+
+#### Expected behavior
+
+- Accept action nodes and directed branches when they expose the procedure.
+- Carry both valid and invalid paths through to their outcomes.
+- Do not invent participants or state solely to produce a more elaborate drawing.
+- Permit short action sentences and rectangular nodes.
