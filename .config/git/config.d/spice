@@ -23,6 +23,10 @@
 
 [spice "log"]
 	pushStatusFormat = aheadBehind
+
+[spice "repoSync"]
+	detachWorktrees = true
+
 [spice "experiment"]
 	commitFixup = true
 	commitPick = true
