@@ -662,75 +662,83 @@ require('lazy').setup({
 			diff = { style = "split" },
 		},
 	},
-	-- {
-	-- 	"dlyongemallo/diffview-plus.nvim",
-	-- 	config = function()
-	-- 		local diffview = require('diffview')
-	-- 		local actions = require('diffview.actions')
-	-- 		diffview.setup({
-	-- 			use_icons = true,
-	-- 			enhanced_diff_hl = true,
-	-- 			keymaps = {
-	-- 				view = {
-	-- 					{'n', 'q', ':DiffviewClose<CR>', {desc = "Close diffview"}},
-	-- 				},
-	-- 				file_panel = {
-	-- 					{'n', 'q', ':DiffviewClose<CR>', {desc = "Close diffview"}}
-	-- 				},
-	-- 			},
-	-- 		})
-	--
-	-- 		-- <leader>gdd: open diffview with default base
-	-- 		-- <leader>gda: open diffview with base supplied in a prompt
-	-- 		-- <leader>gdu: open diffview with base set to upstream
-	-- 		-- <leader>gdp: open diffview with base set to parent commit
-	-- 		-- <leader>gdq: close diffview
-	--
-	-- 		vim.keymap.set('n', '<leader>gdd', function()
-	-- 			local base_args = {}
-	-- 			local gitsigns_base = require('gitsigns.config').config.base
-	-- 			if gitsigns_base ~= nil then
-	-- 				base_args = {gitsigns_base}
-	-- 			end
-	--
-	-- 			diffview.open(base_args)
-	-- 		end, {desc = "Diffview"})
-	--
-	-- 		vim.keymap.set('n', '<leader>gda', function()
-	-- 			vim.ui.input({prompt = "Base commit: "}, function(input)
-	-- 				if input == nil or input == '' then
-	-- 					return
-	-- 				end
-	-- 				diffview.open({input})
-	-- 			end)
-	-- 		end, {desc = "Diffview (prompt)"})
-	--
-	-- 		vim.keymap.set('n', '<leader>gdu', function()
-	-- 			diffview.open({'@{upstream}'})
-	-- 		end, {desc = "Diffview (upstream)"})
-	-- 		vim.keymap.set('n', '<leader>gdp', function()
-	-- 			diffview.open({'HEAD~'})
-	-- 		end, {desc = "Diffview (parent commit)"})
-	--
-	-- 		vim.keymap.set('n', '<leader>gdq', function()
-	-- 			diffview.close()
-	-- 		end, {desc = "Close Diffview"})
-	--
-	-- 		-- <leader>gdh: open file history
-	-- 		-- <leader>gdf: open file history for current buffer
-	-- 		vim.keymap.set('n', '<leader>gdh', function()
-	-- 			diffview.file_history()
-	-- 		end, {desc = "File history"})
-	-- 		vim.keymap.set('n', '<leader>gdf', function()
-	-- 			local file = vim.fn.expand('%')
-	-- 			if file == '' then
-	-- 				Snacks.notify.warn("No file", {title = "Diffview"})
-	-- 				return
-	-- 			end
-	-- 			diffview.file_history(nil, {file})
-	-- 		end, {desc = "File history (current buffer)"})
-	-- 	end,
-	-- },
+	{
+		"dlyongemallo/diffview-plus.nvim",
+		config = function()
+			local diffview = require('diffview')
+			local actions = require('diffview.actions')
+			diffview.setup({
+				use_icons = true,
+				enhanced_diff_hl = true,
+				keymaps = {
+					view = {
+						{'n', 'q', ':DiffviewClose<CR>', {desc = "Close diffview"}},
+						{'n', ']f', actions.select_next_entry, {desc = "Open the diff for the next file"}},
+						{'n', '[f', actions.select_prev_entry, {desc = "Open the diff for the previous file"}},
+					},
+					file_panel = {
+						{'n', 'q', ':DiffviewClose<CR>', {desc = "Close diffview"}},
+						{'n', ']f', actions.select_next_entry, {desc = "Open the diff for the next file"}},
+						{'n', '[f', actions.select_prev_entry, {desc = "Open the diff for the previous file"}},
+					},
+					file_history_panel = {
+						{'n', ']f', actions.select_next_entry, {desc = "Open the diff for the next file"}},
+						{'n', '[f', actions.select_prev_entry, {desc = "Open the diff for the previous file"}},
+					},
+				},
+			})
+
+			-- <leader>gdd: open diffview with default base
+			-- <leader>gda: open diffview with base supplied in a prompt
+			-- <leader>gdu: open diffview with base set to upstream
+			-- <leader>gdp: open diffview with base set to parent commit
+			-- <leader>gdq: close diffview
+
+			vim.keymap.set('n', '<leader>gdd', function()
+				local base_args = {}
+				local gitsigns_base = require('gitsigns.config').config.base
+				if gitsigns_base ~= nil then
+					base_args = {gitsigns_base}
+				end
+
+				diffview.open(base_args)
+			end, {desc = "Diffview"})
+
+			vim.keymap.set('n', '<leader>gda', function()
+				vim.ui.input({prompt = "Base commit: "}, function(input)
+					if input == nil or input == '' then
+						return
+					end
+					diffview.open({input})
+				end)
+			end, {desc = "Diffview (prompt)"})
+
+			vim.keymap.set('n', '<leader>gdu', function()
+				diffview.open({'@{upstream}'})
+			end, {desc = "Diffview (upstream)"})
+			vim.keymap.set('n', '<leader>gdp', function()
+				diffview.open({'HEAD~'})
+			end, {desc = "Diffview (parent commit)"})
+
+			vim.keymap.set('n', '<leader>gdq', function()
+				diffview.close()
+			end, {desc = "Close Diffview"})
+
+			-- <leader>gdh: open file history
+			-- <leader>gdf: open file history for current buffer
+			vim.keymap.set('n', '<leader>gdh', function()
+				diffview.file_history()
+			end, {desc = "File history"})
+			vim.keymap.set('n', '<leader>gdf', function()
+				local file = vim.fn.expand('%')
+				if file == '' then
+					Snacks.notify.warn("No file", {title = "Diffview"})
+					return
+				end
+				diffview.file_history(nil, {file})
+			end, {desc = "File history (current buffer)"})
+		end,
+	},
 	{
         	"NeogitOrg/neogit",
         	branch = 'master',
@@ -747,6 +755,7 @@ require('lazy').setup({
                         	-- Don't auto-enter insert mode when committing.
                         	disable_insert_on_commit = true,
                         	integrations = {
+                        		diffview = true,
                         		snacks = true,
                         	},
                 	}
