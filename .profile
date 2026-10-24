@@ -6,10 +6,10 @@ source ~/.profile.d/locale
 source ~/.profile.d/arrayutil
 source ~/.profile.d/pathutil
 source ~/.profile.d/dirutil
-source ~/.profile.d/home_path
 source ~/.profile.d/xdg
 source ~/.profile.d/sbin_path
 source ~/.profile.d/homebrew
+source ~/.profile.d/home_path
 source ~/.profile.d/mise
 source ~/.profile.d/term
 source ~/.profile.d/pager
