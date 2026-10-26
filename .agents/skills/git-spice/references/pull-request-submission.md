@@ -8,8 +8,14 @@ also load and apply `writing-commit-messages`.
 Pull request titles and descriptions carry the review context
 already established by the branch's commits.
 
+Leave optional submission flags unset unless the user requests their effect.
+`--draft` sets review readiness.
+Git-spice uses navigation comments to link the changes in a stack.
+Pass `--nav-comment` only when the user specifies how to post those links.
+
 Use `git-spice branch submit --branch '<branch>'` for one branch.
 Submission publishes the selected branch's committed history.
+For a push without creating a pull request, `--no-publish` suffices.
 When the requested changes are already committed,
 submit from an existing repository checkout and preserve its current branch.
 A working checkout of the target branch is needed only for additional work
@@ -24,10 +30,6 @@ Use `git-spice stack submit --fill` for the whole stack
 or `git-spice upstack submit --fill` for the current branch and its upstack.
 Do not use `--fill` when any branch has multiple commits;
 git-spice appends all of those commit messages into that pull request metadata.
-Choose publication, navigation, browser, and other optional flags
-only for effects the user currently requests.
-`--no-publish` already implies push-only behavior;
-otherwise preserve configured defaults, including stack-navigation comments.
 
 Do not use:
 

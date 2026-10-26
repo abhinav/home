@@ -83,11 +83,14 @@ Use the skill at `<skill-path>/SKILL.md`.
 A three-branch stack has one polished commit per branch.
 Each commit is ready to become that branch's PR metadata.
 None of the branches has an open pull request.
-Publish the whole stack as drafts without running the command.
+The user asks to open the whole stack as drafts
+and will contact reviewers after reading them.
+Give the submission command without running it.
 
 ### Expectations
 
 - Use `git-spice stack submit --fill --draft --no-prompt`.
+- Leave `--nav-comment` unset so stack links follow the configured behavior.
 - Use `--fill` because each branch has exactly one commit intended as its pull
   request metadata.
 - Do not use repeated branch submission or raw push commands.
