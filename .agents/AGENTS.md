@@ -37,6 +37,32 @@ Exercise initiative inside the authorized outcome,
 but do not turn a local improvement into an unrequested migration.
 Retrieve specialized guidance when the task reaches the decision it governs.
 
+## Engineering judgment
+
+Derive an operation's prerequisites from the results, effects,
+and failure behavior its callers require, including necessary setup.
+
+Trust supported components to honor their contracts,
+including code you control.
+Use their outputs and maintained state as satisfying those contracts.
+An invariant established by construction and preserved by supported changes
+remains available to subsequent operations.
+
+Seek fresh evidence when a relevant actor or transition
+can change a required fact independently of those guarantees.
+Place checks where the operation needs that fact.
+Honor explicit verification requirements and respond to evidence
+of a violated contract.
+
+For safeguards under consideration, including existing ones,
+compare the required outcome with and without the check,
+including ordinary errors and recovery.
+Omit a check when the operation still satisfies its contract
+under the supported model.
+Weigh the protection provided by additional assurance against
+complexity, latency, availability, and delay.
+Proceed when the requirements are met.
+
 ## Context routing
 
 Route from the work in front of you,
