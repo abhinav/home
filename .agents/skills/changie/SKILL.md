@@ -15,40 +15,42 @@ This skill covers how to use `changie` directly,
 choose the correct kind from `.changie.yaml`,
 and write changelog body text.
 
-## Decide whether a changelog entry is needed
+## Decide what to record
 
-Add a changelog entry when the change is user-facing.
-Typical examples include:
+Release notes describe what changes for users since the previous release,
+not each development step toward that release.
+Choose the changelog action from that released baseline
+and the pending entries' coverage of the final outcome.
 
-- New features
-- Changes to existing behavior
-- Bug fixes with visible user impact
-- Deprecations
-- Removals
-- Security fixes
+1. Determine whether the change has a user-facing effect.
+   Features, behavior changes, visible bug fixes, deprecations, removals,
+   and security fixes need coverage.
+   Internal refactors, test-only changes, CI or tooling changes,
+   and code movement with no user-facing effect need no entry.
+2. For a user-facing change, establish what users have received.
+   Read `.changie.yaml` to locate pending entries,
+   then check the repository's release records and relevant history
+   to determine whether the affected behavior has been released.
+   A merged change or an entry's presence alone does not establish release state.
+   Resolve uncertain release state from that evidence before choosing an action.
+3. Compare the final outcome with the released behavior
+   and any pending entry covering that outcome:
 
-Do not add a changelog entry for work
-that has no user-facing effect.
-Typical examples include:
+   | Pending coverage | Action |
+   | --- | --- |
+   | Accurately describes the final outcome | Leave the entry unchanged. |
+   | Covers the outcome but its description or kind is stale | Update that entry. |
+   | No entry covers an outcome users need to know about | Create an entry. |
 
-- Internal refactors
-- Test-only changes
-- CI or tooling changes
-- Code movement with no behavior change
+For example, fixing a bug confined to a new, unreleased option
+usually leaves its accurate `Added` entry unchanged.
+If the option's advertised behavior changes, update that entry.
+If the bug also affects behavior users already have,
+record that released impact as a distinct fix.
+Preserve published release notes.
 
-## Create a new entry
-
-Use `changie` directly by default:
-
-```bash
-changie new --kind $kind --body $body
-```
-
-Prefer generating the entry through Changie
-instead of hand-writing the file.
-That preserves the expected filename,
-timestamp,
-and directory layout.
+For an entry that needs creation or revision,
+choose its kind and body before writing it.
 
 ## Choose the kind
 
@@ -97,6 +99,29 @@ for example:
 
 Those are engineering notes,
 not release notes.
+
+## Create or update the entry
+
+For a new entry, use `changie` directly by default:
+
+```bash
+changie new --kind $kind --body $body
+```
+
+Prefer generating the entry through Changie
+instead of hand-writing the file.
+That preserves the expected filename,
+timestamp,
+and directory layout.
+
+For an update, edit the existing pending entry's body and kind as needed.
+
+## Verify pending coverage
+
+Compare the pending entries with the final change relative to released behavior.
+Each user-facing outcome should be covered without duplicate development history.
+Confirm that entries chosen for revision describe the final outcome
+and that entries chosen to leave alone remain unchanged.
 
 ## Troubleshooting
 
