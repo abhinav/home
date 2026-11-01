@@ -39,7 +39,7 @@ decision it governs:
   read [Type semantics](references/type-semantics.md).
 - For maps, slices, iterators, streaming, strings, or bytes,
   read [Collections and iteration](references/collections-and-iteration.md).
-- For context propagation, goroutines, channels, or synchronization,
+- For context propagation or cancellation, goroutines, channels, or synchronization,
   read [Context and concurrency](references/context-and-concurrency.md).
 - For JSON representation or encoding,
   read [JSON](references/json.md).

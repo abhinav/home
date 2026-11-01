@@ -803,3 +803,115 @@ work.
 - Checks canonical sorted separation as well as preservation.
 - Provides plausible runnable language integration and appropriate command.
 - Keeps useful named examples and acknowledges tested domain limits.
+
+## Cancel sequential transport work
+
+### Prompt
+
+Use the `go-development` skill.
+Do not read its tests or modify files or external state.
+
+Sketch `DownloadAll(ctx context.Context, client *http.Client, urls []string) error`.
+Download sequentially; every URL uses `http.NewRequestWithContext` and `client.Do`.
+Stream each response body to a new numbered file in a task-owned directory.
+You may elide directory and filename setup.
+Close files and response bodies on every path.
+Caller cancellation must stop an active download and abort the remaining batch.
+Show the loop, request construction, body copying, and cleanup.
+
+### Quality bar
+
+- Evaluation mode: judgment.
+- Cancellation reaches the active transport and its errors stop the batch.
+- Resource cleanup remains explicit without routine cancellation polling.
+
+### Expectations
+
+- Reach the context reference through the skill router.
+- Pass the context into each request and handle request and copy errors.
+- Keep resource cleanup scoped to each download.
+- Add no entry, per-item, or final `ctx.Err()` checks without an identified
+  cancellation gap or explicit contract requiring them.
+- Do not add another watcher around the already cancellable HTTP transport.
+- Propose testing cancellation during a stalled response when discussing validation.
+
+## Interrupt an operation without context support
+
+### Prompt
+
+Use the `go-development` skill.
+Do not read its tests or modify files or external state.
+
+A function owns a dedicated `net.Conn` and blocks in `Read`.
+It accepts a caller context, but `Read` has no context argument.
+The function must return promptly on cancellation, even if no bytes arrive.
+Choose the cancellation mechanism and explain its ownership and cleanup.
+Also describe cancellation for a goroutine waiting to send to a channel
+whose consumer may stop receiving.
+
+### Expectations
+
+- Connect cancellation to a supported connection interruption,
+  such as closing the owned connection or setting a deadline.
+- Account for cancellation callback or watcher cleanup and races with completion.
+- Do not rely on checks before or after a blocked `Read`.
+- Do not leave a blocked read goroutine behind while returning a context error.
+- Select on `ctx.Done()` alongside the channel send.
+
+## Preserve deliberate cancellation checkpoints
+
+### Prompt
+
+Use the `go-development` skill.
+Do not read its tests or modify files or external state.
+
+A context-taking search computes for several seconds without I/O,
+channel operations, or calls to another context-aware function.
+Its contract requires responding to cancellation within roughly 50 milliseconds.
+Each search block takes at most 5 milliseconds.
+Choose where cancellation is observed and explain how to validate that choice.
+
+### Expectations
+
+- Permit explicit checks at bounded computation checkpoints.
+- Choose frequency from the latency requirement and bounded block duration.
+- Do not force a transport abstraction or a goroutine wrapper onto CPU work.
+- Preserve normal results when cancellation has not occurred.
+
+## Distinguish cancellation from its error representation
+
+### Prompt
+
+Use the `go-development` skill.
+Do not read its tests or modify files or external state.
+
+A streaming wrapper starts a worker with `exec.CommandContext`.
+It closes pipes and waits for process completion on every exit.
+A patch removes a `ctx.Err()` check before each record write.
+Writes, reads, and process completion still return errors.
+A cancellation test now gets `signal: killed` instead of matching
+`context.Canceled`.
+The API promises to stop on cancellation but specifies no error identity.
+Review the change and recommend the smallest correction, if any.
+
+### Expectations
+
+- Distinguish a stopped process from a failure to cancel.
+- Do not restore per-record polling to satisfy an unsupported error assertion.
+- Check termination and cleanup; relax the assertion to the supported contract.
+- Recognize that a pre-write check cannot guarantee cancellation error identity
+  when cancellation occurs during the following operation.
+
+### Adjacent valid case
+
+#### Prompt addition
+
+Instead, the published wrapper contract explicitly promises an error matching
+`context.Canceled` for caller cancellation.
+Unrelated worker failures must retain their diagnostics.
+
+#### Expected behavior
+
+- Preserve the promised context error at the wrapper's operation boundary.
+- Preserve unrelated errors rather than replacing every failure with `ctx.Err()`.
+- Keep cancellation wired to the process; scattered polling is insufficient.

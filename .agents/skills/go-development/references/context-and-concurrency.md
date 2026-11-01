@@ -14,6 +14,37 @@ client.Do(nil, req)
 client.Do(context.Background(), req)
 ```
 
+## Cancellation
+
+Make cancellation reach the operation that can block or keep doing work.
+Pass the context to the transport or operation that already supports it,
+such as an HTTP request, database call, or `exec.CommandContext`.
+Handle the resulting operation errors.
+For channel waits, select on `ctx.Done()` alongside the send or receive.
+When a blocking API has no context support,
+arrange for cancellation to invoke its supported abort, close, or deadline
+mechanism, with ownership and cleanup that make that interruption safe.
+Checking `ctx.Err()` before a blocking call cannot interrupt that call.
+
+Explicit cancellation checks should be uncommon.
+Add a checkpoint only for work whose cancellation is otherwise unobserved
+for too long, such as a long CPU-bound computation
+or substantial work between cancellable operations.
+Choose checkpoint frequency from the required cancellation latency.
+Short local work and loops already governed by a cancellable operation
+normally need no entry, per-item, or final `ctx.Err()` check.
+
+Choose cancellation error identity from the API's contract.
+Accepting a context alone does not promise that every cancellation-related
+transport or process failure matches `context.Canceled`.
+When callers require a context-specific error,
+implement that policy at the operation boundary while preserving unrelated errors;
+polling throughout the call does not establish that guarantee.
+
+Verify cancellation while the operation is blocked,
+including termination and resource cleanup.
+Assert a particular cancellation error only when the contract requires it.
+
 ## Goroutines
 
 Before starting a goroutine, identify its owner, termination condition,
