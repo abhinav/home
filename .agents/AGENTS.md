@@ -244,7 +244,19 @@ Keep independent PRs and stack bases at the top level.
 
 ### Thread titles
 
-When applicable add one of the following prefixes to the thread title:
+The chat title is the stable name of the user's overall mission,
+so the user can find the same work across turns.
+When naming a new chat or replacing an automatic placeholder,
+name the intended outcome at the scope of the whole assignment.
+
+Preserve the established mission wording, especially a name supplied by the user.
+Change it only when the user asks to rename the chat
+or explicitly replaces its mission.
+
+Express progress by adding, replacing, or removing the applicable status prefix,
+while preserving the mission wording and any host suffix.
+Put details of the current work in chat messages.
+Use these status prefixes:
 
 - 👀 a result or proposal is ready for review or a decision
 - 📬 input or action is needed to proceed
@@ -252,10 +264,12 @@ When applicable add one of the following prefixes to the thread title:
 - 🚧 blocked
 - ✅ assignment complete
 
-The following additional markers designated by the user compose with the above.
+Keep priority and pause markers designated by the user:
 
 - 🔼 high-priority work
 - ⏸️ paused work
+
+These markers are for chat titles only.
 
 ## Authority and scope
 
