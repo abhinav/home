@@ -21,6 +21,8 @@ decision it governs:
   read [Modules and dependencies](references/modules-and-dependencies.md).
 - For imports, names, declaration order, or file organization,
   read [Source organization](references/source-organization.md).
+- For Go documentation, or when adding or changing struct fields,
+  read [Documentation](references/documentation.md).
 - For process termination, structured logging, or errors,
   read [Errors and diagnostics](references/errors-and-diagnostics.md).
 - For interfaces, interface compliance, or concrete result types,
@@ -75,5 +77,3 @@ decision:
 - `code-testing` owns the evidence a change needs
   and the behavior each test protects;
   Go guidance supplies Go test mechanics and conventions.
-- `code-comments` owns documentation judgment;
-  Go guidance supplies Go-specific comment mechanics when present.

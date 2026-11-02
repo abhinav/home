@@ -147,8 +147,3 @@ In languages that support line comments,
 use line comments such as `//` for multi-line explanations
 rather than enclosing prose in `/* ... */`.
 Follow the repository's established representation when it differs.
-
-### Go documentation and struct fields
-
-When documenting Go symbols or struct fields,
-read `references/go-documentation.md` for GoDoc style and field spacing.

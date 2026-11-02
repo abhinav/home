@@ -54,6 +54,11 @@ Use a constructor when creating a value requires behavior:
 validation, normalization, implementation selection, resource acquisition,
 or other work that establishes an invariant.
 
+Choose the constructed type’s fields
+from the dependencies and resolved state its methods need.
+Store independent collaborators directly in separate fields.
+Keep cohesive domain values grouped.
+
 Use one of these constructor shapes.
 
 A configuration struct may contain both required and optional fields:
