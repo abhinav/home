@@ -32,36 +32,26 @@ attribute, such as `#[tokio::test]`.
 When rstest is not already in use or requested, ordinary named tests
 or small case loops with informative assertion messages are sufficient.
 
-Choose the scenario grouping before the case syntax,
-including when converting an existing loop or table to rstest.
-Parameterize inputs and expected observations within a shared setup, action,
-and checking sequence that a maintainer can understand as one scenario.
-Read a selected case on its own: its name, arguments, and nearby body should
-explain the relevant state, what happens, and why the expected result follows.
-Common construction code, the same API call, and the same assertion macro
-are not sufficient reasons to combine scenarios.
-
-Split cases when a parameter selects different scenario histories:
-which state to establish, which failure to induce, which steps to perform,
-or which outcome to expect because of those choices.
-Even one environment or backend flag can require the reader to trace several
-separated branches to reconstruct the chosen scenario.
-Give such scenarios separate named tests or coherent parameterized groups,
-with their distinguishing setup, actions, and expectations visible together.
-Helpers and fixtures may share incidental construction or meaningful setup
-operations; moving a scenario selector into a helper does not reduce that
-reconstruction work.
+Choose scenario grouping before case syntax, including loop/table conversions
+to rstest.
+Parameterize inputs and expected observations within one understandable
+setup, action, and checking sequence.
+Each case's name, arguments, and nearby body should explain its state, action,
+and why the result follows.
+Shared construction, API calls, or assertion macros alone do not justify grouping.
 
 Case data should have a meaningful use in every case.
-Configuration booleans passed to the operation, complete expected `Result`
-values, predicate results, and several related output fields can all fit
-one shared scenario with unconditional checks.
-A short branch that inspects the actual result is reasonable when the shared
-action and each expected outcome remain clear.
-Unused columns, placeholder values, flags that enable assertions,
-and callbacks that choose scenario steps are further signs to split the group.
-Choose the grouping by the reader's reconstruction work,
-rather than parameter count or the amount of repeated setup.
+
+| Case relationship | Grouping decision |
+| --- | --- |
+| Data varies within one scenario | Configuration booleans passed to the operation, complete expected `Result` values, predicate results, and related output fields can fit with unconditional checks. A short branch inspecting the actual result is reasonable when the shared action and expected outcomes remain clear. |
+| A parameter selects different scenario histories: which state to establish, which failure to induce, which steps to perform, or which outcome to expect because of those choices | Split into named tests or coherent parameterized groups with distinguishing setup, actions, and expectations together. Even one environment/backend flag can require reconstruction across separated branches. |
+| Unused columns, placeholders, assertion-enabling flags, or callbacks selecting steps | These are further signs to split. |
+
+Judge grouping by the reader's reconstruction work, not parameter count
+or repeated setup.
+Helpers and fixtures may share incidental construction or meaningful setup;
+moving a scenario selector into a helper does not reduce reconstruction work.
 
 ## Express cases with rstest
 

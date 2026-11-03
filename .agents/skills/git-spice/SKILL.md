@@ -1,69 +1,57 @@
 ---
 name: git-spice
 description: >
-  Use when performing Git repository operations involving commits, amendments,
-  fixups, branch creation or movement, stacked branches, pushes,
-  pull request creation, metadata updates, merges, review submission,
-  publishing, or recovery from raw Git usage.
-  git-spice is mandatory for supported repository operations.
+  Use for Git commits, amendments, fixups, branch creation or movement,
+  stacks, pushes, pull request creation or metadata, merges, review submission,
+  publication, or recovery from raw Git. git-spice is mandatory for supported
+  repository operations.
 ---
 
 # git-spice
 
-## Mandatory Workflow
+Use the full `git-spice` executable name, even when the user says `gs`,
+for every supported operation in every Git repository.
+It owns commits, branches, stack topology, trunk updates, restacking,
+pushes, publication, pull requests, review submission, and merges.
+Raw Git is permitted only where this skill or a loaded reference explicitly allows it.
+Permissions include:
 
-This skill is the authoritative and mandatory workflow for:
+- Read-only inspection: `git status`, `git diff`, `git log`, `git show`,
+  and `git branch --show-current`.
+- Staging, conflict resolution, and file-level merge repair.
+- The fetch configuration, remote-branch materialization, and upstream changes
+  defined in [GitHub import](references/import-github-stacks.md).
+- Unsupported low-level history operations under
+  [History surgery](references/history-surgery.md),
+  the only exception permitting replacement commits.
 
-- Commits, amendments, and fixups
-- Branch creation or movement and stacked branches
-- Pushes, pull request metadata, submission, or merging,
-  review submission, and publishing
-- Recovery from raw Git usage
+## Choose a noninteractive operation
 
-git-spice owns the stack contract.
-There is no separate workflow for operations git-spice supports.
-Use `git-spice` for every supported operation in every Git repository.
-Use raw Git only where this skill or a loaded reference explicitly permits it.
+Every git-spice command must include `--no-prompt` and finish without an editor
+or invisible prompt.
+Before mutation, settle the intended stack position and authoring input.
+These forms match different states; they are not fallback commands.
+If the user forbids a required operation, stop rather than substituting another mutation.
+If the correct form is unclear, resolve that uncertainty before invoking git-spice.
 
-Always run commands with the full `git-spice` executable name,
-even when the user says `gs`.
+| Operation | Required form |
+| --- | --- |
+| Create a branch and commit staged changes | `branch create` with a complete message through `-F -` and a single-quoted heredoc. |
+| Create below current before the diff exists | `git-spice branch create --no-prompt --below --no-commit '<branch-name>'` |
+| Current branch is trunk, not explicitly named as the target | Create and commit together; stop if branch creation is forbidden. Current-branch detection does not establish user intent. |
+| Commit to a chosen non-trunk branch or explicitly named trunk | `commit create` with the complete message through `-F -` and a single-quoted heredoc. |
+| Continue after resolved rebase conflicts | `git-spice rebase continue --no-prompt --no-edit` |
+| Amend and retain the message | `git-spice commit amend --no-prompt --no-edit` |
+| Amend with replacement text | `commit amend` with the complete replacement through `-F -` and a single-quoted heredoc. |
 
-## Non-Interactive Command Contract
+Message supply, `--no-commit`, and `--no-edit` are command requirements.
 
-Every `git-spice` command must be able to finish
-without opening an editor or waiting on an invisible prompt.
-Pass `--no-prompt` to every `git-spice` command.
+## Supply text literally
 
-Before invoking a mutating command,
-identify whether git-spice would otherwise need interactive authoring input.
-If so,
-choose the explicit non-interactive form before you run it:
-The rows below are not fallbacks.
-Choose the row that matches the repository state and intended stack position.
-If a user instruction forbids that row's required operation,
-stop instead of selecting a different mutating command.
-
-| Operation shape | Required non-interactive form |
-|-----------------|-------------------------------|
-| Create a branch and commit staged changes | Use `-F -` with a single-quoted heredoc for the complete message |
-| Create a branch below current, before the diff exists | `git-spice branch create --no-prompt --below --no-commit '<branch-name>'` |
-| Current branch is trunk and the user did not name `main`, `master`, or trunk as the target | Create and commit in one command, using the form in `Supplying Commit Messages and Text Arguments`; stop if the user forbids branch creation |
-| Commit staged changes to a non-trunk branch or explicitly named trunk | Use `-F -` with a single-quoted heredoc for the complete message |
-| Continue a git-spice rebase after conflicts are resolved | `git-spice rebase continue --no-prompt --no-edit` |
-| Amend the previous commit while keeping its message | `git-spice commit amend --no-prompt --no-edit` |
-| Amend the previous commit with a new message | Use `-F -` with a single-quoted heredoc for the complete replacement |
-
-Treat explicit message supply through `-F`,
-`--no-commit`, and `--no-edit` as parts of the command contract,
-not optional cleanup flags to remember later.
-If you cannot choose the correct non-interactive form yet,
-stop and resolve that uncertainty before invoking git-spice.
-
-## Supplying Commit Messages and Text Arguments
-
-For every newly supplied or replacement commit message,
-pass the exact message on standard input with `-F -`
-and a single-quoted heredoc delimiter:
+Load and apply `writing-commit-messages` before supplying any new or replacement
+commit message.
+Supply new or replacement text on literal standard input
+with `-F -` and a single-quoted delimiter:
 
 ```bash
 git-spice commit create --no-prompt -F - <<'COMMIT_MESSAGE'
@@ -73,201 +61,66 @@ Explain the durable context on intentionally wrapped physical lines.
 COMMIT_MESSAGE
 ```
 
-A commit message is a document:
-the heredoc keeps its source layout visible for review,
-and the quoted delimiter passes its contents literally.
-Load and apply `writing-commit-messages`
-before invoking a command that supplies the visible message.
+This preserves the message document's visible source layout and literal contents.
+When needed, file input is available as `-F '<message-file>'`
+or `--message-file '<message-file>'`.
+Write the intended message directly, not encoded with shell escape sequences.
+The shell parses the path; git-spice reads the file bytes literally.
 
-The file form is also available when needed:
-`-F '<message-file>'` or `--message-file '<message-file>'`.
-For file-backed messages,
-write the exact commit message into the file.
-Do not put shell escape sequences in the file contents;
-the shell parses only the file-path argument,
-and git-spice reads the message bytes literally.
+Treat all external values as shell data, including user, service, repository,
+and generated remote, branch, ref, commit, path, and PR selectors.
+Prefer structured argument arrays when supported.
+In shell commands, single-quote each value.
+Represent an embedded apostrophe as in `'it'\''s'`.
+Never interpolate external values into executable shell text.
+Use this quoting for PR titles and bodies;
+git-spice's title and body flags have no file-backed forms.
 
-For shell arguments other than commit-message input,
-use single quotes for generated pull request titles and bodies.
-A single-quoted shell argument preserves all input except an embedded single
-quote.
-Represent an embedded quote with this sequence:
-close the argument, add an escaped quote, and reopen the argument.
+## Load the matching guidance before acting
 
-Pull request title and body flags have no file-backed form;
-use the single-quoted form with embedded quotes escaped as above.
+| Work | Required guidance |
+| --- | --- |
+| Create, name, rename, track, or position branches; create, amend, or fix up commits | [Branch and commit workflows](references/branch-and-commit-workflows.md) |
+| Restack or continue after conflicts | [Restacking and continuation](references/restacking-and-conflict-continuation.md) |
+| Commit messages | `writing-commit-messages` |
+| Draft, revise, review, create, or edit PR titles, descriptions, templates, or metadata | `writing-commit-messages` and [PR submission](references/pull-request-submission.md) |
+| Update existing PR branches, push, or publish | [PR submission](references/pull-request-submission.md) |
+| Merge pull requests | [PR merges](references/pull-request-merges.md) |
+| Split commits or perform raw history surgery; use `branch onto`, `upstack onto`, `branch split`, or `branch fold` | [History surgery](references/history-surgery.md) |
+| Plan multiple branches for one outcome or split work into review branches | [Designing stacks](references/designing-stacks.md) |
+| Plan parallel implementation with worktrees and subagents, or assemble temporary development branches into review units | [Parallel development](references/parallel-development.md) |
+| Recover from raw Git operations or stale metadata | [Recovery](references/recovery.md) |
+| Import existing GitHub PR branches or stacks | [GitHub import](references/import-github-stacks.md) |
+| Diagnose internal git-spice metadata | [Internals](references/internals.md) |
 
-Treat every value from an external source as shell data.
-External sources include users, remote services, repositories, and generated
-artifacts.
-This includes remote, branch, ref, commit, path, and pull request selectors.
-Prefer structured argument arrays when the execution surface supports them.
-When composing a shell command, single-quote each value and use the embedded
-quote escape shown above.
-Never interpolate an external value into executable shell text.
+## Permissions and orientation
 
-Use git-spice for:
+Request escalated filesystem privileges before every mutating git-spice command,
+including changes to local refs or stack metadata.
+Treat `git-spice ls` as mutating: auto-healing can write `refs/spice/data`.
+A suitable justification is "Allow git-spice to update Git refs and stack metadata?"
 
-- Creating, renaming, tracking, splitting, folding, or moving branches
-- Updating repository trunk state before stack movement or rebasing
-- Continuing a git-spice rebase after conflict resolution
-- Creating, amending, or fixing up commits
-- Restacking branches
-- Submitting, pushing, publishing, creating, or updating pull request branches
-- Merging pull requests and stacks
-
-Raw Git is allowed for:
-
-- Read-only inspection with `git status`, `git diff`, `git log`, and `git show`
-- Staging, such as `git add`
-- Current branch detection using `git branch --show-current`
-- Conflict resolution and file-level merge repair
-- Fetching and materializing existing remote branches locally
-  while following
-  `references/import-github-stacks.md`
-- Low-level history surgery when git-spice does not expose the operation
-
-History surgery is the only exception that permits raw Git to create
-replacement commits.
-GitHub import is the separate exception that permits the raw fetch-config,
-branch-materialization,
-and upstream mutations defined in `references/import-github-stacks.md`.
-Before any non-interactive commit splitting or other low-level history surgery,
-you MUST load and follow
-`references/history-surgery.md`.
-
-## References
-
-Load these references before doing the matching work:
-
-- Creating, naming, renaming, tracking, or positioning branches;
-  creating, amending, or fixing up commits:
-  `references/branch-and-commit-workflows.md`
-- Restacking branches or continuing after rebase conflicts:
-  `references/restacking-and-conflict-continuation.md`
-- Commit messages:
-  `writing-commit-messages`
-- Pull request title or description drafting, revision, or review;
-  pull request creation; PR templates; and metadata edits:
-  `writing-commit-messages`
-  and `references/pull-request-submission.md`
-- Existing pull request branch updates, pushes, or publication:
-  `references/pull-request-submission.md`
-- Pull request merges:
-  `references/pull-request-merges.md`
-- Non-interactive commit splitting and other raw history surgery:
-  `references/history-surgery.md`
-- Branch topology surgery with `branch onto`, `upstack onto`, `branch split`,
-  or `branch fold`:
-  `references/history-surgery.md`
-- Planning more than one branch for one requested outcome,
-  or splitting work into review branches:
-  `references/designing-stacks.md`
-- Planning parallel implementation with worktrees and subagents,
-  or assembling temporary development branches into review units:
-  `references/parallel-development.md`
-- Recovery from raw Git usage or stale stack metadata:
-  `references/recovery.md`
-- Importing existing GitHub pull request branches or stacks locally:
-  `references/import-github-stacks.md`
-- Inspecting git-spice internal metadata for diagnostics:
-  `references/internals.md`
-
-## Sandbox Escalation
-
-Request escalated filesystem privileges before every mutating `git-spice`
-command.
-This includes local ref and stack-metadata changes,
-not only network operations.
-
-Use a short justification such as:
-"Do you want to allow git-spice to update Git refs and stack metadata?"
-
-Treat `git-spice ls` as mutating for approval purposes.
-Its auto-healing behavior can update `refs/spice/data`.
-
-## Orientation
-
-Use raw Git for repository inspection when needed:
-
-```bash
-git status --short
-git diff
-git diff --cached
-git branch --show-current
-git log -1 --oneline
-git show
-```
-
-Use git-spice for stack inspection:
+Use raw Git inspection when needed.
+`git branch --show-current` returns nothing for detached HEAD;
+`git-spice branch current` does not exist.
+Inspect stacks with:
 
 ```bash
 git-spice ls --no-prompt
 ```
 
-`git-spice ls` also reconciles git-spice metadata with the current refs.
-Run it first when existing tracked stack state may be stale after a raw Git
-operation.
-Materializing an untracked branch during import follows the import reference's
-tracking order instead.
+Run it first when tracked state may be stale after raw Git;
+untracked imported branches follow the import tracking order instead.
+Load Recovery if raw Git performed an operation owned by git-spice.
 
-Run `git-spice repo sync` first when the task is to update repository trunk.
-This includes `main` and `master`.
-Do not replace it with `git fetch`,
-`git fetch origin master`,
-`git fetch origin master:refs/remotes/origin/master`,
-`git fetch origin master:master`,
-or a fetch of only `origin/master`.
+When updating repository trunk, including `main` or `master`, start with:
 
-After syncing,
-use the local trunk branch that git-spice recognizes as the stack target.
-Do not pass remote-tracking refs such as `origin/master` or `origin/main`
-to `git-spice branch onto` or `git-spice upstack onto`.
-These commands accept local branch names only.
-
-If `git-spice repo sync` fails because auth is unavailable,
-or because the shared repository metadata needs permissions,
-stop and handle that failure directly.
-Do not improvise a narrower raw-Git fetch as a substitute for the repo-level
-sync.
-
-`git-spice branch current` does not exist.
-Use `git branch --show-current` to detect the current branch.
-If it prints nothing,
-`HEAD` is detached.
-
-## Recovery After Raw Git
-
-If raw Git was used for an operation git-spice owns,
-you MUST read:
-
-```text
-references/recovery.md
+```bash
+git-spice repo sync --no-prompt
 ```
 
-## Safety Checklist
-
-Stop before running a command when any of these conditions holds:
-
-- Raw Git would replace a commit, branch, stack, push, or pull request operation
-  owned by git-spice outside an explicit import or history-surgery exception.
-- The command could prompt because required input is missing.
-  Required input includes `--no-prompt`, an explicit message, and `--no-edit`.
-- The current branch has not been chosen as the intended stack position.
-- More than one branch is planned for one requested outcome,
-  but the proposed review units have not been checked
-  against the review and release criteria in `references/designing-stacks.md`.
-- A topology-changing command such as `onto`, `--insert`, `branch split`,
-  or `branch fold`
-  is being used for an ordinary restack or a different topology operation.
-- A remote-tracking ref is being used where git-spice requires a local branch.
-- A raw fetch is being used instead of `git-spice repo sync` for a
-  git-spice-owned trunk update.
-- A new pull request would be submitted without loading
-  `references/pull-request-submission.md` and supplying the required metadata.
-- A pull request merge plan has not established its operation groups,
-  selectors, effective merge sets, and readiness mode under
-  `references/pull-request-merges.md`.
-- A commit or pull request message is being passed through unsafe shell
-  quoting or command substitution.
-- A mutating command would run without escalated filesystem privileges.
+Do not substitute raw fetches, including narrow fetches of trunk or remote refs.
+After sync, use the recognized local trunk for `branch onto` or `upstack onto`;
+these accept local branches, not `origin/main` or `origin/master`.
+If sync fails for authentication or shared-metadata permissions,
+stop and handle that failure rather than improvising a raw fetch.

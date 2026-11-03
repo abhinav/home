@@ -2,9 +2,9 @@
 
 ## Context
 
-Use `t.Context()` instead of `context.Background()`.
-It is canceled just before `t.Cleanup` runs,
-so cleanup can wait for background work that observes cancellation.
+Use `t.Context()` rather than `context.Background()`.
+It is canceled just before registered `t.Cleanup` callbacks run,
+so cleanup can wait for background work observing cancellation.
 
 ```go
 // BAD
@@ -18,21 +18,13 @@ client := newClient(ctx)
 
 ## Assertions
 
-Prefer `github.com/stretchr/testify/assert`
-and `github.com/stretchr/testify/require`
+Prefer `github.com/stretchr/testify/assert` and `github.com/stretchr/testify/require`
 unless the project already uses a different library.
-
-Use `require` when a failure
-makes subsequent checks meaningless —
-typically nil-checks on errors or returned values.
-Use `assert` for everything else
-so the test reports as many failures as possible
-in one run.
-
-Always call the top-level package functions.
-Never create assertion objects with `require.New`
-or `assert.New`;
-they obscure which assertion triggered a fatal stop.
+Use `require` when failure makes subsequent checks meaningless,
+typically nil-checks of errors or returned values.
+Use `assert` otherwise to report as many failures as possible.
+Always use top-level functions, never `require.New` or `assert.New` objects,
+which obscure fatal stops.
 
 ```go
 // BAD
@@ -47,11 +39,8 @@ assert.Equal(t, "alice", user.Name)
 
 ## Resource cleanup
 
-Register teardown with `t.Cleanup`
-instead of deferring in the test body.
-Use `t.TempDir()` instead of `os.MkdirTemp`;
-the directory is removed automatically
-when the test ends.
+Register teardown with `t.Cleanup`, not test-body defers.
+Use automatically removed `t.TempDir()` rather than `os.MkdirTemp`:
 
 ```go
 // BAD
@@ -77,8 +66,7 @@ Methods use `Test{Type}_{Method}`:
 func TestUser_IsValid(t *testing.T)
 ```
 
-Scenarios append a lowercase description
-after an underscore:
+Append lowercase scenarios after an underscore:
 
 ```go
 func TestNewUser_emptyInput(t *testing.T)
@@ -87,16 +75,11 @@ func TestUser_IsValid_emptyUsername(t *testing.T)
 
 ## Executable examples
 
-Use `Example...` functions when a self-contained demonstration helps callers
-and the setup stays small enough that the operation remains clear.
-This is typically a good fit for self-contained packages.
-Prefer ordinary tests when a standalone example would need substantial fixtures,
-external services, or setup that obscures the lesson.
-Do not add examples merely to duplicate existing test coverage.
-
-Put examples in a `_test.go` file, usually in the external `package name_test`,
-so they demonstrate the public API available to callers.
-Name them for the documented package, function, type, or method:
+Use `Example...` for useful self-contained caller demonstrations with small, clear setup.
+Prefer ordinary tests for substantial fixtures, services, or setup obscuring the lesson.
+Do not add examples merely to duplicate coverage.
+Place them in `_test.go`, usually external `package name_test` for public API usage;
+name them for the documented package, function, type, or method:
 
 ```go
 func ExampleClient_Get() {
@@ -104,27 +87,19 @@ func ExampleClient_Get() {
 }
 ```
 
-An example without an output comment is compiled but not run.
-Add `// Output:` and the expected output when deterministic output
-makes the demonstration a useful executable check.
-Run `go test` to check the example alongside the package's tests.
-See [Examples](https://pkg.go.dev/testing#hdr-Examples) for naming and output rules.
+Without output comments, examples compile but do not run.
+Add `// Output:` and expected output when deterministic output makes a useful check.
+Run `go test`; see [Examples](https://pkg.go.dev/testing#hdr-Examples) for naming and output rules.
 
 ## File ordering
 
-1. `TestMain`, if present.
-2. Test functions,
-   grouped by the symbol they cover.
-3. New tests go below existing ones
-   in the same group.
-4. Helpers and types, always at the bottom.
+Put `TestMain` first if present, then tests grouped by covered symbol.
+Append new tests below existing tests in their group; keep helpers and types always last.
 
 ## Inline single-use variables
 
-Inline a variable that is used only once.
-If inlining makes the expression
-too long or hard to read,
-keep a well-named variable instead.
+Inline single-use variables unless the expression becomes too long or hard to read;
+keep a well-named variable in that case.
 
 ```go
 // BAD
@@ -137,14 +112,8 @@ assert.Equal(t, "alice", user.Name)
 
 ## Test-only API surface
 
-When adding tests,
-exercise realistic production behavior before adding test-only API surface.
-Do not export methods or add public-looking helpers solely for tests
-unless the seam protects a production invariant
-and the code documents why that seam exists.
-
-Prefer tests that drive the same behavior a real caller uses.
-If a test needs a seam,
-keep the seam minimal,
-name it honestly,
-and make the production reason visible to future maintainers.
+Exercise realistic production behavior before adding test-only API surface.
+Do not export methods or add public-looking helpers solely for tests unless the seam
+protects a production invariant and code documents why it exists.
+Prefer real-caller behavior; necessary seams must be minimal, honestly named,
+and expose their production reason to future maintainers.

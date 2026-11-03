@@ -2,13 +2,10 @@
 
 ## Diagram-wide defaults
 
-Built-in variables are the diagram's shared defaults.
-Set coherent defaults near the beginning,
-then use per-object attributes for semantic exceptions.
-Because evaluation is single-pass,
-a later assignment changes only later objects.
-
-This is a valid diagram prologue:
+Set shared built-in defaults near the beginning;
+use per-object attributes for semantic exceptions.
+Assignments affect only subsequent objects.
+For example:
 
 ```pikchr
 scale = 0.9
@@ -68,8 +65,7 @@ thickness = 1.2px
 but are not used by Pikchr.
 
 `color`, `fill`, and `thickness` are also keywords.
-Assignment is unambiguous, but parenthesize one when reading it in an
-expression:
+Assignment is unambiguous; parenthesize them when reading their values in expressions:
 
 ```pikchr
 box "Emphasis" thickness 2*(thickness)
@@ -77,18 +73,12 @@ box "Emphasis" thickness 2*(thickness)
 
 ## Dimensions, style, and text
 
-Numeric properties are:
-
-- `width`/`wid`
-- `height`/`ht`
-- `radius`/`rad`/`diameter`
-- `thickness`
+Numeric properties are `width`/`wid`, `height`/`ht`,
+`radius`/`rad`/`diameter`, and `thickness`.
 
 A value followed by `%` scales the property's previous value.
-Radius has object-specific meaning:
-rounded corners for boxes, end-cap shape for cylinders,
-and fold size for files.
-For circles, width, height, diameter, and radius are coupled.
+Radius controls box corner rounding, cylinder end-cap shape, or file fold size.
+Circle width, height, diameter, and radius are coupled.
 Ellipses and ovals ignore radius; diamonds currently ignore it.
 
 Stroke and fill attributes:
@@ -106,11 +96,10 @@ color 0x345995
 fill AliceBlue
 ```
 
-Colors are 24-bit RGB integers or HTML/CSS color names,
-case-insensitively.
+Colors are 24-bit RGB integers or case-insensitive HTML/CSS names.
 `None`, `Off`, and any negative fill value mean transparent.
-`invisible` removes the stroke but does not necessarily hide attached text;
-`solid` restores a solid visible stroke.
+`invisible` removes stroke, not necessarily attached text;
+`solid` restores a visible solid stroke.
 
 An object can carry up to five text annotations.
 Text attributes are `above`, `aligned`, `below`, `big`, `bold`, `center`,

@@ -1,67 +1,70 @@
-# History Surgery
+# History surgery
 
-Use this reference for uncommon branch topology surgery, commit splitting, or
-raw Git history surgery.
+Use for branch topology changes, commit splitting, or unsupported raw history operations.
+Restacking preserves recorded bases and follows
+[Restacking and continuation](restacking-and-conflict-continuation.md).
+Normal creation, insertion, and preferred below-current placement follow
+[Branch and commit workflows](branch-and-commit-workflows.md).
 
-Topology surgery changes the stack graph.
-Restacking preserves the existing stack graph
-and follows `restacking-and-conflict-continuation.md`.
+## Authority and recovery point
 
-This reference also defines the narrow raw-Git exception to the main skill.
-Outside a raw history-surgery window, raw Git may not create or move branches
-or create or amend commits.
-It may not push or create pull requests.
-The read-only `git branch --show-current` command remains permitted by the main
-skill.
-The separate GitHub-import exception is defined only in
-`import-github-stacks.md`.
+Before topology surgery, confirm either explicit user authorization to change
+topology or assembly of task-owned, unpublished development branches into planned
+review units for an authorized implementation task.
+That plan does not authorize reshaping published or other-owned branches.
+Request filesystem escalation before mutating git-spice commands.
 
-Prefer git-spice where it provides the operation:
+Raw Git is limited to noninteractive commit-level surgery git-spice cannot perform.
+Before using it, confirm the user requested low-level surgery or the task cannot
+be performed with a git-spice command.
+Normal repository-state and destructive-operation safeguards still apply.
+Before either kind of surgery, inspect:
 
-- Use `git-spice branch onto` when the current branch should move to a
-  different base:
+```bash
+git status --short
+git-spice ls --no-prompt
+git log --oneline --decorate -n 10
+```
 
-  ```bash
-  git-spice branch onto '<target>' --no-prompt
-  git-spice ls --no-prompt
-  ```
+Do not start with unrelated worktree changes; preserve or stash unrelated work first.
+Request escalated filesystem privileges before mutating raw surgery commands,
+for example: "Allow raw Git history surgery to rewrite commits?"
+Create a unique recovery ref before destructive history edits:
 
-- Use `git-spice upstack onto` when the current branch and its upstack should
-  move to a different base:
+```bash
+git update-ref 'refs/backup/<descriptive-name>' '<pre-surgery-commit>' ''
+git show-ref --verify 'refs/backup/<descriptive-name>'
+```
 
-  ```bash
-  git-spice upstack onto '<target>' --no-prompt
-  git-spice ls --no-prompt
-  ```
+The empty old-value is the portable zero object ID: creation fails on collision.
+Never use a visible backup branch or overwrite an existing recovery ref.
+An approved window may use required low-level `git reset`, `git checkout`, `git switch`,
+`git restore`, `git add`, and replacement `git commit` commands.
+Raw replacement commits are confined to the surgery, not ordinary new or follow-on
+work, fixups, amends, branch workflows, pushes, or PR submission.
+The separate import exception is defined in [GitHub import](import-github-stacks.md).
 
-  These `onto` commands are stack surgery.
-  They change the recorded base for existing work.
-  Do not use them for ordinary restacking,
-  where the desired topology is unchanged
-  and branches only need to replay on recorded bases.
-- Use `git-spice branch split` for branch-level splitting.
-- Use `git-spice branch fold` to combine a branch with its base.
-- Do not use `git-spice commit split` in an agent session.
-  It invokes interactive hunk selection that `--no-prompt` cannot suppress.
-- Use raw Git only for non-interactive commit-level surgery
-  that git-spice does not expose.
+## Choose the topology operation
 
-Inside an approved raw history-surgery window, use the low-level Git tools the
-operation requires.
-These tools can include:
+Prefer git-spice when it supplies the operation:
 
-- `git reset`, `git checkout`, and `git switch`
-- `git restore` and `git add`
-- Replacement `git commit` commands
+```bash
+git-spice branch onto '<target>' --no-prompt   # current branch to a different base
+git-spice ls --no-prompt
 
-The normal repository-state and destructive-operation safeguards still apply.
+git-spice upstack onto '<target>' --no-prompt  # current branch and upstack
+git-spice ls --no-prompt
+```
 
-## Move A Stack Onto A New Bottom-Most Branch
+These change recorded bases; never substitute them for an ordinary restack.
+Use `branch split` for branch-level splitting and `branch fold` to combine with a base.
+Do not use `git-spice commit split`:
+`--no-prompt` cannot suppress its interactive hunk selection.
 
-`branch-and-commit-workflows.md` owns normal creation, `--insert`,
-and the preferred `--below` workflow.
-Use this alternative only when the new bottom-most branch is created separately
-from trunk and the existing stack must move onto it:
+### Move onto a separately created bottom branch
+
+Use only when the new bottom branch is separately created from trunk
+and the existing stack must move onto it:
 
 ```bash
 git-spice branch checkout '<trunk>' --no-prompt
@@ -76,152 +79,53 @@ git-spice upstack onto '<new-bottom>' --branch '<old-bottom>' --no-prompt
 git-spice ls --no-prompt
 ```
 
-`git-spice branch create` requires the intended change to be staged.
-Do not use an empty commit as a placeholder for this workflow.
+Stage the intended change; do not use an empty placeholder commit.
 
-This form is topology surgery because it changes the recorded base of
-the existing stack.
+### Fold a branch into its base
 
-## Fold a branch into its base
-
-Use folding when a branch boundary should disappear
-and its commits belong in the branch directly below it:
+Confirm the selected branch, base, and affected upstack first:
 
 ```bash
-# mutating: request escalated filesystem privileges first
 git-spice branch fold --branch '<branch>' --no-prompt
 git-spice ls --no-prompt
 ```
 
-Confirm the selected branch, its base, and affected upstack before folding.
-Git Spice moves the selected branch's commits into its base,
-deletes the selected branch, and retargets its children to that base.
-Folding removes the branch boundary; it does not squash its commits.
-Inspect the resulting contents and branch relationships before continuing.
+Fold moves commits into the base, deletes the selected branch,
+and retargets its children; it removes the boundary without squashing commits.
+Inspect content and relationships before continuing.
 
-## Split a branch
+### Split existing branch commits
 
-Use `git-spice branch split --at <commit>:<new-branch-name>`
-when taking a branch that already has commits
-and splitting it into multiple branches.
-Do not use `git-spice branch create --insert`
-to peel existing commits out of the current branch.
-
-Agents always pass exact split points and branch names with `--at`.
-Do not rely on the interactive split prompt.
-The branch name after the colon is the exact final branch name,
-including any required user prefix.
-
-Split at one commit:
+Use explicit `--at` points and complete final names, including required prefixes.
+Do not use `branch create --insert` to peel existing commits or rely on split prompts.
+Inspect `git-spice ls --no-prompt` before splitting for associated PRs.
+A branch with a PR number must retain its original name on the `HEAD` split:
+without prompts, the PR stays with whichever split retains that name.
+Putting that name on a lower partial branch needs an explicit safe reassignment
+plan before mutation.
 
 ```bash
-# mutating: request escalated filesystem privileges first
 git-spice branch split --at '<commit>:<new-branch-name>' --no-prompt
 git-spice ls --no-prompt
 ```
 
-To split at multiple commits,
-resolve every split point and verify their ancestry first.
-Pass multiple `--at` values from oldest commit to newest commit.
-git-spice does not sort or validate their order:
+For multiple splits, resolve points and verify ancestry first;
+pass them oldest to newest because git-spice neither sorts nor validates order.
+For commits `A`, `B`, `C` (`HEAD`), split at `A` and `C` to produce `A` below `B+C`:
 
 ```bash
-# mutating: request escalated filesystem privileges first
-git-spice branch split --no-prompt \
-  --at '<lower-commit>:<final-lower-branch-name>' \
-  --at '<higher-commit>:<final-higher-branch-name>'
-git-spice ls --no-prompt
-```
-
-For example,
-to split the previous commit into a prerequisite branch:
-
-```bash
-# mutating: request escalated filesystem privileges first
-git-spice branch split --at HEAD^:abhinav/prerequisite-topic --no-prompt
-git-spice ls --no-prompt
-```
-
-For a branch with commits `A`, `B`, and `C`,
-where `C` is `HEAD`,
-use multiple `--at` values when `A` should become the lower branch
-and `B+C` should become the upper branch:
-
-```bash
-# mutating: request escalated filesystem privileges first
 git-spice branch split --no-prompt \
   --at '<A-commit>:<final-lower-branch-name>' \
   --at '<C-commit>:<final-upper-branch-name>'
 git-spice ls --no-prompt
 ```
 
-If the original branch name is assigned to one of the lower splits,
-provide a new branch name for the `HEAD` split too.
-
-Before any branch split, inspect the stack for an associated pull request:
-
-```bash
-git-spice ls --no-prompt
-```
-
-An original branch with a pull request number must keep its name on the `HEAD`
-split.
-With prompts disabled, git-spice otherwise leaves the open change request on
-whichever split retains the original name.
-A request that assigns the original name to a lower partial branch requires an
-explicit safe reassignment plan before topology mutation.
-
-## Safety gate
-
-Before branch topology surgery, confirm that it is authorized:
-the user asked to change the topology,
-or the operation assembles task-owned, unpublished development branches
-into the planned review units for an authorized implementation task.
-That development plan does not extend authority to reshape published
-or other-owned branches.
-These git-spice commands are mutating,
-so request escalated filesystem privileges before running them.
-
-Before raw history surgery,
-confirm the user asked for low-level history surgery
-or that the task cannot be performed with a git-spice command.
-
-Then inspect state:
-
-```bash
-git status --short
-git-spice ls --no-prompt
-git log --oneline --decorate -n 10
-```
-
-Do not start if unrelated worktree changes are present.
-Preserve or stash unrelated user work before reshaping history.
-
-Request escalated filesystem privileges before running mutating raw Git
-history-surgery commands.
-Use a short justification such as:
-"Do you want to allow raw Git history surgery to rewrite commits?"
-
-Create a unique backup ref before destructive history edits:
-
-```bash
-git update-ref 'refs/backup/<descriptive-name>' '<pre-surgery-commit>' ''
-git show-ref --verify 'refs/backup/<descriptive-name>'
-```
-
-The empty old-value argument is the portable zero object ID.
-Therefore, backup creation fails if that ref already exists.
-Do not create a visible backup branch or retry by overwriting an existing
-backup ref.
-
-Raw Git may create replacement commits inside the surgery window.
-Do not use raw `git commit` for ordinary new or follow-up work.
-It also remains prohibited for fixups, amends, branches, pushes, and pull
-request submission.
+If the original name goes to a lower split, also provide a new name for `HEAD`,
+subject to the associated-PR safeguard above.
 
 ## Split the current commit
 
-For splitting the current `HEAD` commit into replacement commits:
+Use full messages satisfying `writing-commit-messages`:
 
 ```bash
 git reset --mixed HEAD^
@@ -240,17 +144,10 @@ SECOND_COMMIT_MESSAGE
 git-spice ls --no-prompt
 ```
 
-Keep raw `git commit` usage confined to replacement commits
-created as part of the split.
-Use full commit messages that satisfy `writing-commit-messages`.
-
 ## Split a lower commit
 
-Choose the complete editor-free sequence before splitting a lower commit.
-For a linear branch, use the backup ref created above to retain the original
-tail.
-Reset the current branch to the target, split that commit, then replay the later
-commits:
+Choose the complete editor-free sequence before mutation.
+For a linear branch, the recovery ref retains the original tail:
 
 ```bash
 git reset --hard '<target-commit>'
@@ -271,50 +168,42 @@ git cherry-pick --no-edit '<target-commit>..refs/backup/<descriptive-name>'
 git-spice ls --no-prompt
 ```
 
-If cherry-pick stops on a conflict, resolve and stage the files.
-Then continue without an editor:
+Stop before mutation if the tail contains merges or repository constraints
+make linear replay incorrect.
+If cherry-picking conflicts, resolve and stage, then continue without an editor:
 
 ```bash
 git -c core.editor=true cherry-pick --continue
 ```
 
-Stop before mutation if the tail contains merges or another repository-specific
-constraint makes this linear replay incorrect.
-
-After the raw sequence:
+## Verify and return to normal operation
 
 ```bash
 git log --oneline --decorate -n 10
 git-spice ls --no-prompt
 ```
 
-If `git-spice ls` reports an upstack branch as `needs restack`,
-treat that as informational.
-Restack through git-spice only when the next task requires the branch to be
-replayed on its recorded base:
+Treat `needs restack` as informational; replay only when the next task needs it:
 
 ```bash
 git-spice upstack restack --no-prompt
 git-spice ls --no-prompt
 ```
 
-If git-spice stack tracking is missing or stale,
-repair it with:
+If tracking is missing or stale:
 
 ```bash
 git-spice branch track --no-prompt
 git-spice ls --no-prompt
 ```
 
-After the surgery, return to git-spice.
-Use it for amend, fixup, branch movement, push, submit, and pull request updates.
-
-After the replacement commits, stack topology, and relevant behavior are
-verified, delete the temporary backup ref unless the user requested retention:
+Return to git-spice for amend, fixup, movement, push, submit, and PR updates.
+After replacement commits, topology, and relevant behavior are verified,
+delete the recovery ref unless the user requested retention:
 
 ```bash
 git update-ref -d 'refs/backup/<descriptive-name>' '<pre-surgery-commit>'
 git show-ref --verify 'refs/backup/<descriptive-name>'
 ```
 
-The final `git show-ref` must fail because the temporary ref no longer exists.
+The final verification must fail because the ref no longer exists.

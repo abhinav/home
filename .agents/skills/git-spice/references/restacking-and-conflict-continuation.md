@@ -6,101 +6,50 @@ Inspect the stack before topology changes:
 git-spice ls --no-prompt
 ```
 
-Load `history-surgery.md`
-before stack surgery,
-including `git-spice branch onto`,
-`git-spice upstack onto`,
-`git-spice branch split`,
-or `git-spice branch fold`.
-Those commands change stack topology.
-Do not use them for ordinary restacking.
-
-After resolving rebase conflicts,
-continue through git-spice without opening an editor:
+Load [History surgery](history-surgery.md) before `branch onto`, `upstack onto`,
+`branch split`, or `branch fold`; these change topology and are not restack commands.
+Restack replays recorded bases without changing topology.
+Use it only when the task needs that replay, with the smallest scope matching stale branches.
+`(needs restack)` is informational, not a reason to restack by itself,
+especially with rapidly moving trunk.
 
 ```bash
-git-spice rebase continue --no-edit --no-prompt
-git-spice ls --no-prompt
+git-spice branch restack --no-prompt   # current branch
+git-spice upstack restack --no-prompt  # current branch and upstack
+git-spice stack restack --no-prompt    # whole current stack
 ```
 
-Do not use raw `git rebase --continue` after a git-spice rebase conflict.
-git-spice still owns the stack metadata for the operation.
-Always pass `--no-edit`;
-without it,
-`git-spice rebase continue` can invoke the editor
-and leave the session waiting at an invisible prompt.
+Choose one scope, then inspect with `git-spice ls --no-prompt` after restacking.
+Do not substitute `branch onto`: it changes the recorded base.
 
-Before continuing a git-spice rebase or restack after resolving conflicts,
-preserve the pre-rewrite branch content under a unique
-`refs/backup/<descriptive-name>` ref:
+## Continue resolved conflicts
+
+Before continuing a rebase or restack, retain pre-rewrite content under a unique ref:
 
 ```bash
 git update-ref 'refs/backup/<descriptive-name>' '<pre-rewrite-commit>' ''
 git show-ref --verify 'refs/backup/<descriptive-name>'
 ```
 
-Do not create a visible backup branch.
-Do not overwrite an existing backup ref;
-choose a new descriptive name instead.
-The empty old-value argument is the portable zero object ID.
-Therefore, creation fails when the ref already exists.
-After continuation,
-compare the resulting patch with that reference and rerun checks for the
-behavior the branch is intended to preserve.
-Stack topology alone does not establish that conflict resolution preserved the
-branch's semantics.
-Do not publish or discard the recovery reference until both content and stack
-topology have been verified.
-After verification succeeds,
-delete the temporary ref unless the user requested that it be retained:
+Do not use a visible backup branch or overwrite an existing ref.
+The empty old-value is the portable zero object ID, making creation fail on collision.
+Continue through git-spice, which owns the metadata:
+
+```bash
+git-spice rebase continue --no-edit --no-prompt
+git-spice ls --no-prompt
+```
+
+Never use raw `git rebase --continue` here.
+`--no-edit` prevents an invisible editor prompt.
+Compare the resulting patch with the backup and rerun checks of intended behavior;
+topology alone does not establish semantic preservation.
+Do not publish or discard the ref before content and topology are verified.
+After verification, delete it unless the user requested retention:
 
 ```bash
 git update-ref -d 'refs/backup/<descriptive-name>' '<pre-rewrite-commit>'
 git show-ref --verify 'refs/backup/<descriptive-name>'
 ```
 
-The final `git show-ref` must fail because the temporary ref no longer exists.
-
-Restack preserves the recorded stack topology.
-Use restack commands when the current task requires branches to be replayed on
-their recorded bases,
-for example before work that depends on the up-to-date stack shape.
-If `git-spice ls` reports `(needs restack)`,
-that is informational.
-Do not restack solely because the marker is present,
-especially when trunk is moving quickly
-and the current task does not require replaying the branch.
-
-Restack the current branch:
-
-```bash
-git-spice branch restack --no-prompt
-git-spice ls --no-prompt
-```
-
-Restack the current branch and its upstack:
-
-```bash
-git-spice upstack restack --no-prompt
-git-spice ls --no-prompt
-```
-
-Restack every branch in the current stack:
-
-```bash
-git-spice stack restack --no-prompt
-git-spice ls --no-prompt
-```
-
-Choose the smallest restack scope that matches the stale part of the stack.
-Do not use `git-spice branch onto <target>` merely because a branch needs
-restacking.
-`branch onto` changes the recorded base;
-restack commands preserve the existing topology.
-
-After any restack,
-inspect the stack again:
-
-```bash
-git-spice ls --no-prompt
-```
+The final verification must fail because the ref no longer exists.

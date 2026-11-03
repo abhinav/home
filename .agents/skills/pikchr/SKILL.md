@@ -18,17 +18,6 @@ produce the requested artifact.
 Use the concept, vocabulary, and spatial model established with
 `$diagram-design` as the contract for the Pikchr source.
 
-Work through the Pikchr-specific part of the model:
-
-```text
-diagram-design spatial model
-  -> visual invariants and addressable geometry
-  -> relative Pikchr construction
-  -> source and paint order
-  -> SVG rendering
-  -> semantic and Pikchr-specific inspection in context
-```
-
 ## Realize the visual vocabulary in Pikchr
 
 When choosing Pikchr objects or expressing positions and paths,

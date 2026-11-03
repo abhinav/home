@@ -2,21 +2,18 @@
 
 ## Cover every authored named item
 
-Document crates, modules, types, traits, functions, methods, fields, variants,
-constants, statics, and macros, including private items.
-Document the contract at a depth proportional to the reader's task,
-while retaining coverage for every authored item.
-Use `//!` for crate/module orientation and `///` for item contracts.
-Private visibility does not turn an item's callable contract into
-an implementation comment inside its body.
+Document every authored crate, module, type, trait, function, method, field,
+variant, constant, static, and macro, including private items.
+A clear name does not remove this coverage obligation.
+Use `//!` for crate/module orientation and `///` for item contracts;
+private callable contracts still belong outside the implementation body.
 Generated declarations follow their source of truth rather than manual edits.
 
-Give a simple item a brief orientation;
-give a meaningful contract the detail needed to use it without reading its body.
-Keep this coverage obligation even when the name is clear,
-without inventing guarantees or filling empty template sections.
-For a trait implementation, inherit or link the trait's existing contract
-and document implementation-specific choices where needed instead of copying it.
+Match depth to the reader's task: a brief orientation for simple items,
+and enough detail to use meaningful contracts without reading the body.
+Do not invent guarantees or fill empty template sections.
+For trait implementations, inherit or link the trait contract
+and document needed implementation choices instead of copying it.
 
 At module scope, establish responsibility, entry points,
 and what callers still own.

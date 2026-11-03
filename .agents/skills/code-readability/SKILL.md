@@ -1,207 +1,140 @@
 ---
 name: code-readability
 description: >
-  Use when writing, changing, organizing, or reviewing non-generated code;
-  evaluating how readily a maintainer can understand and safely change it; or
-  deciding source order, naming, control flow, locality, physical organization,
-  or whether a boundary reduces cognitive and navigation load. Do not use
-  merely to explain behavior without evaluating or changing source code.
+  Write, change, organize, or review non-generated code; evaluate whether a
+  maintainer can understand and safely change it; or decide source order,
+  naming, control flow, locality, physical organization, or whether a boundary
+  reduces cognitive and navigation load.
+  Do not use merely to explain behavior without evaluating or changing source code.
 ---
 
 # Code readability
 
-Use this skill when writing, organizing, or reviewing code.
-It explains how readily a capable maintainer can understand and safely change
-a coherent part of a system.
+Give a capable maintainer an economical mental model for a concrete task.
+Preserve domain complexity while reducing unnecessary presentation,
+indirection, and organization costs.
 
-Readable code gives that maintainer an economical mental model
-for a concrete task.
-It preserves complexity inherent to the domain
-while reducing presentation, indirection, and organization costs
-that do not help complete the task.
+## Trace the maintainer's task
 
-## Model the maintainer
+Assume knowledge of the language and general engineering practice,
+not the author's private reasoning or the agent's searches and conversation context.
+The maintainer encounters code in an order and must discover what matters;
+author or agent fluency does not establish that the code supplies the needed model.
 
-Judge readability from the maintainer's position,
-not from the agent's ability to inspect and retain the repository.
-The agent may already have search results, conversation context,
-and several files in its active window.
-The maintainer encounters code in an order
-and must discover which surrounding information matters.
-
-Model an intelligent reader who knows the language and general engineering
-practice but does not know the author's private reasoning.
-Familiarity with a codebase can make a complicated local model feel simple.
-Do not treat the author's or agent's fluency as evidence
-that another capable maintainer receives the needed model from the code.
-
-## Trace the reader's mental model
-
-Choose a realistic reading or modification task
-and follow one coherent path through the code.
-At each point, identify the information that enters the reader's attention,
-what must remain active together,
+Choose a realistic reading or modification task and trace one coherent path.
+At each point, identify what enters attention, what must remain active together,
 and what the representation lets the reader safely compress or discard.
+Judge the combined costs:
 
-Cognitive load comes from:
+- Local load: values, states, conditions, effects, and branches understood together.
+- Navigational load: files, callees, helpers, and paths inspected and related.
+- Reconstruction load: purpose, invariants, ownership, ordering, and domain facts
+  inferred because they are missing where needed.
 
-- Local load: values, states, conditions, effects, and branches
-  that must be understood together.
-- Navigational load: the files, callees, helpers, and paths
-  the reader must inspect and relate.
-- Reconstruction load: purpose, invariants, ownership, ordering,
-  and domain facts the reader must infer because they are unavailable
-  where needed.
-
-A readable representation lets the reader replace several details
-with one trustworthy concept or retire facts that no longer matter.
-A name, type, helper, comment, or module helps only when the reader
-can rely on it at the needed scale.
-Do not count facts mechanically:
-the task, relationships between facts, and quality of the representation
-determine the cost.
-
-These costs interact.
-A helper may shorten a local expression while adding navigation
-and another relationship to reconstruct.
-Judge the net load across the coherent path,
-not the apparent improvement at one line.
+Names, types, helpers, comments, and modules help only when readers can rely
+on them at the needed scale to replace details with a concept or retire facts.
+Judge the task, relationships, and representation rather than counting facts.
+A helper can shorten an expression while adding navigation and reconstruction;
+assess net load across the path, not one line.
 
 ## Help the reader release attention
 
-Make the current state and the next governing decision visible.
-The reader should not have to replay the entire function
-to determine which effects have occurred or which possibilities remain.
+Expose current state and the next governing decision without requiring a replay
+of the function to recover completed effects or remaining possibilities.
 
-- Give a complex condition a meaningful name
-  when the name forms a stable concept
+- Name a complex condition when it forms a stable concept
   and lets the reader stop carrying the expression.
-- Use early exits when they retire terminal or invalid states.
-  Keep nesting when it directly represents a hierarchy
-  or several outcomes that remain relevant.
-- Converge successful branches before work they share.
-- When state needs an explicit data representation,
-  represent mutually exclusive states directly
-  instead of encoding them as combinations of booleans.
+- Use early exits to retire terminal or invalid states;
+  retain nesting that represents hierarchy or outcomes still relevant.
+- Converge successful branches before shared work.
+- When state needs an explicit representation, express mutually exclusive states
+  directly rather than through boolean combinations.
 - Keep mutations, effects, and ordering near the operations they govern.
 
-Distinguish working data from bookkeeping about where execution has reached.
-Use sequence, branches, loops, and calls when they naturally express progress;
-the reader can then infer what has happened from the code being executed.
-Keep progress as explicit data when the supported operation must resume
-across calls, persist a checkpoint, or respond to transitions
-that do not fit that control structure.
-Choose from the operation's contract;
-grouping its working data in a type does not require a phase field.
-
-A longer visible sequence can be easier to understand
-than a compressed expression or chain of calls
-when it makes decisions and state transitions explicit.
+Distinguish working data from progress bookkeeping.
+Use sequence, branches, loops, and calls when they naturally express progress.
+Keep explicit progress data when the supported operation must resume across calls,
+persist a checkpoint, or respond to transitions that do not fit that control structure.
+Choose from the operation's contract; grouping working data in a type
+does not require a phase field.
+A longer visible sequence can be clearer than a compressed expression or chain of calls
+when it exposes decisions and state transitions.
 
 ## Keep context and language local
 
-Place information near the code that needs it.
-A reader should not have to cross unrelated declarations, files, or packages
-to reconstruct one concept or operation.
-
-Keep a type near the behavior that gives it meaning.
-Keep request and result records with their operation.
-When code defines the behavior it requires from a collaborator,
-keep that contract near the consumer.
-Arrange code around coherent operations
-and in the order a reader needs to understand them,
-not by declaration kind, reference direction, or arbitrary size.
-
+Keep information where needed: types near meaningful behavior,
+request/result records with their operation, and required collaborator contracts
+near the consumer defining them.
+Arrange code by coherent operations and reader needs,
+not declaration kind, reference direction, or size.
 When choosing declaration or source order,
 read [Source order](references/source-order.md)
-for the reader-order criteria and language or tool constraints.
+for reader-order criteria and language or tool constraints.
 
-Physical organization is part of the code's representation.
-Optimize file and module boundaries primarily for coherent ownership
-and the changes that ownership should localize.
-Declaration-kind and lookup conventions can improve discovery
-within those meaningful boundaries,
-but they should not fragment one operation or policy across several owners.
-Search can locate a symbol;
-it cannot recover ownership scattered across boundaries.
-When a representative change repeatedly crosses boundaries
-that replace no knowledge,
-regroup the code or deepen the owner.
-If an authoritative convention prevents that,
-expose the tradeoff and seek a decision.
+Choose file/module boundaries primarily for coherent ownership and localized changes.
+Declaration-kind and lookup conventions can help discovery inside those boundaries,
+but should not fragment one operation or policy across owners.
+Search can locate a symbol, but cannot recover ownership scattered across boundaries.
+If a representative change repeatedly crosses boundaries replacing no knowledge,
+regroup code or deepen its owner.
+If an authoritative convention prevents that, expose the tradeoff and seek a decision.
 
-Use one stable term for one domain concept
-across names, types, comments, and neighboring modules.
-Introduce another term only for a meaningful distinction.
-When a representation changes but the concept does not,
-retain the domain term or make the transformation explicit.
-Treat a change to an established term as a scoped migration:
-update one coherent internal scope together,
-keep the old term only where compatibility requires it,
-and make the old-to-new transformation explicit at that boundary.
-Do not alternate the terms for one unchanged concept within a scope.
+Use one stable term per domain concept across names, types, comments,
+and neighboring modules; add terms only for meaningful distinctions.
+If representation changes but the concept does not, retain its term
+or make the transformation explicit.
+Treat an established term's replacement as a scoped migration:
+update one coherent internal scope together, retain the old term only where
+compatibility requires it, and expose the old-to-new transformation there.
+Do not alternate terms for one unchanged concept within a scope.
 
-Share behavior when several sites enforce one invariant, policy,
-or source of truth and must change together;
-make them depend on its one owner.
-Keep rules separate when only their syntax or current values match
-and their reasons or evolution differ.
-Make consequential implicit behavior discoverable
-at the boundary where a maintainer must reason about it.
+Share behavior when sites enforce one invariant, policy, or source of truth
+and must change together; depend on its one owner.
+Keep rules separate when their reasons or evolution differ despite matching
+syntax or current values.
+Expose consequential implicit behavior at the boundary where maintainers must reason about it.
 
-## Make boundaries reduce what the reader must know
+## Make boundaries replace knowledge
 
-Every helper, type, class, module, or service boundary introduces a name
-and a relationship the reader may need to understand.
-A boundary that callers rely on earns its place
-when its contract replaces implementation knowledge and lets the reader stop.
-A complete domain operation, invariant, or shared policy
-can provide such a contract.
-Function length alone cannot.
+Each helper, type, class, module, or service adds a name and relationship.
+A contract earns callers' reliance when it replaces implementation knowledge
+and lets the reader stop.
+A complete domain operation, invariant, or shared policy can do this;
+function length alone cannot.
+If callers still reconstruct implementation or coordinate details it claims to own,
+the boundary moves complexity rather than containing it.
 
-When using that contract still requires reconstructing its implementation,
-or when callers must coordinate details it claims to own,
-the boundary has moved complexity rather than contained it.
-
-Within one owner, private methods can provide an outline of a complex operation.
-Keep a phase separate when its name and contract let the reader understand
-its role and relevant effects, then inspect its details selectively.
+Within one owner, private methods can outline a complex operation.
+Keep a phase separate when its name and contract explain its role and relevant effects,
+letting readers inspect details selectively.
 Independent reuse and isolation from shared working state are not prerequisites.
-Reading a phase to change its implementation is expected;
-repeatedly alternating between caller and callee to reconstruct one decision
-is evidence that the decomposition is unhelpful.
-Keep sequencing, branches, and failure paths legible in the outline,
-and keep phase implementations near the operation they explain.
+Reading a phase to change it is expected;
+repeated caller/callee alternation to reconstruct one decision suggests poor decomposition.
+Keep sequencing, branches, and failure paths visible in the outline,
+and phase implementations near the operation.
 
-For example, a private `isReady` helper that only holds the prerequisites
-for one nearby `submit` call makes a maintainer inspect two places
-to change one decision.
-An atomic `ledger.post(entry)` operation instead lets the caller rely
-on an all-or-nothing contract without learning its locking and storage work.
-The useful distinction is whether the contract replaces details
-for the reader's task, not the number of lines behind it.
+Two illustrative cases in pseudocode:
 
+```text
+if isReady(...):       # private prerequisites for only this nearby submit
+    submit(...)
+
+ledger.post(entry)     # atomic; hides locking and storage behind all-or-nothing
+```
+
+The prerequisite-only helper splits one decision across two places.
+Judge replaced knowledge for the task, not lines behind the boundary.
 When this diagnosis calls for inlining, deepening a boundary,
-changing ownership, or reorganizing dependencies,
-load and apply `$code-design`.
-Use this skill to identify the cognitive cost
-and design guidance to choose the remedy.
+changing ownership, or reorganizing dependencies, load and apply `$code-design`.
+Use readability to identify the cost and design guidance to choose the remedy.
 
-## Use comments to supply a better representation
+## Use comments for a cheaper representation
 
-Comments improve readability when they give the reader a cheaper representation
-for the current task.
-They may expose context the code cannot express
-or reorganize visible detail into a larger-scale model
-that requires less reconstruction, navigation, or working memory.
-
-A same-scale translation of an obvious statement is trivial.
-Visible information is not automatically redundant:
-a hidden-state annotation, maintenance region, callee summary,
-or local domain explanation may let the reader reason at a useful scale.
-
-Comments cannot compensate for design or organization
-that the code can reasonably improve.
-Load and apply the `code-comments` skill
-for comment selection, interface documentation,
+Comments can expose context unavailable in code or organize visible detail
+into a larger model with less reconstruction, navigation, or working memory.
+Obvious statements translated at the same scale are trivial;
+visible information may still help as a hidden-state annotation, maintenance region,
+callee summary, or local domain explanation.
+Comments cannot compensate for design or organization the code can reasonably improve.
+Load and apply `$code-comments` for selection, interface documentation,
 teacher comments, examples, and formatting.

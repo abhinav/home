@@ -2,20 +2,13 @@
 
 ## Map-shaped APIs
 
-Avoid using maps in Go API boundaries
-when the map represents named domain data.
-Types like `map[string]string`,
-`map[string][]string`,
-and nested maps make call sites hard to read
-because the signature does not explain what each key or value means.
-
-Prefer a named struct for each record.
-Accept or return a slice for materialized records,
-or an `iter.Seq` / `iter.Seq2` for streaming traversal.
-See [Iteration and streaming](collections-and-iteration.md#iteration-and-streaming)
-for choosing and consuming sequences.
-Use a map inside the function
-when you need fast lookup, grouping, or uniqueness checks.
+Avoid maps for named domain data at API boundaries;
+generic or nested maps obscure the meaning of keys and values.
+Accept or return slices of named records for materialized data,
+or `iter.Seq` or `iter.Seq2` for streaming traversal.
+Read [Iteration and streaming](collections-and-iteration.md#iteration-and-streaming)
+for sequence choice and consumption.
+Internal maps can provide lookup, grouping, and uniqueness checks.
 
 ```go
 // BAD: the two strings have no visible meaning at the call boundary.
@@ -30,22 +23,18 @@ type EndpointSync struct {
 }
 ```
 
-Nested maps deserve extra scrutiny.
-They often indicate that a small domain type
-would make the code easier to understand and safer to change.
+Scrutinize nested maps: they often indicate a useful small domain type.
 
 ## Avoid boolean API knobs
 
-Avoid boolean parameters in exported Go APIs
-when the value changes behavior at the call site.
+Avoid exported boolean parameters when their values change behavior:
 
 ```go
 // BAD: the meaning of true is hidden at the call site.
 renderPage(page, true)
 ```
 
-Prefer a named option,
-or a small enum when the behavior is one choice among several:
+Prefer a named option, or a small enum when choosing among several behaviors:
 
 ```go
 type RenderMode int
@@ -61,13 +50,7 @@ type RenderOptions struct {
 }
 ```
 
-Choose the zero value to preserve default behavior.
-Validate unsupported modes or conflicting options
-at construction or at the API boundary.
-
-Boolean values are fine when they represent
-a stable binary domain fact,
-or when they stay inside local control flow.
-They deserve more scrutiny
-when they become exported parameters,
-configuration fields, or interface methods.
+Zero should preserve default behavior.
+Validate unsupported modes or conflicting options at construction or the API boundary.
+Booleans are valid stable binary domain facts or local control flow;
+scrutinize exported parameters, configuration fields, and interface methods more closely.

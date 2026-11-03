@@ -1,8 +1,8 @@
 ---
 name: help-me-review
 description: >
-  Use when the user wants help understanding a code change and deciding where
-  to focus their own review of a pull request, commit, or diff.
+  Use when the user wants to understand a code change and focus their own
+  review of a pull request, commit, or diff.
 ---
 
 # Help me review
@@ -10,196 +10,123 @@ description: >
 ## Serve the reviewer
 
 The user remains the reviewer.
-Turn the change into a guided reading that helps the user understand its shape,
-follow its consequential behavior,
-and identify the choices that deserve judgment.
-Use other review guidance to substantiate the explanation and expose consequential
-choices; the user's request for guided reading determines the deliverable.
-Standing review tracking can remain open for the user's disposition after the
-guide is delivered.
-An approval recommendation or readiness assessment is a separate deliverable
-when the user explicitly asks for it.
+Deliver a guided reading directly in conversation so they can understand the change,
+follow consequential behavior, and judge important choices.
+Use other review guidance to substantiate the explanation; guided reading remains the deliverable.
+Standing review tracking can stay open for the user's disposition after delivery.
+Approval recommendations and readiness assessments are separate deliverables
+when explicitly requested.
 
-Deliver the guided reading directly in the conversation.
-Explain excerpts supplied in chat there, using the supplied excerpt as the anchor.
-For a change with an existing file or review view,
-open that source beside chat when the host supports it
-and link each explanation to the evidence the user should inspect.
-Keep subject order semantic; one subject may connect several files.
-The conversation carries explanation and follow-up questions;
-existing diff and file views carry the full source.
-When the user requests chat alone or the host cannot open a source pane,
-use source links and small faithful excerpts in the conversation.
+Explain supplied excerpts in chat using them as anchors.
+For existing files or review views, open source beside chat when supported
+and link explanations to evidence.
+Semantic subjects may span files.
+Chat carries explanation and follow-up; source views carry full code.
+For chat-only requests or hosts without source panes, use links and small faithful excerpts.
 
-## Start from good code
-
-Begin from the premise that the change is good code.
-The user reviews code written by capable agents.
-Unless the available evidence says otherwise,
-assume the code builds, its tests pass,
-and routine implementation details have been handled competently.
-
-This premise changes where the guided review starts.
-The work is to help the user understand and judge the important choices,
-not to establish basic implementation competence.
-
-Do not begin with a line-by-line hunt for small bugs.
-An obvious material defect still matters when encountered,
-but routine defensive mistakes, style issues,
-and speculative edge cases are not the organizing questions.
-
-The user's attention is scarce.
-Use it to explain what behavior or contract changed,
-where data came from and went,
-what control flow or state transition appeared,
-which assumptions became load-bearing,
-and what consequences follow for callers and the system.
+Start from good code by capable agents: unless evidence says otherwise,
+assume it builds, tests pass, and routine implementation details are handled competently.
+Help the user judge consequential choices, not establish basic implementation competence.
+Do not start with a line-by-line hunt for small bugs.
+Routine defensive mistakes,
+style issues, and speculative edge cases are not organizing questions;
+obvious material defects still matter when encountered.
+Spend attention on changed contracts and behavior, data flow, control flow and state transitions,
+load-bearing assumptions, and consequences for callers and the system.
 
 ## Establish the evidence
 
-Preserve the original diff and supporting source used in the explanation.
-Use supplied files in place; save fetched or mutable evidence when needed to
-recover the reviewed version in a follow-up.
-A raw diff plus optional supporting source is sufficient input;
-a local repository and local Git refs are not required.
+Preserve the original diff and supporting source used.
+Use supplied files in place; save fetched or mutable evidence when needed to recover
+the reviewed version in a follow-up.
+A raw diff plus optional supporting source suffices; no local repository or refs are required.
 Use only evidence and read-only source surfaces already available to the task.
 Never clone, fetch, pull, check out, switch branches, create a worktree,
 or otherwise acquire or change a repository for the review.
-An existing checkout may be read in place without changing its Git state.
-Provider or API access already available to the task may retrieve the specific
-diff or supporting files needed for the review.
-When the available surfaces cannot supply needed context,
-deliver the guide from the evidence at hand
-and state the resulting uncertainty where it affects the user's judgment.
-Identify the repository or supplied input and any known revisions.
-When revisions are unavailable, identify the supplied input and its scope.
-When more source is needed, collect it from the same revision or identify the
-different revision and its relevance.
+Read existing checkouts without changing Git state;
+available provider or API access may retrieve specific diffs or supporting files.
+If context remains unavailable, deliver the guide from existing evidence
+and state uncertainty where it affects judgment.
+Identify the repository or supplied input and known revisions;
+when revisions are unavailable, identify the input and its scope.
+Get further source from the same revision, or identify its different revision and relevance.
 
-For a follow-up, recover the source and version used by that subject first.
-Distinguish any later change from the evidence the user originally reviewed;
-if a native view has advanced, use the preserved source for the earlier question.
-
-When collecting more evidence or opening source,
-read [Evidence and navigation](references/evidence.md) for commands and tool arguments.
+For follow-ups, recover the subject's original source and version first.
+Distinguish later changes and use preserved evidence if native views have advanced.
+Before collecting more evidence, opening source, or writing source links,
+read [Evidence and navigation](references/evidence.md)
+for commands, tool arguments, versions, and coordinates.
 
 ## Build the change model
 
-Before presenting the change,
-establish its purpose and trace its smallest coherent semantic path:
+Before presenting, trace the smallest coherent semantic path:
 
-1. Establish the relevant prior behavior and the problem or purpose of the
-   change.
-2. Identify the definition, contract, operation, or ownership boundary being
-   changed.
-3. Find the conditions that determine when the change applies.
-4. Follow the important transformation, decision, or state transition.
-5. Find the observable effect and the callers or systems that experience it.
-6. Distinguish a nearby unchanged path when it clarifies the change's scope.
-7. Use changed tests as specifications of scenarios, stimuli, and outcomes;
-   determine whether they establish the intended contract
-   rather than merely agree with the implementation.
+1. Relevant prior behavior and the change's problem or purpose.
+2. Changed definition, contract, operation, or ownership boundary.
+3. Applicability conditions and important transformations, decisions, or state transitions.
+4. Observable effects and affected callers or systems;
+   nearby unchanged paths when they clarify scope.
+5. Changed tests as specifications of scenarios, stimuli, and outcomes:
+   do they establish the intended contract or merely agree with implementation?
 
-Reason across the whole change.
-A line that appears mechanical in one file may reveal its purpose,
-or a distinct consequence,
-only when read with a definition, caller, test, or configuration elsewhere.
-Let a question about the change drive each further investigation.
-Identify what a caller, contract, test, or runtime check would establish
-and how the answer would change the explanation or the user's judgment.
-Refresh changing status when it affects that explanation
-or when the user requests a current readiness assessment.
-Treat a plausible failure as a question to resolve,
-not as evidence that a defect exists.
-When the governing contract or runtime evidence is unavailable,
-preserve the uncertainty and explain what the answer would change.
+Reason across definitions, callers, tests, and configuration, not isolated lines.
+Let a question drive each further investigation:
+what would a caller, contract, test, or runtime check establish,
+and how would the answer change the explanation or user's judgment?
+Refresh changing status when it affects the explanation
+or the user requests a current readiness assessment.
+Treat plausible failures as questions, not defect evidence.
+If governing contracts or runtime evidence are unavailable, retain uncertainty
+and explain what the answer would change.
 
-## Allocate attention
+Keep and examine anchors exposing new contracts, conditions, transformations,
+ownership boundaries, lifecycle edges, external effects, compatibility constraints,
+or consequential algorithms or architecture choices.
+Compress repeated setup, generated output, call-site migrations, or cases only after checking
+equivalence in caller contracts, inputs, timing, ownership, failure behavior,
+lifecycle, and effects.
+Distinct contexts are distinct subjects: a repeated call during shutdown,
+under another lock or task lifetime, or across another compatibility boundary may not be mechanical.
+Language changes expression, not importance.
+If importance is uncertain, retain the code in the model and inspect the uncertainty;
+compression targets and finding counts do not replace judgment.
 
-Keep and examine the semantic anchors that expose a new contract,
-condition, transformation, ownership boundary, lifecycle edge,
-external effect, compatibility constraint,
-or consequential algorithm or architecture choice.
+## Guide the user's reading
 
-Compress repetition after establishing equivalence.
-One representative instance may stand for repeated setup,
-generated output, call-site migrations, or equivalent cases
-only after checking that the other instances do not differ in caller contract,
-inputs, timing, ownership, failure behavior, lifecycle, or effect.
-Treat a distinct context as a distinct review subject.
+Account for every changed file and meaningful group,
+organized by semantic path rather than file order.
+Lead with purpose, then contrast relevant prior and changed behavior.
+For multiple subjects, give a short map in reading order with one sentence on why each matters.
+Introduce definitions, actors, ownership boundaries, and prerequisites before relying on them.
 
-For example,
-the same call added across many sites can be reviewed through one anchor
-when every site has the same role.
-It cannot be treated as mechanical when one site runs during shutdown,
-under a different lock or task lifetime,
-or across a different compatibility boundary.
-The language changes how those facts are expressed,
-not why they deserve attention.
+Show the smallest faithful code shape when syntax exposes a relationship to judge.
+Use behavioral pseudocode when implementation obscures consequential runtime flow
+or conceptual comparison is requested.
+Use a visualization when several actors, states, branches, or ownership boundaries
+are harder to understand in linear prose or code.
+Before choosing or constructing these forms,
+read [Presentation forms](references/presentation-forms.md) for fidelity and flow rules.
 
-When importance is uncertain,
-preserve the code in the change model and inspect the uncertainty.
-Do not use a compression target or finding count as a substitute for judgment.
+Lead each subject with clickable Markdown links to available source ranges
+or identify its supplied excerpt; do not use plain or code file references when links are available.
+Explain prior behavior, changed behavior, and what the user should judge.
+For compressed groups, name the anchor's coverage and direct the user separately
+to each meaningful exception.
+Keep representative and grouped source reachable through available links,
+with material uncertainties beside affected subjects.
 
-## Guide the user's review
-
-Account for every changed file and meaningful change group,
-but organize the explanation around the semantic path rather than file order.
-
-Lead with the change's purpose,
-then contrast the relevant prior behavior with the changed behavior.
-For a change with several subjects, give a short review map in reading order,
-with one sentence explaining why each subject matters.
-Introduce definitions, actors, ownership boundaries,
-and other prerequisites before reasoning that depends on them.
-
-When syntax exposes a relationship the user needs to judge,
-show the smallest faithful code shape that preserves that relationship.
-When implementation syntax obscures a consequential runtime flow,
-or the user requests a conceptual behavior comparison,
-use behavioral pseudocode.
-When several actors, states, branches, or ownership boundaries
-are harder to understand in linear prose or code, use a visualization.
-Before choosing or constructing any of these forms,
-read [Presentation forms](references/presentation-forms.md)
-for source fidelity, flow modeling, and representation rules.
-
-For each review subject,
-lead with clickable Markdown links to available source ranges
-or identify the supplied excerpt.
-Do not format a file reference as code or plain text when a link is available.
-Before writing source links,
-read [Evidence and navigation](references/evidence.md)
-for revision and coordinate rules.
-Then explain prior behavior, changed behavior, and what the user should judge.
-For a compressed group,
-name what the representative anchor covers
-and direct the user separately to each meaningful exception.
-
-Put a material uncertainty with the subject it affects.
-Keep representative and grouped source reachable through links when available.
-
-Give the coherent guided reading in the initial response;
-do not require a separate user turn for every subject or hunk.
-The user can then choose where to investigate further through ordinary replies,
-such as following a caller, comparing equivalent cases, or revisiting a subject.
-
-If building the guide exposes a material defect,
-supported risk or design concern,
-or missing contract or runtime evidence,
-surface it where it affects the user's judgment.
-Distinguish observed facts, supported inferences, and unresolved questions.
+Deliver the coherent guide in the initial response, not one user turn per subject or hunk.
+Ordinary replies can follow callers, compare cases, or revisit subjects.
+Surface material defects, supported risks or design concerns,
+and missing contract or runtime evidence where they affect judgment.
+Distinguish facts, supported inferences, and unresolved questions.
 Do not hunt for findings or manufacture small issues.
 
-Deliver the guide once the user can follow the consequential change,
-locate the evidence behind each meaningful change group,
-see what was compressed and why,
-and identify the decisions or unanswered questions that remain theirs.
-An unresolved question belongs with its evidence and consequence in the guide;
-resolving every question or waiting for pending checks is not a prerequisite
-for helping the user review.
-Before returning,
-compare every code and diff shape with the source
-and move any inserted annotation or explanation outside it.
-Verify that source links identify the intended file, version, and line range.
-Report a navigation limitation if it affects the user's ability to inspect the evidence.
+Finish when the user can follow the consequential change, locate every meaningful group's evidence,
+understand what was compressed and why, and identify their remaining decisions or questions.
+Unresolved questions belong with evidence and consequence;
+resolving every question or waiting for pending checks is not required to deliver the guide.
+Before returning, compare every code and diff shape with source,
+move inserted annotations or explanations outside it,
+and verify each source link's file, version, and range.
+Report navigation limitations affecting evidence inspection.

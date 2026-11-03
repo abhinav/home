@@ -1,40 +1,23 @@
 # Modules and dependencies
 
-## Module files
+Use Go commands, not hand edits, to change `go.mod`:
 
-Use Go commands to update `go.mod` rather than editing its text by hand.
-For directive changes such as a module path or replacement,
-use `go mod edit -module=PATH` or `go mod edit -replace=OLD=NEW`.
-It changes the file without resolving the module graph.
-Use `go get MODULE@VERSION` when selecting a module version,
-and `go get go@VERSION` when changing the Go version;
-these commands account for constraints from other modules.
+| Change | Command and effect |
+| --- | --- |
+| Module path or replacement | `go mod edit -module=PATH` or `go mod edit -replace=OLD=NEW`; edits directives without resolving the graph. |
+| Select a module version | `go get MODULE@VERSION`, accounting for other modules' constraints. |
+| Change Go version | `go get go@VERSION`, accounting for other modules' constraints. |
 
-After changing imports or module directives,
-run `go mod tidy` to reconcile requirements and checksums
-with the packages in the module.
-Let tidy remove requirements that are no longer needed.
-Use `go get MODULE@none` only when deliberately removing a module;
-it can also change the versions selected for other modules.
-Review the resulting `go.mod` and `go.sum` changes,
-then run the relevant tests.
+After import or directive changes, run `go mod tidy`; let it remove unneeded requirements.
+Use `go get MODULE@none` only for deliberate removal: it can change other selected versions.
+Review `go.mod` and `go.sum`, then run relevant tests.
 
-## Viewing dependency source
+To inspect dependency source or answer questions about it,
+run `go mod download -json MODULE` and read files at the returned `Dir`.
 
-To see source files from a Go dependency,
-or to answer questions about a dependency,
-run `go mod download -json MODULE`
-and use the returned `Dir` path to read the files.
-
-## Tool dependencies
-
-Declare Go command dependencies with a `tool` directive in `go.mod`.
-This keeps generators and linters in the module graph
-without a blank-import `tools.go` file.
-Use `go get -tool PACKAGE@VERSION` to add one,
-then run it with `go tool NAME`.
-Use the full package path if the short name is ambiguous.
-The module's `require` directive records the selected version.
-
+Declare command dependencies with a `tool` directive rather than blank-import `tools.go`:
+add with `go get -tool PACKAGE@VERSION`, run with `go tool NAME`,
+and use the full package path when the short name is ambiguous.
+The module's `require` directive records the version.
 See [Go tool dependencies](https://go.dev/doc/modules/managing-dependencies#tools)
-for the module syntax and command behavior.
+for syntax and command behavior.

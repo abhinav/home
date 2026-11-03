@@ -3,34 +3,22 @@
 Use this reference for scripted,
 non-interactive CLI and TUI GIF recordings with `asciinema` and `agg`.
 
-## Command-line commands
+## Record a finite command
 
-`asciinema record` records a terminal session to an asciicast file.
-The command starts either the default shell
+`asciinema record` writes an asciicast, running the default shell
 or the command passed with `--command`.
-For automated skill use,
-always pass a finite command or script with `--command`.
+For automated skill use, always supply a finite command or script with `--command`.
+Always use `--headless` for Codex-run recordings: the child runs and its output is recorded
+without live input or output through the current terminal.
+The recorder still runs in the foreground and exits with the child;
+headless does not mean background execution.
 
-`agg` converts an asciicast file or URL to a GIF.
-For local skill use,
-use a local asciicast file.
-Do not use remote upload or hosted recording paths.
-
-## Required recording invariants
-
-Treat the recording command below as one command contract.
-When writing a concrete plan or executing the recording,
-show or use the complete form instead of summarizing required settings in prose.
-This keeps omissions visible before the recorder starts.
-
-Request escalation for `asciinema record`
-because the recorder opens terminal capture resources.
-Remove `NO_COLOR` at the recorder boundary
-so color-aware commands can emit color inside the recording.
-Keep `NO_COLOR` only when colorless output or `NO_COLOR` behavior
-is the subject of the demo.
-For asciinema recordings,
-set `TERM=xterm-256color` at the same recorder boundary.
+For every concrete plan or recording, show or use the complete command below
+as one contract so omissions are visible before recording starts.
+Request escalation because `asciinema record` opens terminal capture resources.
+At the recorder boundary, set `TERM=xterm-256color`.
+Remove `NO_COLOR` there so color-aware commands can emit color,
+unless colorless output or `NO_COLOR` behavior is the demo's subject.
 
 ```bash
 env -u NO_COLOR TERM=xterm-256color \
@@ -40,8 +28,10 @@ env -u NO_COLOR TERM=xterm-256color \
   demo.cast
 ```
 
-Run `agg` normally after the cast exists,
-unless sandboxing blocks conversion.
+`agg` converts an asciicast file or URL to GIF.
+For local skill use, use only a local cast; do not use remote upload
+or hosted recording paths.
+Run `agg` normally after the cast exists, unless sandboxing blocks conversion.
 
 ```bash
 agg --theme github-dark --font-size 16 --idle-time-limit 1 \
@@ -49,38 +39,14 @@ agg --theme github-dark --font-size 16 --idle-time-limit 1 \
   demo.cast demo.gif
 ```
 
-## Script shape
+## Scripts and child shells
 
-The recorded command or script can set up state,
-print narration,
-sleep for viewer pacing,
-run the demonstrated command,
-redraw the screen,
+The command or script can set up state, print narration,
+sleep for viewer pacing, run the demonstrated command, redraw the screen,
 and leave a readable final state before exiting.
-
-## Headless recording
-
-Always use `--headless` for Codex-run asciinema recordings.
-With `--headless`,
-asciinema runs the child command and records its output
-without using the current terminal for live input or output.
-This is not for background execution:
-the `asciinema record` command still runs in the foreground
-and exits when the child command exits.
-
-## Child shells and scripts
-
-`--command` may launch a child shell,
-as long as the child shell exits by itself.
-These are valid shapes:
+A child shell is valid if it exits by itself; another valid command is:
 
 ```bash
-env -u NO_COLOR TERM=xterm-256color \
-  asciinema record --headless --overwrite --return \
-  --window-size 80x24 \
-  --command "bash demo.sh" \
-  demo.cast
-
 env -u NO_COLOR TERM=xterm-256color \
   asciinema record --headless --overwrite --return \
   --window-size 80x24 \
@@ -88,21 +54,14 @@ env -u NO_COLOR TERM=xterm-256color \
   demo.cast
 ```
 
-Prefer a script file over a heavily quoted `bash -lc` command
-when the demo has staged output,
-sleeps,
-redraws,
-or setup.
-Script files are easier to inspect before recording
-and reduce shell-quoting failures.
+Prefer a script file to heavily quoted `bash -lc` for staged output,
+sleeps, redraws, or setup: it is easier to inspect and reduces quoting failures.
 
 Asciinema sets `ASCIINEMA_SESSION` inside the recorded session.
 That can be useful when diagnosing whether a command is running
 inside the recorder.
 
 ## Useful agg options
-
-Common `agg` controls:
 
 - `--theme <name>` chooses a named theme.
 - `--font-size <px>` controls text size.
@@ -122,10 +81,7 @@ when installed behavior may differ from this reference.
 
 ## Inspecting casts
 
-Asciicast v3 files are line-oriented.
-The first line is JSON metadata.
-Later lines are event records.
-For example:
+Asciicast v3 files are line-oriented: first JSON metadata, then event records:
 
 ```json
 {"version":3,"term":{"cols":80,"rows":10},"timestamp":1782065682,"command":"bash demo.sh","env":{"SHELL":"/bin/zsh"}}
@@ -133,16 +89,8 @@ For example:
 [0.000, "x", "0"]
 ```
 
-Useful event types include:
+`"o"` marks terminal output; `"x"` marks exit status.
 
-- `"o"` for terminal output;
-- `"x"` for exit status.
-
-Inspect the cast directly when debugging TUI output,
-ANSI escape sequences,
-screen redraws,
-unexpected colors,
-or missing final output.
-Use `head`,
-`sed`,
-or a structured JSON tool for the raw events.
+Inspect raw events with `head`, `sed`, or a structured JSON tool
+when debugging TUI output, ANSI escape sequences, screen redraws,
+unexpected colors, or missing final output.

@@ -1,148 +1,90 @@
 ---
 name: code-testing
 description: >
-  Use when deciding what test evidence a code change needs, or when writing,
-  changing, deleting, or reviewing tests or their supporting infrastructure.
-  Do not use merely to explain an existing test result or compiler error when
-  no code, test, or validation decision is requested.
+  Decide what test evidence a code change needs; write, change, delete,
+  or review tests and their supporting infrastructure.
+  Do not use merely to explain an existing test result or compiler error
+  when no code, test, or validation decision is requested.
 ---
 
 # Code testing
 
-Tests should protect the system's intended behavior
-and make that protection easy to inspect.
+Protect intended promises with durable detectors that are easy to inspect.
+A useful test fails for a credible violation and passes for every acceptable
+implementation of its promise; a production change does not automatically need
+a new test.
 
-## Choose evidence for intended behavior
+## Choose evidence before tests
 
-A test suite is a set of durable detectors for promises that matter,
-not a receipt requiring one new test for every production change.
-Useful test evidence distinguishes an acceptable change from a defect.
-It fails for a credible violation of a protected promise
-and passes for every acceptable implementation of that promise.
+Name the intended promise and a plausible regression.
+Prefer observable contracts for callers and users, transitions, errors, and invariants.
+Identify its current detector: an existing test, compiler, type system,
+schema validator, static analyzer, build, or other repeatable check owning the guarantee.
+During ordinary implementation and test planning, look for promises over input
+combinations or operation histories: preservation, inverse operations, or model agreement.
+When these relationships can expose evidence gaps,
+read [Property-based testing](references/property-based-testing.md)
+and choose a useful property test alongside concrete examples.
+Also read it when designing or reviewing property-based tests.
 
-Decide what evidence a code change needs before writing a test:
+Mentally introduce the regression and choose:
 
-1. Name the intended promise and a plausible regression.
-   Prefer observable contracts: what callers can rely on,
-   what users can see, what state transitions must happen,
-   what errors mean, or what invariants must hold after an operation.
-2. Identify the current detector for that regression.
-   It may be an existing test, the compiler, the type system,
-   a schema validator, a static analyzer, the build,
-   or another repeatable check that owns the guarantee.
-3. Look for promises over combinations of inputs or operation histories.
-   Preservation across a transformation, an inverse operation,
-   or agreement with a simple model can make whole input families checkable.
-   When those relationships can expose gaps in the current evidence,
-   read [Property-based testing](references/property-based-testing.md)
-   and choose a useful property test alongside concrete examples.
-   Make this choice during ordinary implementation and test planning;
-   also read that reference when designing or reviewing a property-based test.
-4. Mentally introduce the regression and choose the disposition:
-   - Add or strengthen a permanent test when a new or changed promise,
-     or an uncovered bug, would otherwise pass every relevant detector.
-     A bug-fix regression test should fail without the fix
-     and pass with it.
-   - Retain and run existing tests when they already fail for the regression
-     at a useful boundary.
-   - Use the owning non-test detector for compile-time, type, schema,
-     static-analysis, or build guarantees,
-     together with affected behavior tests when runtime behavior must remain
-     unchanged.
-   - Replace a proposed test when its assertion is implementation-shaped
-     but a real behavioral gap remains.
-   - Omit a new permanent test when it would only repeat existing evidence
-     or turn the changed implementation into a new promise.
+| Condition | Disposition |
+| --- | --- |
+| A new or changed promise or uncovered bug would pass every relevant detector | Add or strengthen a permanent test. A bug regression should fail without the fix and pass with it. |
+| Existing tests fail for the regression at a useful boundary | Retain and run them. |
+| The guarantee belongs to compilation, types, schema, static analysis, or build | Use that owning detector, plus affected behavior tests when runtime behavior must remain unchanged. |
+| A proposed assertion reflects implementation shape but a behavioral gap remains | Replace the proposed test to protect that behavior. |
+| A new test only repeats evidence or makes the changed implementation a promise | Omit the new permanent test. |
 
-For a behavior-preserving refactor,
-run the existing tests that protect the affected promises.
-For removal of unsupported or unreachable behavior,
-verify the governing contract and the remaining supported paths.
-No new permanent test does not mean no validation;
-it means the existing or owning detectors already supply the relevant signal.
+For behavior-preserving refactors, run existing tests protecting affected promises.
+For removal of unsupported or unreachable behavior, verify the governing contract
+and remaining supported paths.
+Omitting a new permanent test still requires validation by existing or owning detectors.
 
 Repeated coverage is useful when it detects a distinct failure mode,
 exercises a materially different boundary or environment,
 or makes an important failure substantially easier to localize.
-If removing the proposed test would not let a credible regression
-pass every remaining detector,
-the test needs one of those additional benefits to justify its maintenance.
+If removing a proposed test would let no credible regression pass all remaining
+detectors, one of those additional benefits must justify its maintenance.
 
-Avoid tests that only detect that the implementation changed.
-A change-detector test restates private mechanics,
-such as helper structure, mock call sequence, intermediate representation,
-or copied production logic.
-These tests are brittle during behavior-preserving changes
-and provide weak evidence that the behavior is correct.
+## Make the promise and distinct defect signal visible
 
-When writing or reviewing a test,
-make its protected promise and distinct defect signal visible.
-The reader should be able to identify the setup, action,
-and expected behavior from the test body without reconstructing hidden state
+Show setup, action, and expected behavior in the body without reconstruction
 from distant fixtures, loops, or helper chains.
-If that promise is hard to name without referring to private mechanics,
-the test is probably too tightly coupled to implementation.
-Rewrite it around the behavior that should remain true,
-or delete it if no meaningful behavior is at risk.
+Avoid tests that only detect implementation change by restating private mechanics:
+helper structure, mock call order, intermediate representation, or copied production logic.
+They are brittle during behavior-preserving changes
+and give weak evidence that the behavior is correct.
+If a promise is hard to name without private mechanics,
+it is probably too coupled to implementation; rewrite around behavior
+or delete the test when no meaningful behavior is at risk.
+Ask whether a different correct implementation would fail;
+if so, the test may be detecting shape rather than behavior.
 
-A useful pressure test is:
-would a different correct implementation fail this test?
-If so, the test may be detecting implementation shape
-rather than protecting behavior.
+Implementation detail is legitimate when it is the tested contract:
+a parser's token stream, file format, public API type, or documented ordering rule.
+Ask whether a caller, user, or maintainer is meant to rely on it.
 
-Implementation details can still appear in tests
-when those details are the boundary being tested.
-For example, a parser's token stream, a file format, a public API type,
-or a documented ordering rule may be the contract.
-The key question is whether the detail is something a caller, user,
-or maintainer is meant to rely on.
+## Keep scenarios DAMP
 
-## Keep Test Scenarios DAMP
+Prefer scenarios visible at the point of use.
+Tests usually lack their own tests, so correctness depends on human inspection.
+Do not apply DRY to repeated text by default: it protects duplicated knowledge,
+not coincidental lines checking different behavior.
+Keep meaningful inputs, the exercised operation, and expected externally visible
+results in the test; extract incidental construction, protocol, file plumbing,
+or other mechanics that distract from the behavior.
 
-Prefer tests that make the scenario visible at the point of use.
-Tests do not usually have their own tests,
-so their correctness depends on human inspection.
-A test that saves a few lines by hiding scenario-specific values, actions,
-or assertions can make failures harder to diagnose.
+`OpenRepositoryWithBranches("main", "feature")` names a testing operation
+while leaving the scenario in control.
+`Setup()` or `RunCases()` is suspect when readers must open it to discover the behavior.
+Before adding a helper, state the behavior or setup concept it names.
+Use a helper only for a real testing operation understandable without opening it.
+Do not add one solely to satisfy required fields, hide mock construction,
+reduce repeated struct literals, or shorten tests.
+Prefer explicit repeated setup when it expresses the scenario or required dependencies.
 
-Do not apply DRY to repeated test text by default.
-DRY protects duplicated knowledge, not coincidental duplicated lines.
-If two tests repeat the same setup value, call,
-or assertion because they are checking different behavior,
-the repetition may be useful documentation.
-
-Keep the test's what visible:
-the inputs that matter,
-the operation being exercised,
-and the expected externally visible result.
-Extract the how when it is incidental:
-object construction noise,
-protocol setup,
-temporary file plumbing,
-or other mechanics that distract from the behavior under test.
-
-A good helper names a meaningful testing operation
-and leaves the scenario in control.
-For example, `OpenRepositoryWithBranches("main", "feature")`
-can improve clarity.
-A helper such as `Setup()` or `RunCases()` is suspect
-when the reader must open it to understand what behavior the test covers.
-
-Before adding a new test helper,
-state what behavior or setup concept the helper names.
-Do not add a helper whose only purpose is to satisfy required fields,
-hide mock construction,
-reduce repeated struct literals,
-or shorten a test.
-Prefer explicit setup in each test when the repeated lines are part
-of the scenario or make required dependencies visible.
-
-A test helper is appropriate only when it names a real testing operation
-that a reader can understand without opening the helper.
-
-Shared fixtures, mutable fields, table loops,
-and assertion loops are useful only when they make the behavior easier
-to inspect.
-Avoid them when they hide the case being tested,
-couple unrelated tests,
-or make a failure report identify an index instead of a behavior.
+Use shared fixtures, mutable fields, table loops, or assertion loops only when
+they make behavior easier to inspect.
+Avoid hiding cases, coupling unrelated tests, or reporting an index instead of behavior.

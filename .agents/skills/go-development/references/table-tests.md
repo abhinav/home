@@ -1,8 +1,6 @@
 # Table tests
 
-Table test case names use GoCase
-starting with uppercase.
-Keep them descriptive but concise — not sentences.
+Use descriptive, concise GoCase names beginning uppercase, not sentences:
 
 ```go
 // BAD
@@ -12,19 +10,11 @@ Keep them descriptive but concise — not sentences.
 {name: "EmptyInput"}
 ```
 
-Use table tests when every case follows the same logic
-with no complex branching, setup, or teardown.
-
-Name the slice `tests`.
-Each entry has a `name` field in GoCase.
-Name input fields `give` (or `giveFoo`, `giveBar`),
-and output fields `want` (or `wantFoo`, `wantBar`).
-If data does not map to inputs or outputs,
-name fields after what they represent.
-Never use `inputFoo`, `expectedBar`, or similar.
-
-Iterate with `for _, tt := range tests`
-and call `t.Run(tt.name, ...)`.
+Use tables only for uniform logic without complex branching, setup, or teardown.
+Name the slice `tests` and give each entry a GoCase `name` field.
+Iterate with `for _, tt := range tests` and call `t.Run(tt.name, ...)`.
+Inputs use `give` or `giveFoo`, `giveBar`; outputs use `want` or `wantFoo`, `wantBar`.
+Name other data for its meaning; never use `inputFoo`, `expectedBar`, or similar.
 
 ```go
 // BAD
@@ -52,15 +42,9 @@ for _, tt := range tests {
 }
 ```
 
-Never put function fields like `setupMocks`,
-`runTest`, or `assertResult` in the test struct.
-Function fields hide control flow
-and make tables harder to read.
-
-When cases need different setup, teardown,
-or assertion logic,
-use explicit `t.Run` subtests instead of a table.
-Tables are for uniform structure only.
+Never put function fields such as `setupMocks`, `runTest`, or `assertResult` in cases;
+they hide control flow.
+Use explicit `t.Run` subtests when setup, teardown, or assertion logic differs:
 
 ```go
 // BAD — function field in table

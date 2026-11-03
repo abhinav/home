@@ -1,137 +1,61 @@
 ---
 name: changie
-description: Use when deciding whether a repository change needs a changelog entry, creating or updating Changie unreleased entries, choosing the correct changelog kind, or writing user-facing changelog body text in repositories that use `.changie.yaml`.
+description: >
+  Create or update Changie unreleased entries, or decide whether a change needs
+  one, in repositories with `.changie.yaml`.
 ---
 
 # Changie
 
-## Overview
+Apply this skill only when `.changie.yaml` exists.
+Release notes describe the final difference from the previous release,
+not each development step.
 
-Use this skill only if the repository has a `.changie.yaml` file.
-If `.changie.yaml` is absent,
-this skill does not apply.
+## Choose the entry action
 
-This skill covers how to use `changie` directly,
-choose the correct kind from `.changie.yaml`,
-and write changelog body text.
+Cover user-facing features, behavior changes, visible fixes, deprecations,
+removals, and security fixes.
+When they have no user-facing effect, omit entries for internal refactors,
+test-only changes, CI/tooling, and code movement.
 
-## Decide what to record
+For a user-facing change, read `.changie.yaml` to locate pending entries.
+Establish what users have received from release records and relevant history;
+neither a merge nor a pending entry proves release state.
+Resolve uncertainty before choosing an action.
 
-Release notes describe what changes for users since the previous release,
-not each development step toward that release.
-Choose the changelog action from that released baseline
-and the pending entries' coverage of the final outcome.
+Compare the final outcome with released behavior and pending coverage:
 
-1. Determine whether the change has a user-facing effect.
-   Features, behavior changes, visible bug fixes, deprecations, removals,
-   and security fixes need coverage.
-   Internal refactors, test-only changes, CI or tooling changes,
-   and code movement with no user-facing effect need no entry.
-2. For a user-facing change, establish what users have received.
-   Read `.changie.yaml` to locate pending entries,
-   then check the repository's release records and relevant history
-   to determine whether the affected behavior has been released.
-   A merged change or an entry's presence alone does not establish release state.
-   Resolve uncertain release state from that evidence before choosing an action.
-3. Compare the final outcome with the released behavior
-   and any pending entry covering that outcome:
+| Pending coverage | Action |
+| --- | --- |
+| Accurately describes the final outcome | Leave the entry unchanged. |
+| Covers the outcome, but its body or kind is stale | Update that entry. |
+| No entry covers an outcome users need to know about | Create an entry. |
 
-   | Pending coverage | Action |
-   | --- | --- |
-   | Accurately describes the final outcome | Leave the entry unchanged. |
-   | Covers the outcome but its description or kind is stale | Update that entry. |
-   | No entry covers an outcome users need to know about | Create an entry. |
-
-For example, fixing a bug confined to a new, unreleased option
-usually leaves its accurate `Added` entry unchanged.
-If the option's advertised behavior changes, update that entry.
-If the bug also affects behavior users already have,
-record that released impact as a distinct fix.
+A fix confined to an unreleased option usually keeps its accurate `Added` entry.
+Update it if the advertised behavior changes.
+If the fix also affects released behavior, record that impact as a separate fix.
 Preserve published release notes.
 
-For an entry that needs creation or revision,
-choose its kind and body before writing it.
+## Choose the kind and body
 
-## Choose the kind
+Before writing, choose an allowed kind and a specific user-facing body
+using `.changie.yaml`, including custom kinds and body expectations.
+Choose by the outcome for users, not the implementation work.
 
-Read the allowed kinds from `.changie.yaml`.
-Common kinds include:
+## Write and check
 
-- `Added`
-- `Changed`
-- `Deprecated`
-- `Removed`
-- `Fixed`
-- `Security`
+Create new entries through Changie by default:
 
-Choose the kind based on the user-visible outcome,
-not the implementation detail.
-
-Examples:
-
-- A new capability is usually `Added`.
-- A behavior adjustment is usually `Changed`.
-- A bug resolution is usually `Fixed`.
-- A newly discouraged capability is usually `Deprecated`.
-- A deleted capability is usually `Removed`.
-
-If `.changie.yaml` defines custom kinds,
-use those instead of generic assumptions.
-
-## Write the body
-
-The body should describe the user-facing effect.
-
-- Write about the outcome,
-  not the internal refactor.
-- Keep the wording specific.
-- Match any body expectations implied by `.changie.yaml`.
-
-Good bodies usually answer:
-"What changed for the user?"
-
-Weak bodies usually describe only internal work,
-for example:
-
-- `refactor API client`
-- `cleanup`
-- `move code into helper`
-
-Those are engineering notes,
-not release notes.
-
-## Create or update the entry
-
-For a new entry, use `changie` directly by default:
-
-```bash
-changie new --kind $kind --body $body
+```sh
+changie new --kind "$kind" --body "$body"
 ```
 
-Prefer generating the entry through Changie
-instead of hand-writing the file.
-That preserves the expected filename,
-timestamp,
-and directory layout.
+Prefer this over hand-writing files to preserve filenames, timestamps, and layout.
+For updates, edit the existing pending entry's body and kind as needed.
+If `changie` is unavailable, first check `mise.toml` and `Makefile`;
+use a repository wrapper when defined.
 
-For an update, edit the existing pending entry's body and kind as needed.
-
-## Verify pending coverage
-
-Compare the pending entries with the final change relative to released behavior.
-Each user-facing outcome should be covered without duplicate development history.
-Confirm that entries chosen for revision describe the final outcome
-and that entries chosen to leave alone remain unchanged.
-
-## Troubleshooting
-
-If `changie` is not found,
-look for repository-specific wrappers before doing anything else.
-
-Check:
-
-- `mise.toml`
-- `Makefile`
-
-If either file defines a wrapper for running `changie`,
-use that wrapper instead of assuming a global `changie` binary exists.
+Check pending coverage against the final change relative to released behavior:
+cover each user-facing outcome without duplicate development history,
+confirm revised entries describe the final outcome,
+and verify entries selected to remain unchanged still are.

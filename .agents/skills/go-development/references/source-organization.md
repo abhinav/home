@@ -2,13 +2,8 @@
 
 ## Import aliases
 
-Avoid import aliases unless Go requires them
-or the local project already uses an alias for that package.
-Do not invent an alias merely to describe the package's directory,
-layer,
-transport,
-owner,
-or relationship to the current package.
+Avoid aliases unless Go requires one or the project already uses it for that package.
+Do not invent aliases to label directory, layer, transport, owner, or relationship.
 
 ```go
 // BAD: the alias only labels a package whose natural selector is usable.
@@ -18,8 +13,7 @@ import remoteconfig "example.com/project/config"
 import "example.com/project/config"
 ```
 
-The current file's package name is also not a conflict
-with an imported package selector.
+The current file's package name does not conflict with an imported selector:
 
 ```go
 package ledger
@@ -31,22 +25,16 @@ import ledgerdb "example.com/project/storage/ledger"
 import "example.com/project/storage/ledger"
 ```
 
-Use an alias only for a real naming constraint:
-two imported packages with the same package name in one file,
-an imported package whose declared name differs from its path,
-or an established local convention such as generated protobuf packages.
+Use aliases only for real naming constraints: two imports with the same name in one file,
+a declared name differing from the path, or established conventions such as protobuf aliases.
 
 ## Names and scope
 
-Use the shortest name that remains clear at its ordinary use sites.
-As a declaration's scope and the number of competing symbols grow,
-add domain or role context to distinguish it.
-
-Unexported package-level declarations are visible across every file
-in the package and can be shadowed by local declarations.
-Give unexported package-level types, functions, variables, and constants
-enough context to distinguish their package-wide roles
-and leave natural short names available to local code.
+Use the shortest clear name at ordinary use sites; add domain or role context
+as scope and competing symbols grow.
+Unexported package declarations span all package files and can be shadowed by locals.
+Give unexported package-level types, functions, variables, and constants enough role context
+to distinguish them and leave natural short names for local code.
 
 ```go
 // BAD: generic names occupy the package block.
@@ -62,58 +50,33 @@ type reconcileApplication struct{ /* ... */ }
 var applyFailureCounter metric.Counter
 ```
 
-Use the smallest meaningful qualifier.
-Do not lengthen names with declaration mechanics
-such as `global`, `private`, or `internal`.
+Use the smallest meaningful qualifier, not mechanics such as `global`, `private`, or `internal`.
 
 ## Symbol ordering
 
-Go package declarations can generally refer to declarations
-that appear later in the package.
-A type named by a function, method, or interface
-is therefore not a source-order prerequisite.
-Apply the reader-order rule in `$code-readability`.
-Place an interface before the request and result types used by its methods.
-Place request and result types immediately before a function or method
-when its body would otherwise force the reader
-to scroll past the implementation to reach those records.
-When the implementation and records remain visible together,
-place the function or method first
-and the request and result types after it in first-need order.
+Go declarations generally allow forward references;
+a type named in a signature is not an ordering prerequisite.
+Apply `$code-readability`'s reader order:
 
-Keep declarations for one cohesive type or operation together.
-When a type is the primary abstraction, keep its declarations in one cluster:
-the type declaration, its constructors, then its methods.
-Order constructors and methods for readability within their part of the cluster.
-Request and result types may appear immediately before the method they frame
-inside that receiver's cluster.
-Methods on one receiver share its state and invariants.
-Keeping those methods together lets the reader retain that mental model.
-Do not interleave methods from different receiver types
-unless the reader's task genuinely treats those types as one operation
-and separate clusters would make that operation harder to understand.
+- Interface before its request and result records.
+- Records immediately before a function or method whose body would separate them from its boundary.
+- Compact implementation first when boundary and records remain visible together,
+  then records in first-need order.
+
+Keep cohesive types or operations together.
+Cluster a primary type, its constructors, then its methods;
+order each part for readability.
+Request and result records may frame their method inside its receiver's cluster.
+Do not interleave receiver clusters unless the reader treats them as one operation
+and separate clusters would make it harder to understand.
+Their shared state and invariants should remain one mental model.
 
 ## File organization
 
-Organize files within a package by domain responsibility,
-not by declaration kind.
-A file should contain a concept and the behavior that makes the concept useful.
-Keep a type near its constructors,
-methods,
-private interfaces,
-and closely related helpers.
-
-Avoid package layouts that collect every type,
-service,
-constant,
-or command implementation into a declaration-kind file.
-Such files separate concepts from their behavior
-and make readers reconstruct relationships across the package.
-Apply the same rule to adapter and command packages;
-they are not exempt because their code sits near an entry point.
-
-Create a shared file only when its contents are genuinely package-wide.
-Dependencies or helpers used by one abstraction belong with that abstraction.
-When splitting a file,
-choose boundaries that let each resulting file explain a coherent part of the
-package rather than targeting a particular line count.
+Organize by domain responsibility: keep concepts with their useful behavior,
+including constructors, methods, private interfaces, and closely related helpers.
+Avoid declaration-kind files collecting all types, services, constants, or commands;
+adapter and command packages are not exempt by being near an entry point.
+Create shared files only for genuinely package-wide content;
+keep dependencies or helpers used by one abstraction with it.
+Split into coherent parts, not by a line-count target.

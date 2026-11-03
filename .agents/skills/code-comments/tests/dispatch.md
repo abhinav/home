@@ -23,7 +23,10 @@ Do not modify files or external state.
   before drafting.
 - The output documents the named boundary concept for maintainers.
 - The output documents field semantics that names and types do not establish,
-  including units, indexing, valid values, and representation changes.
+  including intentional opacity, units, indexing, valid values,
+  and representation changes.
+- Field-purpose and handling claims are supported by the supplied facts;
+  a familiar name alone does not establish an additional use.
 - The output avoids comments that only narrate the code.
 - The subagent does not treat code-only output,
   small scope,

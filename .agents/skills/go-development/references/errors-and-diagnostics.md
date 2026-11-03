@@ -2,11 +2,10 @@
 
 ## Program exits
 
-Keep `log.Fatal`, `os.Exit`, and similar hard exits at process entry points:
-application `main`, or `TestMain` when it owns the test process's exit status.
-Reusable helpers return errors or a status to that entry point.
-For helper-process dispatch from `TestMain`,
-read [Subprocess tests](subprocess-tests.md).
+Keep hard exits (`log.Fatal`, `os.Exit`, etc.) at application `main`,
+or at `TestMain` when it owns the test process's exit status.
+Reusable helpers return errors or a status.
+For helper dispatch, read [Subprocess tests](subprocess-tests.md).
 
 ```go
 // BAD: hard exit buried in a helper.
@@ -36,27 +35,23 @@ One `slog.Logger` can send records to several handlers:
 logger := slog.New(slog.NewMultiHandler(jsonHandler, diagnosticHandler))
 ```
 
-Each handler retains its own level filtering,
-and `WithAttrs` and `WithGroup` propagate to both.
-Keep filtering that differs between destinations on the child handlers;
-an outer filter can suppress a record wanted by either destination.
+Each handler keeps its level filter; `WithAttrs` and `WithGroup` propagate to both.
+Keep destination-specific filtering on child handlers:
+an outer filter can suppress records either destination wants.
 
 ## Error handling
 
 ### Error contracts
 
-Choose an error representation by how callers can respond:
+Choose by caller response:
 
-- Use `errors.New` or `fmt.Errorf` when callers only need to propagate
-  or report the failure.
-- Use a sentinel such as `var ErrClosed = errors.New("session is closed")`
-  when callers need to recognize a condition without additional fields.
-  Prefix sentinel names with `Err`.
-- Use a structured error when callers need information such as a field name
-  or source location to respond.
-  Suffix the type name with `Error` and use a pointer receiver for `Error()`.
+- `errors.New` or `fmt.Errorf` for propagation or reporting only.
+- A sentinel such as `var ErrClosed = errors.New("session is closed")`
+  for recognizable conditions without fields; prefix names with `Err`.
+- Structured errors for actionable fields or locations; suffix types with `Error`
+  and use pointer receivers for `Error()`.
 
-Match conditions with `errors.Is` and extract error values with `errors.AsType`:
+Match through wrappers with `errors.Is` and `errors.AsType`:
 
 ```go
 if errors.Is(err, fs.ErrNotExist) {
@@ -67,28 +62,21 @@ if pathErr, ok := errors.AsType[*fs.PathError](err); ok {
 }
 ```
 
-These operations traverse wrapped errors;
-string matching and direct type assertions do not preserve that behavior.
-Use `errors.As` when the supported Go version predates `AsType`,
-or when matching an interface that does not implement `error`.
-See [errors](https://pkg.go.dev/errors) for matching contracts.
-
-When a custom structured error wraps a cause that callers should match,
-provide `Unwrap` as well as `Error`:
+String matching and direct type assertions do not preserve wrapped matching.
+Use `errors.As` for Go versions predating `AsType`, or matching interfaces not implementing `error`.
+See [errors](https://pkg.go.dev/errors).
+Provide `Unwrap` alongside `Error` when callers should match a wrapped cause:
 
 ```go
 func (e *DecodeError) Unwrap() error { return e.Err }
 ```
 
-Handle only failures for which this caller has a meaningful response;
-propagate the others with context.
+Handle only failures with a meaningful response; propagate others with context.
 
 ### Formatting variable values
 
-Use `%q` (not `"%s"`) when interpolating variable strings
-into error messages.
-`%q` makes empty strings, whitespace,
-and special characters visible in the output.
+Use `%q`, not `"%s"`, for variable strings
+so empty strings, whitespace, and special characters remain visible:
 
 ```go
 // BAD: empty name produces a confusing message —
@@ -102,13 +90,10 @@ return fmt.Errorf("open config %q: %w", name, err)
 
 ### Wrapping errors
 
-Add context with `fmt.Errorf` and `%w`
-instead of bare `return err`.
-Context should describe the immediate sub-operation being performed
-without "failed to" or "error doing" prefixes.
-Do not repeat the surrounding function's responsibility.
-Each caller may add its own context,
-so repeating outer context creates noisy error chains.
+Add context through `fmt.Errorf` and `%w` instead of bare `return err`.
+Describe the immediate sub-operation without "failed to" or "error doing" prefixes
+or repeating the current function's responsibility.
+Callers may add context; repeating it creates noisy chains.
 
 ```go
 func LoadSettings(path string) (*Settings, error) {
@@ -133,8 +118,7 @@ func LoadSettings(path string) (*Settings, error) {
 }
 ```
 
-Avoid wrapping with the current function's name
-or broad operation:
+Avoid the current function name or broad operation:
 
 ```go
 // BAD: duplicates LoadSettings' responsibility.
@@ -144,9 +128,7 @@ return nil, fmt.Errorf("load settings %q: read: %w", path, err)
 return nil, fmt.Errorf("load settings %q: unmarshal YAML: %w", path, err)
 ```
 
-For loops,
-describe the item-specific child operation,
-not the whole loop:
+In loops describe the item-specific child operation, not the whole loop:
 
 ```go
 for _, target := range targets {
@@ -159,15 +141,10 @@ for _, target := range targets {
 
 ### Error variables
 
-Use `err` for operation errors.
-Reuse it for sequential operations,
-and shadow it in a narrower scope
-when no earlier error must remain available there.
-
-Introduce separately named error variables only when multiple errors
-must remain independently readable at the same time.
-An error that is immediately combined with `err`
-does not require another variable.
+Use `err`, reusing it sequentially or shadowing narrowly
+when no earlier error must remain available.
+Name errors separately only when multiple errors must remain independently readable together;
+immediate combination with `err` needs no extra variable.
 
 ```go
 responseBody, err := io.ReadAll(res.Body)

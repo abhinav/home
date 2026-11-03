@@ -2,46 +2,32 @@
 
 ## Source shapes
 
-When syntax exposes a relationship the user needs to judge,
-show the smallest faithful code shape that preserves that relationship.
-Use the source pane for the full code;
-include a short excerpt in chat when it makes that relationship easier to explain.
-When the point is a change to an established shape,
-use a diff fragment with the nearest unchanged owner that identifies it.
-Preserve real names, types, parameters, source spelling,
-ownership boundaries, and relevant ordering.
-Copy every retained source or diff line verbatim.
-The only added text permitted inside the shape is a visible `...`
-that marks source already established as non-consequential.
-Put labels and explanation in prose outside the shape.
-Use prose to explain behavior, constraints, rationale, consequences,
-and relevant unchanged behavior that the code does not express.
+Show the smallest faithful shape when syntax exposes a relationship to judge.
+Full code stays in the source pane; include short chat excerpts when useful.
+For changes to an established shape, use a diff with the nearest unchanged owner identifying it.
+Preserve real names, types, parameters, source spelling, ownership boundaries, and relevant order.
+Copy retained source or diff lines verbatim; the only addition inside a shape is visible `...`
+for source already established as non-consequential.
+Keep labels and explanations outside.
+Use prose for behavior, constraints, rationale,
+consequences, and relevant unchanged behavior the code does not express.
 
 ## Behavioral pseudocode
 
-When implementation syntax would obscure a consequential runtime flow,
-or the user asks for a conceptual behavior comparison,
+When syntax obscures consequential runtime flow or conceptual comparison is requested,
 use a clearly labeled behavioral pseudocode `diff` block.
-Put one action or decision on each line.
-Retain enough unchanged steps to show ordering and I/O.
-Keep each material branch and returned outcome that affects the comparison
-inside the model.
-Use `-` for prior behavior and `+` for changed or newly added behavior.
-Treat the block as an explanatory model rather than quoted source.
-Keep source links and labels outside the block.
-Use a faithful source shape when syntax or ownership is itself the choice.
-For each modeled flow,
-state the supported effect on backend calls, concurrency scope,
-per-request or per-item work, and expensive work that remains unchanged.
-Keep changes to existing paths distinct from new alternatives.
-Keep startup work distinct from request paths.
-Treat test or comment changes as evidence
-unless the implementation changes runtime behavior.
+Put one action or decision per line, retain unchanged steps needed for ordering and I/O,
+and keep every material branch and returned outcome affecting the comparison inside the model.
+Use `-` for prior and `+` for changed or new behavior.
+This is an explanatory model, not quoted source; links and labels stay outside.
+Use source shapes when syntax or ownership is the choice.
+For each modeled flow, state supported effects on backend calls, concurrency scope,
+work per request or item, and expensive work remaining unchanged.
+Distinguish changes to existing paths from new alternatives, and startup from request work.
+Test and comment changes are evidence unless implementation changes runtime behavior.
 
 ## Visualizations
 
-When several actors, states, branches, or ownership boundaries
-would be harder to understand in linear prose or code,
+For several actors, states, branches, or ownership boundaries harder to understand linearly,
 use the smallest useful table, tree, sequence, flow, state view, or timeline.
-Do not repeat the same relationship in multiple forms
-unless each form answers a different review question.
+Repeat relationships in multiple forms only when each answers a different review question.

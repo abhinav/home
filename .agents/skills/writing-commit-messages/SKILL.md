@@ -10,80 +10,69 @@ description: >
 
 # Writing commit messages
 
-This skill governs commit messages, pull request titles and descriptions,
-and source text intended to supply those artifacts.
 Apply `prose-writing` for explanation and representation choices
 and `prose-formatting` for source conventions.
 The artifact-specific rules here govern their application to commit and PR text.
 
 ## Build the explanation the reader needs
 
-A reviewer must decide whether one coherent change makes sense.
-A future maintainer must be able to find, evaluate, change, or revert it.
-Both can inspect the source; neither has necessarily repeated the investigation.
-The message supplies the understanding needed to evaluate the diff.
-That includes baseline behavior and causal relationships that source inspection
-could eventually reveal: source availability is not the reader's prior knowledge.
+Give reviewers enough context to assess one coherent change
+and future maintainers enough to find, evaluate, change, or revert it.
+Both can inspect source; do not assume they repeated the investigation.
+Supply the baseline behavior and causal relationships needed to evaluate the diff;
+source availability is not the reader's prior knowledge.
 
 Before drafting, recover the supported explanation from the request,
-investigation, and existing discussion.
-Establish the affected behavior, the motivating condition and consequence,
-and how the final change addresses them within its limits.
-Use those relationships to build the explanation;
-use the final diff to verify its accuracy and scope.
+investigation, and discussion: affected behavior, motivating condition
+and consequence, and how the final change addresses them within its limits.
+Build the explanation from those relationships;
+verify its accuracy and scope against the final diff.
 Discard superseded proposals and conversation-specific material.
 
-Decide whether the subject alone gives the reader enough context
-to understand and evaluate the outcome.
-Use a body when the reader would otherwise have to reconstruct the problem,
-its mechanism, the reason for the chosen behavior,
-or a material constraint, tradeoff, compatibility boundary, or observation.
-A relationship can earn space even when its component facts appear in the diff.
-Use a subject-only message when no such explanation is needed.
-For a mechanical change, first check the request, issue, maintenance policy,
-or history for purpose or selection criteria that the diff does not express.
-A dependency refresh may follow a release policy or address a particular failure.
-Do not manufacture a body from an edit inventory or unrelated non-changes.
+Use a body when the subject alone leaves the reader to reconstruct the problem,
+mechanism, reason for the chosen behavior, or a material constraint, tradeoff,
+compatibility boundary, or observation needed to understand and evaluate the outcome.
+Relationships can earn space even when their component facts appear in the diff.
+Otherwise use a subject-only message.
+For mechanical changes, first check the request, issue, maintenance policy,
+or history for purpose or selection criteria absent from the diff:
+a dependency refresh may follow a release policy or address a particular failure.
+Do not manufacture a body from edit inventories or unrelated non-changes.
 If no coherent outcome fits, reconsider the commit boundary.
 
-Lead the body with the consequence or reason the reader needs.
+Lead the body with the needed consequence or reason.
 Introduce the affected system, baseline behavior, actors, and unfamiliar terms
-before reasoning that depends on them.
-Choose context by what explains the need for the change,
-including relevant behavior that remains unchanged.
-When an existing guarantee, limit, or safeguard appears to address the problem,
-explain what it actually governs and how the motivating condition still occurs.
-Stating that it is insufficient leaves the reader to reconstruct the reason.
-When order matters, preserve enough of the actions and handoffs
-for the reader to explain why the old behavior leads to the consequence
-and why the change addresses it.
-A list of mechanisms or a generic benefit cannot supply that explanation.
+before reasoning from them.
+Include context and unchanged behavior that explain the need for the change.
+If an existing guarantee, limit, or safeguard appears to address the problem,
+explain what it governs and how the motivating condition still occurs;
+calling it insufficient does not explain why.
+When order matters, retain actions and handoffs that explain how old behavior
+causes the consequence and how the change addresses it.
+A mechanism list or generic benefit cannot replace that explanation.
 
-Choose the representation before compressing the explanation.
-Carry forward a useful code shape, example, or comparison
-when it still exposes a relationship the new reader needs;
-adapt it to the destination's supported form.
-Trim setup and repetition while preserving the relationship.
-Do not turn a useful explanation into labels merely to shorten the message.
-A short causal paragraph is sufficient when it carries the reader's task.
+Choose the representation before compressing.
+Retain a code shape, example, or comparison that still exposes a relationship
+the new reader needs, adapting it to the destination's supported form.
+Trim setup and repetition, preserving the relationship.
+Do not replace useful explanation with labels merely to shorten it.
+A short causal paragraph suffices when it carries the reader's task.
 
 Include public names or readable syntax needed to discover, invoke, configure,
-or observe the behavior: commands, flags, keys, input forms, statuses, or errors.
-Include internal names and implementation details when they explain the failure,
-a constraint, a surprising choice, or the review boundary.
+or observe behavior: commands, flags, keys, input forms, statuses, or errors.
+Include internal names and details that explain a failure, constraint,
+surprising choice, or review boundary.
 Omit details whose removal leaves the causal explanation
-and the reader's decisions intact.
+and reader decisions intact.
 Distinguish normal use from explicit maintenance, migration, or recovery
-when that changes what the reader should do or expect.
-Locate this commit's responsibility within a larger effort only as needed;
-keep future behavior distinct from what the change implements.
+when it changes what readers should do or expect.
+Locate this commit's responsibility in a larger effort only as needed;
+distinguish future behavior from what this change implements.
 
-A qualification earns space when it limits a claim the explanation makes
-or changes the reader's decision.
-Remove an unchanged-path disclaimer if the text would not otherwise imply
-that path changed.
-When evidence is missing, narrow the claim, retain a material uncertainty,
-or obtain the missing context rather than invent a plausible story.
+Qualifications earn space when they limit a claim or change a reader's decision.
+Remove unchanged-path disclaimers unless the text otherwise implies that path changed.
+When evidence is missing, narrow the claim, retain material uncertainty,
+or obtain context; do not invent a plausible story.
 
 ## Identify the outcome in the subject
 
@@ -96,25 +85,21 @@ Use the form that matches the repository and affected area:
   and `project/component: Imperative summary`
   for a component-specific change.
 
-The prefix is lowercase;
-the imperative summary begins in sentence case.
-First identify the area whose behavior changes,
-then use its concise, stable name as the prefix.
-Use the architecture, repository instructions, and nearby history
-to establish that vocabulary.
-Treat changed paths as supporting evidence only;
-when a path name differs from the area that owns the changed behavior,
-use the behavior-owning area.
+Use a lowercase prefix and sentence-case imperative summary.
+First identify the area whose behavior changes;
+use its concise, stable name as the prefix, establishing vocabulary
+from architecture, repository instructions, and nearby history.
+Changed paths only support this choice; when a path names a different area,
+use the area owning the changed behavior.
 Omit the prefix only when no narrower stable area exists
-and the summary itself locates the affected system.
+and the summary locates the affected system.
 
-After the prefix, state the distinguishing result in imperative form.
-Use stable terms that a reader would search for in nearby history,
-including an affected system, package, component, command,
-or user-facing behavior when it improves discovery.
-The prefix cannot displace the terms that identify the outcome.
-A newly introduced name usually belongs in the summary rather than the prefix
-because readers could not have searched for it before this change.
+After the prefix, state the distinguishing result imperatively.
+Use stable terms readers would search for in nearby history, including the affected
+system, package, component, command, or user-facing behavior when it improves discovery.
+The prefix cannot displace terms identifying the outcome.
+A new name usually belongs in the summary, not the prefix;
+readers could not have searched for it before this change.
 
 Prefer a subject shorter than 50 characters
 and keep it at or below 72 characters.
@@ -129,18 +114,17 @@ Do not add validation sections, test plans, or equivalent reporting blocks,
 including when adapting a repository template or carrying forward a message.
 Continue performing the checks required by the task.
 
-Use observations as source material for the explanation itself.
-An observed failure can establish the motivating problem;
-a scoped measurement can quantify the consequence of a design choice.
-Describe what the system did under the relevant conditions.
-Retain the method or environment only when it changes what the result establishes.
+Use observations within the explanation: an observed failure can establish
+the problem, and a scoped measurement can quantify a design consequence.
+Describe the system's behavior under the relevant conditions;
+retain methods or environments only when they change what the result establishes.
 When an observation supplies the problem or result,
-use it in place of a generic account of that behavior,
-so the reader encounters the behavior once.
-Ask what the reader could not explain or assess without the observation.
-If it only confirms behavior already explained, omit it.
-A test-only change should explain the invariant and previously unrepresented risk;
-case names belong only when they define that boundary.
+use it instead of a generic account of that behavior,
+so the reader encounters it once.
+Omit observations that only confirm behavior already explained;
+keep what the reader otherwise could not explain or assess.
+Test-only changes should explain the invariant and previously unrepresented risk;
+name cases only when they define that boundary.
 
 When using raw input or output, regression comparisons, manual probes,
 measurements, or uncertainty about behavior,
@@ -163,11 +147,11 @@ a multi-commit PR synthesizes the aggregate outcome and context.
 Adapt useful content to a repository template,
 removing sections and placeholders that call only for excluded content.
 
-For a revision, reassess the subject and entire body against the current change.
-Keep supported, useful explanation, replace stale claims,
-and produce one coherent replacement rather than append corrections.
-Apply the same content decisions when copying commit text into a PR
-or revising metadata without changing code.
+For revisions, reassess the subject and entire body against the current change.
+Preserve useful, supported explanation and replace stale claims
+in one coherent replacement, rather than appending corrections.
+Apply the same decisions when copying commit text into a PR
+or revising metadata without code changes.
 
 Before returning or supplying metadata to a tool,
 read each artifact without the conversation or work notes.
@@ -209,15 +193,11 @@ not merely where the line becomes full.
 Use inline code for identifiers, paths, flags, fields, and command names.
 An indivisible identifier or link may exceed the line limit;
 keep that exception local and wrap surrounding prose normally.
-Indent each line of a code block with four leading spaces,
-plus four leading spaces for each enclosing structure.
-A top-level code block therefore has four leading spaces on every line;
-a code block within a top-level list item has eight leading spaces
-measured from the left margin.
-Put a complete command invocation in an indented code block
-when the reader needs its full form to perform a procedure
-or reproduce evidence.
+Indent every line of a code block four spaces from the left margin,
+plus four per enclosing structure: a top-level block uses four,
+a block within a top-level list item uses eight.
+Use an indented block for a complete command needed to perform a procedure
+or reproduce evidence, or for multi-line output whose original text
+materially supports the problem or result.
 Keep command names, flags, and partial syntax inline.
-Put multi-line output in an indented code block
-when its original text materially supports the problem or result.
 Place issue references and trailers after the explanatory body.

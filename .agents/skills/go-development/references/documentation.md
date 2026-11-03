@@ -1,7 +1,7 @@
 # Documentation
 
-For exported Go functions, types, variables, and fields,
-use GoDoc style and begin with the exported name.
+Use GoDoc style for exported functions, types, variables, and fields,
+beginning with the exported name.
 
 ```go
 // StartDispatcher runs workers until ctx is canceled.
@@ -9,12 +9,10 @@ use GoDoc style and begin with the exported name.
 func StartDispatcher(ctx context.Context) { ... }
 ```
 
-When adding or changing struct fields, check the documentation on the struct
-and its fields as part of that declaration change.
-Attach each field's documentation directly above its declaration inside the struct.
-The comment above `type` describes the whole value and relationships among fields.
-This lets a caller read a field's contract at the field being set or inspected.
-Separate each documented field from the previous field with an empty line.
+When adding or changing struct fields, check both struct and field documentation.
+Put field documentation directly above its declaration inside the struct;
+put whole-value meaning and field relationships above `type`.
+Separate each documented field from its predecessor with an empty line.
 
 ```go
 // ByteWindow selects a portion of a payload. Start must not exceed End.

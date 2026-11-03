@@ -1,46 +1,40 @@
 # Aggregates and persistence
 
-Choose the state boundary from the rule a change must preserve.
-First state what must hold when the change completes,
-which facts determine that rule, and who can change those facts.
-Distinguish rules that must hold together from relationships that can be
-reconciled later under an explicit business requirement.
+Choose state boundaries from the rule a change must preserve:
+what must hold on completion, the determining facts, and who can change them.
+Separate rules that must hold together from relationships an explicit business
+requirement permits reconciling later.
 
-## Group state by the rules it protects
+## Group state by its invariants
 
-An aggregate groups domain state whose invariants need coordinated protection.
-Its root controls changes to that state so callers cannot bypass those rules
-by updating a child independently.
-An aggregate is not every object reachable through a database relationship,
-nor every field convenient for a response.
+An aggregate groups state needing coordinated invariant protection;
+its root controls changes so callers cannot bypass rules through child updates.
+Database relationships and response convenience do not define the aggregate.
 Too broad a boundary makes independent changes contend;
-too narrow a boundary leaves a rule dependent on coordination outside its owner.
+too narrow a boundary leaves rules dependent on outside coordination.
 
 For an order constrained by an approved spending limit,
-every line edit must obey that limit, including imports and jobs.
-Sharing a customer does not put all that customer's orders in one aggregate.
-If a rule also constrains several orders together,
-identify an owner and enforcement mechanism for that larger decision.
-Renaming a collection of objects does not supply either.
+every line edit, including imports and jobs, must obey that limit.
+Sharing a customer does not combine all orders into one aggregate.
+For a rule spanning orders, identify its larger decision owner and enforcement;
+a new name supplies neither.
 
-## Make the persistence contract uphold the rule
+## Make persistence uphold the rule
 
-A repository gives callers access to domain state while owning retrieval
-and mapping mechanics.
-For aggregate mutations, shape access around the root and meaningful changes,
-rather than independently exposing each table's CRUD operations.
-Use a custom repository only when it supplies a useful domain contract;
-an existing persistence facility may already provide the needed abstraction.
+Repositories own retrieval and mapping while exposing domain state.
+Shape aggregate mutations around roots and meaningful changes
+rather than each table's independent CRUD.
+Use a custom repository only for a useful domain contract;
+existing persistence may already supply the abstraction.
 
-Loading must obtain sufficient, coherent state to make the decision.
-Several independent reads may combine facts that never held together.
-Choose a supported snapshot, locking, or version-validation mechanism
-when the rule depends on consistency across those reads.
-Loading the entire reachable object graph is not inherently necessary:
-targeted retrieval or a storage operation may enforce the same rule more directly.
+Load sufficient, coherent decision state.
+Independent reads may combine facts that never coexisted;
+use supported snapshots, locking, or version validation when consistency matters.
+Targeted retrieval or storage operations may enforce rules without loading
+an entire reachable graph.
 
-Two edits can each satisfy a limit against old state and violate it together.
-One possible contract:
+Two edits valid against old state can violate a limit together.
+Illustrative contract:
 
 ```text
 order, revision = orders.load(order_id)  # coherent decision state
@@ -52,44 +46,41 @@ on result:
     Unknown  -> reconcile the commit or use a proven safe retry
 ```
 
-Save checks the revision and persists all changes atomically or applies none;
-`Unknown` leaves which outcome occurred unresolved.
-Locks or other mechanisms can also work; all writers must participate.
-Verify storage isolation against the rule: an ordinary transaction or private
-object method alone does not establish concurrency protection.
-A unit of work coordinates persistence changes sharing one commit boundary.
+Save checks the revision and commits all required changes atomically or none;
+`Unknown` leaves the outcome unresolved.
+Locks or other mechanisms can also work.
+All writers must participate in the chosen protection.
+Verify storage isolation against the rule;
+a transaction or private method alone does not establish concurrency protection.
+A unit of work coordinates persistence sharing one commit boundary.
 
-Define loading existing state separately from creating a new domain object.
-Reconstitution restores identity and lifecycle without replaying creation effects.
-Account for old or invalid persisted state through an explicit compatibility
-or repair decision; do not silently invent valid business facts during mapping.
-Keeping mapping outside domain behavior does not make storage interchangeable:
-transaction capabilities, constraints, and query costs still bound the design.
+Separate reconstitution from new-object creation:
+restore identity and lifecycle without replaying creation effects.
+Handle old or invalid persisted state through explicit compatibility or repair
+decisions, not invented valid business facts during mapping.
+Keeping mapping outside domain behavior does not make storage interchangeable;
+transaction capabilities, constraints, and query costs still govern the design.
 
-## Let reads serve their callers
+## Let reads serve callers
 
-Reporting and search may combine several aggregates into a useful projection
-without granting that projection authority to mutate them.
-Use direct queries or dedicated read representations when they suit the caller.
-Keep authorization and the meaning of calculated values deliberate.
-Establish whether the caller needs a consistent snapshot or can accept stale data.
+Reporting and search projections can combine aggregates without gaining
+mutation authority.
+Use direct queries or dedicated read representations when useful;
+make authorization and calculated meanings deliberate,
+and establish whether the caller needs a consistent snapshot or accepts staleness.
 
-Separating read and update models is the useful core of CQRS
-(command query responsibility segregation).
-It can use one database and synchronous calls.
+Separating read and update models is CQRS (command query responsibility segregation).
+One database and synchronous calls can suffice; keep one representation if it
+serves both jobs well.
 Separate databases, asynchronous delivery, and event sourcing are independent
-choices with their own requirements and maintenance costs.
-Keep one representation when it serves both jobs well.
+choices requiring their own justification and maintenance.
 
-A local transaction spanning aggregates can be justified by a requirement
-and supported storage; eventual consistency requires an acceptable intermediate
-state and a way to finish or recover.
-Choose from those conditions rather than prescribing one transaction policy
-for every application.
-The external-boundary guidance owns coordination with independently controlled
-systems; a local aggregate cannot extend its transaction into them.
+Local cross-aggregate transactions can suit requirements and supported storage.
+Eventual consistency needs an acceptable intermediate state and completion or recovery.
+Choose by those conditions, not one universal transaction policy.
+External-boundary guidance governs independently controlled systems;
+a local aggregate cannot extend its transaction into them.
 
-Before settling the design, trace each writer, the facts loaded for a decision,
-and the commit condition that protects it.
-Use concurrent and interrupted executions to identify evidence needed from
-the actual storage boundary; isolated object tests cannot establish those guarantees.
+Trace every writer, loaded decision facts, and the protecting commit condition.
+Use concurrent and interrupted executions to identify needed real-storage evidence;
+isolated object tests cannot establish those guarantees.

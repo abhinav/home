@@ -1,71 +1,57 @@
 # External boundaries
 
-## Describe the capability the caller needs
+## Describe the needed capability
 
-Domain code should speak in domain concepts.
-Adapters may know both an external representation and the domain,
-but transport requests, database rows, vendor clients,
-generic command runners, and framework lifecycles
-should not spread through business logic.
-Translate at the boundary that owns the external mechanism.
-
-Model an external system in terms of the capability the domain needs.
-An adapter for an external process should own command syntax,
-working directory, environment, output parsing,
-exit status, and tool-specific failures.
-The domain should request the operation,
-not reconstruct the external protocol.
+Domain code uses domain concepts; adapters know external representations
+and translate where the external mechanism is owned.
+Keep transport requests, rows, vendor clients, generic command runners,
+and framework lifecycles from spreading through business logic.
+For external processes, adapters own command syntax, working directory,
+environment, parsing, exit status, and tool-specific failures.
+The domain requests an operation without reconstructing its protocol.
 Do not create a service boundary for a small local probe
 whose result and mechanism have no domain policy;
-the boundary must remove real knowledge, not anticipate hypothetical reuse.
+remove real knowledge rather than anticipating reuse.
 
-A gateway presents an external capability in the consumer's terms.
+A gateway expresses the capability in consumer terms.
 It may combine calls, normalize units, or translate errors;
 it need not mirror the provider's entire API.
-Dependency injection supplies a collaborator, while dependency inversion lets
-the consumer's contract govern the dependency on implementation details.
-Injecting a vendor client makes it visible but still exposes the vendor's model.
-Supply a purposeful capability when that translation removes knowledge from
-business logic.
-Keep the implementation of that capability at the adapter boundary.
+Dependency injection supplies collaborators; dependency inversion lets the
+consumer contract govern implementation dependencies.
+Injecting a vendor client still exposes its model.
+Supply a purposeful capability when that translation removes knowledge
+from business logic, and implement it at the adapter boundary.
 
 ## Preserve meaning across models
 
-Translate across a boundary when ownership, representation,
-or contract actually changes.
-Do not create duplicate types merely to make every package look isolated.
-A canonical generated or shared type can be the domain type
-when the domain truly owns its meaning and compatibility.
+Translate where ownership, representation, or contract changes,
+not merely to duplicate types across packages.
+A canonical generated or shared type can serve as the domain type
+when the domain owns its meaning and compatibility.
+Translate different external assumptions as well as data shape;
+this anti-corruption layer protects meaning.
+Its translation role does not absorb local eligibility or workflow policy
+from domain owners.
 
-When an external model carries different assumptions,
-translate their meaning as well as their data shape.
-This semantic protection is often called an anti-corruption layer.
-Its job is translation; local eligibility and workflow policy retain their
-domain owners rather than accumulating in the adapter.
+## Respect external authority
 
-## Respect the external system's authority
+Combining external responses establishes neither a coherent snapshot nor an aggregate.
+Identify each fact's source, required consistency, and provider capability.
+Expose freshness or revisions when they change caller actions.
+If the provider cannot meet the requirement, narrow the operation or resolve
+the capability gap rather than imply a guarantee through a return type.
 
-A gateway may assemble several records into a useful domain representation.
-Combining responses does not make them a coherent snapshot or a domain aggregate.
-Determine which source owns each fact,
-what consistency the caller's decision requires,
-and whether the external system can supply it.
-Expose freshness or revision information when it changes the caller's action.
-If the capability cannot meet the requirement, narrow the operation or resolve
-the missing capability; do not imply a guarantee through a return type.
+Remote aggregate access grants only its owner's mutation and consistency contracts.
+Several remote writes behind one save remain separate unless the provider
+supplies the required atomic operation.
+Local transactions cannot roll back unrelated external effects.
+Expose conflicts, partial completion, cancellation, and uncertainty
+when callers must respond differently.
 
-Access to a remotely owned aggregate supplies only the mutation authority
-and consistency guarantees offered by its owner.
-Several remote writes hidden behind one save operation are still several writes
-unless the provider offers the required atomic operation.
-A database transaction cannot roll back an unrelated external effect.
-Keep conflicts, partial completion, cancellation,
-and uncertain outcomes visible when the caller must act differently on them.
-
-A carrier can book a shipment even if its response never reaches the caller.
-A timeout therefore leaves the booking unresolved;
-report a pending outcome instead of claiming rejection or submitting a new booking.
-When the provider supports status lookup, reconcile the same operation:
+A timed-out shipment booking may have succeeded.
+Report it pending instead of rejected or submitting a new booking.
+With supported lookup, reconcile the same operation.
+Illustrative pseudocode:
 
 ```text
 book_shipment(shipment, operation_id):
@@ -77,34 +63,31 @@ reconcile(operation_id):
     return Pending(operation_id) if status.is_unknown else status
 ```
 
-A confirmed booking or rejection resolves the pending outcome.
-An inconclusive lookup leaves it pending.
-
-Use only supported lookup or retry contracts.
-An absent result need not prove nonexecution;
-a correlation ID alone proves neither deduplication nor safe resubmission.
-Establish retention, retry, and lookup guarantees before relying on them.
+Confirmed booking or rejection resolves pending; inconclusive lookup does not.
+Rely only on supported lookup and retry contracts:
+absence need not prove nonexecution, and correlation IDs establish neither
+deduplication nor safe resubmission.
+Establish retention, retry, and lookup guarantees before using them.
 
 ## Define completion across effects
 
-A command requests an action and can be rejected.
-An event records a fact that happened.
-Recording a domain event can make consequences explicit while leaving their
-execution to coordination code; it does not require a broker or asynchronous calls.
-Publish facts to another system only when the state they describe is committed.
-Such integration events are contracts with consumers and compatibility obligations.
+Commands request actions and can be rejected; events record facts that happened.
+Domain events can expose consequences for coordination code to execute
+without requiring brokers or asynchronous calls.
+Publish facts to another system only after their state is committed;
+integration events carry consumer contracts and compatibility obligations.
 
-Define what the caller's success result establishes:
-local acceptance, durable pending work, or completion by the external owner.
-Trace failures between those stages, including completion whose acknowledgment
-is lost.
-Choose recovery from the required outcome and actual external guarantees.
-Some workflows permit partial progress or a best-effort attempt;
-others require retry, reconciliation, compensation, or a pending state.
-Compensation is a further business action and may itself fail.
+Define whether success establishes local acceptance, durable pending work,
+or completion by the external owner.
+Trace failures between stages, including lost acknowledgments of completion.
+Choose recovery from required outcomes and actual provider guarantees:
+partial progress or best effort may suffice, or the workflow may need retry,
+reconciliation, compensation, or pending states.
+Compensation is a further business action that can also fail.
 
-When committed changes require follow-up to survive crashes,
-store both atomically (transactional outbox for messages):
+When required follow-up must survive crashes, store it atomically with the change.
+For messages this is a transactional outbox; existing durable jobs may suffice.
+Illustrative pseudocode:
 
 ```text
 transaction tx:
@@ -116,28 +99,25 @@ publish(event)
 mark_delivered(event.id)
 ```
 
-Existing durable jobs may suffice.
 Operation identity and duplicate handling must cover the business effect,
-concurrent attempts, and crashes;
-a preliminary "already processed" check does not establish idempotency.
-When durable follow-up is not required, a direct call with deliberate failure
-semantics may be enough.
+concurrent attempts, and crashes; an initial "already processed" check
+is not proof of idempotency.
+When durability is unnecessary, direct calls with deliberate failure behavior
+may suffice.
 
 ## Choose deployment boundaries separately
 
-Establish cohesive ownership before introducing a process or network boundary.
-Distribution does not create a meaningful domain boundary;
-it adds latency, partial failure, versioning, observability,
-deployment, and operational ownership.
-Introduce it only when demonstrated needs such as independent lifecycle,
-scaling, security, or failure isolation justify those costs.
+Establish cohesive ownership before a process or network boundary.
+Distribution adds latency, partial failure, versioning, observability,
+deployment, and operational ownership; it does not create domain meaning.
+Require demonstrated needs such as independent lifecycle, scaling, security,
+or failure isolation to justify those costs.
 
-An API gateway routes client traffic, may combine responses,
-and can own common network concerns.
-It serves a different purpose from a domain-facing gateway or an aggregate.
-Keep business rules with their owners even when traffic passes through one entry.
+An API gateway routes traffic, may combine responses, and can own common
+network concerns; it is distinct from a domain-facing gateway or aggregate.
+Keep business rules with their owners despite one traffic entry.
 
-Check a representative operation with the external dependency substituted:
+Substitute the dependency in a representative operation:
 domain decisions should remain understandable without its protocol.
-Then identify the adapter and real-system evidence needed to establish mapping,
-failure, and consistency guarantees; a fake cannot verify the provider's contract.
+Identify adapter and real-system evidence for mapping, failure,
+and consistency guarantees; a fake cannot verify the provider contract.

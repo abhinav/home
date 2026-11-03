@@ -1,47 +1,31 @@
 # Recovery
 
-Use this reference when raw Git was used for an operation git-spice owns,
-or when `git-spice ls` reports stale stack state.
-
-Do not push, publish, or create a pull request until the branch is integrated
-into git-spice.
-
-## Auto-Heal First
-
-Run:
+After raw Git performs an operation owned by git-spice, or tracked state is stale,
+do not push, publish, or create a PR before integrating the branch into git-spice.
+First allow auto-healing:
 
 ```bash
 git-spice ls --no-prompt
 ```
 
-`git-spice ls` reconciles git-spice metadata with current refs
-and auto-heals recoverable stale state.
-If the resulting stack is correct,
-no additional repair is needed.
-Continue below only when the branch is still missing or incorrectly tracked.
-Auto-healing does not satisfy a separate requested branch rename.
-If the tracked branch still has the wrong name,
-continue with the rename step below.
+If the stack is correct, no additional tracking repair is needed.
+Continue only for missing or incorrect tracking, or a requested rename still outstanding;
+auto-healing does not fulfill that rename.
 
-## Raw Git branch creation
+For a raw-created branch:
 
-If the user created a branch with raw Git:
+1. Inspect with `git branch --show-current`.
+2. Run `git-spice branch track --no-prompt`.
+3. If normalization is needed, run
+   `git-spice branch rename --no-prompt '<final-name>'`.
+4. Inspect with `git-spice ls --no-prompt`.
 
-1. Inspect the current branch with `git branch --show-current`.
-2. Track it with `git-spice branch track --no-prompt`.
-3. If the name needs normalization, rename the now-tracked branch with
-   `git-spice branch rename --no-prompt '<exact-final-name>'`.
-4. Inspect the stack with `git-spice ls --no-prompt`.
+For a raw-created or amended commit:
 
-## Raw Git commit or amend
+1. Inspect with `git log -1 --oneline` or `git show`.
+2. Correct its message if needed.
+3. Inspect with `git-spice ls --no-prompt`.
 
-If the user created or amended a commit with raw Git:
-
-1. Inspect the commit with `git log -1 --oneline`
-   or `git show`.
-2. Fix the commit message if needed.
-3. Inspect the stack with `git-spice ls --no-prompt`.
-
-For a message-only amend,
-there must be no staged changes unless the user explicitly asked to amend
-content too.
+A message-only amend requires no staged changes unless content amendment
+was explicitly requested too; follow [Branch and commit workflows](branch-and-commit-workflows.md)
+when staged changes would block the amend.

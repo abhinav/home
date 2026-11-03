@@ -9,7 +9,9 @@ Available skills:
 - `code-design`: `{GUIDANCE_DESCRIPTION}`
 - `code-readability`: Use when writing, changing, organizing,
   or reviewing non-generated code.
-- `code-comments`: Use when deciding whether code comments are needed.
+- `code-comments`: Use for source comments and documentation,
+  or when introducing domain concepts, non-obvious contracts,
+  or representation boundaries.
 
 A user asks you to refactor a service so retry policy moves from several
 callers into the component that owns the operation.
@@ -25,7 +27,8 @@ Do not design the refactor or modify files.
 - Select `code-design` for ownership, policy, boundary, and representation
   decisions.
 - Select `code-readability` because the task changes non-generated code.
-- Do not select `code-comments` unless the work reaches a comment decision.
+- Select `code-comments` for the introduced domain representation
+  and its non-obvious boundary contracts.
 
 ### Adjacent valid case
 

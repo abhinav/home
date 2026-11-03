@@ -1,26 +1,16 @@
 # Async tests
 
-When testing asynchronous behavior,
-prefer deterministic synchronization,
-explicit signals,
-or direct state assertions over unconditional waiting.
-Avoid assertions such as `require.Never`
-when their main effect is to make the test sleep.
+For tests of concurrency, event delivery, event absence, or background workers,
+prefer deterministic synchronization, explicit signals, or direct state assertions
+over unconditional waiting.
+Avoid `require.Never` when its main effect is sleep.
+Use real-time checks only when neither deterministic signals nor virtual time is practical.
 
-This applies to concurrency tests,
-event-delivery tests,
-absence-of-event tests,
-and background-worker tests.
-Use a real-time check only when no deterministic signal
-or virtual-time test is practical.
-
-For behavior driven by timers or deadlines,
-`testing/synctest.Test` provides a bubble with virtual time.
-Create the timers and goroutines inside the bubble;
-`synctest.Wait` lets their activity settle before an assertion.
-`synctest.Sleep(d)` advances virtual time by `d`
-and then waits for activity at that time to settle.
-This is suitable for boundary assertions without real sleeping:
+For behavior driven by timers or deadlines, create timers and goroutines
+inside `testing/synctest.Test`'s bubble.
+`synctest.Wait` settles activity before assertions;
+`synctest.Sleep(d)` advances virtual time by `d` and settles activity at that time.
+This supports boundary assertions without real sleeping:
 
 ```go
 func TestReadyAfterDelay(t *testing.T) {
@@ -36,5 +26,5 @@ func TestReadyAfterDelay(t *testing.T) {
 }
 ```
 
-The bubble cannot make external I/O or unrelated goroutines deterministic.
-Use explicit signals for those boundaries.
+The bubble cannot make external I/O or unrelated goroutines deterministic;
+use explicit signals for those boundaries.

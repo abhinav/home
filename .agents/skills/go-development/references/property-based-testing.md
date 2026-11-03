@@ -1,35 +1,31 @@
 # Property-based tests and fuzzing
 
-Use `code-testing` to choose the missing evidence, domain, and independent oracle.
-Keep a suitable existing integration; a useful new property does not justify
-replacing the project's test framework.
-For a new integration, match the input model and run mode:
+Use `code-testing` to choose missing evidence, domain, and independent oracle.
+Keep suitable existing integrations; a new property does not justify replacing the framework.
+For new integrations, match input model and run mode:
 
-- [Rapid](https://pkg.go.dev/pgregory.net/rapid) supplies typed generators,
-  shrinking, and replay within ordinary `go test` runs.
-  It is a compact choice for structured values and operation histories.
-- [Hegel](https://pkg.go.dev/hegel.dev/go/hegel) also generates and shrinks cases
-  during ordinary tests, using the Hegel engine shared across language bindings.
-  Consider it when that engine or an existing Hegel convention is useful.
-- [Go fuzzing](https://go.dev/doc/security/fuzz/) supplies coverage-guided search
-  and a persistent corpus without another testing engine dependency.
-  Its target parameters are bytes, strings, and supported scalar types;
-  structured domains need an adapter.
+- [Rapid](https://pkg.go.dev/pgregory.net/rapid): typed generation, shrinking,
+  and replay in ordinary `go test`; a compact choice for structured values and histories.
+- [Hegel](https://pkg.go.dev/hegel.dev/go/hegel): generation and shrinking in ordinary tests
+  using the Hegel engine shared across language bindings;
+  consider when that engine or convention helps.
+- [Go fuzzing](https://go.dev/doc/security/fuzz/): coverage-guided search and persistent
+  corpus without another engine dependency.
+  Targets take bytes, strings, and supported scalars; structured domains need an adapter.
 
-Choose dependency versions compatible with the module's supported Go version.
-Use the package documentation for that selected release.
-The examples below are alternatives for `LowerBound(xs []int, key int) int`,
-which accepts sorted input and returns the first index with value at least key,
-or the slice length.
-Counting smaller values checks this contract independently of binary search.
-Small value ranges encourage duplicates; length caps bound test work.
+Choose versions compatible with the module's supported Go version
+and read that release's documentation.
+These alternatives test `LowerBound(xs []int, key int) int` on sorted inputs:
+the first index whose value is at least `key`, or the slice length.
+Counting smaller values is independent of binary search.
+Small ranges encourage duplicates; length caps bound work.
 Keep fixed examples for important boundaries and broader integer limits.
 
 ## Rapid
 
-Add `pgregory.net/rapid` through the normal module workflow.
-In a `_test.go` file, import `slices`, `testing`, `pgregory.net/rapid`,
-and `github.com/stretchr/testify/assert` under the usual assertion convention.
+Add `pgregory.net/rapid` through the module workflow.
+In `_test.go`, import `slices`, `testing`, `pgregory.net/rapid`, and Testify `assert`
+under the usual assertion convention.
 
 ```go
 func TestLowerBound_rapid(t *testing.T) {
@@ -48,23 +44,20 @@ func TestLowerBound_rapid(t *testing.T) {
 }
 ```
 
-Run with `go test ./...` (`-count=1` forces a new run when Go could reuse a result).
-Use the callback's `*rapid.T` for draws, assertions, and case cleanup;
-reporting through the enclosing `*testing.T` bypasses the property runner.
-[Rapid's `MakeFuzz`](https://pkg.go.dev/pgregory.net/rapid#MakeFuzz)
-can adapt the same generator-based property to `f.Fuzz` when coverage-guided
-search is useful; it still needs a fuzzing invocation to search fresh inputs.
+Run `go test ./...`; `-count=1` forces a new run when caching is possible.
+Use callback `*rapid.T` for draws, assertions, and case cleanup;
+outer `*testing.T` reporting bypasses the runner.
+[MakeFuzz](https://pkg.go.dev/pgregory.net/rapid#MakeFuzz) adapts generator properties
+to `f.Fuzz` when coverage-guided search helps; fresh search still needs a fuzzing invocation.
 
 ## Hegel
 
-Add `hegel.dev/go/hegel` and import it as `hegel`.
-The current binding runs a native engine in the test process,
-with supported binaries bundled in the module and loaded through the user cache.
-Check the selected release's [test setup](https://github.com/hegeldev/hegel-go#installation)
-and [compatibility](https://hegel.dev/compatibility)
-against local and CI platforms before choosing it.
-Hegel is currently in beta, so verify APIs against the selected release.
-
+Add `hegel.dev/go/hegel`, imported as `hegel`.
+The current binding runs a native engine in-process, with bundled binaries loaded
+through the user cache.
+Check selected-release [setup](https://github.com/hegeldev/hegel-go#installation)
+and [compatibility](https://hegel.dev/compatibility) for local and CI platforms before choosing.
+Hegel is currently beta; verify APIs against the selected release.
 With the same `slices`, `testing`, and `assert` imports:
 
 ```go
@@ -84,16 +77,15 @@ func TestLowerBound_hegel(t *testing.T) {
 }
 ```
 
-Run with `go test ./...`.
-Report failures through the callback's `*hegel.T` so shrinking and replay
-remain under Hegel's control.
+Run `go test ./...`.
+Report failures through the callback's `*hegel.T`
+so shrinking and replay remain under Hegel's control.
 
 ## Go native fuzzing
 
-A semantic assertion works inside a native fuzz target too.
-This adapter explores at most 100 signed-byte values;
-it covers a useful subset of the integer contract, not every integer input.
-Use a richer adapter or typed generator when that restriction misses the risk.
+This semantic adapter covers at most 100 signed-byte values,
+a subset of the integer contract.
+Choose richer adapters or typed generation if that misses the risk:
 
 ```go
 func FuzzLowerBound(f *testing.F) {
@@ -116,14 +108,14 @@ func FuzzLowerBound(f *testing.F) {
 }
 ```
 
-`go test ./...` replays seeds, including committed files in
-`testdata/fuzz/FuzzLowerBound`; it does not start mutation.
-From this package, run a bounded campaign with:
+`go test ./...` replays seeds, including committed `testdata/fuzz/FuzzLowerBound` files;
+it does not start mutation.
+Run a bounded campaign from this package:
 
 ```sh
 go test -fuzz='^FuzzLowerBound$' -fuzztime=10s .
 ```
 
 Keep minimized failures as durable regressions.
-Use a property runner in the ordinary suite when fresh structured generation
-is needed there and a separate fuzzing campaign would not run.
+Use an ordinary-suite property runner when fresh structured generation is needed there
+and a separate fuzz campaign would not run.

@@ -1,42 +1,35 @@
 # Tape reference
 
-Use this reference after the parent skill selects the tape control model.
-It governs selection between Betamax and VHS, the order of tape commands,
-and the runner-specific validation and render forms.
+After selecting the tape control model, use this reference to choose
+Betamax or VHS, order tape commands, validate, and render.
 
 ## Choose Betamax or VHS
 
-Inspect an existing tape and applicable repository instructions
-before choosing a runner.
-
-- Follow an explicit user or repository selection.
-- Otherwise use Betamax for a new compatible tape when it is installed.
-- Use Betamax for an existing tape when it supports every command
-  and no local rule selects VHS.
-- Use VHS when Betamax is unavailable.
+Inspect the existing tape and applicable repository instructions first.
+Follow an explicit user or repository selection.
+Otherwise use installed Betamax for a new compatible tape.
+For an existing tape, use Betamax when it supports every command
+and no local rule selects VHS.
+Use VHS when Betamax is unavailable.
 
 Do not rewrite a working tape merely to change runners.
 
 ## Build the tape in execution order
 
-Use the following order when creating or changing a tape.
-For an existing tape that only needs rendering,
-inspect it for runner compatibility and continue at validation.
+Create or change a tape in the following order.
+For rendering alone, inspect runner compatibility and continue at validation.
 
 ### 1. Declare startup configuration
 
-Put `Output`, `Require`, and `Set` commands before runtime commands.
-Put Betamax `Env` commands in this startup block as well.
-These commands affect shell creation,
-terminal dimensions, capture timing, and rendering.
+Put `Output`, `Require`, `Set`, and Betamax `Env` before runtime commands;
+they affect shell creation, dimensions, capture timing, and rendering.
 
 Keep settings together unless the visible interaction needs a deliberate change
 such as a different typing speed for one command.
 
 #### Outputs
 
-`Output <path>` declares an artifact written after the tape finishes.
-Common visual outputs include:
+`Output <path>` declares an artifact written after the tape finishes:
 
 ```tape
 Output demo.gif
@@ -57,8 +50,8 @@ Output final-state.json
 Output frames
 ```
 
-Terminal-state JSON provides supplementary semantic evidence.
-It does not establish that a human can follow the rendered artifact.
+Terminal-state JSON supplements semantic evidence;
+it does not establish that a human can follow the rendered artifact.
 
 #### Requirements and environment
 
@@ -82,8 +75,7 @@ unless that configuration is part of the user workflow.
 
 #### Settings
 
-Use `Set` commands to control the terminal and render.
-Common settings include:
+Use `Set` to control the terminal and render:
 
 - `Set Shell "bash"` chooses the shell inside the recording.
 - `Set Theme "Theme Name"` chooses a theme.
@@ -106,12 +98,10 @@ Small TUI widgets usually need less terminal space than full CLI workflows.
 
 ### 2. Prepare hidden state
 
-`Hide` stops appending frames while commands continue to run in the PTY.
-`Show` resumes capture and immediately captures the current terminal state.
-
-Use hidden sections for setup and cleanup that are not the subject of the GIF.
-Clear the terminal before `Show`
-so setup output does not become the first visible frame:
+`Hide` stops appending frames while commands continue in the PTY;
+`Show` resumes capture with an immediate frame of the current terminal state.
+Hide setup and cleanup unless they are the subject.
+Clear before `Show` so setup output does not become the first visible frame:
 
 ```tape
 Hide
@@ -159,8 +149,8 @@ or visible typing would distract from the takeaway.
 
 #### Betamax captions
 
-When the parent skill calls for a presentation message,
-`Caption <text>` sets a single-line message for later visual frames:
+When the parent skill calls for a message,
+`Caption <text>` sets a single line for later visual frames:
 
 ```tape
 Caption "Choose the profile used by later commands"
@@ -174,11 +164,10 @@ Wait+Screen "Active: staging"
 Sleep 2s
 ```
 
-A caption remains active until another `Caption` replaces it
-or `Caption ""` clears it.
-Changing a caption does not capture a frame or add duration.
-Follow a caption-only change with `Sleep`
-when the stable terminal state should hold the new message.
+A caption persists until replaced or cleared with `Caption ""`.
+A change neither captures a frame nor adds duration;
+follow a caption-only change with `Sleep` when the stable terminal state
+should hold the new message.
 
 Captions appear in GIFs, videos, PNG outputs, frame directories,
 and screenshots.
@@ -219,8 +208,7 @@ state JSON, or final output dimensions.
 
 ### 4. Synchronize state and pace the viewer
 
-Use `Wait` for uncertain program state instead of guessing its duration.
-Common forms include:
+Synchronize uncertain program state with `Wait`:
 
 ```tape
 Wait
@@ -239,9 +227,8 @@ and output whose cursor position can change.
 Use a regular expression for changing text
 and a plain substring when stable text names the desired state.
 
-Treat waits as assertions and synchronization points.
-Put a semantic wait after each meaningful application transition
-before adding viewer pacing.
+Treat waits as assertions and synchronization points:
+put a semantic wait after each meaningful application transition, before pacing.
 
 `Sleep <duration>` continues capture without input:
 
@@ -251,8 +238,7 @@ Sleep 1s
 Sleep 2s
 ```
 
-Use `Wait` to establish that a state exists.
-Use `Sleep` only for the time the viewer needs after that state is true.
+After `Wait` establishes the state, use `Sleep` only for viewer pacing.
 
 ### 5. Capture the review state before cleanup
 
@@ -278,8 +264,7 @@ after the tape finishes, including commands run during hidden cleanup.
 When cleanup follows the visible result,
 use `Screenshot` or `State` as the stable review endpoint.
 
-State checks can verify terminal claims,
-but the rendered GIF still needs visual inspection.
+State checks can verify terminal claims; visually inspect the rendered GIF too.
 
 ## Validate, render, and inspect
 

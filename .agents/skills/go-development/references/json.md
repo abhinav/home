@@ -1,13 +1,11 @@
 # JSON
 
-## JSON
-
 Use `encoding/json/v2` for new JSON code.
-Its `Marshal` and `Unmarshal` functions accept options,
-and `MarshalWrite` and `UnmarshalRead` work directly with writers and readers.
-The v2 defaults reject duplicate object names and invalid UTF-8.
-They also encode nil maps and slices as empty objects and arrays,
-so preserve an existing wire contract deliberately when changing established code.
+`Marshal` and `Unmarshal` accept options; `MarshalWrite` and `UnmarshalRead`
+work directly with writers and readers.
+Defaults reject duplicate names and invalid UTF-8, encode nil maps as empty objects,
+and encode nil slices as empty arrays.
+Deliberately preserve established wire contracts when changing code.
 
 ```go
 import "encoding/json/v2"
@@ -21,9 +19,8 @@ if err := json.Unmarshal(data, &decoded); err != nil {
 }
 ```
 
-For a field whose zero value should be absent from JSON,
-use `omitzero` instead of a custom marshaler or `omitempty`.
-Unlike `omitempty`, it omits a zero `time.Time`:
+When zero-valued fields should be absent, use `omitzero` rather than a custom
+marshaler or `omitempty`; it also omits zero `time.Time` values:
 
 ```go
 type Event struct {
@@ -31,5 +28,4 @@ type Event struct {
 }
 ```
 
-See [JSON v2](https://pkg.go.dev/encoding/json/v2)
-for options and representation details.
+See [JSON v2](https://pkg.go.dev/encoding/json/v2) for options and representations.

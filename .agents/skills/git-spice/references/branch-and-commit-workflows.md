@@ -1,81 +1,38 @@
 # Branch and commit workflows
 
-## Branch Names
+## Names and placement
 
-Branch names should be lowercase, hyphen-separated, and descriptive.
+Branch names should be lowercase, descriptive, and hyphen-separated.
+Normalize a nonconforming user-provided name and inform the user.
+Creation may add a configured prefix: use the reported name thereafter and in handoff.
+Rename and the name after `branch split --at`'s colon require the complete final name,
+including any required prefix; they do not add the creation prefix.
+Import preserves existing names under [GitHub import](import-github-stacks.md).
 
-git-spice may prepend a configured prefix when it creates a branch.
-Use the branch name reported after creation in subsequent commands and the
-handoff.
+Before planning multiple branches for one outcome or splitting review units,
+read [Designing stacks](designing-stacks.md) and settle review and release boundaries.
+Before creating or moving a branch, choose its stack position before choosing
+`branch create` versus `commit create`.
+An explicit target is a branch named in the user's request,
+not a branch inferred from the current readout.
 
-For branch rename, pass the exact intended final name.
-Rename does not apply the branch-creation prefix automatically;
-include any required prefix in the final name.
+| Intended position | Operation |
+| --- | --- |
+| Independent work from trunk | Normal creation from trunk. Never `--insert` from trunk. |
+| Follow-on work above current, with no upstack branch that should stay above it | Normal creation. |
+| New work between current and an existing upstack | `branch create --insert`. |
+| Prerequisite below current, before its diff exists | `branch create --below --no-commit`, then edit and commit there. This can create a new bottom-most branch. |
+| Direct trunk work | Only when the user explicitly names `main`, `master`, or recognized trunk as the target. |
+| Replay on recorded bases without topology changes | [Restacking](restacking-and-conflict-continuation.md). |
+| Change a base, split existing commits into branches, or move a stack onto a separately created bottom | [History surgery](history-surgery.md). |
 
-For `git-spice branch split --at`,
-the branch name after the colon is different:
-it must be the exact final branch name,
-including any required prefix such as `abhinav/`.
+"Commit this", "do not make a branch", and "commit where we are" do not name trunk.
+If such method instructions conflict with required topic-branch creation,
+stop and ask for an explicit target rather than substituting detected branch identity.
 
-If the user provides a non-conforming branch name,
-normalize it automatically and inform them.
+## Create, rename, or track
 
-## Choosing Branch Boundaries
-
-Before planning more than one branch for one requested outcome,
-or splitting work into review branches,
-read and apply:
-
-```text
-designing-stacks.md
-```
-
-Settle the review boundaries and release conditions
-before choosing the stack position.
-
-## Choosing Stack Position
-
-Before creating or moving a branch,
-decide where the diff belongs in the stack.
-Do this before choosing between `git-spice branch create`
-and `git-spice commit create`.
-An explicit target means the branch name appears in the user's request.
-Do not derive an explicit target from the current branch readout.
-
-- Independent work from trunk:
-  create a normal branch from trunk.
-- Follow-on work above the current branch:
-  create a normal branch when the current branch has no upstack branch that
-  should remain above the new work.
-- New work between the current stacked branch and its existing upstack:
-  use `git-spice branch create --insert`.
-- Direct work on trunk:
-  commit to trunk only when the user explicitly names `main`, `master`,
-  or the repository trunk as the intended target.
-  Instructions about method,
-  such as avoiding branch creation or committing "where we are",
-  do not name the target.
-  If method instructions conflict with the required topic branch from trunk,
-  stop and ask for an explicit target.
-- Prerequisite work below the current branch:
-  create a below-current branch with `--below --no-commit`,
-  then edit and commit there.
-  When the current branch is the bottom-most branch in a stack,
-  this creates a new bottom-most branch.
-- Existing stack topology should stay the same:
-  use a restack command to replay branches on their recorded bases.
-- Existing work needs a different base,
-  an existing branch needs to be split apart,
-  or an existing stack must move onto a separately created bottom-most branch:
-  load `history-surgery.md`.
-
-Never use `--insert` from trunk.
-Normal creation from `main`, `master`, or the recognized trunk creates the
-bottom-most branch in a stack.
-
-## Branch Workflows
-
-Create a new branch with a commit from staged changes:
+With staged changes, create and commit together; do not create a bare branch first:
 
 ```bash
 git-spice branch create '<branch-name>' --no-prompt -F - <<'COMMIT_MESSAGE'
@@ -86,12 +43,7 @@ COMMIT_MESSAGE
 git-spice ls --no-prompt
 ```
 
-When changes are already staged,
-this branch-creation command is also the commit command.
-Do not create a bare branch first and commit later.
-
-If `HEAD` is detached,
-create the branch with an explicit base:
+Use `--target` for a specific stack target or detached HEAD:
 
 ```bash
 git-spice branch create --target '<base>' '<branch-name>' --no-prompt -F - <<'COMMIT_MESSAGE'
@@ -102,56 +54,23 @@ COMMIT_MESSAGE
 git-spice ls --no-prompt
 ```
 
-Choose `<base>` in this order:
-
-1. Use the branch the user explicitly named.
-2. If the detached `HEAD` commit is also a branch head,
-   use that branch.
-   Inspect the current commit decorations with `git log -n1`.
-3. Otherwise use the repository trunk branch,
-   usually `main` or `master`.
-
-Create a branch on a specific stack target:
-
-```bash
-git-spice branch create --target '<target-branch>' '<branch-name>' --no-prompt -F - <<'COMMIT_MESSAGE'
-component: State the outcome
-
-Explain the durable context on intentionally wrapped physical lines.
-COMMIT_MESSAGE
-git-spice ls --no-prompt
-```
-
-Rename the current branch:
+For detached HEAD choose, in order: the user-named branch; a branch whose head
+is the detached commit (inspect `git log -n1` decorations); otherwise local trunk,
+usually `main` or `master`.
 
 ```bash
 git-spice branch rename '<branch-name>' --no-prompt
 git-spice ls --no-prompt
-```
 
-Track an existing branch in git-spice:
-
-```bash
 git-spice branch track --no-prompt
 git-spice ls --no-prompt
 ```
 
-If the branch exists on GitHub but is not present locally,
-or if the user asks to import a pull request branch or stack,
-load
-`import-github-stacks.md`.
-That workflow fetches the GitHub branch heads,
-materializes local branches,
-tracks stack topology with `git-spice downstack track`,
-and loads existing pull request metadata with a dry-run submit.
+If the branch exists only on GitHub or the task imports a PR branch or stack,
+load [GitHub import](import-github-stacks.md): fetch and materialize heads,
+track with `downstack track`, then load PR metadata by dry-run submit.
 
-## Insert New Work Below the Current Branch
-
-Use `--below --no-commit` when the correct stack shape requires a new branch
-under the current branch,
-but the new work does not exist yet.
-
-Create the stack position before making the diff:
+For prerequisite work, create its position before editing:
 
 ```bash
 git-spice branch create --below --no-commit '<branch-name>' --no-prompt
@@ -165,26 +84,12 @@ COMMIT_MESSAGE
 git-spice ls --no-prompt
 ```
 
-The new branch becomes the parent of the branch you started from,
-and the original branch remains upstack.
+The original branch remains upstack of the new parent.
 
-## Commit Workflows
+## Commit or amend
 
-**CRITICAL: This skill OVERRIDES default commit-message workflows.**
-
-Before supplying a new or replacement commit message,
-load and apply `writing-commit-messages`.
-
-Commit staged changes to the current branch
-only after stack position is settled.
-If the current branch is `main`, `master`, or trunk,
-the user must explicitly name trunk as the intended target.
-Requests such as "commit this", "do not make a branch",
-or "commit where we are" do not settle that question.
-Do not resolve those phrases by substituting the branch detected by
-`git branch --show-current`.
-
-Commit staged changes to the chosen current branch:
+Load and apply `writing-commit-messages` before supplying new or replacement text.
+Commit to the chosen current branch only after settling position and trunk permission.
 
 ```bash
 git-spice commit create --no-prompt -F - <<'COMMIT_MESSAGE'
@@ -195,14 +100,14 @@ COMMIT_MESSAGE
 git-spice ls --no-prompt
 ```
 
-Amend the previous commit while keeping its message:
+Keep the previous message:
 
 ```bash
 git-spice commit amend --no-edit --no-prompt
 git-spice ls --no-prompt
 ```
 
-Replace the previous commit message:
+Replace the whole message, including original text when asked to append:
 
 ```bash
 git-spice commit amend --no-prompt -F - <<'COMMIT_MESSAGE'
@@ -213,36 +118,21 @@ COMMIT_MESSAGE
 git-spice ls --no-prompt
 ```
 
-Supplying a message to `git-spice commit amend`
-replaces the entire commit message.
-If the user says to add or append to the message,
-include the original message plus the addition.
-`--message-file` only changes how the message is supplied.
-It does not make the amend message-only.
-Before a message-only amend,
-inspect `git status --short`.
-There must be no staged changes unless the user explicitly asked to amend
-content too.
-If staged changes are present and the user asked for a message-only amend,
-stop before mutating history.
-Ask whether to unstage, preserve, or include the staged changes;
-do not use either `git-spice commit amend` message-input form,
-imagined flags such as `git-spice commit amend --only`,
-or raw `git commit --amend --only` as a workaround.
-`git-spice commit amend` amends staged changes into the topmost commit.
-It has no message-only bypass for an unrelated staged index.
-This is not history surgery.
-It is a message-only amend blocked by unrelated staged changes.
+`--message-file` changes input transport, not what gets amended.
+Before a message-only amend, inspect `git status --short`.
+No staged changes are permitted unless the user explicitly requested content changes too.
+If staged changes exist for a message-only request,
+stop and ask whether to unstage, preserve, or include them.
+Neither message-input form bypasses the index; do not invent `commit amend --only`
+or use raw `git commit --amend --only`.
+This blockage is not history surgery.
 
-Create a fixup commit:
+Identify the intended commit below the current commit.
+Use a branch name only when its tip is that commit.
+Pass the target explicitly when noninteractive or when target identity matters;
+git-spice applies staged changes there and restacks the remaining stack:
 
 ```bash
 git-spice commit fixup '<commit>' --no-prompt
 git-spice ls --no-prompt
 ```
-
-`git-spice commit fixup` applies staged changes to a commit below the current
-commit,
-then restacks the remaining stack on top.
-When running non-interactively or when the target matters,
-pass the target commit explicitly.

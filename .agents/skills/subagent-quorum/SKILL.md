@@ -34,35 +34,23 @@ Give each subagent only the context and permissions needed for its role.
 
 Classify each material unknown before deciding whether a quorum can resolve it:
 
-- Inspect sources or run a supported probe for a factual question.
-- Ask the user when the result depends on a missing material preference.
-- Use a proposal panel to explore materially different directions.
-- Use a decision quorum for a tradeoff among defined alternatives
-  under established criteria.
-
-## Run a proposal panel
-
-When exploring materially different directions,
-read [Proposal panel](references/proposal-panel.md)
-before assigning proposal authors.
-
-## Run a decision quorum
-
-When adjudicating defined alternatives under established criteria,
-read [Decision quorum](references/decision-quorum.md)
-before assigning adjudicators.
+| Unknown | Action |
+| --- | --- |
+| Factual question | Inspect sources or run a supported probe. |
+| The result depends on a missing material user preference | Ask the user. |
+| Materially different directions to explore | Use a proposal panel. Before assigning proposal authors, read [Proposal panel](references/proposal-panel.md). |
+| Tradeoff among defined alternatives under established criteria | Use a decision quorum. Before assigning adjudicators, read [Decision quorum](references/decision-quorum.md). |
 
 ## Produce the recommendation
 
 The parent compares every proposal against the decision contract,
-then synthesizes compatible strengths into the recommendation.
+rejects any alternative that fails a requirement regardless of votes,
+and synthesizes compatible strengths into the recommendation.
 Do not adopt a proposal wholesale merely because it received the most support.
 Do not add a decision quorum merely because the panel produced alternatives.
 Use adjudication only when the user requests it
 or the parent's comparison leaves a material judgment unresolved.
 
-The parent rejects any alternative that fails a requirement,
-regardless of its vote count.
 Reconcile disagreements caused by different facts, assumptions,
 or workload models before treating them as judgment differences.
 

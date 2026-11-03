@@ -1,18 +1,15 @@
 # Reduce implementation load with comments
 
-An implementation comment should give a maintainer
-a cheaper representation of the covered code.
-It commonly does one of four jobs.
+Give maintainers a cheaper representation of the covered code.
+The four common jobs below may apply independently.
 
 ## Explain context
 
-Explain a purpose, causal relationship, invariant,
-compatibility requirement, or performance constraint
-that changes how a maintainer should evaluate the visible operations.
-This can include why setup or fixture data exists,
-how a local mechanism produces externally observable behavior,
-or why an apparent simplification would violate a required property.
-Place the comment beside the smallest coherent span that owns the constraint.
+Explain a purpose, causal relationship, invariant, compatibility requirement,
+or performance constraint that changes evaluation of the visible operations.
+This can include fixture/setup purpose, how a local mechanism produces observable
+behavior, and why simplification would break a required property.
+Place it beside the smallest span owning the constraint.
 
 ```go
 // Workers must exist before the first event is sent;
@@ -22,18 +19,16 @@ for i := 0; i < numWorkers; i++ {
 }
 ```
 
-Treat comment writing as an analysis step.
-If the comment cannot state the purpose, relationship,
-invariant, or transition clearly,
-the implementation or model may need more design work.
+Comment writing is analysis: inability to explain the purpose, relationship,
+invariant, or transition clearly may indicate the model or implementation needs
+more design work.
 
 ## Expose working state
 
-Make a stack, cursor, parser position, ownership state,
-protocol phase, or other hidden state visible
-when later operations depend on it.
-These comments may describe what each call does
-because the useful result is the otherwise invisible state after the call.
+Expose hidden stack, cursor, parser, ownership, or protocol state that later
+operations depend on.
+Describing what a call does is useful when it reveals the otherwise invisible
+resulting state:
 
 ```go
 emit.LoadLocal(userID)    // stack: userID
@@ -41,34 +36,22 @@ emit.LoadConst(limit)     // stack: userID, limit
 emit.Call("withinQuota")  // stack: allowed
 ```
 
-The comments save the reader from replaying every stack mutation
-or repeatedly consulting another API.
-Introduce the notation once when its direction or omitted context is unclear.
+This saves replaying mutations or consulting another API.
+Introduce notation once if its direction or omitted context is unclear.
 
 ## Guide the primary path
 
-Use a guide comment when it lets a maintainer treat several visible operations
-as one accurate phase or stable maintenance region,
-or rely on a callee summary while reasoning at the current level.
-Its value is the change in reading scale;
-it need not reveal a hidden fact.
+Group several operations into one accurate phase or maintenance region,
+or summarize a callee for reasoning at the current level.
+Changing reading scale can help even without revealing a hidden fact.
 
-The label and the span it covers make one claim.
-Every covered operation must support the concept the label names.
-When the span is too broad, too narrow, or mixes separate regions,
-rewrite the label, regroup or split the code, adjust the span,
-or delete the comment.
-A label over one obvious statement is usually narration.
-A precise label over several operations may let the reader
-treat them as one unit while scanning, verifying, or changing the routine.
-The label still loses when blank lines, names, or structure
-already provide the same orientation at lower cost.
-
-When a phase has a meaningful transition,
-orient the reader with the incoming state,
-the operation or constraint,
-and the resulting state or consequence.
-Preserve stable names across adjacent phase comments.
+The label and full covered span make one claim: every operation must fit it.
+If the span is too broad, narrow, or mixed, adjust the label/span,
+regroup or split code, or delete the comment.
+A label over one obvious statement is usually narration;
+it also loses when names, blank lines, or structure orient at lower cost.
+For a meaningful transition, connect incoming state, operation/constraint,
+and resulting state/consequence, using stable names across phases.
 
 ```go
 // Release request-scoped allocations.
@@ -82,60 +65,37 @@ unwatchResources(c)
 releaseTracking(c)
 ```
 
-The calls already show each operation.
-The comments earn their place in a longer cleanup routine
-because they turn the calls into two maintenance regions.
-They would be noise in a short routine
-that already reads as one chunk.
+These labels can orient maintenance in a longer cleanup routine,
+but add noise when the routine already reads as one chunk.
 
 ## Teach prerequisite knowledge
 
-A teacher comment explains domain knowledge
-that the implementation depends on
-but a capable maintainer may not know or recall.
-Use one when that knowledge is necessary to verify or change the code
-and names, types, or structure cannot carry it.
+Teach unfamiliar domain premises needed to verify or change the code when names,
+types, and structure cannot carry them.
+Guide comments organize operations; teaching explains what the domain permits,
+a representation means, or a mechanism causes.
+A clear path can still have missing premises; evaluate that need separately.
 
-A guide comment helps the reader follow or group operations.
-A teacher comment supplies the premise that makes a decision understandable:
-what the domain permits, what a representation means,
-or how a mechanism produces its consequences.
-A path can be easy to follow while those premises remain unfamiliar.
-Evaluate that knowledge gap separately from the need for phase orientation.
+Across the requested span, identify unfamiliar premises behind its decisions,
+check those already established by code or explanations, and teach each missing
+premise where the implementation relies on it.
+Keep explanations supplying the needed model; omit new ones when the reader can
+already predict the decision.
+Coverage means the reader can explain the remaining decisions,
+not a comment or phase count.
 
-When adding or reviewing teacher comments,
-first identify the unfamiliar premises behind decisions in the requested span.
-Check which premises the code and existing explanations already establish,
-then teach each missing premise where the implementation relies on it.
-Keep an existing explanation when it supplies the needed model;
-omit a new comment when the reader can already predict the decision.
-Judge coverage by whether the reader can explain the remaining decisions,
-not by the number of comments or phases described.
+Teach only the model used here: goal, minimum prerequisite concept,
+relationship/transition/case split, mapping to code names, and material limits
+or exceptional cases.
+An algorithm name or background link alone is insufficient.
+The reader should be able to predict non-obvious conditions, updates, and cases.
+For an accumulated quantity or state machine, explain what its value represents,
+what moves it each way, and why each threshold selects its transition;
+naming an error, score, phase, or state does not explain that causal role.
 
-Teach only the model used here:
-
-1. State the implementation goal.
-2. Introduce the minimum prerequisite concept.
-3. Explain the relationship, state transition, or case split the code uses.
-4. Map stable terms and labels in the explanation to names in the code.
-5. State the material limit or exceptional case.
-
-Do not stop at naming an algorithm or linking background material.
-The reader should be able to use the explanation
-to predict the non-obvious conditions, updates, or cases in the code.
-For an accumulated quantity or state machine,
-state what the value represents,
-what moves it in each direction,
-and why each threshold selects its corresponding transition.
-Naming an `error`, `score`, `phase`, or `state`
-without explaining that causal role does not teach the model.
-
-Use a small plain-text visualization
-when shape, ownership, ordering, or a transition
-would take more effort to reconstruct from prose.
-Introduce the notation,
-show only the relationships used by the implementation,
-and reuse the code's names in the diagram and explanation.
+Use a small plain-text visualization when shape, ownership, ordering, or transitions
+would be harder to reconstruct from prose.
+Introduce notation, show only relationships used here, and reuse code names:
 
 ```go
 // Ownership is the clockwise interval (start, end].
@@ -147,12 +107,7 @@ and reuse the code's names in the diagram and explanation.
 return token <= end || token > start
 ```
 
-In a teacher comment,
-use paragraphs or section labels only when they separate distinct parts
-of the model the reader must learn,
-not as a fixed template.
-
-If the full lesson applies to several implementations,
-put it in an owned design note or reference.
-Keep enough local explanation and routing
-for a reader to understand how this code maps to that model.
+Use paragraphs or section labels only for distinct parts the reader must learn,
+not a fixed template.
+If the lesson spans implementations, place it in an owned design note/reference;
+retain enough local explanation and routing to map this code to that model.

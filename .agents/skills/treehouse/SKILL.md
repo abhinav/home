@@ -8,18 +8,12 @@ description: >-
 
 # Treehouse
 
-Use `treehouse` to lease temporary pooled Git worktrees for isolated task work.
-Keep the workflow small:
-lease a pooled worktree with an informative holder name,
-work only in the printed path,
-finish or explicitly defer the assigned task,
-then return the same path to the pool.
+Lease temporary pooled Git worktrees with `treehouse` for isolated task work.
+Work only in the printed path and return it under the conditions below.
+Return pooled worktrees for reuse; do not delete their directories, including with
+`rm -rf`, `git worktree remove`, or `wt remove`.
 
-`treehouse` worktrees are pooled resources.
-Do not delete the worktree directory when the task is done.
-Return it to the pool so later tasks can reuse it.
-
-## Sandbox Escalation
+## Sandbox escalation
 
 Request escalated filesystem privileges before every `treehouse` operation.
 Pool inspection, lease creation,
@@ -29,8 +23,6 @@ Use a short justification such as:
 "Allow treehouse to inspect and update pooled worktree state."
 
 ## Lease a worktree
-
-Request a leased worktree and print its path:
 
 ```bash
 treehouse get --lease --lease-holder "$slug"
@@ -52,7 +44,6 @@ Use the printed path as the task checkout:
 cd "$path"
 ```
 
-Perform the assigned work in that worktree.
 For delegated subagent work,
 give the subagent the leased path as the task path
 and keep the lease active until the subagent has completed its handoff.
@@ -79,29 +70,22 @@ Do not substitute a branch name,
 lease-holder slug,
 or parent directory.
 
-For completed delegated work,
-return the leased path after handoff by default
-when the result no longer depends on that filesystem checkout.
-Before returning the path,
-verify that completed work is durably recorded outside the pooled checkout,
-such as in a commit on the task branch,
-an applied destination change,
-a patch artifact,
-or another explicit preservation form suitable for the task.
-A handoff summary by itself is not durable preservation
-when the implementation exists only as uncommitted checkout state.
-A possible later inspection or follow-up is not enough reason
-to keep pooled capacity leased.
-Leave the lease active only when a concrete checkout-dependent action
-is ready to start immediately,
-when the user asks to keep working in that path,
-or when an environment-specific process must remain there.
-After the checkout-dependent action or process no longer needs the path,
-return the path before starting unrelated work.
+For completed delegated work, return after handoff by default
+when the result no longer depends on the checkout.
+Before returning the path, verify completed work is durably preserved outside
+the pooled checkout: a commit on the task branch, an applied destination change,
+a patch artifact, or another explicit form suitable for the task.
+A handoff summary alone is insufficient when the implementation exists only
+as uncommitted checkout state.
 
-For abandoned work,
-return the path only after the user has authorized abandoning that task's
-uncommitted or unsubmitted state.
-Do not remove the directory with `rm -rf`,
-`git worktree remove`,
-or `wt remove`.
+Possible later inspection or follow-up does not justify retaining pooled capacity.
+Leave the lease active only when:
+
+- a concrete checkout-dependent action is ready to start immediately;
+- the user asks to keep working in that path; or
+- an environment-specific process must remain there.
+
+When the action or process no longer needs the path,
+return it before starting unrelated work.
+For abandoned work, return only after the user authorizes abandoning
+that task's uncommitted or unsubmitted state.

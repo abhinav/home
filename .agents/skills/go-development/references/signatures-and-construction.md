@@ -2,15 +2,10 @@
 
 ## Parameter and result objects
 
-Use parameter objects when a Go function has several inputs
-or when optional inputs are likely to grow.
-Use result objects when a function has several outputs
-or when optional outputs are likely to grow.
-
-Do not count `context.Context` when deciding
-whether a function has too many parameters.
-Do not count `error` when deciding
-whether a function has too many return values.
+Use parameter objects for several inputs or likely growth in optional inputs.
+Use result objects for several outputs or likely growth in optional outputs.
+Do not count `context.Context` when judging too many parameters,
+or `error` when judging too many results.
 
 ```go
 func Export(ctx context.Context, req ExportRequest) (ExportResult, error) {
@@ -28,40 +23,30 @@ type ExportResult struct {
 }
 ```
 
-When adding fields to an existing parameter or result object,
-make new fields optional whenever possible.
-Prefer field types whose zero values preserve existing behavior
-or select a documented default.
-When omission must be distinguished from the type's zero value,
-a pointer, nullable representation, or required field may be clearer.
-
-Adding a required field to an established input object can invalidate existing
-callers even when their code still compiles.
-Preserve their construction behavior through an optional field and default,
+When adding fields to existing parameter or result objects,
+make them optional whenever possible; prefer zero values preserving existing behavior
+or selecting documented defaults.
+A pointer, nullable representation, or required field may be clearer
+when omission must differ from zero.
+Required additions can invalidate established callers even if they compile:
+preserve construction through an optional field and default,
 or treat the new requirement as a deliberate contract change.
 
-When returning a result alongside an error, normally return the result's zero value.
-Return a partial result only when the operation deliberately supports one;
-document which parts remain usable on failure.
-Preserve existing partial-result contracts, such as the count from `io.Writer.Write`.
+With an error, normally return the result's zero value.
+Return partial results only when deliberately supported,
+and document which parts remain usable on failure.
+Preserve existing contracts such as `io.Writer.Write`'s count.
 
 ## Constructors and required dependencies
 
-Choose constructor results and receiver semantics with
-[Type semantics](type-semantics.md).
-
-Use a constructor when creating a value requires behavior:
-validation, normalization, implementation selection, resource acquisition,
-or other work that establishes an invariant.
-
-Choose the constructed type’s fields
-from the dependencies and resolved state its methods need.
-Store independent collaborators directly in separate fields.
-Keep cohesive domain values grouped.
+Choose results and receivers with [Type semantics](type-semantics.md).
+Use constructors for validation, normalization, implementation selection,
+resource acquisition, or other invariant-establishing behavior.
+Store dependencies and resolved state needed by methods;
+keep independent collaborators in separate fields and cohesive domain values grouped.
 
 Use one of these constructor shapes.
-
-A configuration struct may contain both required and optional fields:
+Use configuration structs for several required inputs or likely growth:
 
 ```go
 func NewIndexer(cfg IndexerConfig) *Indexer {
@@ -76,11 +61,7 @@ type IndexerConfig struct {
 }
 ```
 
-Use a configuration struct when construction has several required inputs
-or when the input set is likely to grow.
-Mark required configuration fields with an inline `// required` comment.
-
-A constructor may instead accept up to two required positional arguments
+Alternatively, accept up to two required positional inputs
 followed by an options struct containing only optional fields:
 
 ```go
@@ -97,14 +78,10 @@ type PublisherOptions struct {
 }
 ```
 
-If a type is named `Options`, every field must be optional.
-A nil options pointer means that all options use their defaults.
-When a constructor needs more than two required inputs,
-use a configuration struct rather than adding more positional arguments.
-
-Do not add a constructor that only copies dependencies into fields.
-When no construction logic is required,
-export the dependency fields directly:
+Every field of a type named `Options` must be optional; nil options select all defaults.
+More than two required inputs need a configuration struct, not more positional inputs.
+Do not add constructors that only copy dependencies;
+export dependency fields for direct initialization:
 
 ```go
 type Recorder struct {
@@ -115,25 +92,19 @@ type Recorder struct {
 }
 ```
 
-Required fields in either a configuration struct or a directly initialized
-value use the same marker.
-Place `// required` on the same line as the field declaration.
-Do not put the marker on the line above the field.
+Mark required configuration and direct-initialization fields with inline `// required`,
+on the declaration line, not above it.
 The [requiredfield](https://pkg.go.dev/go.abhg.dev/requiredfield) linter
-uses the inline marker to enforce initialization of required fields.
-
-Prefer useful zero-value behavior for optional fields.
-Document defaults, deferred initialization, or cases where omission must be
-distinguished from the field type's zero value.
+uses the marker to enforce initialization of required fields.
+Prefer useful optional zero values; document defaults, deferred initialization,
+or distinctions between omission and zero.
 
 ## Resource acquisition and cleanup
 
-Return the acquired resource with a cleanup method or cleanup function,
-and have the caller defer cleanup immediately after successful acquisition.
-This keeps the resource's lifetime visible beside its use
-and lets the caller use ordinary control flow and error returns.
-
-For example, with a cleanup function that cannot fail:
+Return an acquired resource with a cleanup method or function.
+Callers defer cleanup immediately after checking acquisition succeeded,
+keeping lifetime beside use and preserving ordinary control flow and early returns.
+For cleanup that cannot fail:
 
 ```go
 foo, cleanup, err := acquireFoo()
@@ -147,28 +118,18 @@ if err := useFoo(foo); err != nil {
 }
 ```
 
-Choose the owning function's scope to match the required resource lifetime;
+Match owning function scope to resource lifetime:
 `defer` runs when that function returns, not when a block or loop iteration ends.
-See [Defer](https://go.dev/doc/effective_go#defer) for the language behavior.
+See [Defer](https://go.dev/doc/effective_go#defer).
 
 ## Exported members on unexported types
 
-Unexported concrete types can still have exported members.
-
-Use exported methods or fields when another component is expected
-to call, set, read, or rely on that member as part of the type's contract.
-The type name may be package-local,
-but the member is still a selector surface for its callers.
-Document exported members with the same care you would use on an exported type.
-
-Keep members unexported when they are implementation details
-owned by the type's own methods or tightly local construction code.
-
-Do not use lowercase methods or fields
-merely because the concrete type is unexported.
-Lowercase names signal implementation ownership.
-If another component must know about the member to do its job,
-the member is part of the collaboration boundary.
+Unexported concrete types may have exported members.
+Export methods or fields when other components are expected to call, set, read,
+or rely on them as part of the contract; document them as carefully as on exported types.
+Keep implementation details owned by methods or tightly local construction unexported.
+Do not lowercase members merely because the type is unexported:
+lowercase signals implementation ownership, not collaboration contracts.
 
 ```go
 type reportWriter struct {
@@ -180,7 +141,3 @@ func (w *reportWriter) WriteSummary(ctx context.Context, report Report) error {
     ...
 }
 ```
-
-In this example, `reportWriter` is package-local.
-`Output` and `WriteSummary` are exported because another package component
-constructs the writer and asks it to write a summary.

@@ -1,40 +1,32 @@
 # Callbacks
 
-Choose a callback API by what the callee needs from the caller.
-A function parameter can deliver successive values, scope access to a resource,
-or supply behavior the callee needs to perform its operation.
-These roles call for different API shapes.
+Choose by what the callee needs: successive values, resource lifetime,
+or caller-supplied behavior have different API shapes.
 
 ## Iteration
 
-Prefer `iter.Seq[V]` over an API that repeatedly invokes the same callback
-when the callback's only control over the producer
-is whether it should invoke the callback again.
-Use `iter.Seq2[K, V]` when each step yields a pair.
-Callers consume the sequence with `for range`
-and retain ordinary `continue`, `break`, and `return` behavior.
-
+Prefer `iter.Seq[V]` when a repeated callback
+controls the producer only by deciding whether it is invoked again;
+use `iter.Seq2[K, V]` for pairs.
+Callers retain ordinary `for range`, `continue`, `break`, and `return`.
 Read [Collections and iteration](collections-and-iteration.md#producing-and-consuming-values)
-for iterator implementation, early stopping, errors, and resource cleanup.
+for production, early stopping, errors, and cleanup.
 
 ## Resource management
 
-Always prefer explicit acquisition with deferred cleanup
-for resource management over a `WithFoo(func(Foo))` callback API.
-The caller should keep its work and early returns in its own control flow.
+Always prefer explicit acquisition and deferred cleanup over `WithFoo(func(Foo))`.
+Keep caller work and early returns in caller control flow.
 Read [Resource acquisition and cleanup](signatures-and-construction.md#resource-acquisition-and-cleanup)
-for acquisition results, cleanup operations, and the owning function's scope.
+for results, cleanup operations, and owning scope.
 
 ## Caller-supplied behavior
 
-Keep a callback when the callee needs behavior chosen by the caller,
-such as a comparison `func(a, b T) int` or transformation `func(T) U`.
-The callee consumes the result to perform its operation.
-Repeated invocation alone does not make a callback an iterator:
-a comparison result determines ordering, not merely whether to call again.
-
-For a public strategy that needs additional optional capabilities,
-consider a small interface instead of a function parameter:
+Keep callbacks for behavior the callee uses to perform its operation,
+such as `func(a, b T) int` comparisons or `func(T) U` transformations.
+Repeated invocation is not inherently iteration: comparison results determine order,
+not merely whether to call again.
+For a public strategy needing additional optional capabilities,
+consider a small interface:
 
 ```go
 type Formatter interface {
@@ -42,8 +34,6 @@ type Formatter interface {
 }
 ```
 
-Implementations can expose further methods that callers discover through
-[Optional capabilities](interfaces.md#optional-capabilities).
-A parameter typed as `func(Entry) string` exposes no additional methods.
-Keep a callback when one operation satisfies the caller's needs;
-do not introduce a strategy interface solely for hypothetical expansion.
+Discover extra methods through [Optional capabilities](interfaces.md#optional-capabilities);
+`func(Entry) string` parameters expose none.
+Keep callbacks when one operation suffices; do not add interfaces for hypothetical growth.

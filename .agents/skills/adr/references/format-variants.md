@@ -1,36 +1,18 @@
 # ADR format variants
 
-Use the repository template and established records when they define an ADR
-format.
-Preserve their section names, ordering, and level of detail.
-Do not introduce a second format merely because this reference uses different
-defaults.
-
-When the repository has no established format, use the default record below.
-Use a compact record only when it preserves the same decision-time model
-without ambiguity.
-Add optional sections when they give the reader useful evidence or distinctions.
+Repository templates and established records govern section names, ordering,
+and detail; do not introduce a competing format.
+Without precedent, use the default below.
+Use a compact form only when it preserves the same decision-time model unambiguously.
 
 ## Default record
 
-Every ADR must make these parts recoverable:
-
-- **Title:** Identify the decision, not only the problem.
-- **Status:** State the lifecycle position when the request or inspected
-  evidence establishes it and another source does not make it clear.
-- **Context:** State the facts, forces, constraints, and trigger.
-- **Decision:** State the chosen response, scope, and material boundaries.
-- **Consequences:** State the resulting benefits, costs, risks, and constraints.
-
-When Status applies, put it immediately after the title and before Context.
-Do not infer Status from future-tense wording or from the act of drafting an ADR.
-
 ```markdown
-# <Decision title>
+# <Decision, not just the problem>
 
 ## Status
 
-<Established lifecycle position and supersession link when applicable.>
+<Established lifecycle state and supersession link, when applicable.>
 
 ## Context
 
@@ -42,24 +24,20 @@ Do not infer Status from future-tense wording or from the act of drafting an ADR
 
 ## Consequences
 
-<Positive, negative, and neutral effects that matter later.>
+<Material benefits, costs, risks, and constraints.>
 ```
 
-Omit Status when it is unknown or established elsewhere.
-Required headings do not authorize inferred content.
-When Context, Decision, or Consequences lacks necessary evidence-backed content,
-state the material evidence gap in that section.
-Do not elaborate the supplied decision merely to fill the template.
-
-Rationale can appear in Context, Decision, or an optional Rationale section.
-Use headings only for sections that contain useful content.
-Do not emit an empty optional heading, placeholder text, template commentary,
-or `N/A` only to preserve a template.
+Include Status immediately after the title only when request or evidence establishes
+it and another source does not make it clear.
+Drafting and future tense do not establish status.
+For missing necessary Context, Decision, or Consequences content, state the material
+evidence gap; do not invent content to fill headings.
+Rationale may sit in Context, Decision, or its own useful section.
+Remove empty optional headings, placeholders, template commentary, and filler `N/A`.
 
 ## Compact record
 
-Use a compact record when one short passage can state the decision,
-decision-time reason, and material consequences without ambiguity.
+Use one short passage when it preserves decision, reason, and material consequences:
 
 ```markdown
 # Use opaque resource identifiers
@@ -71,64 +49,39 @@ The public boundary must translate those numbers,
 and operators cannot infer creation order from public identifiers.
 ```
 
-A compact record can still include a code shape or plain-text diagram.
-Do not omit a useful structural aid merely to keep the prose to one paragraph.
+Retain useful code shapes and plain-text diagrams even in a compact record.
 
 ## Optional sections
 
-Add an optional section only when its evidence-backed content changes what the
-reader can understand, evaluate, or revisit:
-
-- **Decision drivers:** Separate several forces that the decision must balance.
-- **Alternatives considered:** Preserve rejected choices and the tradeoffs that
-  distinguish them when those choices can plausibly recur.
-- **Rationale:** Explain why the decision fits the context when that reasoning
-  would be difficult to recover from Context or Decision.
-- **Non-goals:** Exclude a nearby interpretation that would materially expand
-  the decision's scope.
-- **Acceptance:** Give observable criteria or point to the smallest useful
-  evidence that shows whether the implemented result satisfies the decision.
-- **References:** Link evidence or related decisions needed to evaluate the
-  record.
-
-Preserve repository ordering when it exists.
-Without an established order, put decision analysis before Decision,
-then put Acceptance and References after Consequences.
-
-Do not add an Implementation Plan merely because the ADR is detailed.
-Put file changes, task sequencing, rollout steps, and test procedures in the
-artifact that owns implementation.
-Link that artifact when the connection helps the reader.
-
-## Apply lifecycle metadata
-
-Use the repository's established status vocabulary.
-Common states include Proposed, Accepted, Rejected, Deprecated,
-and Superseded.
-
-When a proposal is rejected,
-preserve the reason that completed the review outcome.
-New evidence belongs in a new proposed ADR that links to the rejected record;
-it does not make the historical rejection disappear.
-
-A superseding ADR should identify the record it replaces.
-After the new ADR is accepted,
-the old ADR should identify and link to its replacement.
-Keep the old decision and rationale intact.
-
-Status records the decision lifecycle.
-Acceptance evaluates the result of applying the decision.
-A change to acceptance evidence does not by itself change the decision.
-
-## Write decision analysis
-
-Describe alternatives by the same decision drivers.
-Do not give the chosen option detailed evidence while reducing rejected options
-to labels or strawmen.
-Omit an alternative when it does not help a future reader understand or revisit
+Add a section only when evidenced content helps the reader evaluate or revisit
 the decision.
 
-Consequences describe the context created by the decision.
-They are not a disguised task list.
-Include positive, negative, and neutral consequences when material.
-Do not manufacture one item in each category for symmetry.
+| Section | Use when |
+| --- | --- |
+| Decision drivers | Several forces need to be distinguished. |
+| Alternatives considered | Rejected choices and their tradeoffs could plausibly recur. |
+| Rationale | Context and Decision do not make the fit clear. |
+| Non-goals | A nearby interpretation would materially expand scope. |
+| Acceptance | Observable criteria or evidence show whether the result satisfies the decision. |
+| References | Related decisions or evidence are needed to evaluate the record. |
+
+Follow repository ordering; otherwise put analysis before Decision and
+Acceptance and References after Consequences.
+Implementation tasks, rollout steps, and test procedures belong in their owning
+artifact, linked when useful; detail alone does not justify an Implementation Plan.
+
+## Lifecycle and analysis
+
+Use repository status vocabulary, commonly Proposed, Accepted, Rejected,
+Deprecated, or Superseded.
+Preserve the reason a proposal was rejected.
+New evidence belongs in a new proposed ADR linked to the rejected record.
+Follow the main skill's supersession procedure without changing historical rationale.
+Status tracks decision lifecycle; Acceptance evaluates implementation results.
+Changed acceptance evidence alone does not change the decision.
+
+Compare alternatives against the same drivers with fair evidence for each;
+omit alternatives that do not help future evaluation.
+Consequences describe the context the decision creates, not implementation tasks.
+Include positive, negative, and neutral effects when material, without manufacturing
+one of each for symmetry.

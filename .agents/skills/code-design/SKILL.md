@@ -1,117 +1,76 @@
 ---
 name: code-design
 description: >
-  Use when designing, changing, or evaluating code ownership, boundaries,
-  contracts, representations, dependency lifetimes, domain adapters, public API
-  shapes, or where policy and state live, including while adding code or
-  refactoring. Do not use for a local readability-only edit that changes none
-  of those design decisions.
+  Design, change, or evaluate code ownership, boundaries, contracts,
+  representations, dependency lifetimes, domain adapters, public API shapes,
+  or where policy and state live, including new code and refactoring.
+  Do not use for a local readability-only edit that changes none of these decisions.
 ---
 
 # Code design
 
-Use this skill when designing new code or refactoring.
+Give each domain decision an owner and callers a stable contract
+that hides the owner's implementation coordination.
+Aim to make a meaningful change require understanding and editing
+the smallest coherent part of the system, not to add abstractions.
 
-Design decides where knowledge, state, and decisions live.
-A good design gives each domain decision an owner
-and lets callers depend on a stable contract
-without coordinating the owner's implementation details.
-The goal is not more packages, interfaces, objects, or helpers.
-The goal is to make a meaningful change require understanding
-and editing the smallest coherent part of the system.
+## Design from the caller's outcome
 
-Judge a design from the perspective of the next maintainer.
-Imagine a likely change to the behavior,
-then trace what that maintainer would need to discover and modify.
-If one decision requires synchronized edits across unrelated callers,
-the design has probably leaked knowledge.
-If a boundary merely moves the same coordination behind another name,
-the boundary has not reduced the load.
-
-## Design from the outside in
-
-Begin with the outcome the caller needs,
-not the classes, functions, or framework pieces already available.
-Establish what the operation means to the people or systems affected by it:
-which facts matter, which decisions change them,
-and which rules must remain true.
-Use concrete successful, rejected, and interrupted cases
-to discover missing concepts and ambiguous terms.
-Treat the model as an explanation to refine with domain evidence;
-record unresolved business rules instead of filling them with familiar defaults.
-When discovering domain concepts or reconciling different meanings of a concept,
+Establish what the operation means to affected people and systems:
+the relevant facts, decisions, and rules.
+Use successful, rejected, and interrupted cases to expose missing concepts
+and ambiguous terms; record unresolved business rules instead of inventing defaults.
+When discovering domain concepts or reconciling different meanings,
 read [Domain modeling](references/domain-modeling.md)
-for scenarios, shared language, and the scope of a model.
+for scenarios, shared language, and model scope.
 
-Design the public or inter-component surface from the calling code inward.
-Sketch representative calls before choosing the implementation shape.
-From those calls, draft the smallest useful boundary:
-name its operations and define their inputs, results, ownership,
-failure behavior, mutation, and ordering.
-Check that contract against real call sites and representative examples
+Sketch representative calls before choosing implementation structure.
+Define operations, inputs, results, ownership, failure behavior, mutation,
+and ordering; check this contract against real call sites and examples
 before implementing the production boundary.
+Libraries, frameworks, schemas, protocols, and existing helpers are candidates
+for satisfying the contract, not reasons to expose their mechanisms to callers.
+If feasibility is uncertain, use a private spike and revise the contract or
+implementation from its evidence; do not expose exploration as an accidental contract.
 
-Treat implementation mechanisms as candidates for satisfying the contract,
-not as the source of the caller-facing design.
-A selected library, framework, schema, protocol, or existing helper
-should not leak into the boundary merely because implementation starts there.
-When feasibility is uncertain, use a private spike to test the mechanism,
-then revise either the contract or the implementation from what the spike proves.
-Do not let exploratory implementation become the public contract by accident.
+Evaluate the whole candidate through normal use, failure, and recovery,
+including caller and operator coordination.
+For each added component, state, or step, identify its requirement and obligations.
+Obligations introduced by a mechanism are costs, not proof that it is needed.
+When a choice needs more machinery to support its consequences,
+compare changing that choice.
+Prefer designs satisfying the contract with fewer concepts and interactions
+across implementation and operation;
+keep necessary complexity with the requirement's owner.
+For an uncertain material constraint, identify evidence that distinguishes
+alternatives before committing to structure that depends on it.
 
-Evaluate a candidate as a complete way to deliver the supported outcome.
-Trace normal use, failure, and recovery through it,
-including what callers and operators must coordinate.
-For each additional component, state, or step,
-identify the requirement it satisfies and the obligations it introduces.
-Those obligations are costs of choosing that mechanism;
-they do not independently establish that the mechanism is needed.
-When a choice creates a problem requiring more machinery,
-compare changing that choice with supporting its consequences.
-Prefer the design that satisfies the contract with fewer concepts
-and interactions to maintain across implementation and operation.
-Keep necessary complexity with the owner of the requirement that demands it.
-When a material constraint is uncertain,
-identify the evidence that would distinguish the alternatives
-before committing to the structure that depends on it.
+When the domain or workflow is uncertain, keep early structure changeable
+and learn from working implementations.
+Stabilize an abstraction only when representative behavior and real callers
+reveal a cohesive responsibility and narrow contract; refactor toward it then.
 
-Outside-in design does not require freezing an early guess.
-When the domain or workflow is still uncertain,
-keep the initial structure easy to change
-and use working implementations to learn its shape.
-Do not stabilize an abstraction before representative behavior
-and real callers reveal a cohesive responsibility and narrow contract.
-Refactor toward that boundary when the evidence appears.
+For a boundary wrapping, extending, or replacing existing behavior,
+establish supported behavior, constraints, and compatibility commitments
+from callers, tests, repository history, and operational evidence.
+Preserve behavior rather than accidental structure,
+but do not dismiss an incumbent mechanism because its purpose is unclear.
+Use current requirements, callers, and history to assess likely change;
+omit options, extension points, and indirection for hypothetical needs.
 
-Use current requirements, callers, and repository history
-as evidence about likely change.
-When a boundary wraps, extends, or replaces existing behavior,
-establish the supported behavior, constraints,
-and compatibility commitments before stabilizing its contract.
-Inspect callers, tests, repository history, and operational evidence.
-Preserve supported behavior rather than accidental implementation structure,
-but do not infer that an incumbent mechanism has no purpose
-merely because its purpose is not immediately visible.
-Do not add options, extension points, or indirection
-only because something could change someday.
-Stable public boundaries deserve more caution:
-their names, inputs, outputs, mutation behavior, ordering,
-and partial-failure behavior can all become compatibility commitments.
-Expose only the operations callers need,
-and make observable behavior deliberate.
-Make the representative operation direct.
-When demonstrated callers need materially different levels of control,
-provide an advanced contract without forcing common callers
-to coordinate its additional concepts.
-Do not add parallel API layers for hypothetical callers.
+Treat stable public names, inputs, outputs, mutation, ordering,
+and partial-failure behavior cautiously: they can become compatibility commitments.
+Expose only needed operations and make observable behavior deliberate.
+Keep representative use direct.
+When demonstrated callers need materially different control,
+provide an advanced contract without imposing its concepts on common callers;
+do not add parallel API layers for hypothetical callers.
 
-A boundary earns its place when its contract replaces knowledge:
-callers can ask for a useful outcome
-without knowing the representation, policy, or sequence behind it.
-Prefer complete domain operations over implementation stages
-when the ordering and coordination belong to the domain.
-Preserve composable stages when callers genuinely own their selection,
-ordering, or reuse.
+A boundary earns its place when its contract replaces knowledge of
+representation, policy, or sequence.
+Prefer complete domain operations when the domain owns coordination;
+retain composable stages when callers own their selection, ordering, or reuse.
+Illustrative calls:
 
 ```text
 billing.send_invoice(invoice_id)  # billing owns load, price, send, retry, audit
@@ -121,78 +80,53 @@ frames = crop(frames, region)
 encode(frames, format)
 ```
 
-A helper, type, object, module, package, or service is useful
-when it names a real concept, protects an invariant,
-owns a cohesive operation, or centralizes genuine shared policy.
-Judge the contract the reader relies on:
-a boundary is shallow when using it still requires callers
-to reconstruct the decision or sequence it claims to own.
-Private methods can organize an owner's implementation
-without creating additional owners.
-Use `$code-readability` to judge that decomposition across the whole operation.
+Helpers, types, objects, modules, packages, and services can name a real concept,
+protect an invariant, own a cohesive operation, or centralize shared policy.
+A boundary is shallow if callers must still reconstruct its decision or sequence.
+Private methods can organize an owner's implementation without adding owners;
+use `$code-readability` to judge that decomposition across the whole operation.
 
 ## Put knowledge with its owner
 
-Related state, invariants, dependencies, and operations
-should live with the concept whose behavior they determine.
-Physical organization should make that ownership visible.
-Keep a domain's concepts, policy, state, and workflows together
-within the boundary that owns them.
-Split a file or module only when one part has an independently explainable
-responsibility, lifecycle, invariant set, dependency boundary, or contract.
-A declaration kind, framework layer, or size target
-does not create such a boundary.
+Keep related concepts, state, invariants, dependencies, policy, and workflows
+with the concept whose behavior they determine; make ownership visible physically.
+Split a file or module for an independently explainable responsibility,
+lifecycle, invariant set, dependency boundary, or contract,
+not declaration kind, framework layer, or size.
 
-Distinguish the decision from its execution.
-Domain behavior determines whether a change is allowed and what it means.
-Application coordination obtains facts, invokes that behavior,
-arranges persistence and effects, and reports the outcome.
-Adapters translate between that model and external mechanisms.
-A rule about eligibility, ordering, or required follow-up remains domain policy
-even when executing it requires several steps or collaborators.
-Application coordination can execute policy defined by a different domain owner.
-For each required sequence across collaborators, identify who defines the rule,
-who executes the effects, and who enforces each local transition.
-Justify policy ownership from the invariant
-and the component's supported contract.
-Existing control flow establishes execution;
-policy ownership needs its own evidence.
-Retain a coordinator when its contract owns the domain workflow.
-When only execution is established, identify the missing contract evidence
-before approving or relocating the policy.
-Trace a change to the rule through its owner, callers, and collaborators.
-Give a meaningful operation that fits no single object its own domain owner.
-Objects, functions over validated values, and private modules can all express
-these responsibilities; a fixed layer count or inheritance tree is unnecessary.
+Distinguish who decides from who executes:
 
-Trace representative workflows through the proposed layout.
-Repeated crossings between files or modules
-to complete one operation or change one policy
-are evidence that the decision has been fragmented.
-At the system root,
-retain only coordination whose scope is genuinely global;
-let cohesive components own the state and behavior they govern.
+- Domain behavior defines whether a change is allowed and what it means.
+- Application coordination obtains facts, invokes behavior, arranges persistence
+  and effects, and reports outcomes.
+- Adapters translate between the model and external mechanisms.
 
-Ownership can be nested.
-An owner may divide a larger responsibility
-into cohesive sub-responsibilities owned by private components.
-The outer owner retains the larger outcome,
-but supplies each sub-owner with the required inputs and capabilities
-and depends on its result
-without coordinating its internal policy or sequence.
-If that knowledge remains on both sides,
-the new boundary is a helper, not an owner.
+Eligibility, ordering, and required follow-up remain domain policy
+when execution needs several steps or collaborators.
+Coordination may execute another domain owner's policy.
+For each required sequence, identify who defines the rule, executes effects,
+and enforces local transitions.
+Establish policy ownership from invariants and supported contracts;
+existing control flow proves execution, not policy ownership.
+Retain a coordinator whose contract owns the domain workflow.
+If only execution is established, identify missing contract evidence
+before approving or relocating policy.
+Trace rule changes through the owner, callers, and collaborators.
+Give meaningful operations fitting no single object their own domain owner.
+Objects, functions over validated values, and private modules are all options;
+no fixed layer count or inheritance tree is required.
 
-A cohesive operation can itself be represented by a private type.
+Keep only genuinely global coordination at the system root.
+Ownership can be nested: an outer owner retains the larger outcome,
+supplies private sub-owners with inputs and capabilities, and uses their results
+without coordinating their internal policy or sequence.
+Knowledge remaining on both sides makes the new boundary a helper, not an owner.
+
 When substantial phases share working state and one lifetime,
-consider an instance for one execution of the operation.
-Let it own the shared state, phase ordering, and outcome.
-Keep values used only within a phase local to that phase;
-use parameters and results when they express dependencies clearly.
-The type should make the computation cohesive,
-not merely bundle arguments while leaving its sequencing with callers.
-
-Illustrative pseudocode, with `?` propagating failure:
+consider a private type for one execution, owning state, ordering, and outcome.
+Keep values used only within a phase local to it;
+use parameters and results for clear dependencies.
+Illustrative pseudocode; `?` propagates failure:
 
 ```text
 parse(source):
@@ -210,14 +144,16 @@ private Parser:
     # Phase implementations remain within this owner.
 ```
 
-Here the parser lasts for one parse;
+This parser lasts for one parse;
 it need not be a persistent entity or reusable service.
-Keep a local sequence when it already exposes the operation clearly,
-and retain separate functions when their inputs and results
-express the relationships without scattering ownership.
+Do not merely bundle arguments while leaving sequencing with callers.
+Keep a local sequence when already clear, or separate functions when their inputs
+and results express relationships without scattering ownership.
 
-Match values to their owner's lifetime and rate of change.
-Translate external state at composition or adapters.
+Match values and dependencies to their owner's lifetime and rate of change.
+Translate external state at composition or adapters; keep environment, request,
+and storage formats outside domain behavior.
+Illustrative pseudocode:
 
 ```text
 # Composition owns process settings and stable dependencies.
@@ -230,21 +166,19 @@ authorizer.authorize(tenant_id, action)
 ```
 
 Bind behavior where its choice becomes stable;
-re-evaluate choices whose source can change, or supply them per operation.
-Keep environment, request, and storage formats outside domain behavior.
-
-Stateful collaborators and replaceable policy should be visible
-at a construction or operation boundary.
-A mutable global, default client, registry, or service locator
-has process-wide reachability but no meaningful owner.
+re-evaluate choices whose source can change or supply them per operation.
+Expose stateful collaborators and replaceable policy at construction or operations.
+A mutable global, default client, registry, or service locator has process-wide
+reachability without a meaningful owner.
 A process-wide declaration with one clear owner is acceptable only when
 neither it nor anything transitively reachable from it
 exposes writable shared state.
-Global addressability is not itself the problem;
-hidden mutation, replaceable policy, or lifecycle is.
+Global addressability itself is acceptable;
+hidden mutation, replaceable policy, or lifecycle is the concern.
 
-An unrelated application bag hides dependencies and couples consumers to its shape.
-Pass narrow collaborators; keep contexts that share a domain meaning and lifetime.
+Pass narrow collaborators rather than an unrelated application bag;
+keep contexts sharing domain meaning and lifetime.
+Illustrative calls:
 
 ```text
 handler = InvoiceHandler(billing, logger)
@@ -252,92 +186,44 @@ run_job(JobContext(job_id, attempt, deadline, cancellation, logger))
 ```
 
 Keep each policy or declaration authoritative in one place.
-Derive reverse lookups, indexes, transport views,
-and other mechanical projections from that source.
-Keep similar-looking values separate when they represent independent facts;
-deduplication is useful only when the values must change together.
+Derive reverse lookups, indexes, transport views, and other mechanical projections.
+Keep similar-looking values separate when they are independent facts;
+deduplicate only when they must change together.
 
-## Keep domain boundaries meaningful
+## Read the reference for the decision
 
-When adapting an external system, translating across a domain boundary,
-coordinating external effects, or choosing a process or network boundary,
-read [External boundaries](references/external-boundaries.md)
-for capability contracts, translation, completion, and distribution decisions.
+- When adapting an external system, translating across domains, coordinating
+  external effects, or choosing a process or network boundary,
+  read [External boundaries](references/external-boundaries.md)
+  for capability contracts, translation, authority, completion, and distribution.
+- When designing constructors or validation, parsing inputs, establishing
+  invariants, or choosing domain data shapes,
+  read [Domain representations](references/domain-representations.md)
+  for construction paths, identity, lifecycle, and configuration contracts.
+- When grouping state for mutation, designing load/save contracts,
+  or separating reporting from state changes,
+  read [Aggregates and persistence](references/aggregates-and-persistence.md)
+  for consistency, concurrency, and read models.
+  Also read External boundaries when an external system is involved.
+- When a local improvement differs from repository precedent,
+  could expand into migration, or implements an accepted migration,
+  read [Scoped evolution](references/scoped-evolution.md)
+  for scope and transition obligations.
 
-## Let representations carry the model
+## Check change locality
 
-When designing constructors or validation methods,
-parsing inputs, establishing invariants, or choosing domain data shapes,
-read [Domain representations](references/domain-representations.md)
-for supported construction paths, invariants, identity, lifecycle,
-and configuration contracts.
+Trace representative workflows and a likely change through the complete design.
+Identify the decision's owner, what callers must know, and declarations changing together.
+Repeated crossings to complete one operation or change one policy suggest fragmentation.
+Callers should change for a different requested operation or relied-on contract,
+not an internal representation or implementation change.
+If one domain change requires mechanical edits across callers,
+move their shared knowledge to its natural owner.
+Remove or deepen abstractions that add navigation while leaving the same facts
+live on both sides.
 
-## Preserve rules through persistence
-
-When grouping state for mutation, designing load/save contracts,
-or separating reporting from state changes,
-read [Aggregates and persistence](references/aggregates-and-persistence.md)
-for consistency boundaries, concurrency, and read models.
-When that work also involves an external system,
-read External boundaries for the limits of remote authority and completion.
-
-## Use change locality as the diagnostic
-
-Trace a representative change through the candidate design.
-Ask which code owns the decision,
-which callers must know it,
-and which declarations must move together.
-A strong boundary lets internal representation and policy evolve
-without unrelated callers changing.
-Callers should need edits when the operation they request
-or the contract they rely on changes,
-not whenever its implementation changes.
-
-When one domain change requires mechanical edits across many callers,
-look for the representation, sequence, condition, or policy
-those callers all know.
-Move that knowledge to its natural owner.
-When a proposed abstraction adds navigation
-but the same facts remain live on both sides,
-remove or deepen the abstraction instead.
-
-Local readability and system design meet at this boundary.
-Use `$code-readability`
-for control flow, naming, and local helper decisions.
-Escalate to a design change when the local complexity exists
-because ownership or policy is split across the system.
-
-## Evolve within the requested scope
-
-When a proposed local improvement differs from repository precedent,
-could expand into a migration, or implements an accepted migration,
-read [Scoped evolution](references/scoped-evolution.md)
-for scope and the obligations of moving from the current state to the destination.
-
-## Apply the model
-
-Before implementing or settling on a design:
-
-1. Establish the operation's meaning through concrete cases,
-   then describe the caller's outcome and sketch representative calls.
-2. Establish any supported existing behavior and compatibility commitments.
-3. Draft the observable contract and validate it against real callers.
-4. Identify the decision, invariant, state, and external knowledge involved.
-5. Assign each one to the concept whose behavior it determines.
-6. Match dependencies and values to their real lifetime.
-7. Probe implementation feasibility without exposing the mechanism.
-8. Revise and stabilize the contract from caller and feasibility evidence.
-9. Trace a representative future change through callers and owners.
-10. Remove boundaries that add navigation without replacing knowledge.
-11. Check public behavior and repository scope before expanding the surface.
-
-Prefer the simplest coherent design
-that gives the important decisions a clear owner.
-Judge simplicity in the resulting ownership model,
-not by the size of the patch.
-When a governing boundary is wrong,
-repair and integrate that boundary
-instead of adding a local exception that creates another owner.
-Complex domains remain complex;
-good design keeps that complexity cohesive
-instead of making every caller carry a fragment of it.
+Use `$code-readability` for control flow, naming, and local helpers;
+make a design change when local complexity comes from split ownership or policy.
+Choose the simplest coherent ownership model, not the smallest patch.
+Repair and integrate a wrong governing boundary instead of adding an exception
+that creates another owner; keep necessary domain complexity cohesive.
