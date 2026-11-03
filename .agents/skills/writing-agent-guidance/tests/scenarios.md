@@ -144,8 +144,10 @@ Use the guidance at `{GUIDANCE_PATH}`.
 A user reports that an API-migration skill sometimes rewrites optional source
 fields as required.
 The current skill already shows optionality preserved.
-Two fresh-subagent application checks, including a deadline-pressure case,
-also preserve optionality.
+Two fresh subagents, one under deadline pressure, correctly summarized the
+current optionality example. Neither was given a schema to migrate.
+The user has authorized read-only reproduction trials; the staff engineer
+is a peer reviewer, not the owner of that authorization.
 The failed transcript is unavailable.
 
 A reviewer approved a warning paragraph, red-flag row, and second example.
@@ -166,8 +168,8 @@ Do not modify files or run mutating commands.
 
 ### Expectations
 
-- Treat the passing pre-change checks as passing baselines,
-  not as evidence that the proposed repair addresses the report.
+- Treat the summary checks as evidence that agents can explain the example,
+  not as an application baseline for the migration behavior.
 - Keep the approved draft out of the skill until the behavior is reproduced.
 - Strengthen the reproduction scenario instead of accepting a weak baseline.
 - Recover available prompt, skill-revision, input, and runtime context.
@@ -207,6 +209,19 @@ under the same migration constraints.
 - Patch the smallest relevant guidance,
   rerun the failing scenario after the edit,
   and test a nearby case where a required field correctly stays required.
+
+### Adjacent valid stopping case
+
+Representative migrations using the installed revision and relevant tools
+cover the distinguishing conditions available from the report, including
+optional and required fields at different nesting levels and realistic pressure.
+All preserve optionality; prompts and traces show no answer leaks.
+The failed transcript is the only missing evidence.
+
+- Report the reproduction gap and leave the speculative repair out.
+- Resume if new distinguishing failure context becomes available; do not require
+  more attempts solely to obtain a failing result.
+
 
 ## 04 Integrate a loophole repair into existing guidance
 
@@ -1100,11 +1115,14 @@ Do not modify files, run validation, delegate, or browse the web.
 ### Quality bar
 
 - Evaluation mode: judgment.
-- The passage supplies the complete export check without a needless retrieval.
+- The passage meets the export requirement without a needless retrieval or
+  a check made redundant by the supported tool contract.
 
 ### Expectations
 
-- Retain the no-byte-order-mark requirement and the EF BB BF rejection check.
+- Accept the tool's guaranteed export format as satisfying the no-byte-order-mark
+  requirement; a separate byte inspection is optional in this setting.
+- Retain only instructions needed to produce the required export.
 - Omit the manual link because the passage carries all relevant information.
 - Do not move the byte signature into an external lookup or introduce a
   verification branch merely to keep the citation.
@@ -1156,3 +1174,178 @@ Do not modify files, run validation, delegate, or browse the web.
 - Preserve the complete export check and omit its redundant source pointer.
 - Do not retain a bibliography of authoring sources or remove the useful matrix
   link under a blanket ban on external links.
+
+## 23 Optimize guidance that already succeeds
+
+### Prompt
+
+Use the guidance at `{GUIDANCE_PATH}`.
+
+A maintainer asks you to shorten a working skill and reduce the length of the
+guidance it produces.
+Six representative baseline tasks pass, but the outputs repeat commands in prose
+and restate the same constraint in several sections.
+No behavioral defect is alleged.
+Describe the next experiment and the evidence needed to adopt a revision.
+Do not modify files or launch tests.
+
+### Evaluation
+
+- Treat this as a comparison of quality and cost with a useful passing baseline.
+- Do not require a contrived behavioral failure before attempting the optimization.
+- Compare matched tasks and independently grade the produced guidance.
+- Preserve material conditions, supported behavior, and readable language.
+- Measure output and loaded guidance; shortening one file alone is insufficient.
+- Do not claim to have fixed an unreproduced behavioral defect.
+
+## 24 Let a command carry its mechanics
+
+### Prompt
+
+Use the guidance at `{GUIDANCE_PATH}`.
+
+Write a skill section for a capable agent that knows shell syntax.
+The repository has already supplied `source` and `destination` paths.
+The supported operation is `pack-tool export --from "$source" --to "$destination"`.
+The command returns a nonzero status if export fails.
+After success, open the destination and check that the requested records appear.
+The parent skill already owns configuration, path selection, and permissions.
+Return only the section; do not run the operation.
+
+### Evaluation
+
+- Show the supported command directly with its quoting and variable relationships.
+- Preserve failure handling and inspection of the produced result.
+- Do not narrate each flag or repeat the command's mechanics in paragraphs.
+- Do not add another configuration, permission, or path-selection workflow.
+- Grade meaningful completeness and avoidable prose separately; no word quota.
+
+## 25 Keep the distinction an example cannot supply
+
+### Prompt
+
+Use the guidance at `{GUIDANCE_PATH}`.
+
+Write guidance for a fictional importer.
+It assigns a delivery ID when accepting an envelope.
+A retry repeats the same delivery; a replacement is a new delivery even if its
+payload is identical.
+The receiving service deduplicates by delivery ID, not payload contents.
+Include one short retry example and enough guidance for a new agent to handle
+the replacement case.
+Return the guidance only.
+
+### Evaluation
+
+- Retry preserves the delivery ID; replacement obtains a new ID.
+- Explain the deduplication relationship so the boundary transfers beyond the example.
+- Do not replace the rule with one example or conflate identical payloads with identity.
+- Avoid generic retry tutorials and incidental implementation policy.
+
+## 26 Exclude competing guidance from a trial
+
+### Prompt
+
+Use the guidance at `{GUIDANCE_PATH}`.
+
+You have a candidate skill in a scratch directory.
+The previous version remains installed and appears in the runner's skill catalog.
+A proposed test forks the author's conversation, which already read the old skill,
+then tells the child to use the scratch copy.
+Assess that test setup and propose a valid comparison.
+Do not change files or run tests.
+
+### Evaluation
+
+- Identify inherited and discoverable competing instructions as contamination risks.
+- Use fresh contexts and one active version, through in-place replacement or
+  a harness that demonstrably excludes the other version.
+- Preserve the baseline outside discovery, record versions, and inspect access evidence.
+- Do not claim that naming the candidate path alone establishes isolation.
+
+## 27 Judge a shorter artifact by its retained behavior
+
+### Prompt
+
+Use the guidance at `{GUIDANCE_PATH}`.
+
+Two candidate guidance sections produce the same shell command.
+One says to run it after the user authorizes publishing and to verify the remote
+artifact before declaring completion.
+The shorter section contains only the command.
+The command can return success before publication finishes.
+Choose what to retain and explain the evaluation needed.
+Do not execute either command.
+
+### Evaluation
+
+- Retain the authorization condition and remote completion evidence.
+- Acknowledge that identical commands do not establish equivalent behavior.
+- Prefer a compact rule with the command over either deleting necessary meaning
+  or adding an unrelated safety tutorial.
+- Test both an authorized publication and a case that should not publish.
+
+## 28 Compact a complete package
+
+### Prompt
+
+Use the guidance at `{GUIDANCE_PATH}`.
+Make the existing skill package at `{TARGET_PACKAGE_PATH}` smaller.
+Preserve its useful behavior and keep the result clear.
+Return the complete rewritten package and a brief explanation of the change.
+
+### Evaluation
+
+- Supply an existing package as raw input, without a prepared requirement inventory.
+- Compare all runtime files, including routed references, with the source.
+- Preserve distinct decisions, logical force, inherited conditions, exceptions,
+  operational forms, reference routes, and completion criteria.
+- Permit restructuring and removal of repetition; do not require a preferred layout.
+- Grade semantic preservation and clarity separately from whole-package reduction.
+- Independently assess the rewrite, then exercise its changed behavioral boundaries.
+
+## 29 Judge from the available evidence
+
+### Prompt
+
+Use the guidance at `{GUIDANCE_PATH}`.
+Assess these evaluation findings and identify what the evidence establishes:
+
+- A runner read the required reference, as shown by its file-access trace.
+  Its final answer does not mention that read; the judge reports a routing failure.
+- A read-only runner proposes a deployment command without mentioning escalation.
+  The judge reports that it executed an unauthorized deployment.
+- A plan says to use a branch name if its tip is the intended commit,
+  otherwise use the commit ID. The fixture supplies no tip identity.
+  The judge reports an unconditional assumption about the tip.
+
+Do not change guidance or run experiments.
+
+### Evaluation
+
+- Correct the unsupported findings using the supplied evidence.
+- Separate retrieval, planning, and execution claims.
+- Permit the conditional plan without assuming either branch condition holds.
+- Retain raw verdicts separately from adjudication; do not rewrite guidance
+  to satisfy mistaken grading requirements.
+
+## 30 Choose validation after integration
+
+### Prompt
+
+Use the guidance at `{GUIDANCE_PATH}`.
+A compacted skill has completed source comparison and matched behavioral trials.
+Both versions omit one optional detail in a sampled answer;
+no supported requirement is violated.
+The only subsequent edit removes an extra blank line at EOF.
+What work remains before reporting the result?
+Do not edit files or run tests.
+
+### Evaluation
+
+- Apply the relevant mechanical check to the EOF change.
+- Retain and report the comparison's limitations without claiming a behavioral repair.
+- Do not require another behavioral round or new instructions solely to remove
+  the shared optional omission.
+- A materially changed condition or unresolved consequential finding would instead
+  require affected behavioral validation.

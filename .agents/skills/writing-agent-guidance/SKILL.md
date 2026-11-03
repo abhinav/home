@@ -1,384 +1,152 @@
 ---
 name: writing-agent-guidance
 description: >
-  Use when creating, updating, or testing agent-facing guidance, including
-  skills, AGENTS.md, CLAUDE.md, and references linked from them; deciding when
-  guidance should be reached or applied; repairing unclear triggers, pointers,
-  or observed misbehavior; designing pressure tests; closing loopholes; or
-  validating guidance before deployment. Do not use for ordinary prose that
-  does not steer agent behavior, or for discussion or review when no guidance
-  artifact or behavioral evaluation is requested.
+  Create, revise, or test agent instructions in skills, AGENTS.md, CLAUDE.md,
+  and their references. Use for instruction routing and behavioral evaluations,
+  not ordinary prose.
 ---
 
 # Writing agent guidance
 
-## Overview
+Write the least guidance that reliably changes the agent's decisions.
+Assume a capable agent; supply local knowledge, constraints, and procedures
+it cannot infer from the task or environment.
+Measure success in the work it produces, including the cost of the guidance.
 
-Treat agent-guidance authoring as test-driven process design.
-Observe how an agent fails without the guidance,
-make the smallest repair that changes that behavior,
-integrate the repair into its governing guidance and routed resources,
-then validate the complete integrated result.
+## Establish the task and baseline
 
-The goal is not to write a large document.
-The goal is to make future agents reliably do the right thing with the least
-context that can carry the behavior.
+Identify the requested behavior, runtime, entry route, and governing local sources.
+Define a representative input and an observable quality bar before drafting.
+For an artifact, identify its reader and what that reader must decide, do, or observe.
+For updates or compaction, read [Updating guidance](references/updating-guidance.md)
+for requirement preservation and package restructuring.
 
-A useful guidance system teaches the agent enough to understand the work,
-then gives it the procedure needed to act reliably.
-Theory should help the agent predict unfamiliar cases:
-who experiences the outcome, what forces or invariants govern it,
-why one choice follows from those conditions,
-and what evidence distinguishes success from failure.
-Application boundaries say when that theory changes the next action.
-Operational guidance says what to do and how to know it is complete.
-None of these substitutes for the others when the task requires all three.
+Choose evidence for the claim:
 
-## Core workflow
-
-Follow this loop for new guidance and for edits to existing guidance:
-
-1. Orient to the requested behavior, target runtime, destination,
-   entry mechanism, and existing guidance conventions.
-   Inspect the target's instructions, architecture, tools, tests,
-   and neighboring guidance to find the local owner of each constraint.
-   Use general authoring guidance only for a decision that local evidence leaves
-   unresolved; adapt the governing idea instead of copying another skill's
-   surface form.
-   Classify the work as operational, judgment-plus-format, deterministic,
-   or a mixture.
-   Identify how the guidance enters context or is reached,
-   then identify the decisions it must prompt after entry.
-   Define the observable quality bar and whether the guidance needs judgment or
-   conformance before spending subagent runs.
-   Orientation is complete when the target, representative input,
-   and pass/fail boundary are clear.
-2. **Red:** Capture failed evidence appropriate to the claim before drafting the
-   repair.
-   Behavior-shaping changes require failed agent behavior:
-   test new guidance without the candidate,
-   or an update against the current guidance.
-   Deterministic, retrieval, reference,
-   or mechanical-contract changes may instead use the corresponding failed
-   conformance or validation check.
-   A passing baseline is not red.
-   If realistic behavioral variants still pass,
-   stop and report the reproduction gap;
-   use the narrow inaccessible-boundary exception only when it applies.
-3. Classify the owner of the failure before changing guidance prose.
-   Distinguish a guidance gap from a test or evaluator gap, routing gap,
-   application-support gap, unavailable capability, or missing authority.
-   Enter green for guidance only when changing it can change the
-   failed decision.
-   Otherwise repair or report the owning boundary and rerun red there.
-   For a guidance-owned behavior gap, reconstruct the decision as the agent
-   encountered it: what it could observe, what it inferred,
-   which model made the failed choice seem reasonable,
-   and which observable distinction should change the next action.
-   Ground that reconstruction in the runner's visible context and captured
-   reasoning, not a claim about hidden motives.
-   Treat it as a falsifiable hypothesis: change the earliest distinction
-   it identifies, then rerun the same scenario.
-   Repair the earliest missing or incorrect distinction instead of encoding the
-   observed symptom.
-4. **Green:** Make the smallest candidate change that makes the failed evidence
-   pass.
-   Rerun the same evidence type; use fresh subagents for behavioral claims.
-   Treat the passing candidate as proof of the repair direction,
-   not as the finished guidance.
-5. **Refactor:** Inspect the complete affected guidance
-   and its directly routed resources.
-   Integrate the passing repair into its governing text,
-   merge or remove provisional and duplicated material,
-   and preserve distinct valid behavior.
-   Account for each changed requirement and its one governing home,
-   verify that affected routes reach it,
-   and record the disposition of each provisional addition.
-   This pass is complete only when that integration evidence exists,
-   including when inspection establishes that no further edit is necessary.
-6. Close any remaining loophole by refining the existing guidance that owns the
-   failed behavior.
-   Keep a red flag or example only when it materially improves recognition
-   without restating the rule, then repeat green and refactor for that failure.
-7. Persist reusable behavioral tests when the scenario should protect future
-   changes to the guidance.
-   Before adding or planning these artifacts,
-   read `references/test-artifact-templates.md`.
-8. After the recorded integration pass,
-   validate the affected guidance mechanically and behaviorally.
-   Rerun the failing scenario, applicable pressure or adjacent cases,
-   and relevant regressions against the final integrated form.
-   For artifact-producing guidance,
-   grade the artifact independently against the quality bar.
-   Validation is complete when the integration result
-   and final-form evidence establish the requested behavior.
-
-Read `references/subagent-testing.md` before designing subagent validation,
-running pressure tests, or repairing a loophole found during testing.
-
-Choose the validation shape from the guidance's behavioral purpose.
-Discipline guidance needs pressure scenarios.
-Technique and pattern guidance needs application, variation,
-and counter-example scenarios.
-Reference guidance needs retrieval, gap, and written-application checks.
-Use `references/subagent-testing.md` for the detailed test shapes.
-
-## Build understanding and execution
-
-The direct reader is the agent performing the task.
-Write theory to give that agent a usable model, not to sound generally wise.
-Introduce the outcome recipient, relevant state, causal relationships,
-invariants, and evidence before asking the agent to reason from them.
-Name what the outcome recipient already knows and what the recipient must
-decide, do, or observe.
-Derive the required output from the gap between those states;
-omit content that does not change the recipient's outcome.
-A principle earns space when it helps the agent explain a choice,
-predict a new case, or recognize when the procedure changes.
-Use a small example when it makes that model concrete;
-change one material condition at a time so the boundary remains visible.
-
-For each required behavior, make the applicable parts of this contract explicit:
-
-1. **Entry:** What user intent, task state, scope, or pointer makes the guidance
-   available or causes the agent to reach it?
-2. **Application:** What condition means act now,
-   and when is another action or no action correct?
-3. **Model:** What reader need, causal relationship, invariant,
-   or risk explains the choice?
-4. **Action:** What concrete step, format, command, reference, or tool follows?
-5. **Evidence:** What observable result establishes completion?
-
-A quality model is incomplete when the agent cannot tell when to use it.
-For judgment artifacts, name each materially different disposition such as
-create, update, keep, or omit instead of leaving the action implicit.
-Put that decision where the agent encounters it.
-
-Match the emphasis to the work:
-
-| Guidance shape | Required emphasis |
+| Work | Baseline and comparison |
 | --- | --- |
-| Concrete operational workflow | Outcome recipient and takeaway, entry conditions, actors and state transitions, decision gates, bounded recovery, and observable proof after each material stage. |
-| Judgment plus format | Outcome recipient, application and omission conditions, explicit dispositions, decision criteria, and format. |
-| Small deterministic workflow | Applicability precondition, authoritative configuration, exact operation, result check, and bounded recovery. |
+| Repair a behavioral defect | Capture the failed decision with current guidance, or without the new skill. Rerun it after the repair. |
+| Improve efficiency or clarity | Compare current and candidate guidance on the same tasks. Preserve useful behavior while reducing unnecessary text or work. A passing baseline is useful here. |
+| Repair syntax, references, or a mechanical contract | Reproduce and rerun the corresponding validator or retrieval check. |
 
-## Design the guidance architecture
+For a behavioral defect, classify the failure before editing:
+guidance, routing, test setup, missing capability, or missing authority.
+Repair the owning boundary.
+For guidance, use the visible context and actions to identify the earliest missing
+distinction that would change the decision; do not invent hidden motives.
+Before concluding that a reported defect cannot be reproduced,
+use the [Subagent testing](references/subagent-testing.md) workflow
+to check the setup and try realistic variants.
+If those attempts still pass, stop that defect repair and report the gap.
+Do not call an optimization a verified repair of an unreproduced failure.
 
-Choose the artifact from how and when the agent must receive the guidance:
+## Choose the smallest useful form
 
-| Artifact | Entry mechanism | Governing content |
-| --- | --- | --- |
-| Model-invoked skill | Selected from a catalog description | A reusable workflow or body of guidance the agent must discover for relevant tasks. |
-| Automatically loaded instruction file | Loaded for every task in its directory or configured scope | Rules and routing needed throughout that scope. |
-| Linked reference | Reached through a pointer in another guidance document | Material needed only by the branch named in that pointer. |
+Start with the condition and action.
+Include the result check when the agent needs it to recognize completion.
+Add an explanation only when it changes a choice, resolves ambiguity,
+or helps the agent apply the rule to an unfamiliar case.
+These are authoring questions, not required sections in the finished guidance.
 
-Packaging changes entry, not the writing model.
-Use the same application, model, action, and evidence contract after the
-guidance enters context.
-
-Treat each description or other pointer in the agent's current context as a
-routing interface.
-It names material outside that context and the condition that
-should cause the agent to reach it.
-Its wording controls reliable discovery,
-so test it as part of the guidance rather than treating the referenced material
-as sufficient on its own.
-
-Keep in the current guidance document the procedure and knowledge every path
-through that document needs.
-For a distinct branch, move conditional mechanics to a one-level reference or
-script and link it at the decision that enters that branch.
-The decision is reach, not length: a short branch-specific rule can obscure the
-main path, while a bulky rule that every path needs belongs in the current
-guidance document.
-
-Use the same established term in the pointer, destination heading,
-and surrounding task vocabulary when it accurately names the same decision.
-This makes the route recognizable before entry and reinforces the concept after
-the agent follows it.
-
-Keep each requirement in one governing home.
-A link in executing guidance invites retrieval and spends turns and context.
-Add or retain a source link only when a concrete task condition requires
-information or authority the guidance does not already supply.
-At the point of use, name that condition and what the agent must obtain.
-When the guidance supplies what the task needs, omit the link;
-source attribution alone does not justify a retrieval route.
-Keep stable knowledge needed on the main path in the guidance.
-For facts that must be current or details needed only by a distinct branch,
-route to their maintained source instead of copying them.
-
-Splitting a document creates progressive disclosure only when the later material
-sits behind a real context boundary.
-A later section in the same loaded document changes organization,
-but it does not hide post-completion steps from the agent.
-
-Within each guidance document,
-distinguish an execution sequence from reference material.
-Put dependent actions in the order the agent must perform them.
-Keep independently consulted definitions, rules, and criteria as a peer set;
-do not invent an order that changes no decision.
-
-## Write effective guidance
-
-Use the local format and routing conventions for the target runtime.
-
-Keep model-invoked skill frontmatter focused on discovery:
-
-- `name` is lowercase, hyphenated, and matches the folder.
-- `description` says when to use the skill, including concrete triggers,
-  symptoms, file types, tools, or failure modes.
-- Treat the description as a context pointer:
-  name each distinct trigger branch once, front-load the material identifier
-  agents will recognize, and remove synonymous trigger lists.
-- Reuse the target's established terms for concepts that guide discovery or
-  reasoning, especially in descriptions and decision headings.
-  Coin a term only when it materially compresses a repeated distinction,
-  define it at first use, and verify that it changes runner behavior.
-- Name a nearby non-use boundary when adjacent intent could plausibly select the
-  skill for work it does not govern.
-- Avoid stuffing the description with the workflow.
-  If the description fully summarizes the steps,
-  an agent may follow the summary instead of loading the body.
-- When the runtime distinguishes autonomous and manual invocation,
-  choose autonomous discovery only when the agent or another skill must reach
-  the skill without the user naming it.
-  Otherwise prefer the mode that avoids permanent catalog context when users
-  can reliably find the skill.
-
-For automatically loaded instruction files:
-
-- Keep only rules and routing that apply throughout the file's scope.
-- Point to branch-specific guidance at the condition that requires it.
-- State the target and the condition in the pointer;
-  a bare path supplies identity but not reliable routing.
-
-For linked references:
-
-- Assume the parent pointer supplied the branch context;
-  do not repeat the entire parent document.
-- Start with the decision, procedure, or reference material the branch needs.
-- Keep definitions, rules, and caveats for one concept together.
-
-Choose the instruction form from the causal shape of the failure.
-More forceful wording does not repair a missing model or a bad output contract.
-
-| Failure shape | Useful form |
+| What the agent needs | Preferred form |
 | --- | --- |
-| Agent lacks the model needed to choose | Explain the causal relationship and the evidence that distinguishes cases. |
-| Behavior should change under an observable condition | State the predicate and the distinct dispositions it selects. |
-| A produced artifact omits or buries required content | Give a positive structure or required slot at the point of production. |
-| Agent understands a required gate but skips it under pressure | Use a bright-line gate; add counters or red flags only for observed, reusable rationalizations. |
+| One behavior or constraint | One or two direct statements |
+| A command, configuration, API shape, or output format | A short faithful example; prose supplies only missing conditions and meaning |
+| Different actions under different conditions | A condition/action list or table, including no action when applicable |
+| An unfamiliar judgment | A concise decision criterion and, if needed, one example that reveals the boundary |
+| Actions whose order matters | Ordered steps with observable completion conditions |
+| Independent definitions or criteria | A peer set, not an invented sequence |
 
-Keep the governing document focused on the operating contract:
+For example, a small operation can be complete without an explanatory section:
 
-- Explain only the knowledge a capable agent would not already know.
-- Match specificity to risk.
-  Fragile workflows need exact commands;
-  judgment-heavy work needs principles and checks.
-- Pair principles with their decision points.
-  State what observable condition invokes the principle and what the agent
-  should do next.
-- Keep required gates and completion checks near the actions they govern.
-  Do not bury them in background prose or expect the agent to reconstruct them
-  from a distant theory section.
-- Keep frequently used guidance especially compact.
-  Keep the main path visible; defer examples, command references, and mechanics
-  reached only by particular branches.
-- Prefer one strong example over several similar examples.
-  Add another example only when it materially improves recognition or
-  application, or protects a distinct decision boundary.
-- Use examples to teach the recurring symptom, the evidence that reveals it,
-  and the decision boundary.
-  Keep incident-specific implementation details out of durable guidance unless
-  the guidance teaches a required format or procedure.
-- Check the information hierarchy when a guidance system starts to sprawl.
-  Split reference material only when a branch or sequence needs a real context
-  boundary, not merely to lower the line count.
-  Keep distinct rules co-located with their definitions and caveats.
-- Put branch-specific details in one-level reference files.
-  Link each reference at the condition that requires it and say what authority
-  it supplies.
-- For skill packages, add scripts only when deterministic behavior matters or
-  the same code would otherwise be rewritten often.
-  Add assets only when the skill uses them in outputs,
-  and do not add package documentation the runtime does not require.
-- Give ordered steps completion criteria that are checkable and appropriately
-  demanding for their scope.
-  Give reference-only work an exhaustive application bound,
-  such as accounting for every applicable rule or affected entity.
-  Prefer an exhaustive observable bound such as "each affected rule has one
-  governing home" over an aspirational bound such as "review the guidance."
-  Disclose a finding that materially affects the user's current decision when it
-  is discovered; workflow order governs execution and presentation,
-  not disclosure.
+````markdown
+Check JSON syntax with:
 
-## Update existing guidance
+```sh
+python -m json.tool config.json > /dev/null
+```
 
-When updating existing guidance,
-read `references/updating-guidance.md` for reconstructing the affected boundary
-and selecting the repair.
-Apply it within the core workflow.
+A successful parse does not establish schema conformance.
+````
 
-## Test with subagents
+Let the example carry syntax and structure; remove prose that narrates it again.
+Keep examples representative and label illustrative code.
+Add another only for a distinct decision that the first does not teach.
+Preserve necessary actors, conditions, authority, and recovery boundaries.
+Shorter wording is not an improvement when it makes the agent guess.
 
-Before designing subagent validation,
-read `references/subagent-testing.md` for evaluation design,
-runner isolation, independent grading, repetition, and regression mechanics.
+Use fixed commands and bright-line gates for fragile operations or demonstrated
+skipping under pressure.
+Use outcomes and decision criteria when several methods satisfy the contract.
+For reference-only work, account for every applicable rule or affected entity.
+Do not turn every preference into a mandatory procedure.
 
-## Persist reusable tests
+## Put each requirement in one place
 
-When a guidance update exposes a durable behavioral boundary,
-leave behind reusable test artifacts for future maintainers.
-Before adding or planning these artifacts,
-read `references/test-artifact-templates.md` for the test layout,
-README, scenario templates, and fixture requirements.
+Choose the artifact by when the agent needs the information:
 
-## Pressure tests and loopholes
+| Artifact | Contents |
+| --- | --- |
+| Skill description | Capability and distinct activation conditions; a nearby exclusion only when it prevents likely misrouting |
+| Automatically loaded instructions | Rules needed throughout that scope and pointers for other tasks |
+| Skill body | Shared operating decisions, constraints, completion conditions, and branch pointers |
+| Linked reference | Substantial detail needed only after the named branch is chosen |
+| Script | Repeated deterministic work whose execution is more reliable or economical than regenerating it |
 
-When enforcing discipline under pressure or repairing a testing loophole,
-read `references/subagent-testing.md` for pressure categories,
-rationalization capture, and the loophole procedure.
+Keep skill names and frontmatter valid for the runtime.
+Descriptions should help select the skill, not summarize its procedure.
+Use established task terms and name each distinct trigger once.
+Preserve existing invocation settings unless changing them is part of the task.
 
-## Validation
+At each reference pointer, state when to read it and what it supplies.
+Keep references one level from the entrypoint and start them with the branch's work.
+Keep knowledge every invocation needs in the body.
+Moving text to a later heading does not defer its loading;
+moving it to another file helps only if some tasks can skip that file.
 
-Before considering guidance ready:
+Link to a source when the task needs current facts or authority absent here.
+Keep sufficient stable instructions self-contained.
+Do not add retrieval solely for attribution, or copy a rule into an overview,
+procedure, warning, and checklist.
+Keep a rule with its conditions and exceptions.
+Add scripts, assets, or package documentation only for a concrete use.
 
-- Run the runtime's validator when available.
-- Inspect the affected file list for clutter or missing resources.
-- For skills, confirm frontmatter is valid and trigger-focused.
-- Confirm every catalog description and in-file pointer has one route per
-  distinct branch, names the material it reaches, and does not summarize the
-  workflow.
-- Confirm main guidance contains what every execution path needs and each
-  reference is linked at the branch decision that requires it.
-- Confirm dependent actions appear in execution order,
-  while independently consulted reference material remains a peer set.
-- Confirm each retained requirement has one governing home and each copied
-  authoritative fact earns its maintenance cost.
-- Confirm each source link supplies information or authority missing from the
-  guidance under its stated task condition; remove redundant source pointers.
-- Confirm each required behavior supplies the applicable parts of the entry,
-  application, model, action, and evidence contract.
-- Confirm the guidance does not merely define a good artifact;
-  it must make the decision to create, omit, or change that artifact reliable.
-- Confirm ordered work has observable completion criteria
-  and reference-only work accounts for every applicable rule or affected entity.
-- For operational artifacts intended for a viewer or reader,
-  confirm the procedure derives visible content from that recipient's takeaway.
-- Follow the sufficient testing checklist in `references/subagent-testing.md`.
-- Repeat important or borderline scenarios and report their observed pass rate.
-- Rerun relevant previously passing scenarios after the repair.
-- Update or create persisted tests when the repair protects a reusable
-  behavioral boundary.
-- For updates, show the pre-change failure and rerun the same scenario after the
-  repair, or state the narrow inaccessible-boundary exception and its validation
-  gap.
-- Treat a missing reproduction as a validation gap,
-  not as evidence that speculative guidance fixed the report.
-- Report the behavioral evidence, not only that the Markdown looked correct.
+## Integrate and test
 
-If testing reveals a new loophole, revise the guidance and repeat the relevant
-scenario.
-Do not treat the first passing run as enough
-when the guidance enforces discipline under pressure.
+Before testing a candidate, inspect the complete affected guidance and routed files.
+Integrate changes into their governing rules, remove provisional duplication,
+and account for each changed requirement and route.
+The inspected diff and a brief integration note can supply this evidence;
+use a separate mapping only when needed for reviewability.
+
+Before behavioral evaluation, read
+[Subagent testing](references/subagent-testing.md)
+for isolation, scenario selection, independent grading, and repetitions.
+Use fresh runners with only the active guidance version and realistic inputs.
+Keep expected answers and the proposed diagnosis outside their prompts.
+
+Test the produced artifact as well as the agent's choices.
+For efficiency work, compare artifact length and avoidable prose alongside
+correctness, unnecessary actions, loaded context, and available run-cost metrics.
+Choose the shorter clear form only when it preserves the required behavior.
+An arbitrary word limit, a shorter main file with larger references,
+or a convincing completion statement does not establish improvement.
+
+Validate the final integrated form:
+
+- Run the available runtime validator and check affected resources and links.
+- For semantic changes, run the target, relevant regressions, and adjacent valid cases.
+  For mechanical-only changes, use the corresponding mechanical check.
+- Test changed discovery routes separately from application after loading.
+- Inspect substantial generated artifacts independently against the quality bar.
+- Repeat important or variable cases and report observed results and material gaps.
+
+For reusable behavioral boundaries, retain scenarios for future changes.
+Before planning or creating those artifacts, read
+[Test artifact templates](references/test-artifact-templates.md).
+Keep test evidence and research notes outside execution guidance unless future
+execution needs them.
+
+Before delivery, delete any passage whose removal preserves the decisions,
+required output, and necessary understanding.
+Report the changed behavior, measured comparison, and remaining uncertainty.
