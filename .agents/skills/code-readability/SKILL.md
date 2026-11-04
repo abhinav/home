@@ -37,6 +37,12 @@ Judge the task, relationships, and representation rather than counting facts.
 A helper can shorten an expression while adding navigation and reconstruction;
 assess net load across the path, not one line.
 
+Compiler inference and implicit conventions do not establish reader understanding.
+Expose a value's role, relevant type, and governing condition where otherwise
+the reader must recover them from distant declarations or later use.
+Use a local name, type annotation, or explicit construct to remove that work;
+leave information implicit when the current context already makes it clear.
+
 ## Help the reader release attention
 
 Expose current state and the next governing decision without requiring a replay

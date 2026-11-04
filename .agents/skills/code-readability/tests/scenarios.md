@@ -553,3 +553,33 @@ Do not introduce callbacks, concurrency, or a workflow framework.
 - Retain serializable progress required by the persisted workflow.
 - Do not conflate grouping working data in a type with needing a phase field.
 - Do not remove explicit state at the cost of changing an operation's contract.
+
+## Recover meaning from the local reading context
+
+### Prompt
+
+Use the `code-readability` skill.
+Improve this TypeScript fragment for a maintainer changing publication behavior.
+The imported SDK cannot be changed: `reserve` returns a pair containing a
+reservation and whether this call acquired it; `publish` takes the reservation.
+Preserve the calls, their order, and the decision about whether to publish.
+Show the revised fragment and briefly explain your changes. Do not modify files.
+
+```typescript
+const result = reserve(request);
+if (result[1]) {
+  publish(result[0]);
+}
+
+const attempts = 3;
+const label = "daily";
+record(attempts, label);
+```
+
+### Expectations
+
+- Make the reservation and acquisition condition understandable locally.
+- Preserve the SDK calls, their order, and the publication decision.
+- Accept descriptive destructuring or another equally clear local form.
+- Keep the SDK contract; do not introduce a wrapper or a new domain model.
+- Leave the obvious literal types implicit unless another concrete need exists.
