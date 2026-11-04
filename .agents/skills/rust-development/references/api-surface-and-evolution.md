@@ -126,6 +126,10 @@ not a blanket preference for short names or qualified imports.
 When reviewing names, inspect the imports and resulting use-site spellings
 alongside the declarations.
 
+Import a trait used by only one function inside that function
+when it makes the source of its methods easier to find.
+Keep a module-level import when the trait serves operations across the module.
+
 ## Choose what external callers may do
 
 Keep representation fields private for values whose invariants or storage

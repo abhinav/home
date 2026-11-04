@@ -1,5 +1,15 @@
 # Types and standard traits
 
+## Make value roles visible
+
+Use named fields when readers would otherwise recover a tuple element's meaning
+from its position or inspect callers to distinguish similar values.
+Keep tuples for short local combinations whose roles remain clear,
+and tuple structs for simple newtypes.
+Use an enum for an API choice when a boolean argument obscures the caller's intent,
+such as `export(report, ExportMode::Preview)`.
+Keep booleans for clear binary facts; a boolean alone does not require a new type.
+
 ## Parse into the representation consumers need
 
 Parse external strings, bytes, and raw records into values that retain what

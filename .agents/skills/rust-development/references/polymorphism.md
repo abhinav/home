@@ -47,6 +47,9 @@ Use generics for caller-selected implementations when each instantiation uses
 one concrete type.
 Argument `impl Trait` is convenient when naming the type expresses no additional
 relationship; name `T` when inputs, outputs, or stored state must share that type.
+Choose generic parameter names that reveal their roles, such as `Reader` and
+`Writer` or conventional `R: Read` and `W: Write`.
+Keep `T` and `U` when no more specific role matters.
 Use return `impl Trait` when the producer promises a trait and selects one hidden
 implementation, especially for iterators and closures.
 Keep a useful concrete domain result concrete.

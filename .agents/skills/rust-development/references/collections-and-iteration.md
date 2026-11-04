@@ -58,6 +58,12 @@ It does not undo effects already performed during iteration.
 Do not silently discard failures with `filter_map(Result::ok)`, `flatten`,
 or default values unless omission is the intended, documented policy.
 Prefer a loop when an adapter chain hides mutation, effects, or early exits.
+Use `for` for ordinary effectful traversal rather than `for_each`.
+Keep short queries such as `records.iter().any(Record::is_pending)`;
+their standard operation can replace explicit bookkeeping.
+Bind a substantial pipeline to a meaningful local name before a loop when that
+separates selecting the input from acting on it.
+The binding need not collect the iterator.
 
 Use borrowed map lookup and standard collection operations before allocating
 temporary keys or repeating searches.

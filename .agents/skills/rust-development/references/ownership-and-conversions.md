@@ -27,6 +27,11 @@ removing the copy would require that additional machinery.
 
 ## Make signatures reflect the work
 
+Name lifetimes for the borrowed sources or relationships when readers must
+distinguish several of them, especially on types retaining those borrows.
+Keep lifetime elision, `'_`, and a short `'a` for simple local relationships
+or genuinely generic abstractions; names should clarify the existing constraints.
+
 For inspection, accept useful borrowed types such as `&str`, `&Path`, and `&[T]`.
 Accept `&String` or `&Vec<T>` only when the owner's capabilities matter.
 Keep a domain type when its validated meaning is part of the contract.

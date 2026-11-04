@@ -20,6 +20,8 @@ including inside a change whose primary purpose is unrelated to ownership.
 Read every reference whose condition matches the work before making the
 corresponding decision:
 
+- For inferred local types, expression readability, macros, or code generation,
+  read [Local implementation](references/local-implementation.md).
 - For module and file organization, shared operations, changes spanning callers,
   item naming, imports, visibility, dependency types in APIs,
   or the ways callers can extend or depend on an API,
@@ -27,11 +29,12 @@ corresponding decision:
 - For invocation data, retained dependencies, required parameters, optional
   settings, constructors, builders, or staging substantial caller changes,
   read [Construction](references/construction.md).
-- For ownership in signatures or local data flow, borrow-checker fixes,
+- For ownership in signatures or local data flow, lifetime names, borrow-checker fixes,
   cloning or owned conversions, buffer reuse, accessor names,
   or owned types with borrowed counterparts,
   read [Ownership and conversions](references/ownership-and-conversions.md).
-- For domain identities, provider address translation, parsing into domain types,
+- For named fields, positional values, boolean API arguments,
+  domain identities, provider address translation, parsing into domain types,
   preserving invariants during mutation, invalid states, standard trait
   implementations, numeric conversions, or exhaustive enum handling,
   read [Types and standard traits](references/types-and-traits.md).

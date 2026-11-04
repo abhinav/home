@@ -105,6 +105,16 @@ private payloads, or other data outside the intended diagnostic contract.
 
 ## Make panics describe broken invariants
 
+Use `match`, `if let`, or `let ... else` to bind a present or successful value
+instead of checking a variant and then calling `unwrap`.
+The chosen branch should supply the value directly:
+
+```rust
+if let Some(job) = jobs.pop_front() {
+    submit(job);
+}
+```
+
 Return `Result` for expected input, I/O, and operational failures.
 Use a panic for an established invariant violation
 when the operation cannot meaningfully continue under its contract.

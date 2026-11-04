@@ -1196,3 +1196,140 @@ Do not modify files.
 - Keeps the cohesive test module inline and adds the case there.
 - Treats separate test files as optional, with no extraction threshold by size.
 - Applies the child-module file layout only if extraction is chosen.
+
+## Local Rust meaning and ordinary control flow
+
+### Prompt
+
+Use the skill at `{GUIDANCE_PATH}`.
+Review these private Rust 2024 application fragments for maintainers and show
+your revised code or interface sketches. All callers can change together.
+Preserve behavior, including deliberate rejection counting. Keep the answer
+focused on the fragments; supporting types and unrelated implementations can
+be omitted visibly. Do not modify installed files or commit anything.
+
+1. This parser accepts u32 IDs, retains successful IDs in input order, and counts
+   every rejected row. Its return value is used as `report.0` and `report.1`
+   throughout the calling function.
+
+```rust
+fn parse_rows(rows: &[&str]) -> (Vec<u32>, usize) {
+    let mut rejected = 0;
+    let accepted = rows.iter()
+        .map(|row| row.parse())
+        .inspect(|result| {
+            if result.is_err() { rejected += 1; }
+        })
+        .filter_map(Result::ok)
+        .collect();
+    (accepted, rejected)
+}
+```
+
+2. This queue code removes at most one job and submits it if present.
+   The existing predicate used elsewhere is `jobs.iter().any(Job::is_urgent)`.
+
+```rust
+let next = jobs.pop_front();
+if next.is_some() {
+    submit(next.unwrap());
+}
+```
+
+3. The team proposes a custom `macro_rules!` macro for each of three helpers
+   that parse an environment string, attach the variable name to an error,
+   and fall back to a supplied default only when the variable is absent.
+   They also already use `#[derive(Debug)]` and `format!("job {id}")`.
+   Recommend the implementation approach; preserve distinctions between an
+   absent variable and malformed input. No full implementation is needed.
+
+4. This type retains two unrelated borrows and reader/writer collaborators.
+   The collaborators use Read and Write only in one method, so the type itself
+   needs no bounds. Show the declaration and suitable method signature.
+
+```rust
+struct Transfer<'a, 'b, T, U> {
+    source: &'a str,
+    schema: &'b Schema,
+    reader: T,
+    writer: U,
+}
+```
+
+   Also choose a private `export` interface taking a Report and a boolean that
+   distinguishes preview from publication, with one illustrative call.
+   A separate existing field remains `records: archive::Reader`; its module
+   supplies the domain context. Preserve that established caller spelling.
+   In a larger module only `append_label` calls `write!` on a String; its
+   `std::fmt::Write` trait import currently sits at module scope. Assess it.
+
+### Expectations
+
+- Preserve successful u32 IDs, order, and every rejected-row count.
+- Make the result fields and conversion destination understandable at their use.
+- Keep queue removal at most once and obtain the job from a pattern branch.
+- Retain the short `any` query and familiar derives and formatting macros.
+- Use ordinary Rust for the environment operation unless a concrete macro need
+  emerges; retain absent-versus-malformed behavior.
+- Clarify the roles of independently borrowed sources and collaborators without
+  coupling their lifetimes or adding unnecessary type-level bounds.
+- Make preview/publication clear at the call; preserve `archive::Reader`.
+- Consider the trait import's locality and retain documentation coverage.
+- Do not add unnecessary newtypes, builders, or generic application interfaces.
+
+### Adjacent valid case
+
+#### Prompt addition
+
+A separate table macro generates repetitive declarations that ordinary functions
+cannot express. Its callers use established syntax and need those declarations.
+A nearby helper destructures a pair immediately as `(width, height)`;
+its `u32` fields are already evident from the surrounding operation.
+Another helper has one elided input/output borrow and a short `any` query.
+Assess these choices without changing their supported contracts.
+
+#### Expected behavior
+
+- Permit the justified declarative macro and clear local tuple.
+- Preserve simple lifetime elision and the short query.
+- Do not add annotations, new records, or procedural macros without a benefit.
+
+## Route local implementation guidance
+
+### Prompt
+
+Read the skill at `{GUIDANCE_PATH}` and the references needed for this task.
+A reviewer cannot determine the destination type of `raw.parse()?` until reading
+an assignment much later in the function. Recommend a local improvement.
+Do not modify files.
+
+### Expectations
+
+- Read the local-implementation reference; establish this through access traces.
+- Place useful type information near production without annotating every value.
+
+### Alternate task
+
+#### Prompt
+
+Read the skill at `{GUIDANCE_PATH}` and the references needed for this task.
+A private custom macro wraps an ordinary fallible operation and performs an early
+return in the caller. Assess whether to retain the macro. Do not modify files.
+
+#### Expectations
+
+- Read the local-implementation reference, evidenced by an access trace.
+- Evaluate whether ordinary Rust can preserve the contract and expose control flow.
+
+### Nearby non-use task
+
+#### Prompt
+
+Read the skill at `{GUIDANCE_PATH}` and the references needed for this task.
+Should a helper used only by its containing module be made public solely so a
+sibling test can call it? Address visibility only. Do not modify files.
+
+#### Expectations
+
+- Read API surface guidance; do not require local-implementation guidance.
+- Preserve production visibility according to actual callers.
