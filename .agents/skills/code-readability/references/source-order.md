@@ -5,6 +5,18 @@ boundary before choosing to inspect its implementation or continue to the next c
 Minimize scrolling and context switching to reach that summary.
 Identify the primary abstraction or operation explaining the surrounding declarations.
 
+Identify abstractions by their responsibilities and invariants.
+For each type with behavior, keep its declaration, constructors if any,
+and methods together as one unit, in that order.
+Order whole units for the reader's task, then order constructors and methods
+within each unit.
+References in fields, signatures, and calls connect these units.
+Interleave types only when they jointly implement one abstraction
+and the reader needs to compare corresponding methods to understand
+its shared invariant or transition.
+
+Within a type's unit, or for a standalone operation, use this order:
+
 | Primary declaration | Reader order |
 | --- | --- |
 | Compact contract, such as an interface or trait | Contract first, then supporting declarations in first-need order. |

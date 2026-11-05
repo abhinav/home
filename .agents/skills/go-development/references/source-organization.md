@@ -54,22 +54,9 @@ Use the smallest meaningful qualifier, not mechanics such as `global`, `private`
 
 ## Symbol ordering
 
-Go declarations generally allow forward references;
-a type named in a signature is not an ordering prerequisite.
-Apply `$code-readability`'s reader order:
-
-- Interface before its request and result records.
-- Records immediately before a function or method whose body would separate them from its boundary.
-- Compact implementation first when boundary and records remain visible together,
-  then records in first-need order.
-
-Keep cohesive types or operations together.
-Cluster a primary type, its constructors, then its methods;
-order each part for readability.
-Request and result records may frame their method inside its receiver's cluster.
-Do not interleave receiver clusters unless the reader treats them as one operation
-and separate clusters would make it harder to understand.
-Their shared state and invariants should remain one mental model.
+Go declarations generally allow forward references.
+Apply `$code-readability`'s type grouping and reader order.
+Request and result records may frame their method inside its receiver's unit.
 
 ## File organization
 
