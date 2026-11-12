@@ -2,8 +2,11 @@
 
 ## Interface compliance checks
 
-Add compile-time assertions, except when type or interface cannot be imported
-into the same file:
+Add compile-time assertions where both names are already available, typically
+with the consumer or at composition.
+Go satisfaction is implicit.
+Keep a provider independent of a consumer when it would otherwise import that
+consumer solely to implement or assert an interface:
 
 ```go
 var _ InterfaceName = (*TypeName)(nil)
@@ -11,10 +14,31 @@ var _ InterfaceName = (*TypeName)(nil)
 
 ## Accept interfaces, return structs
 
-Prefer interfaces for inputs and concrete structs for results.
-For varying consumed behavior, define the smallest useful interface near the
-consumer owning the requirement, not beside the provider to mirror its methods.
-This permits implementations, test doubles, and wrappers without a larger API dependency.
+Accept interfaces for behavior supplied by the caller and return concrete structs.
+Choose the input from the operations the consumer needs, including operations
+required by functions it passes the input to.
+If those functions already accept interfaces, reuse them.
+Embed their interfaces when one input must satisfy several of those contracts.
+The caller can still pass a concrete implementation.
+
+Illustrative constructor forwarding to helpers that accept `io.ReaderAt`
+and `io.WriterAt`.
+
+```go
+type ArchiveBacking interface {
+    io.ReaderAt
+    io.WriterAt
+}
+
+func NewArchive(backing ArchiveBacking) *Archive {
+    return &Archive{reader: newReader(backing), writer: newWriter(backing)}
+}
+```
+
+Define a new interface near the consumer when existing interfaces include
+unrelated operations or express a different contract.
+Its signatures can use types from their established owners.
+Avoid mirroring an entire provider API.
 
 ```go
 func Parse(r io.Reader) (*Document, error) { ... }
@@ -37,11 +61,12 @@ func NewClient(cfg ClientConfig) *Client {
 
 Do not return interfaces merely to hide implementation;
 adding methods breaks caller implementations, tests, and wrappers.
-Do not introduce interfaces when substitution would not improve consumer design or tests.
-Prefer concrete dependencies when their API is the relevant contract,
-they are cheap to construct or pass, and callers need no behavior replacement.
-Common examples include structured loggers, immutable configuration,
-standard-library value types, and small stateless collaborators.
+Use concrete inputs for values such as immutable configuration or durations
+and for collaborators whose concrete API is the contract, such as a structured
+logger.
+Requiring a concrete service client needs a reason tied to the consumer's
+operation, such as a concrete-only guarantee or resource ownership.
+One implementation at the composition site is insufficient reason.
 Producer-defined interfaces remain useful for multiple implementations,
 a single operation, or commonly wrapped abstractions.
 

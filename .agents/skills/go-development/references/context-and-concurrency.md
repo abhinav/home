@@ -43,8 +43,16 @@ Before starting, identify owner, termination condition, and completion observati
 Wait before returning from call-scoped work;
 give background work's lifecycle owner stop and wait operations.
 Cancellation requests do not prove completion; blocked work must finish or observe cancellation.
-Bound input-driven concurrency with a worker pool or another explicit limit,
-not unrestricted goroutines per item.
+Bound concurrency where work is admitted.
+Use the owner's existing limit when several producers share capacity.
+Choose the mechanism from task lifetime, ordering, and how work is supplied.
+A fixed set of workers suits a long stream of interchangeable tasks under one
+owner.
+Feed them over a cancellation-aware channel, close it when producing stops,
+and wait for the workers.
+A semaphore or bounded task group suits individually scheduled tasks.
+Keep both active work and any backlog the caller retains within their bounds.
+
 `sync.WaitGroup.Go` replaces the usual `Add(1)`, `go`, and deferred `Done` sequence:
 
 ```go

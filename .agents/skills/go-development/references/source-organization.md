@@ -58,7 +58,15 @@ Go declarations generally allow forward references.
 Apply `$code-readability`'s type grouping and reader order.
 Request and result records may frame their method inside its receiver's unit.
 
-## File organization
+## Package and file organization
+
+Keep packages private to an application under `internal/`.
+Use an importable package path outside `internal/` for a supported external API.
+
+Keep `package main` for process composition and invocation.
+Place independently testable rules and external integrations in importable
+packages, using existing owners when they fit.
+Check that the command can wire those packages without either importing it.
 
 Organize by domain responsibility: keep concepts with their useful behavior,
 including constructors, methods, private interfaces, and closely related helpers.

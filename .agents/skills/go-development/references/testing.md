@@ -115,5 +115,9 @@ assert.Equal(t, "alice", user.Name)
 Exercise realistic production behavior before adding test-only API surface.
 Do not export methods or add public-looking helpers solely for tests unless the seam
 protects a production invariant and code documents why it exists.
-Prefer real-caller behavior; necessary seams must be minimal, honestly named,
-and expose their production reason to future maintainers.
+Prefer exercising the public entry point with an existing controllable boundary,
+such as a test server or the dependency's fixture.
+State the fixture needed when its API is unspecified.
+Before adding a private seam, identify which behavior must be substituted
+and why an existing test boundary cannot exercise it.
+Keep necessary seams minimal, honestly named, and useful for the tested contract.

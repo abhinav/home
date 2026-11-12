@@ -45,7 +45,7 @@ keep necessary complexity with the requirement's owner.
 For an uncertain material constraint, identify evidence that distinguishes
 alternatives before committing to structure that depends on it.
 
-When the domain or workflow is uncertain, keep early structure changeable
+When the rules or sequence of effects are uncertain, keep early structure changeable
 and learn from working implementations.
 Stabilize an abstraction only when representative behavior and real callers
 reveal a cohesive responsibility and narrow contract; refactor toward it then.
@@ -88,7 +88,7 @@ use `$code-readability` to judge that decomposition across the whole operation.
 
 ## Put knowledge with its owner
 
-Keep related concepts, state, invariants, dependencies, policy, and workflows
+Keep related concepts, state, invariants, dependencies, policy, and operations
 with the concept whose behavior they determine; make ownership visible physically.
 Split a file or module for an independently explainable responsibility,
 lifecycle, invariant set, dependency boundary, or contract,
@@ -108,7 +108,7 @@ For each required sequence, identify who defines the rule, executes effects,
 and enforces local transitions.
 Establish policy ownership from invariants and supported contracts;
 existing control flow proves execution, not policy ownership.
-Retain a coordinator whose contract owns the domain workflow.
+Retain a coordinator when its contract owns the sequence and outcome.
 If only execution is established, identify missing contract evidence
 before approving or relocating policy.
 Trace rule changes through the owner, callers, and collaborators.
@@ -116,7 +116,16 @@ Give meaningful operations fitting no single object their own domain owner.
 Objects, functions over validated values, and private modules are all options;
 no fixed layer count or inheritance tree is required.
 
-Keep only genuinely global coordination at the system root.
+An entry point translates inputs, composes dependencies, and invokes the
+operation.
+Keep behavior with the concept whose rules it implements.
+Reuse its existing owner when the responsibility matches.
+When adding behavior and external integrations, sketch one call with the
+package or module that owns each decision and the types crossing each import.
+Use importable owners for application policy and independent integrations
+so each can be called or tested without the executable or unrelated dependencies.
+This applies even when there is one entry point.
+A command that directly invokes an existing capability can keep the call local.
 Ownership can be nested: an outer owner retains the larger outcome,
 supplies private sub-owners with inputs and capabilities, and uses their results
 without coordinating their internal policy or sequence.
@@ -192,6 +201,9 @@ deduplicate only when they must change together.
 
 ## Read the reference for the decision
 
+Read the references that govern package and dependency boundaries before
+choosing layout or public signatures.
+
 - When adapting an external system, translating across domains, coordinating
   external effects, or choosing a process or network boundary,
   read [External boundaries](references/external-boundaries.md)
@@ -212,7 +224,7 @@ deduplicate only when they must change together.
 
 ## Check change locality
 
-Trace representative workflows and a likely change through the complete design.
+Trace representative calls and a likely change through the complete design.
 Identify the decision's owner, what callers must know, and declarations changing together.
 Repeated crossings to complete one operation or change one policy suggest fragmentation.
 Callers should change for a different requested operation or relied-on contract,

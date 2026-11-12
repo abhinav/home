@@ -915,3 +915,158 @@ Unrelated worker failures must retain their diagnostics.
 - Preserve the promised context error at the wrapper's operation boundary.
 - Preserve unrelated errors rather than replacing every failure with `ctx.Err()`.
 - Keep cancellation wired to the process; scattered polling is insufficient.
+
+## Roll back connection setup after acquisition
+
+### Harness
+
+Load both `code-design` and `go-development`.
+
+### Prompt
+
+Show Go code for opening a database connection from a one-shot command.
+Include startup, imports, the reusable connection API, and a test for a setup
+failure.
+The existing `NewClient(address)` returns a client with `Init(ctx)`,
+`SelectNamespace(ctx, namespace, region)`, and `Close()`.
+Both setup calls may fail.
+An acquired client must close after either error.
+On success the caller owns it.
+
+Address and namespace are required.
+Region defaults to west when omitted.
+One command receives these settings from environment variables and another from
+flags.
+Errors should identify the failed operation and allow matching the client cause.
+There is no competing test library convention.
+
+### Evaluation
+
+- The library takes explicit configuration, enforces required fields and
+  defaults, and returns a concrete client.
+  The command owns process inputs.
+- One rollback registered after acquisition covers both failures.
+  A named error result can drive the defer.
+  A comparably direct pattern with one rollback and clear ownership passes.
+- Errors include useful operation context and preserve the cause.
+  The test uses top-level Testify assertions and verifies cleanup as well as
+  the error contract.
+- Setup remains readable from the acquisition through ownership transfer.
+  A new interface or helper needs a responsibility beyond concealing repeated
+  cleanup.
+
+### Adjacent valid case
+
+#### Prompt addition
+
+The SDK now has a single `OpenReady` call that returns either a fully
+initialized client or an error and owns all rollback.
+
+#### Evaluation
+
+The caller defers closing the client on success.
+It relies on the SDK's established acquisition contract.
+
+## Count a recurring job's outcomes
+
+### Prompt
+
+Show the Go setup and one pass of a job that releases expired reservation holds.
+The same instance can run several passes.
+Its store streams due records and completes them after the service confirms
+release or absence.
+A failure affects only its item.
+The operator needs a log for each failed item and a failed pass result with the
+number of failures.
+The process provides a registry that binds counters by metric and outcome.
+Outcomes are release, absence, service failure, and completion failure.
+
+### Evaluation
+
+- Construct the job with the registry and bind the four counters once.
+  Later passes use the handles and increment the outcome at the owning step.
+- The pass keeps a bounded failure count, records item details in logs,
+  and keeps processing after individual errors.
+  Callers can decide whether the pass succeeded from its returned error.
+
+## Match HTTP test setup to the Go version
+
+### Prompt
+
+Write an HTTP gateway test using a fake HTTP server.
+The gateway accepts an HTTP client and maps a 403 response to an
+error.
+The first project supports Go 1.26.
+Show the changes for a second project whose minimum version is Go 1.27.
+
+### Evaluation
+
+- Go 1.26 uses an available test server API and registers cleanup.
+- Go 1.27 can use the test-owned server and its client.
+- The assertions use the project's default Go testing conventions.
+
+
+## Clean up only when an operation fails
+
+### Prompt
+
+Show the Go implementation of publishing edits to an existing document.
+An existing editor opens a draft, applies edits, verifies them, and publishes.
+A nil publish error transfers ownership.
+Every failed publish leaves the draft unpublished.
+Discard an unpublished draft on failure.
+Discard can fail, and callers must be able to recognize both errors.
+Also show how a preview handle is closed when its read ends.
+The preview handle must close on both success and failure.
+
+### Evaluation
+
+- A defer checks the returned error after the draft is acquired.
+  A named `retErr` can carry the result and preserve both errors if discard fails.
+  Successful publication leaves the draft alone.
+- The preview close is unconditional and requires no error-dependent state.
+
+## Share a concurrency limit across producers
+
+### Prompt
+
+A process caps concurrent diagnostic checks with a cancellation-aware limiter
+shared by local timers and user requests.
+Add a submitter that reads requests from a stream and needs one result before
+pulling its next request.
+Preserve the shared limit and ordering.
+Separately, show how a single decoder processes a long sample stream.
+Samples need independent CPU-intensive calibration.
+Limit simultaneous calibration to four, with no output order requirement.
+The call must stop and join its work on cancellation.
+
+### Evaluation
+
+- The new submitter uses the existing admission limit and pulls the next
+  request only after delivering its current result.
+- The calibration path bounds in-flight work, releases blocked operations
+  on cancellation, and waits for its workers.
+  A fixed worker pool or another mechanism with equivalent behavior passes.
+
+## Reuse the interfaces required by shared bindings
+
+### Prompt
+
+Show Go code for a repository that binds typed inventory objects and a
+warehouse index.
+The Catalog SDK exports `PointClient` for its object binding and
+`IndexClient` for its index binding.
+Its concrete client implements both and also owns credentials and connection
+shutdown.
+The application opens the client and supplies a structured logger and a
+validated timeout for the inventory job.
+Show the repository constructor and command wiring.
+
+### Evaluation
+
+- Accept the established behavior interfaces, embedded together when the
+  constructor needs a single client that satisfies both.
+  Pass the supplied client directly to both existing SDK constructors.
+- Return a concrete repository.
+  Leave closing and credential handling with the application.
+- The logger and timeout can remain concrete.

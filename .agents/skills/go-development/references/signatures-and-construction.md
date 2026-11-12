@@ -42,8 +42,17 @@ Preserve existing contracts such as `io.Writer.Write`'s count.
 Choose results and receivers with [Type semantics](type-semantics.md).
 Use constructors for validation, normalization, implementation selection,
 resource acquisition, or other invariant-establishing behavior.
-Store dependencies and resolved state needed by methods;
-keep independent collaborators in separate fields and cohesive domain values grouped.
+Resolve required inputs and defaults before acquiring resources.
+Read process settings at the command entry point and pass them to reusable code.
+Keep only the collaborators and resolved values methods use in private fields;
+unpack constructor input records instead of retaining them wholesale.
+Keep a cohesive domain value grouped when the object uses it as a value.
+When a constructor forwards a dependency to existing functions,
+check the parameter types those functions accept.
+Use the existing interfaces they require.
+See [Interfaces](interfaces.md) for composing several capabilities and returning
+the concrete component.
+Use `$code-design` to decide who supplies it and which capability is required.
 
 Use one of these constructor shapes.
 Use configuration structs for several required inputs or likely growth:
@@ -117,6 +126,9 @@ if err := useFoo(foo); err != nil {
     return err
 }
 ```
+
+When failure after acquisition requires releasing the resource,
+apply [Cleanup on error](errors-and-diagnostics.md#cleanup-on-error).
 
 Match owning function scope to resource lifetime:
 `defer` runs when that function returns, not when a block or loop iteration ends.

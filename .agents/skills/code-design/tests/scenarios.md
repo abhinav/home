@@ -1124,3 +1124,49 @@ and evidence needed before the new reader becomes authoritative.
   verify query equivalence and completeness,
   and explain interruption and forward repair.
 - Require a concrete invariant before adding migration modes or a new coordinator.
+
+## Add behavior to the package that owns its rules
+
+### Harness
+
+Load both `code-design` and `go-development`.
+
+### Prompt
+
+Sketch the Go files, signatures, and call path for normalization in an existing
+public color-profile SDK.
+External programs already use the profile package to decode profiles and
+validate channels.
+Normalization clamps channels, verifies required metadata, and returns the
+normalized profile and a per-channel change report.
+A new CLI reads files and prints the report.
+A GUI uses the SDK to generate the same report and sends it to a printer.
+Two models use the same vendor client.
+An existing diagnostics command uses it to print a self-test.
+The public SDK must remain usable without a printer.
+
+### Evaluation
+
+- Keep profile rules together in the existing package and preserve its import
+  path.
+  Keep process inputs and output rendering at their entry points.
+- Use the existing vendor client and put protocol conversion at the printing
+  boundary.
+  Keep printing policy independent of profile normalization.
+- Supply equivalent contracts and file layout when they preserve the owners
+  and supported caller outcomes.
+  The new operation alone does not require another package.
+
+### Adjacent valid case
+
+#### Prompt addition
+
+A separate embedded device reads frames from a vendor SDK and forwards them
+unchanged to a broker.
+Its only inputs are the listener endpoint and broker topic.
+Show the layout for this program too.
+
+#### Evaluation
+
+A direct relay can stay with its entry point and use the SDKs directly.
+Its source and sink lifetimes must support shutdown.

@@ -13,14 +13,29 @@ Do not create a service boundary for a small local probe
 whose result and mechanism have no domain policy;
 remove real knowledge rather than anticipating reuse.
 
-A gateway expresses the capability in consumer terms.
-It may combine calls, normalize units, or translate errors;
-it need not mirror the provider's entire API.
-Dependency injection supplies collaborators; dependency inversion lets the
-consumer contract govern implementation dependencies.
-Injecting a vendor client still exposes its model.
-Supply a purposeful capability when that translation removes knowledge
-from business logic, and implement it at the adapter boundary.
+The consumer defines the capability it needs.
+When an established component owns that capability, depend on its smallest
+supported contract that covers the required operations and guarantees.
+Use the existing contract directly when it fits.
+Use a consumer interface when a subset of its operations is sufficient and
+needs to be expressed independently.
+Add an adapter when the consumer needs a different representation or guarantee.
+
+An adapter can combine calls, normalize units, or translate errors.
+An integration owns its provider-specific conversion and the inputs and
+outcomes of its own operations.
+Check that another caller can use it without importing the original caller's
+policy package.
+Use a type from its established owner when it already expresses the right
+meaning.
+Let policy consume a repository's stored values or a gateway's operation
+types when those contracts fit.
+When the meanings differ, translate between the two contracts without making
+the reusable integration import the policy.
+Retain validated types in signatures that rely on their guarantees.
+The owner of a collaborator's lifecycle supplies it to its consumers.
+Bind dependencies for the lifetime they are shared.
+Pass values that vary by call with the operation.
 
 ## Preserve meaning across models
 
@@ -79,6 +94,8 @@ integration events carry consumer contracts and compatibility obligations.
 
 Define whether success establishes local acceptance, durable pending work,
 or completion by the external owner.
+Use the provider's outcome as well as its error when a successful call can
+report that no effect was applied.
 Trace failures between stages, including lost acknowledgments of completion.
 Choose recovery from required outcomes and actual provider guarantees:
 partial progress or best effort may suffice, or the workflow may need retry,

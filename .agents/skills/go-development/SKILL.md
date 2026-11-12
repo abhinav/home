@@ -18,8 +18,8 @@ Read every matching reference before making the decision it governs:
 | Module requirements, tool dependencies, or inspection of dependency source | [Modules and dependencies](references/modules-and-dependencies.md) |
 | Imports, names, declaration order, or file organization | [Source organization](references/source-organization.md) |
 | Go documentation or adding or changing struct fields | [Documentation](references/documentation.md) |
-| Process termination, structured logging, or errors | [Errors and diagnostics](references/errors-and-diagnostics.md) |
-| Interfaces, interface compliance, or concrete result types | [Interfaces](references/interfaces.md) |
+| Process termination, logging, metrics, errors, or cleanup on error | [Errors and diagnostics](references/errors-and-diagnostics.md) |
+| Choosing dependency parameter types, interfaces, or concrete result types | [Interfaces](references/interfaces.md) |
 | Considering callback APIs, accepting function parameters, or passing functions or closures to helpers | [Callbacks](references/callbacks.md) |
 | Function shapes, resource acquisition and cleanup, construction, dependencies, or exported members | [Signatures and construction](references/signatures-and-construction.md) |
 | Map-shaped APIs or boolean API parameters | [Map and boolean APIs](references/map-and-boolean-apis.md) |
@@ -41,7 +41,14 @@ Read every matching reference before making the decision it governs:
 Combine these rules with the general skills governing the decision:
 
 - `code-design`: domain contracts, ownership, dependencies, and representations.
+- `code-comments`: content and placement of contracts, field documentation,
+  and implementation comments.
 - `code-readability`: the maintainer's mental model;
   Go guidance supplies language-specific naming and organization constraints.
 - `code-testing`: evidence a change needs and the behavior each test protects;
   Go guidance supplies test mechanics and conventions.
+
+Before handing off changes spanning packages, trace a representative call
+through the changed code.
+Check that imports, signatures, dependency lifetimes, and error handling
+support the caller's contract.

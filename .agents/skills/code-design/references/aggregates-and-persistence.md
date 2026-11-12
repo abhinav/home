@@ -22,6 +22,18 @@ a new name supplies neither.
 ## Make persistence uphold the rule
 
 Repositories own retrieval and mapping while exposing domain state.
+Organize application-facing persistence around the state or aggregate it
+serves.
+Keep the backend as an implementation detail of that responsibility.
+The repository's contract can serve new operations on that state without
+importing the policy of an existing caller.
+A repository shared by several operations should express the stored facts
+and consistency guarantees those callers rely on.
+Implement atomic storage guards there and leave domain decisions with their owner.
+Rely on established write and query guarantees.
+Handle invalid persisted state at its owning boundary if the supported data
+or a compatibility requirement admits it.
+
 Shape aggregate mutations around roots and meaningful changes
 rather than each table's independent CRUD.
 Use a custom repository only for a useful domain contract;

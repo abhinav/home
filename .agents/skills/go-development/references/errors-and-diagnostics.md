@@ -29,6 +29,27 @@ func connect(addr string) (net.Conn, error) {
 
 ## Structured logging
 
+Construct the logger at the entry point and pass it to code that logs.
+Use the explicit logger for startup and exit diagnostics too.
+Package-level `log` and `slog` logging calls use a shared process logger.
+For multiline calls, put each key and value on one line and close on its own line.
+
+```go
+logger.ErrorContext(ctx, "refresh account",
+    "account", accountID,
+    "error", err,
+)
+```
+
+## Metrics
+
+Bind instruments when the registry and labels become stable and retain the handles
+for that lifetime.
+Record outcomes at the operation that owns their meaning and reporting.
+Keep telemetry-only counts out of operation results.
+When an executable owns export and shutdown, flush before exit and handle
+any returned flush error according to its effect on the command contract.
+
 One `slog.Logger` can send records to several handlers:
 
 ```go
@@ -72,11 +93,15 @@ func (e *DecodeError) Unwrap() error { return e.Err }
 ```
 
 Handle only failures with a meaningful response; propagate others with context.
+Keep returned errors bounded as the amount of input or work grows.
+If you log an individual failure, return only a distinct summary or status
+the caller needs.
+Use structured results when callers need to act on individual outcomes.
 
 ### Formatting variable values
 
-Use `%q`, not `"%s"`, for variable strings
-so empty strings, whitespace, and special characters remain visible:
+Use `%q` for variable strings that are safe to include in the error
+so empty strings, whitespace, and special characters remain visible.
 
 ```go
 // BAD: empty name produces a confusing message —
@@ -93,6 +118,8 @@ return fmt.Errorf("open config %q: %w", name, err)
 Add context through `fmt.Errorf` and `%w` instead of bare `return err`.
 Describe the immediate sub-operation without "failed to" or "error doing" prefixes
 or repeating the current function's responsibility.
+Start error text with a lowercase word.
+Put capitalized provider names after the operation when they are needed.
 Callers may add context; repeating it creates noisy chains.
 
 ```go
@@ -138,6 +165,38 @@ for _, target := range targets {
 	}
 }
 ```
+
+### Cleanup on error
+
+When an operation owns a change or resource that must be undone on failure,
+register cleanup when that obligation starts.
+Use a named `retErr` result if a defer needs to observe the returned error.
+Leave cleanup that runs on success and failure unconditional.
+Preserve the original error if cleanup also fails.
+Use `errors.Join` when callers need both causes.
+
+Illustrative cleanup after two successful setup steps.
+
+```go
+func install() (retErr error) {
+    dir, err := stageFiles()
+    if err != nil { return err }
+    defer func() {
+        if retErr != nil { retErr = errors.Join(retErr, removeStage(dir)) }
+    }()
+
+    slot, err := reserveSlot()
+    if err != nil { return err }
+    defer func() {
+        if retErr != nil { retErr = errors.Join(retErr, releaseSlot(slot)) }
+    }()
+
+    return activate(dir, slot)
+}
+```
+
+Each defer is registered after its own acquisition.
+If activation fails, both cleanups run in reverse order.
 
 ### Error variables
 
