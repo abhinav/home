@@ -78,6 +78,8 @@ are investigation signals, not findings.
 Report concerns when the change creates real coordination cost,
 makes callers carry another component's policy, obscures extension or ownership,
 or couples policy to infrastructure.
+When proposing a simpler design, check which requirement could rule it out.
+If that requirement is unresolved, make the recommendation conditional.
 
 ## Readability
 

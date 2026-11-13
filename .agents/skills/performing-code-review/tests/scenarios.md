@@ -191,3 +191,41 @@ Describe the findings you would prioritize and why.
   without organizing the review around them.
 - Do not treat a hunt for variable names or a minor comment correction
   as completion of the broader lenses.
+
+## Check the requirement that makes a simpler design insufficient
+
+### Prompt
+
+Use the `performing-code-review` skill.
+Apply the design lens.
+Do not edit files.
+
+A profile API writes a durable row before returning from an update.
+A worker retries copying the update to a reporting system.
+A proposed simplification calls the reporting system directly after
+the profile write. The profile write is authoritative.
+The diff, commit message, and API contract are all the available evidence.
+They do not say whether reporting must reflect every accepted update after
+a crash. Give the findings you would send to the author.
+
+### Expected behavior
+
+- Identify the failure window between the profile commit and the direct call.
+- State the open requirement and explain when the direct call would suffice
+  and when durable follow-up would still be needed.
+- Leave the recommendation conditional while the contract is unresolved.
+
+### Adjacent valid case
+
+#### Prompt addition
+
+The API contract requires reporting to apply every accepted update,
+even if the process exits immediately after the profile commit.
+The worker row is written in the same transaction as the profile change.
+The reporting API supports retries with the update ID.
+
+#### Expected behavior
+
+- Explain why the proposed direct call would violate the established contract.
+- Keep durable follow-up tied to the profile commit and use the update ID
+  to retry the same update.

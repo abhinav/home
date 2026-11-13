@@ -1170,3 +1170,31 @@ Show the layout for this program too.
 
 A direct relay can stay with its entry point and use the SDKs directly.
 Its source and sink lifetimes must support shutdown.
+
+## Check a proposed mechanism against the existing capability
+
+### Prompt
+
+Use the `code-design` skill.
+The code is already written and the team wants to merge this week.
+Give a design decision. Do not edit files.
+
+A purchase history endpoint must return the latest 100 orders in descending
+creation order with stable pagination when two orders have the same timestamp.
+Postgres owns the data. The service uses a repository query that sorts only by
+creation timestamp. The proposed patch adds an in-memory order cache with a
+refresh worker and sorts by timestamp and order ID in the cache. The proposal
+says Postgres cannot return deterministic pages when timestamps tie. The SQL
+backend supports compound sorting and comparisons, and the schema has a unique
+order ID. The existing endpoint accepts opaque cursors containing a timestamp
+only, and callers may still present old cursors for 24 hours. There is no
+evidence that the database is a performance bottleneck. Recommend what to ship
+and how you would handle the old cursors.
+
+### Expected behavior
+
+- Use the database's compound sort and seek with the same sort keys.
+  Explain why the cache and refresh worker do not address a necessary
+  capability gap.
+- Preserve the supported window for timestamp-only cursors.
+  Explain why a timestamp alone cannot identify a position within a tie.

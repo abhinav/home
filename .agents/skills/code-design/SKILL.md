@@ -33,9 +33,12 @@ for satisfying the contract, not reasons to expose their mechanisms to callers.
 If feasibility is uncertain, use a private spike and revise the contract or
 implementation from its evidence; do not expose exploration as an accidental contract.
 
-Evaluate the whole candidate through normal use, failure, and recovery,
+When a proposal adds material state or coordination, sketch a direct solution
+using the existing components and their supported contracts.
+Compare both through normal use, failure, and recovery,
 including caller and operator coordination.
-For each added component, state, or step, identify its requirement and obligations.
+For each addition, identify what the direct solution cannot provide
+and what obligations the addition creates.
 Obligations introduced by a mechanism are costs, not proof that it is needed.
 When a choice needs more machinery to support its consequences,
 compare changing that choice.
