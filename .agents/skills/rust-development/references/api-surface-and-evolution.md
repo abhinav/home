@@ -191,10 +191,10 @@ See [Polymorphism](polymorphism.md) for extension and delegation choices.
 
 Before changing an existing API, establish its supported callers and
 compatibility commitments.
-When callers can change together, evolve the existing operation and update
-those callers as part of the change.
-Preserve supported behavior by supplying the appropriate values and
-implementations through the revised interface.
+When callers can change together, evolve the existing operation and migrate its callers.
+For a new input, extend its signature or the request type that owns the input.
+Callers that need the previous behavior supply the corresponding value
+or implementation through the same operation.
 For independently evolving consumers, preserve the supported interface
 according to its release or migration contract.
 Additional operations need a distinct supported caller contract or an

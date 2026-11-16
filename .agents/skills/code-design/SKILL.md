@@ -64,10 +64,13 @@ omit options, extension points, and indirection for hypothetical needs.
 Treat stable public names, inputs, outputs, mutation, ordering,
 and partial-failure behavior cautiously: they can become compatibility commitments.
 Expose only needed operations and make observable behavior deliberate.
-Keep representative use direct.
-When demonstrated callers need materially different control,
-provide an advanced contract without imposing its concepts on common callers;
-do not add parallel API layers for hypothetical callers.
+When an operation needs a new input and its callers can change together,
+extend the existing function and migrate its callers, including callers using the old default.
+Add a parameter when the call stays clear, or extend a parameter object the input belongs to.
+Introduce a parameter object when named fields make a crowded call easier to read.
+Keep the old signature when a compatibility commitment requires it.
+When callers need materially different control, give them a distinct contract
+that keeps common calls simple.
 
 A boundary earns its place when its contract replaces knowledge of
 representation, policy, or sequence.

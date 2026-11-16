@@ -1198,3 +1198,19 @@ and how you would handle the old cursors.
   capability gap.
 - Preserve the supported window for timestamp-only cursors.
   Explain why a timestamp alone cannot identify a position within a tie.
+
+## Extend a layout operation
+
+### Prompt
+
+A print worker calls `impose(input, paper, left_mm, right_mm, top_mm, bottom_mm)`.
+All four margins are integers. The operator now supplies a gutter width in millimeters
+per job. Batch and preview are the only callers and ship together.
+Batch reads the gutter from its job. Preview uses zero.
+Show the resulting operation and both calls.
+
+### Expected behavior
+
+- Use the existing operation for both callers.
+  Group the related dimensions so readers can identify each value at the call site.
+- Supply the job's gutter in batch and zero in preview.

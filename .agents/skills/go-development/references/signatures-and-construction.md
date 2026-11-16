@@ -2,7 +2,11 @@
 
 ## Parameter and result objects
 
-Use parameter objects for several inputs or likely growth in optional inputs.
+When adding an input in application code, change the existing function and its callers.
+Extend the request struct if the input belongs there.
+Otherwise keep a few clear arguments positional, or group related inputs in a struct
+when the call becomes hard to read or the set of optional inputs is likely to grow.
+Keep the old function signature when a supported interface or compatibility commitment requires it.
 Use result objects for several outputs or likely growth in optional outputs.
 Do not count `context.Context` when judging too many parameters,
 or `error` when judging too many results.

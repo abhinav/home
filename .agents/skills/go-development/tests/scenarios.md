@@ -1070,3 +1070,34 @@ Show the repository constructor and command wiring.
 - Return a concrete repository.
   Leave closing and credential handling with the application.
 - The logger and timeout can remain concrete.
+
+## Add a delivery priority to an internal send path
+
+### Prompt
+
+A telemetry agent's 27 collector paths call `send(ctx, m)`.
+It encodes the message, writes it at normal priority, and records the outcome.
+The shutdown path now needs expedited delivery after the buffer drains.
+It uses the same encoding and accounting. All paths ship in the same binary.
+Keep the change focused. Show the resulting functions and both kinds of calls.
+
+### Evaluation
+
+- Change the existing send function to accept delivery priority.
+  Ordinary collectors supply normal priority and shutdown supplies expedited priority.
+- Keep encoding and accounting in the shared send operation.
+  The number of ordinary callers does not justify retaining the old signature.
+
+### Adjacent valid case
+
+#### Prompt addition
+
+Now suppose the send function is exported by a released Go module.
+Downstream clients register it as a callback with its current function type,
+and the next minor release promises source compatibility.
+Show how to support expedited delivery in this release.
+
+#### Evaluation
+
+Preserve the callable type and normal behavior for existing clients.
+Give new clients access to expedited delivery through a compatible API.
