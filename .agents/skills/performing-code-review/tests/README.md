@@ -13,7 +13,9 @@ with the candidate's current catalog description.
 Keep the expectations and intended answer hidden from the runner.
 For a pressure or adjacent case,
 give a fresh runner the base `Prompt`
-plus only that case's prompt addition.
+with the stated addition or substitution.
+When a scenario lists repository evidence separately, make those files
+available in the fixture and record which files or commands the reviewer uses.
 Keep tests read-only or confined to a task-local temporary directory
 outside the target repository.
 

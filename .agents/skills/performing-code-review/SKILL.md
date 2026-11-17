@@ -11,19 +11,23 @@ description: >
 
 ## Choose the review questions
 
-Choose named engineering questions matching the change's risks and requested outcome.
-One undifferentiated pass does not establish correctness, maintainability,
-clarity, and reviewability.
+When the user names a focus, use it to set the review scope.
+For a broad review, choose questions that match the change's risks.
+Before opening a supporting file or running a check,
+identify what the result could change in your answer to a selected question.
+Investigate conformance as its own question only when you select Behavior.
 
 | Lens | Question | Governing skill to load |
 | --- | --- | --- |
 | Behavior | Does the change preserve established external contracts? | — |
 | Design | Do abstractions, ownership, and policy flow coherently? | `code-design` |
 | Readability | Can a maintainer form and use the system's mental model? | `code-readability` |
-| Documentation | Does code teach the contracts and context readers need? | `code-comments` when the change includes comments or other in-code documentation |
+| Documentation | Does code teach the contracts and context readers need? | `code-comments` |
 | Reviewability | Do the diff and commit message explain the change alone? | — |
 
-Before reviewing, verify that each selected lens's applicable governing skill is loaded.
+Apply the parts of governing skills that serve the selected questions.
+When you select Behavior, read [Behavior review](references/behavior.md)
+to establish the applicable contract and test conformance.
 State the lenses applied and keep their questions distinct;
 success under one does not cover another.
 Lenses are peers, not a required execution topology or gate sequence.
@@ -35,29 +39,6 @@ in a self-contained prompt.
 Reviewability imposes evidence order, not priority.
 Run it before the reviewer sees anything beyond the diff and commit message;
 if other context was already seen, give those artifacts to a fresh isolated reviewer.
-
-## Behavior
-
-Establish the relevant external contract before judging conformance.
-Use evidence proportionate to risk, such as authoritative specifications, established behavior,
-repository and operational history, or a focused probe at the real boundary.
-Tests, validators, implementation source, and mocks are behavioral evidence,
-not automatically the contract.
-
-Try to falsify conformance with awkward but valid inputs, partial state, process failures,
-cancellation, timing changes, unexpected but valid file names, and realistic boundary behavior.
-Check failure reporting, ordering, state transitions, cleanup, and partial success.
-Scrutinize happy-path tests, mocks, or assertions shaped around implementation
-when they replace the real boundary.
-
-- **Confirmed defect:** established contract plus evidence of implementation violation.
-- **Supported risk:** evidenced premises and the contract at risk,
-  naming the unverified boundary or behavior.
-- **Optional test idea:** a plausible case without claiming it currently fails.
-
-Be skeptical without inventing facts.
-An imaginable failure is not a defect without evidence that the contract permits
-the scenario and the change mishandles it.
 
 ## Design
 
@@ -100,23 +81,34 @@ scattered ownership, or excessive orchestration.
 
 ## Documentation
 
-Judge whether the code is well documented as a system.
-Advocate for a capable reader lacking the authoring conversation, implementation history,
-and unstated folklore.
-At each package, symbol, command, and operational boundary,
-identify what readers know and must learn to use or change the system safely.
-Do names, types, structure, and documentation together communicate:
+For a general review of comments, assess adequacy.
+Select accuracy as a separate question when the user asks for it
+or a broad review warrants it.
+
+### Adequacy
+
+Start with a caller or maintainer entering at the affected boundary.
+Identify what they need to know to use or change the code safely
+and what names, types, structure, and documentation already teach them.
+Look for gaps in:
 
 - ownership, resource lifetime, ordering, transitions, and invariants;
 - zero values, defaults, units, sources, and valid values;
 - failure behavior, partial state, and recovery obligations;
 - compatibility and external process behavior; and
-- rationale for surprising constraints or design choices?
+- rationale for surprising constraints or design choices.
 
-Verify documentation against behavior; inaccuracies should be fixed when found,
-but isolated minor corrections are not the lens's goal.
-Do not reward volume or request comments repeating implementation,
-explaining self-evident statements, or compensating for poor naming or misplaced concepts.
+For each finding, name the reader, the task they need to perform,
+and the context they would have to reconstruct or could get wrong.
+Include a discrepancy only when evidence shows how it could materially
+mislead that reader during the task.
+Reserve routine wording and literal corrections for accuracy reviews.
+Request comments where they supply needed context beyond
+what names, types, and structure already convey.
+
+### Accuracy
+
+Check the claims in scope against the implementation and applicable contracts.
 
 ## Reviewability
 

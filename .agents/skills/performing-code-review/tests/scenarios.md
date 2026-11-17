@@ -187,10 +187,8 @@ Describe the findings you would prioritize and why.
   and major flow in the readability review.
 - Prioritize whether contracts, invariants, ownership, lifecycle,
   and failure behavior make the code well documented.
-- Acknowledge that the local name and inaccurate comment should be fixed
-  without organizing the review around them.
-- Do not treat a hunt for variable names or a minor comment correction
-  as completion of the broader lenses.
+- Judge findings by their consequences for the maintainer or caller.
+  Minor naming and accuracy observations cannot substitute for that assessment.
 
 ## Check the requirement that makes a simpler design insufficient
 
@@ -229,3 +227,186 @@ The reporting API supports retries with the update ID.
 - Explain why the proposed direct call would violate the established contract.
 - Keep durable follow-up tied to the profile commit and use the update ID
   to retry the same update.
+
+## Review the readability of a changed workflow
+
+### Prompt
+
+Use the `performing-code-review` skill.
+Please review this change.
+Focus on readability and how easy it is for a maintainer
+to follow the monthly report flow.
+
+```diff
+diff --git a/reports/monthly.py b/reports/monthly.py
+--- a/reports/monthly.py
++++ b/reports/monthly.py
+@@ -1,4 +1,9 @@
++from reports.export_context import ExportContext
++from reports.stages import run_stage
++
++
+ def export_month(rows, organization, uploader):
+-    selected = select_billable_rows(rows, organization.timezone)
+-    summary = summarize_by_currency(selected)
+-    return uploader.put(render_workbook(summary))
++    state = ExportContext(rows=rows, organization=organization, uploader=uploader)
++    for step in ("A", "E", "P"):
++        run_stage(step, state)
++    return state.result
+diff --git a/reports/stages.py b/reports/stages.py
+--- /dev/null
++++ b/reports/stages.py
+@@ -0,0 +1,11 @@
++from reports.rows import select_billable_rows
++from reports.render import render_workbook, summarize_by_currency
++
++
++def run_stage(step, state):
++    if step == "A":
++        state.data = select_billable_rows(state.rows, state.organization.timezone)
++    elif step == "E":
++        state.data = summarize_by_currency(state.data)
++    elif step == "P":
++        state.result = state.uploader.put(render_workbook(state.data))
+diff --git a/reports/export_context.py b/reports/export_context.py
+--- /dev/null
++++ b/reports/export_context.py
+@@ -0,0 +1,11 @@
++from dataclasses import dataclass
++from typing import Any
++
++
++@dataclass
++class ExportContext:
++    rows: list
++    organization: Any
++    uploader: Any
++    data: Any = None
++    result: Any = None
+diff --git a/reports/summary.py b/reports/summary.py
+--- a/reports/summary.py
++++ b/reports/summary.py
+@@ -1,4 +1,2 @@
+ def mean_line_amount(amounts):
+-    if not amounts:
+-        return 0
+     return sum(amounts) / len(amounts)
+```
+
+### Repository evidence
+
+Make this available as `contracts/reporting.md`.
+
+```markdown
+# Reporting API
+Monthly summary exports include inactive accounts.
+For an account with no line items, the average amount is zero.
+```
+
+### Expected behavior
+
+- Explain how the stage keys and shared intermediate state affect a maintainer
+  following the export flow.
+- Keep the findings and investigation focused on that flow.
+  Reading the contract to verify the separate empty-account bug or running
+  a probe for that bug is outside the requested review.
+
+### Adjacent valid case: broad release review
+
+#### Prompt substitution
+
+Replace the review request with “Please review this change for release readiness.”
+
+#### Expected behavior
+
+- Establish the empty-account contract from repository evidence and report
+  the regression alongside other material findings relevant to release readiness.
+
+## Review whether comments teach the reader what matters
+
+### Prompt
+
+Use the `performing-code-review` skill.
+Please review this change and focus on whether it has adequate comments.
+
+```diff
+diff --git a/index/compact.py b/index/compact.py
+--- a/index/compact.py
++++ b/index/compact.py
+@@ -1,4 +1,7 @@
+-def compact_segment(segment, store):
++def compact_segment(segment, store, readers):
+     new_segment = store.write(segment.live_records())
++    previous_epoch = readers.current_epoch()
+     store.set_active(new_segment)
++    readers.advance_epoch()
++    readers.wait_for_epoch(previous_epoch)
+     store.drop(segment)
+@@ -7,3 +10,3 @@
+ def batch_metadata(keys):
+-    # Keep a couple of keys in each metadata batch.
+-    return [keys[i:i + 2] for i in range(0, len(keys), 2)]
++    # Keep up to four keys in each metadata batch.
++    return [keys[i:i + 5] for i in range(0, len(keys), 5)]
+```
+
+### Repository evidence
+
+Make this available as `index/readers.py`.
+
+```python
+class ReaderRegistry:
+    def pin_active(self, store):
+        """Register the reader's current epoch, then obtain the active segment."""
+        ...
+
+    def wait_for_epoch(self, epoch):
+        """Wait for every reader pinned at or before epoch to release its segment."""
+        ...
+```
+
+Make this available as `tests/test_compact.py`.
+
+```python
+def test_pins_keep_old_segment_alive(store, readers, executor):
+    old = store.active()
+    with readers.pin_active(store):
+        task = executor.submit(compact_segment, old, store, readers)
+        store.wait_for_active_change(old)
+        assert store.exists(old)
+    task.result()
+    assert not store.exists(old)
+```
+
+### Expected behavior
+
+- Use the evidence about when readers pin the active segment to explain
+  the missing reason for the order of publication, epoch advance, and reclamation.
+- Judge adequacy by what callers and maintainers need to understand.
+  The internal batch-size mismatch is visible in the adjacent code.
+  It does not warrant an adequacy finding without evidence of a consequence
+  for the reader.
+
+### Adjacent valid case: absent comments
+
+#### Prompt substitution
+
+Present only the change to `compact_segment` in the diff.
+
+#### Expected behavior
+
+- Load `code-comments` and find the missing explanation even though
+  the change contains no comments.
+
+### Adjacent valid case: accuracy review
+
+#### Prompt substitution
+
+Replace the review request with “Please review whether the wording of the
+changed comments matches the implementation.”
+
+#### Expected behavior
+
+- Report the specific mismatch between the stated limit and the slicing code.
+- Keep the review concerned with the claims in the changed comments.
