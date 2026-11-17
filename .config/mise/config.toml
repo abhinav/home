@@ -11,6 +11,7 @@ zig = "latest"
 pitchfork = "latest"
 "aqua:benbjohnson/litestream" = "latest"
 "github:joshka/betamax" = "latest"
+"github:NonLogicalDev/util.layerctl" = "0.2.0"
 
 [settings]
 experimental = true
