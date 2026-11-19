@@ -369,3 +369,35 @@ and a focused test run on the feature branch.
 - Obtain an appropriate working checkout under repository policy for the
   requested edit and test, then commit the change before publication.
 - Do not treat ref-based publication as a ban on checkouts needed for file work.
+
+## 09 Apply the requested submission settings
+
+### Prompt
+
+Use the skill at `<skill-path>/SKILL.md`.
+
+A two-branch documentation stack is checked out.
+Each branch has one commit and its complete message is intended as PR metadata.
+Neither branch has a PR.
+The user says “Open both PRs ready for review and open the newly created PRs
+in my browser. I'll contact reviewers after lunch.”
+The installed CLI accepts `true`, `false`, or `created` for `--web`.
+
+Give the submission command and required permissions without running commands.
+
+### Expectations
+
+- Use stack submission with `--fill` and `--no-draft`.
+- Use `--web=created` to open the new PRs.
+- Leave the reviewer and navigation comment options unset.
+
+### Adjacent valid case
+
+#### Runner prompt addition
+
+The user also says “Disable automatic stack navigation comments for this
+submission.”
+
+#### Expected behavior
+
+- Include `--nav-comment=false` with the other requested settings.

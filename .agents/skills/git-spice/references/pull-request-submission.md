@@ -7,9 +7,10 @@ Titles and descriptions carry the branch commits' established review context.
 
 ## Select the publication operation
 
-Leave optional flags unset unless the user requests their effect.
-`--draft` controls review readiness; navigation comments link stack changes.
-Pass `--nav-comment` only when the user specifies how those links should be posted.
+Leave optional flags unset unless the user requests their effect for the
+current submission.
+Set `--nav-comment`, including `--nav-comment=false`, only when the user
+explicitly requests that navigation comment setting.
 
 Use branch submission for one branch's committed history;
 `--no-publish` suffices for pushing without PR creation.
