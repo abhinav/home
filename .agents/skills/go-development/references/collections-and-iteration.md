@@ -1,5 +1,11 @@
 # Collections and iteration
 
+## Sets
+
+Use `map[T]struct{}` for sets, inserting `struct{}{}` and testing membership
+with the comma-ok lookup.
+Use `map[T]bool` when the stored boolean is data, such as a check result.
+
 ## Collection operations
 
 Copy before mutating a result that must not affect its input:

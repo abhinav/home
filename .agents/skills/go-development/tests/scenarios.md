@@ -1101,3 +1101,74 @@ Show how to support expedited delivery in this release.
 
 Preserve the callable type and normal behavior for existing clients.
 Give new clients access to expedited delivery through a compatible API.
+
+## Preserve Go embedding, membership, and error context
+
+### Prompt
+
+Use the `go-development` skill.
+Do not read its tests or modify files.
+
+A release importer needs a wrapper for an archive and a small batch function
+for importing manifests.
+Review and revise these draft snippets.
+Preserve the public signatures, embedded dependencies, and import behavior.
+The dependency errors are opaque sentinel errors, and the CLI displays the
+final error.
+
+```go
+type ManifestArchive interface {
+    Verify() error
+    io.Reader
+    io.Closer
+}
+
+type archiveSession struct {
+    release string
+    ManifestArchive
+    *slog.Logger
+    verified bool
+}
+
+func importRelease(release string) error {
+    manifests, err := LoadManifests(release)
+    if err != nil {
+        return fmt.Errorf("load manifests for %q: %w", release, err)
+    }
+
+    seen := make(map[string]bool)
+    for i, manifest := range manifests {
+        if seen[manifest] {
+            continue
+        }
+        seen[manifest] = true
+        if err := ImportManifest(manifest); err != nil {
+            return fmt.Errorf("import manifest: %w", err)
+        }
+    }
+    return nil
+}
+
+func run(release string) error {
+    if err := importRelease(release); err != nil {
+        return fmt.Errorf("import release %q: %w", release, err)
+    }
+    return nil
+}
+```
+
+Also show how a separate map named `checks` records each manifest's
+verification result.
+It must retain both true and false results and distinguish unrecorded manifests.
+
+### Evaluation
+
+- Put the embedded interfaces and fields first in their respective declarations.
+  Leave a blank line before the first declared method or named field.
+  Preserve promoted methods and dependency access.
+- Use `map[string]struct{}` and comma-ok lookup to skip previously seen manifests.
+  Keep the boolean values and distinguish absent entries in `checks`.
+- Use `%w` to preserve the cause.
+  Identify the failing load at `importRelease` and report the release in `run`.
+  On an import failure, identify the failing manifest by index or safe identifier.
+- Preserve first-occurrence order and return on the first failure.

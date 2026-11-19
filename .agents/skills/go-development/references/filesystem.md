@@ -10,13 +10,13 @@ String prefix checks on cleaned paths do not provide that guarantee.
 ```go
 root, err := os.OpenRoot(baseDir)
 if err != nil {
-	return fmt.Errorf("open root %q: %w", baseDir, err)
+	return fmt.Errorf("open root: %w", err)
 }
 defer root.Close()
 
 file, err := root.Open(name)
 if err != nil {
-	return fmt.Errorf("open %q: %w", name, err)
+	return fmt.Errorf("open file: %w", err)
 }
 defer file.Close()
 ```

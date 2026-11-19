@@ -21,7 +21,7 @@ func connect(addr string) net.Conn {
 func connect(addr string) (net.Conn, error) {
 	conn, err := net.Dial("tcp", addr)
 	if err != nil {
-		return nil, fmt.Errorf("dial %q: %w", addr, err)
+		return nil, fmt.Errorf("dial: %w", err)
 	}
 	return conn, nil
 }
@@ -103,31 +103,26 @@ Use structured results when callers need to act on individual outcomes.
 Use `%q` for variable strings that are safe to include in the error
 so empty strings, whitespace, and special characters remain visible.
 
-```go
-// BAD: empty name produces a confusing message —
-//   "open config : no such file"
-return fmt.Errorf("open config %s: %w", name, err)
-
-// GOOD: empty name is obvious —
-//   "open config \"\": no such file"
-return fmt.Errorf("open config %q: %w", name, err)
-```
-
 ### Wrapping errors
 
 Add context through `fmt.Errorf` and `%w` instead of bare `return err`.
-Describe the immediate sub-operation without "failed to" or "error doing" prefixes
-or repeating the current function's responsibility.
+Describe the suboperation that failed, without "failed to" or "error doing"
+prefixes.
+Let the caller add the function's overall operation and any input values
+it can already identify for the failure.
+Include details the caller cannot infer, such as the specific target that
+failed in a batch.
 Start error text with a lowercase word.
 Put capitalized provider names after the operation when they are needed.
-Callers may add context; repeating it creates noisy chains.
+
+A caller of `LoadSettings(path)` can wrap its error with `load settings %q: %w`.
 
 ```go
 func LoadSettings(path string) (*Settings, error) {
 	data, err := os.ReadFile(path)
 	if err != nil {
 		// GOOD: this return site failed while reading.
-		return nil, fmt.Errorf("read %q: %w", path, err)
+		return nil, fmt.Errorf("read: %w", err)
 	}
 
 	var settings Settings
@@ -145,23 +140,12 @@ func LoadSettings(path string) (*Settings, error) {
 }
 ```
 
-Avoid the current function name or broad operation:
+In this batch, the index identifies the failed item even if labels repeat.
 
 ```go
-// BAD: duplicates LoadSettings' responsibility.
-return nil, fmt.Errorf("load settings %q: read: %w", path, err)
-
-// BAD: duplicates LoadSettings' responsibility.
-return nil, fmt.Errorf("load settings %q: unmarshal YAML: %w", path, err)
-```
-
-In loops describe the item-specific child operation, not the whole loop:
-
-```go
-for _, target := range targets {
+for i, target := range targets {
 	if err := build(target); err != nil {
-		// GOOD: the failed sub-operation is building this target.
-		return fmt.Errorf("build %q: %w", target.Label, err)
+		return fmt.Errorf("build [%d] %q: %w", i, target.Label, err)
 	}
 }
 ```

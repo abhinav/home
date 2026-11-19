@@ -16,7 +16,7 @@ Read every matching reference before making the decision it governs:
 | Work | Reference |
 | --- | --- |
 | Module requirements, tool dependencies, or inspection of dependency source | [Modules and dependencies](references/modules-and-dependencies.md) |
-| Imports, names, declaration order, or file organization | [Source organization](references/source-organization.md) |
+| Imports, names, declaration order, embedding layout, or file organization | [Source organization](references/source-organization.md) |
 | Go documentation or adding or changing struct fields | [Documentation](references/documentation.md) |
 | Process termination, logging, metrics, errors, or cleanup on error | [Errors and diagnostics](references/errors-and-diagnostics.md) |
 | Choosing dependency parameter types, interfaces, or concrete result types | [Interfaces](references/interfaces.md) |
@@ -24,7 +24,7 @@ Read every matching reference before making the decision it governs:
 | Function shapes, resource acquisition and cleanup, construction, dependencies, or exported members | [Signatures and construction](references/signatures-and-construction.md) |
 | Map-shaped APIs or boolean API parameters | [Map and boolean APIs](references/map-and-boolean-apis.md) |
 | Parsing domain values, enums, copying and sharing semantics, receiver choice, or pointers or values in APIs and collections | [Type semantics](references/type-semantics.md) |
-| Maps, slices, iterators, streaming, strings, or bytes | [Collections and iteration](references/collections-and-iteration.md) |
+| Maps, sets, slices, iterators, streaming, strings, or bytes | [Collections and iteration](references/collections-and-iteration.md) |
 | Context propagation or cancellation, goroutines, channels, or synchronization | [Context and concurrency](references/context-and-concurrency.md) |
 | JSON representation or encoding | [JSON](references/json.md) |
 | UUIDs, identifiers, or random tokens | [Identifiers and randomness](references/identifiers-and-randomness.md) |

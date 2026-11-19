@@ -58,6 +58,12 @@ Go declarations generally allow forward references.
 Apply `$code-readability`'s type grouping and reader order.
 Request and result records may frame their method inside its receiver's unit.
 
+## Embedding layout
+
+Group embedded fields at the top of a struct and embedded interfaces at the top
+of an interface.
+Use a blank line between that group and any remaining fields or methods.
+
 ## Package and file organization
 
 Keep packages private to an application under `internal/`.
