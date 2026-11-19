@@ -525,3 +525,21 @@ and their overlap at the audit store remains visually unambiguous.
 
 - A shared destination anchor remains acceptable.
 - Do not offset paths merely to satisfy a one-path-per-anchor rule.
+
+## 13 Default diagram delivery
+
+### Prompt
+
+Use the Pikchr skill at `{SKILL_PATH}`.
+Create a Pikchr diagram for chat showing an invoice going from Received
+to Reviewed to Paid.
+Create any files under a task-local temporary directory.
+
+### Expected behavior
+
+- The final response displays or attaches a rendered diagram
+  that shows the three states and two transitions in order.
+
+### Unacceptable behavior
+
+- The response includes or links to Pikchr source.

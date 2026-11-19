@@ -13,8 +13,6 @@ It owns the viewer task, destination contract, visual argument,
 visual vocabulary, spatial composition, and semantic inspection.
 This skill owns their implementation and medium-specific validation in Pikchr.
 
-When the user explicitly requests a Pikchr artifact,
-produce the requested artifact.
 Use the concept, vocabulary, and spatial model established with
 `$diagram-design` as the contract for the Pikchr source.
 
@@ -198,11 +196,10 @@ visual correctness.
 
 ## Deliver the requested artifact
 
-Match the representation to the request and medium:
+Deliver the rendered diagram by default.
+Use SVG where the destination supports it and a raster image where needed.
+Add a raster preview when it makes review easier.
 
-- Return Pikchr source as a `pikchr` block or `.pikchr` file.
-- Return an `.svg` artifact when SVG is requested or supported.
-- Return a raster preview when it makes review easier or the destination needs
-  one.
-- Return source and rendered output when the user needs an editable artifact and
-  a visual review surface.
+Honor the requested formats and deliverables.
+Include Pikchr source only when the request or destination calls for it.
+Return it as a `pikchr` block or `.pikchr` file as appropriate.
